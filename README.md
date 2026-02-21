@@ -27,6 +27,10 @@ Run `python exam_metadata.py` to generate all feature CSVs. Entries with empty `
 | `property_features.csv` | 30 | Magpie-style statistics (mean, std, min, max, range) of 6 elemental properties (atomic_number, atomic_mass, electronegativity, covalent_radius, electron_affinity, ionization_energy) weighted by composition |
 | `stoichiometry_features.csv` | 8 | `num_elements`, `total_atoms`, `composition_entropy` (Shannon), and p-norms of composition vector (L2, L3, L5, L7, L10) |
 
+## Contributors
+- [Ray Zhu](https://github.com/Ray16)
+- [Rodrigo Ferreira](https://github.com/rpf00)
+
 ## License
 The dataset is licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode)
 
