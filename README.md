@@ -8,7 +8,7 @@ The dataset is downloaded from [is2res_total_train_val_test_lmdbs](https://dl.fb
 
 ## Generated Features
 
-Run `python exam_metadata.py` to generate all feature CSVs. Entries with empty `ads_symbols` are excluded, so all CSVs share the same rows (43,189 entries) keyed by `system_id`.
+Run `python gen_features.py` to generate all feature CSVs. Entries with empty `ads_symbols` are excluded, so all CSVs share the same rows (43,189 entries) keyed by `system_id`.
 
 ### Adsorbate Features (`embeddings/adsorbate/`)
 
