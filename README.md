@@ -3,6 +3,56 @@ Physics-Aware Leakage Minimizer
 
 ## Usage
 
+### Dataset Splitting
+
+`datasail_split.py` performs 2D dataset splitting using [DataSAIL](https://github.com/kalininalab/DataSAIL), treating adsorbate as the e-entity and adsorbent as the f-entity (analogous to ligand/protein in PDBBind).
+
+**Basic usage (single embedding pair, fast):**
+
+```bash
+python datasail_split.py --e-embedding embeddings/adsorbate/physchem_features.csv --f-embedding embeddings/adsorbent/property_features.csv --f-clusters 30 --techniques C2
+```
+
+For better accuracy, use more clusters (e.g., `--f-clusters 100`). Fewer clusters run faster but produce coarser splits.
+
+**All embeddings concatenated (default):**
+
+```bash
+python datasail_split.py
+```
+
+**Multiple embeddings per entity:**
+
+```bash
+python datasail_split.py --e-embedding embeddings/adsorbate/physchem_features.csv embeddings/adsorbate/composition_features.csv --f-embedding embeddings/adsorbent/property_features.csv embeddings/adsorbent/stoichiometry_features.csv
+```
+
+**Full options:**
+
+```
+--e-embedding FILE [FILE ...]   Adsorbate embedding CSV(s)
+--f-embedding FILE [FILE ...]   Adsorbent embedding CSV(s)
+--f-clusters N                  Number of adsorbent clusters (default: 200)
+--max-sec N                     Solver time limit in seconds (default: 300)
+--techniques T [T ...]          Splitting techniques (default: R I1e I1f I2 C1e C1f C2)
+--splits N [N ...]              Split ratios (default: 8 2)
+--names NAME [NAME ...]         Split names (default: train test)
+```
+
+**Available techniques:**
+
+| Technique | Description |
+|-----------|-------------|
+| `R` | Random split |
+| `I1e` | Identity-cold on adsorbate |
+| `I1f` | Identity-cold on adsorbent |
+| `I2` | Identity-cold on both |
+| `C1e` | Cluster-cold on adsorbate |
+| `C1f` | Cluster-cold on adsorbent |
+| `C2` | Cluster-cold on both (double-cold) |
+
+Output CSVs are saved to `output/` with columns `system_id` and `split`, tagged by embedding names (e.g., `datasail_split_C2__e_physchem__f_property.csv`).
+
 ## Dataset
 The dataset is downloaded from [is2res_total_train_val_test_lmdbs](https://dl.fbaipublicfiles.com/opencatalystproject/data/oc22/is2res_total_train_val_test_lmdbs.tar.gz)
 
