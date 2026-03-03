@@ -65,32 +65,60 @@ python 1_datasail_split.py \
 
 Output CSVs are saved to `output/split_result/` with columns `system_id` and `split`, tagged by embedding names (e.g., `datasail_split_C2__e_physchem__f_property.csv`).
 
-### 3. Visualization
+### 3. Summary Dashboard
+
+`2_summary.py` generates overview figures for comparing all feature pair combinations, showing raw coverage and overlap metrics side by side. Use this to narrow down which (method, feature pair) to use.
 
 ```bash
-# Visualize all splits (grouped by method)
-python visualization.py
+# Compare all feature pairs across all methods
+python 2_summary.py
 
-# Visualize specific method
-python visualization.py --method C1e
+# Compare feature pairs for a specific method
+python 2_summary.py --method C1e
 
-# Visualize specific splits
-python visualization.py output/split_result/datasail_split_C1f__e_physchem__f_property.csv
+# Custom output directory
+python 2_summary.py -o output/summary
 ```
 
-Figures are saved to `output/figure/`.
+**Per-method figures** (`output/summary/summary_{method}.png`):
+- **(a) Coverage** — stacked train/test bar chart with coverage % annotations
+- **(b) Overlap** — grouped bars for pair, adsorbate, and adsorbent overlap counts
 
-### 4. Validation
+**Cross-method figure** (`output/summary/summary_cross_method.png`):
+- **(a) Coverage heatmap** — feature pairs (rows) × methods (columns), colored by coverage %
+- **(b) Overlap heatmap** — same layout, showing P(air)/A(dsorbate)/B(adsorbent) overlap breakdown per cell
+
+### 4. Deep Analysis
+
+`3_analysis.py` performs detailed analysis on selected splits. Use this after narrowing down candidates with the summary dashboard.
 
 ```bash
-# Validate all splits
-python validation.py output/split_result/datasail_split_*.csv
+# Analyze a single split
+python 3_analysis.py output/split_result/datasail_split_C2__e_rdkit_descriptors__f_stoichiometry.csv
 
-# Validate a single split
-python validation.py output/split_result/datasail_split_C2__e_physchem__f_property.csv
+# Compare multiple selected splits
+python 3_analysis.py output/split_result/datasail_split_C2__e_rdkit_descriptors__f_stoichiometry.csv \
+                      output/split_result/datasail_split_C1e__e_rdkit_descriptors__f_bonding.csv
+
+# Custom embeddings for UMAP and NN distance computation
+python 3_analysis.py --e-embedding features/oc22/adsorbate/physchem_features.csv \
+                     --f-embedding features/oc22/adsorbent/property_features.csv \
+                     output/split_result/datasail_split_C2__e_rdkit_descriptors__f_stoichiometry.csv
 ```
 
-Validation figure is saved to `output/figure/split_validation.png`.
+**Per-split figures** (`output/analysis/analysis_{label}.png`):
+- **(a) Adsorbent UMAP** — 2D projection colored by train/test/not-selected
+- **(b) Adsorbate UMAP** — 2D projection with labeled points
+- **(c) Adsorbate distribution** — per-adsorbate train vs test system counts
+- **(d) Adsorbent NN distance** — histogram of test→nearest-train distances in feature space
+- **(e) Adsorbate NN distance** — histogram of test→nearest-train distances
+- **(f) Summary statistics** — table with all key metrics
+
+**Comparison figure** (`output/analysis/analysis_comparison.png`, when multiple splits given):
+- **(a) Entity overlap** — grouped bars comparing pair/adsorbate/adsorbent overlap
+- **(b) Split size distribution** — stacked bars with coverage %
+- **(c) Mean NN distances** — grouped bars for adsorbate and adsorbent separation
+- **(d) NN distance distributions** — box plots for direct comparison
 
 ## Dataset
 The dataset is downloaded from [is2res_total_train_val_test_lmdbs](https://dl.fbaipublicfiles.com/opencatalystproject/data/oc22/is2res_total_train_val_test_lmdbs.tar.gz)
@@ -123,15 +151,16 @@ The dataset is downloaded from [is2res_total_train_val_test_lmdbs](https://dl.fb
 PALM/
 ├── 0_gen_features.py          # Feature generation
 ├── 1_datasail_split.py        # DataSAIL splitting
-├── visualization.py           # Split visualization
-├── validation.py              # Split validation
+├── 2_summary.py               # Summary dashboard (coverage & overlap comparison)
+├── 3_analysis.py              # Deep analysis (UMAP, NN distances, distributions)
 ├── data/oc22/                 # Raw dataset
 ├── features/oc22/             # Generated features
 │   ├── adsorbate/             #   Adsorbate feature CSVs
 │   └── adsorbent/             #   Adsorbent feature CSVs
 └── output/
     ├── split_result/          # Split CSV outputs
-    └── figure/                # Visualization & validation figures
+    ├── summary/               # Summary dashboard figures
+    └── analysis/              # Deep analysis figures
 ```
 
 ## Contributors
