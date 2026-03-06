@@ -4,9 +4,9 @@ PALM creates train/test splits for interaction datasets with reduced data leakag
 
 It supports molecule, material, biomolecule, and gene entities.
 
-## Fastest Path: Run Web App Locally
+## To run the web app Locally
 
-### 1. Create environment
+### 1. Create conda environment
 
 ```bash
 conda create -n palm python=3.12 -y
@@ -16,15 +16,22 @@ conda activate palm
 ### 2. Install required packages
 
 ```bash
+# Core + web app + structure/material parsing + LM embeddings
 pip install datasail pandas numpy pyyaml scipy rdkit
 pip install fastapi uvicorn pydantic python-multipart
+pip install biopython ase
+
+# PyTorch and Language-model backends (ESM, Nucleotide Transformer, DNABERT-2)
+pip install torch transformers
+
+#clustering tools
+mamba install -c bioconda mmseqs2 cd-hit diamond foldseek tmalign mash -y
 ```
 
-### 3. Start the web app
+### 4. Start the web app
 
 ```bash
-# From the parent directory containing PALM/
-cd /path/to/parent-of-PALM
+cd <path_to_PALM>
 
 # Option A
 uvicorn PALM.webapp.app:app --host 0.0.0.0 --port 8080 --reload
@@ -41,7 +48,7 @@ Web app flow:
 3. Run splitting
 4. Download results
 
-## If you refer to run it locally
+## Optional: Run by CLI
 
 ```bash
 python -m PALM config.yaml
@@ -105,16 +112,10 @@ Split files contain:
 
 ## Dependencies by Use Case
 
-Required:
+All dependencies below are required for this project setup:
 - `datasail`, `pandas`, `numpy`, `pyyaml`, `scipy`, `rdkit`
-
-Web app:
 - `fastapi`, `uvicorn`, `pydantic`, `python-multipart`
-
-Optional:
 - `biopython` for PDB/mmCIF parsing
 - `ase` for CIF/XYZ/.db material loading
 - `torch`, `transformers` for LM embeddings (`esm_embedding`, `nt_embedding`)
-
-Optional external clustering tools (mainly for biomolecule/gene `C1e/C1f/C2`):
 - `mmseqs2`, `cd-hit`, `diamond`, `foldseek`, `tmalign`, `mash`
