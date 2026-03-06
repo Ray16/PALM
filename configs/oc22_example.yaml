@@ -1,0 +1,62 @@
+# OC22 Dataset Splitting Configuration
+# Usage: python -m PALM configs/oc22_example.yaml
+
+input_file: "data/oc22/is2re-total/metadata.json"
+output_dir: "output"
+dataset_name: "oc22"
+
+# Filter out entries with empty adsorbate symbols
+filters:
+  - column: "ads_symbols"
+    not_equal: ""
+
+# e-entity: adsorbate (analogous to ligand)
+e:
+  name: "adsorbate"
+  type: "molecule"
+  extract:
+    column: "ads_symbols"
+  feature_sets:
+    - rdkit_descriptors
+    - composition
+    - physicochemical
+  smiles_map:
+    "C": "[C]"
+    "CO": "[C-]#[O+]"
+    "H": "[H]"
+    "H2O": "O"
+    "HO2": "[O]O"
+    "N": "[N]"
+    "O": "[O]"
+    "O2": "O=O"
+    "OH": "[OH]"
+
+# f-entity: adsorbent (analogous to protein/pocket)
+f:
+  name: "adsorbent"
+  type: "material"
+  extract:
+    column: "bulk_symbols"
+  feature_sets:
+    - magpie_properties
+    - stoichiometry
+    - electronic
+    - bonding
+    - thermodynamic
+    - classification
+
+# DataSAIL splitting configuration
+splitting:
+  techniques:
+    - R
+    - I1e
+    - I1f
+    - I2
+    - C1e
+    - C1f
+    - C2
+  splits: [8, 2]
+  names: ["train", "test"]
+  f_clusters: 30
+  max_sec: 300
+  solver: "SCIP"

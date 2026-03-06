@@ -1,0 +1,29 @@
+# Gene-Drug pharmacogenomics — gene (CDS) + molecule (drug)
+input_file: "/homes/rzhu/PALM/tests/data/gene_drug/interactions.csv"
+output_dir: "/homes/rzhu/PALM/tests/output/gene_drug"
+dataset_name: "gene_drug"
+
+e:
+  name: "gene"
+  type: "gene"
+  extract:
+    column: "sequence"
+  feature_sets:
+    - nucleotide_composition
+    - kmer_frequencies
+
+f:
+  name: "drug"
+  type: "molecule"
+  extract:
+    column: "smiles"
+  feature_sets:
+    - rdkit_descriptors
+    - physicochemical
+
+splitting:
+  techniques: [R, I2]
+  splits: [8, 2]
+  names: ["train", "test"]
+  max_sec: 120
+  solver: "SCIP"

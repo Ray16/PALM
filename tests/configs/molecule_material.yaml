@@ -1,0 +1,30 @@
+# Adsorbate-Surface — molecule (adsorbate) + material (surface)
+input_file: "/homes/rzhu/PALM/tests/data/adsorbate_surface/interactions.csv"
+output_dir: "/homes/rzhu/PALM/tests/output/adsorbate_surface"
+dataset_name: "adsorbate_surface"
+
+e:
+  name: "adsorbate"
+  type: "molecule"
+  extract:
+    column: "smiles"
+  feature_sets:
+    - rdkit_descriptors
+    - physicochemical
+
+f:
+  name: "surface"
+  type: "material"
+  extract:
+    column: "surface"
+  feature_sets:
+    - magpie_properties
+    - stoichiometry
+    - electronic
+
+splitting:
+  techniques: [R, I2]
+  splits: [8, 2]
+  names: ["train", "test"]
+  max_sec: 120
+  solver: "SCIP"

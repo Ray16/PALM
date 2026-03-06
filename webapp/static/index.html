@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Splitting Agent</title>
+<style>
+:root {
+  --bg:       #f0f4f8;
+  --card:     #ffffff;
+  --primary:  #2563eb;
+  --pri-dark: #1d4ed8;
+  --pri-light:#eff6ff;
+  --success:  #16a34a;
+  --suc-light:#f0fdf4;
+  --error:    #dc2626;
+  --err-light:#fef2f2;
+  --warn:     #d97706;
+  --text:     #0f172a;
+  --muted:    #64748b;
+  --border:   #e2e8f0;
+  --radius:   10px;
+  --shadow:   0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+  --shadow-lg:0 8px 24px rgba(0,0,0,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  background:var(--bg);color:var(--text);min-height:100vh;padding:2rem 1rem;}
+
+/* ── Layout ── */
+.wrapper{max-width:860px;margin:0 auto;}
+.logo{text-align:center;margin-bottom:2rem;}
+.logo h1{font-size:1.6rem;font-weight:700;color:var(--primary);}
+.logo p{color:var(--muted);margin-top:.3rem;font-size:.95rem;}
+
+/* ── Step indicator ── */
+.steps{display:flex;align-items:center;margin-bottom:2rem;gap:0;}
+.step{display:flex;align-items:center;gap:.5rem;flex:1;position:relative;}
+.step:not(:last-child)::after{content:'';flex:1;height:2px;background:var(--border);margin:0 .5rem;}
+.step-dot{width:32px;height:32px;border-radius:50%;border:2px solid var(--border);
+  background:var(--card);display:flex;align-items:center;justify-content:center;
+  font-size:.8rem;font-weight:600;color:var(--muted);flex-shrink:0;transition:.2s;}
+.step-label{font-size:.8rem;color:var(--muted);white-space:nowrap;transition:.2s;}
+.step.active .step-dot{border-color:var(--primary);background:var(--primary);color:#fff;}
+.step.active .step-label{color:var(--primary);font-weight:600;}
+.step.done .step-dot{border-color:var(--success);background:var(--success);color:#fff;}
+.step.done .step-label{color:var(--success);}
+
+/* ── Card ── */
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+  padding:2rem;margin-bottom:1rem;}
+.card-title{font-size:1.1rem;font-weight:600;margin-bottom:1.25rem;
+  display:flex;align-items:center;gap:.5rem;}
+
+/* ── Drop zone ── */
+.dropzone{border:2px dashed var(--border);border-radius:var(--radius);padding:3rem 1rem;
+  text-align:center;cursor:pointer;transition:.2s;background:var(--bg);}
+.dropzone:hover,.dropzone.over{border-color:var(--primary);background:var(--pri-light);}
+.dropzone-icon{font-size:2.5rem;margin-bottom:.75rem;}
+.dropzone p{color:var(--muted);font-size:.95rem;}
+.dropzone strong{color:var(--primary);cursor:pointer;}
+#file-input{display:none;}
+.file-badge{display:inline-flex;align-items:center;gap:.5rem;background:var(--pri-light);
+  color:var(--primary);padding:.4rem .9rem;border-radius:999px;font-size:.85rem;
+  font-weight:500;margin-top:1rem;}
+.file-badge svg{width:16px;height:16px;}
+
+/* ── Forms ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+@media(max-width:600px){.grid-2{grid-template-columns:1fr;}}
+.section-label{font-size:.75rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.05em;color:var(--muted);margin-bottom:.75rem;}
+.entity-card{border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;}
+.entity-card .entity-title{font-weight:600;font-size:.95rem;margin-bottom:1rem;
+  display:flex;align-items:center;gap:.5rem;}
+.entity-card .entity-title span{font-size:.7rem;padding:.15rem .5rem;border-radius:999px;
+  font-weight:600;background:var(--pri-light);color:var(--primary);}
+
+label{display:block;font-size:.82rem;font-weight:500;color:var(--muted);margin-bottom:.3rem;}
+select,input[type=text]{width:100%;padding:.5rem .75rem;border:1px solid var(--border);
+  border-radius:6px;font-size:.9rem;color:var(--text);background:var(--card);
+  appearance:none;outline:none;transition:.15s;}
+select:focus,input[type=text]:focus{border-color:var(--primary);
+  box-shadow:0 0 0 3px rgba(37,99,235,.15);}
+
+.form-group{margin-bottom:1rem;}
+.feat-grid{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.4rem;}
+.feat-pill{display:flex;align-items:center;gap:.35rem;padding:.25rem .6rem;
+  border:1px solid var(--border);border-radius:999px;font-size:.78rem;cursor:pointer;
+  transition:.15s;user-select:none;background:var(--card);}
+.feat-pill input{width:13px;height:13px;cursor:pointer;accent-color:var(--primary);}
+.feat-pill:has(input:checked){border-color:var(--primary);background:var(--pri-light);
+  color:var(--primary);}
+
+.technique-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.5rem;}
+.technique-item{display:flex;align-items:flex-start;gap:.5rem;padding:.6rem .75rem;
+  border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:.15s;}
+.technique-item:has(input:checked){border-color:var(--primary);background:var(--pri-light);}
+.technique-item input{margin-top:2px;accent-color:var(--primary);}
+.technique-name{font-size:.85rem;font-weight:600;}
+.technique-desc{font-size:.75rem;color:var(--muted);margin-top:1px;}
+
+/* ── Progress ── */
+.progress-wrap{margin:1rem 0;}
+.progress-header{display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:.5rem;}
+.progress-label{font-size:.85rem;font-weight:500;}
+.progress-pct{font-size:.85rem;font-weight:700;color:var(--primary);}
+.progress-bar{height:10px;background:var(--border);border-radius:999px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),#60a5fa);
+  border-radius:999px;transition:width .4s ease;width:0%;}
+.progress-fill.complete{background:linear-gradient(90deg,var(--success),#4ade80);}
+
+.log-box{background:#0f172a;border-radius:var(--radius);padding:1rem;
+  height:260px;overflow-y:auto;font-family:'SF Mono',Consolas,monospace;
+  font-size:.78rem;line-height:1.6;color:#94a3b8;margin-top:1rem;}
+.log-box .log-line{white-space:pre-wrap;word-break:break-all;}
+.log-box .log-line.ok{color:#4ade80;}
+.log-box .log-line.err{color:#f87171;}
+
+/* ── Status badge ── */
+.status-badge{display:inline-flex;align-items:center;gap:.4rem;padding:.3rem .8rem;
+  border-radius:999px;font-size:.8rem;font-weight:600;}
+.status-badge.running{background:#fef9c3;color:#854d0e;}
+.status-badge.completed{background:var(--suc-light);color:var(--success);}
+.status-badge.failed{background:var(--err-light);color:var(--error);}
+
+/* ── Done panel ── */
+.done-icon{font-size:3rem;text-align:center;margin-bottom:1rem;}
+.result-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:.75rem;margin:1rem 0;}
+.result-tile{border:1px solid var(--border);border-radius:8px;padding:.9rem;text-align:center;}
+.result-tile .tile-val{font-size:1.4rem;font-weight:700;color:var(--primary);}
+.result-tile .tile-label{font-size:.75rem;color:var(--muted);margin-top:.15rem;}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.6rem 1.4rem;
+  border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer;
+  border:none;transition:.15s;text-decoration:none;}
+.btn-primary{background:var(--primary);color:#fff;}
+.btn-primary:hover{background:var(--pri-dark);}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed;}
+.btn-success{background:var(--success);color:#fff;}
+.btn-success:hover{background:#15803d;}
+.btn-outline{background:var(--card);color:var(--primary);
+  border:1.5px solid var(--primary);}
+.btn-outline:hover{background:var(--pri-light);}
+.btn-row{display:flex;gap:.75rem;justify-content:flex-end;margin-top:1.5rem;
+  flex-wrap:wrap;}
+
+.alert{padding:.75rem 1rem;border-radius:8px;font-size:.875rem;margin-bottom:1rem;}
+.alert-error{background:var(--err-light);color:var(--error);border:1px solid #fca5a5;}
+
+/* ── Panel visibility ── */
+.panel{display:none;}
+.panel.active{display:block;}
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- Logo -->
+  <div class="logo">
+    <h1>⚗️ Data Splitting Agent</h1>
+    <p>Scientifically rigorous train/test splitting powered by DataSAIL</p>
+  </div>
+
+  <!-- Step indicator -->
+  <div class="steps">
+    <div class="step active" id="s1"><div class="step-dot">1</div><span class="step-label">Upload</span></div>
+    <div class="step" id="s2"><div class="step-dot">2</div><span class="step-label">Configure</span></div>
+    <div class="step" id="s3"><div class="step-dot">3</div><span class="step-label">Running</span></div>
+    <div class="step" id="s4"><div class="step-dot">4</div><span class="step-label">Download</span></div>
+  </div>
+
+  <!-- ── Panel 1: Upload ── -->
+  <div class="panel active" id="p1">
+    <div class="card">
+      <div class="card-title">📂 Upload your dataset</div>
+      <div id="error-upload" class="alert alert-error" style="display:none;"></div>
+      <div class="dropzone" id="dropzone" onclick="document.getElementById('file-input').click()">
+        <div class="dropzone-icon">📄</div>
+        <p>Drag &amp; drop your file here, or <strong>browse</strong></p>
+        <p style="margin-top:.4rem;font-size:.8rem;">CSV · JSON · SDF · SMILES · FASTA · PDB · mmCIF · MOL · MOL2</p>
+        <div id="file-name-badge" style="display:none;" class="file-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span id="file-name-text"></span>
+        </div>
+      </div>
+      <input type="file" id="file-input" accept=".csv,.json,.sdf,.smi,.smiles,.fasta,.fa,.faa,.pdb,.cif,.mmcif,.mol,.mol2">
+      <div class="btn-row">
+        <button class="btn btn-primary" id="btn-next-1" disabled onclick="goStep(2)">
+          Next: Configure →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Panel 2: Configure ── -->
+  <div class="panel" id="p2">
+    <div class="card">
+      <div class="card-title">⚙️ Configure entities</div>
+      <div class="grid-2">
+
+        <!-- E entity -->
+        <div class="entity-card">
+          <div class="entity-title">Entity 1 <span>1</span></div>
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" id="e-name" placeholder="e.g. drug" value="entity_1">
+          </div>
+          <div class="form-group">
+            <label>Type</label>
+            <select id="e-type" onchange="updateFeatures('e')">
+              <option value="molecule">Molecule</option>
+              <option value="material">Material</option>
+              <option value="biomolecule">Biomolecule (protein)</option>
+              <option value="gene">Gene (DNA/RNA)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Column</label>
+            <select id="e-col"></select>
+          </div>
+          <div class="form-group">
+            <label>Feature sets</label>
+            <div class="feat-grid" id="e-features"></div>
+          </div>
+        </div>
+
+        <!-- F entity -->
+        <div class="entity-card">
+          <div class="entity-title">Entity 2 <span>2</span></div>
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" id="f-name" placeholder="e.g. protein" value="entity_2">
+          </div>
+          <div class="form-group">
+            <label>Type</label>
+            <select id="f-type" onchange="updateFeatures('f')">
+              <option value="molecule">Molecule</option>
+              <option value="material">Material</option>
+              <option value="biomolecule" selected>Biomolecule (protein)</option>
+              <option value="gene">Gene (DNA/RNA)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Column</label>
+            <select id="f-col"></select>
+          </div>
+          <div class="form-group">
+            <label>Feature sets</label>
+            <div class="feat-grid" id="f-features"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔀 Splitting configuration</div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Train / Test ratio</label>
+          <select id="ratio">
+            <option value="70/30">70 / 30</option>
+            <option value="80/20" selected>80 / 20</option>
+            <option value="90/10">90 / 10</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Dataset name (used in output filenames)</label>
+          <input type="text" id="dataset-name" placeholder="my_dataset" value="dataset">
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:.5rem;">
+        <label>Splitting techniques</label>
+        <p style="font-size:.78rem;color:var(--muted);margin-bottom:.6rem;">
+          Cluster techniques (C*) give the most rigorous splits but require more time.
+        </p>
+        <div class="technique-grid" id="technique-grid"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="goStep(1)">← Back</button>
+        <button class="btn btn-primary" onclick="startJob()">▶ Run Splitting</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Panel 3: Running ── -->
+  <div class="panel" id="p3">
+    <div class="card">
+      <div class="card-title">
+        ⏳ Running pipeline
+        <span class="status-badge running" id="status-badge">Running</span>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-header">
+          <span class="progress-label" id="progress-label">Initialising…</span>
+          <span class="progress-pct" id="progress-pct">0%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+      </div>
+      <div class="log-box" id="log-box"></div>
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="goStep(2)">← Back</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Panel 4: Done ── -->
+  <div class="panel" id="p4">
+    <div class="card">
+      <div class="done-icon" id="done-icon">✅</div>
+      <h2 style="text-align:center;font-size:1.3rem;margin-bottom:.4rem;" id="done-title">
+        Splitting complete!
+      </h2>
+      <p style="text-align:center;color:var(--muted);font-size:.9rem;margin-bottom:1.5rem;" id="done-sub">
+        Your dataset has been split. Download the results below.
+      </p>
+      <div class="result-grid" id="result-grid"></div>
+      <div class="btn-row" style="justify-content:center;margin-top:1.5rem;">
+        <button class="btn btn-outline" onclick="goStep(2)">← Back</button>
+        <button class="btn btn-success" id="btn-download" onclick="downloadResults()">
+          ⬇ Download Results (.zip)
+        </button>
+        <button class="btn btn-outline" onclick="resetAll()">Start over</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /wrapper -->
+
+<script>
+// ── State ─────────────────────────────────────────────────────────────────
+let jobId    = null;
+let columns  = [];
+let evtSrc   = null;
+
+// ── Feature sets metadata ─────────────────────────────────────────────────
+const FEATURES = {
+  molecule:    [
+    {id:'rdkit_descriptors', label:'RDKit Descriptors',    desc:'MW, HBD, HBA, TPSA, LogP (9 feat)'},
+    {id:'physicochemical',   label:'Physicochemical',      desc:'Atom counts, rings, aromaticity (11 feat)'},
+    {id:'composition',       label:'Composition',          desc:'Elemental counts + weighted properties'},
+  ],
+  material:    [
+    {id:'magpie_properties', label:'MAGPIE Properties',    desc:'Statistical elemental descriptors (~130 feat)'},
+    {id:'stoichiometry',     label:'Stoichiometry',        desc:'L-norm stoichiometric features'},
+    {id:'electronic',        label:'Electronic',           desc:'Electronegativity, ionization energy'},
+    {id:'bonding',           label:'Bonding',              desc:'Atomic/covalent radius stats'},
+    {id:'thermodynamic',     label:'Thermodynamic',        desc:'Melting point, cohesive energy'},
+    {id:'classification',    label:'Classification',       desc:'Metal/nonmetal/block fractions'},
+  ],
+  biomolecule: [
+    {id:'sequence_properties',   label:'Sequence Properties', desc:'Length, MW, hydrophobicity, charge (16 feat)'},
+    {id:'esm_embedding',         label:'ESM2 Embedding',      desc:'Protein language model (requires torch)'},
+    {id:'precomputed_embedding', label:'Precomputed',         desc:'Load from .csv/.npy/.npz/.pt'},
+  ],
+  gene:        [
+    {id:'nucleotide_composition', label:'Nucleotide Composition', desc:'GC%, skew, CpG O/E, Tm (11 feat)'},
+    {id:'kmer_frequencies',       label:'K-mer Frequencies',      desc:'Di+trinucleotide freqs (80 feat)'},
+    {id:'nt_embedding',           label:'NT Embedding',           desc:'Nucleotide Transformer (requires torch)'},
+    {id:'precomputed_embedding',  label:'Precomputed',            desc:'Load from .csv/.npy/.npz/.pt'},
+  ],
+};
+
+// Defaults per type (pre-checked on type change)
+const FEAT_DEFAULTS = {
+  molecule:    ['rdkit_descriptors','physicochemical'],
+  material:    ['magpie_properties','stoichiometry','electronic'],
+  biomolecule: ['sequence_properties'],
+  gene:        ['nucleotide_composition','kmer_frequencies'],
+};
+
+const TECHNIQUES = [
+  {id:'R',   name:'Random',          desc:'Baseline random split'},
+  {id:'I1e', name:'Identity (1)',    desc:'No entity 1 shared across sets'},
+  {id:'I1f', name:'Identity (2)',    desc:'No entity 2 shared across sets'},
+  {id:'I2',  name:'Identity (both)', desc:'No shared entities on either axis'},
+  {id:'C1e', name:'Cluster (1)',     desc:'Cluster entity 1 by features'},
+  {id:'C1f', name:'Cluster (2)',     desc:'Cluster entity 2 by features'},
+  {id:'C2',  name:'Cluster (both)', desc:'Cluster both axes (most rigorous)'},
+];
+
+// ── Initialise ────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  setupDropzone();
+  buildTechniqueGrid();
+  updateFeatures('e');
+  updateFeatures('f');
+});
+
+// ── Steps ─────────────────────────────────────────────────────────────────
+function goStep(n) {
+  [1,2,3,4].forEach(i => {
+    document.getElementById('p'+i).classList.toggle('active', i===n);
+    const s = document.getElementById('s'+i);
+    s.className = 'step' + (i < n ? ' done' : i === n ? ' active' : '');
+    // tick mark for done steps
+    s.querySelector('.step-dot').textContent = i < n ? '✓' : i;
+  });
+  if (n===3) document.querySelector(`#s3 .step-dot`).textContent = '3';
+  if (n===4) document.querySelector(`#s4 .step-dot`).textContent = '✓';
+}
+
+// ── Dropzone ──────────────────────────────────────────────────────────────
+function setupDropzone() {
+  const dz = document.getElementById('dropzone');
+  const fi = document.getElementById('file-input');
+
+  ['dragenter','dragover'].forEach(e => dz.addEventListener(e, ev => {
+    ev.preventDefault(); dz.classList.add('over');
+  }));
+  ['dragleave','drop'].forEach(e => dz.addEventListener(e, ev => {
+    ev.preventDefault(); dz.classList.remove('over');
+  }));
+  dz.addEventListener('drop', ev => handleFile(ev.dataTransfer.files[0]));
+  fi.addEventListener('change', () => handleFile(fi.files[0]));
+}
+
+async function handleFile(file) {
+  if (!file) return;
+  showError('upload', '');
+
+  const fd = new FormData();
+  fd.append('file', file);
+
+  try {
+    const res  = await fetch('/api/upload', {method:'POST', body:fd});
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Upload failed');
+
+    jobId   = data.job_id;
+    columns = data.columns || [];
+
+    // Update UI
+    document.getElementById('file-name-text').textContent =
+      `${file.name}  (${(file.size/1024).toFixed(1)} KB)`;
+    document.getElementById('file-name-badge').style.display = 'inline-flex';
+    document.getElementById('btn-next-1').disabled = false;
+
+    // Populate column selects
+    ['e-col','f-col'].forEach(id => {
+      const sel = document.getElementById(id);
+      sel.innerHTML = columns.length
+        ? columns.map(c => `<option value="${c}">${c}</option>`).join('')
+        : '<option value="">— no columns detected —</option>';
+    });
+    // Pick different defaults if possible
+    if (columns.length >= 2) {
+      document.getElementById('f-col').value = columns[1];
+    }
+  } catch(err) {
+    showError('upload', err.message);
+  }
+}
+
+// ── Feature checkboxes ────────────────────────────────────────────────────
+function updateFeatures(axis) {
+  const type      = document.getElementById(axis+'-type').value;
+  const container = document.getElementById(axis+'-features');
+  const defs      = FEAT_DEFAULTS[type] || [];
+
+  container.innerHTML = (FEATURES[type] || []).map(f => `
+    <label class="feat-pill">
+      <input type="checkbox" name="${axis}-feat" value="${f.id}"
+        ${defs.includes(f.id) ? 'checked' : ''}
+        title="${f.desc}">
+      ${f.label}
+    </label>`).join('');
+}
+
+// ── Technique grid ────────────────────────────────────────────────────────
+function buildTechniqueGrid() {
+  const grid = document.getElementById('technique-grid');
+  grid.innerHTML = TECHNIQUES.map(t => `
+    <label class="technique-item">
+      <input type="checkbox" name="technique" value="${t.id}"
+        ${['R','I2'].includes(t.id) ? 'checked' : ''}>
+      <div>
+        <div class="technique-name">${t.name} <code style="font-size:.7rem;opacity:.7">${t.id}</code></div>
+        <div class="technique-desc">${t.desc}</div>
+      </div>
+    </label>`).join('');
+}
+
+function getChecked(name) {
+  return [...document.querySelectorAll(`input[name="${name}"]:checked`)]
+         .map(el => el.value);
+}
+
+// ── Run ───────────────────────────────────────────────────────────────────
+async function startJob() {
+  if (!jobId) { alert('Please upload a file first.'); return; }
+
+  const techniques = getChecked('technique');
+  if (!techniques.length) { alert('Select at least one splitting technique.'); return; }
+
+  const payload = {
+    dataset_name: document.getElementById('dataset-name').value || 'dataset',
+    e: {
+      name:         document.getElementById('e-name').value || 'entity_1',
+      type:         document.getElementById('e-type').value,
+      column:       document.getElementById('e-col').value,
+      feature_sets: getChecked('e-feat'),
+    },
+    f: {
+      name:         document.getElementById('f-name').value || 'entity_2',
+      type:         document.getElementById('f-type').value,
+      column:       document.getElementById('f-col').value,
+      feature_sets: getChecked('f-feat'),
+    },
+    splitting: {
+      techniques,
+      ratio: document.getElementById('ratio').value,
+    },
+  };
+
+  goStep(3);
+  resetProgress();
+
+  const res  = await fetch(`/api/run/${jobId}`, {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    appendLog('✗ Failed to start job: ' + (err.detail || JSON.stringify(err)), true);
+    return;
+  }
+
+  // Open SSE stream
+  evtSrc = new EventSource(`/api/stream/${jobId}`);
+  evtSrc.onmessage = e => handleEvent(JSON.parse(e.data));
+  evtSrc.onerror   = () => evtSrc.close();
+}
+
+// ── Progress handling ─────────────────────────────────────────────────────
+function resetProgress() {
+  setProgress(0, 'Initialising…');
+  document.getElementById('log-box').innerHTML = '';
+  document.getElementById('status-badge').textContent = 'Running';
+  document.getElementById('status-badge').className   = 'status-badge running';
+}
+
+function setProgress(pct, label) {
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent  = pct + '%';
+  if (label) document.getElementById('progress-label').textContent = label;
+  if (pct >= 100)
+    document.getElementById('progress-fill').classList.add('complete');
+}
+
+function appendLog(msg, isErr=false) {
+  const box = document.getElementById('log-box');
+  const ln  = document.createElement('div');
+  ln.className = 'log-line' + (isErr ? ' err' : msg.startsWith('✓') ? ' ok' : '');
+  ln.textContent = msg;
+  box.appendChild(ln);
+  box.scrollTop = box.scrollHeight;
+}
+
+function handleEvent(data) {
+  if (data.error) { appendLog('✗ ' + data.error, true); return; }
+
+  (data.log || []).forEach(line => appendLog(line, line.startsWith('✗')));
+  setProgress(data.progress || 0);
+
+  if (data.status === 'completed') {
+    evtSrc && evtSrc.close();
+    setProgress(100, 'Complete!');
+    document.getElementById('status-badge').textContent = 'Completed';
+    document.getElementById('status-badge').className   = 'status-badge completed';
+    setTimeout(() => showDone(), 800);
+  } else if (data.status === 'failed') {
+    evtSrc && evtSrc.close();
+    document.getElementById('status-badge').textContent = 'Failed';
+    document.getElementById('status-badge').className   = 'status-badge failed';
+    appendLog('✗ Job failed: ' + (data.error || 'unknown error'), true);
+  }
+}
+
+// ── Done panel ────────────────────────────────────────────────────────────
+async function showDone() {
+  goStep(4);
+  // Fetch status for summary
+  try {
+    const res  = await fetch(`/api/status/${jobId}`);
+    const data = await res.json();
+    const log  = data.log || [];
+
+    // Parse train/test counts from log
+    const tiles = [];
+    log.forEach(line => {
+      const m = line.match(/^\s*(Train|Test):\s+([\d,]+)\s+\((\d+\.\d+)%\)/i);
+      if (m) tiles.push({label: m[1], val: m[2], pct: m[3]});
+    });
+    // Count techniques from log
+    const techs = [...new Set(log.map(l => { const m=l.match(/---\s+(\w+)\s+---/); return m && m[1]; }).filter(Boolean))];
+
+    const grid = document.getElementById('result-grid');
+    grid.innerHTML = [
+      ...tiles.map(t => `<div class="result-tile">
+        <div class="tile-val">${t.val}</div>
+        <div class="tile-label">${t.label} rows (${t.pct}%)</div>
+      </div>`),
+      techs.length ? `<div class="result-tile">
+        <div class="tile-val">${techs.length}</div>
+        <div class="tile-label">Techniques run</div>
+      </div>` : '',
+    ].join('');
+  } catch(_) {}
+}
+
+async function downloadResults() {
+  window.location.href = `/api/download/${jobId}`;
+}
+
+// ── Utilities ─────────────────────────────────────────────────────────────
+function showError(panel, msg) {
+  const el = document.getElementById('error-'+panel);
+  el.textContent = msg;
+  el.style.display = msg ? 'block' : 'none';
+}
+
+function resetAll() {
+  jobId = null; columns = [];
+  if (evtSrc) { evtSrc.close(); evtSrc = null; }
+  document.getElementById('file-input').value = '';
+  document.getElementById('file-name-badge').style.display = 'none';
+  document.getElementById('btn-next-1').disabled = true;
+  goStep(1);
+}
+</script>
+</body>
+</html>

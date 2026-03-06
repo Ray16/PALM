@@ -1,174 +1,500 @@
-# PALM
-Physics-Aware Leakage Minimizer
+# Data Splitting Agent
 
-## Usage
+A pipeline for scientifically rigorous train/test splitting of interaction datasets using [DataSAIL](https://github.com/kalininalab/DataSAIL). It featurizes entities (molecules, materials, proteins, genes) and applies DataSAIL's cluster-aware splitting algorithms to minimise data leakage across splits.
 
-### 1. Generate Features
+---
 
-`0_gen_features.py` generates all feature CSVs for adsorbates and adsorbents. Entries with empty `ads_symbols` are excluded, so all CSVs share the same rows (43,189 entries) keyed by `system_id`.
+## Motivation
 
-```bash
-python 0_gen_features.py
-```
+Random splitting of interaction data (e.g. drug–protein, adsorbate–adsorbent, gene–phenotype) leads to overly optimistic evaluation because similar entities appear in both train and test. This agent produces splits where the test set contains entities that are dissimilar to those in the train set, giving a more realistic estimate of generalisation.
 
-Features are saved to `features/oc22/adsorbate/` and `features/oc22/adsorbent/`.
+---
 
-### 2. Dataset Splitting
-
-`1_datasail_split.py` performs 2D dataset splitting using [DataSAIL](https://github.com/kalininalab/DataSAIL), treating adsorbate as the e-entity and adsorbent as the f-entity (analogous to ligand/protein in PDBBind).
-
-**Basic usage (single embedding pair, fast):**
+## Quick Start
 
 ```bash
-python 1_datasail_split.py --e-embedding features/oc22/adsorbate/physchem_features.csv --f-embedding features/oc22/adsorbent/property_features.csv --f-clusters 30 --techniques C2
+python -m PALM config.yaml
 ```
 
-For better accuracy, use more clusters (e.g., `--f-clusters 100`). Fewer clusters run faster but produce coarser splits.
+### Web App
 
-**All embeddings concatenated (default):**
+PALM also includes a browser-based UI for interactive use. To start the web server:
 
 ```bash
-python 1_datasail_split.py
+# From the parent directory of PALM (i.e. the directory containing the PALM/ package)
+cd /path/to/parent-of-PALM
+
+# Ensure web app deps are installed first (see Installation -> Optional packages -> Web app UI)
+
+# Run directly with uvicorn
+uvicorn PALM.webapp.app:app --host 0.0.0.0 --port 8080 --reload
+
+# Or use the helper script (uses `conda run -n palm`)
+bash PALM/webapp/run.sh [port]
 ```
 
-**Multiple embeddings per entity:**
+Then open `http://localhost:8080` in your browser. The web interface lets you:
+
+1. **Upload** a data file (CSV, JSON, etc.)
+2. **Configure** entity types, feature sets, and splitting techniques
+3. **Run** the pipeline with real-time progress streaming
+4. **Download** results as a ZIP file
+
+---
+
+## Input
+
+### 1. Data file
+
+Any of the supported formats below. The file is loaded into a table where each row represents one interaction pair (an e-entity interacting with an f-entity).
+
+| Format | Extension(s) | Description |
+|--------|-------------|-------------|
+| CSV | `.csv` | Tabular data; any columns |
+| JSON | `.json` | Dict-of-dicts (OC22-style) or list-of-dicts |
+| ASE database | `.db` | ASE SQLite DB; extracts formula + key-value pairs |
+| SMILES | `.smi`, `.smiles` | One SMILES per line, optional ID in second column |
+| SDF | `.sdf` | Multi-molecule SD file; extracts SMILES, formula, all SDF properties |
+| MOL | `.mol` | Single molecule MOL file; extracts SMILES and formula |
+| MOL2 | `.mol2` | Single molecule MOL2 file; extracts SMILES and formula |
+| PDB | `.pdb` | Single PDB file; one row per chain (or per chain–ligand pair) |
+| PDB directory | directory of `.pdb` | All PDB files in a directory |
+| mmCIF | `.cif`, `.mmcif` | Single mmCIF file; one row per chain (or chain–ligand pair) |
+| mmCIF directory | directory of `.cif` | All mmCIF files in a directory |
+| FASTA | `.fasta`, `.fa`, `.faa` | Protein or nucleotide sequences; one row per sequence |
+| CIF directory | directory of `.cif` | Material CIF files (via ASE); extracts formula |
+| XYZ directory | directory of `.xyz` | Material XYZ files (via ASE); extracts formula |
+
+The format is auto-detected from the file extension or directory contents. You can override it with `fmt:` in the config.
+
+All loaders produce a `_row_id` column used to track which split each row is assigned to.
+
+### 2. YAML config
+
+```yaml
+input_file: "path/to/data.csv"
+output_dir: "output"
+dataset_name: "my_dataset"
+
+# Optional row filters applied before splitting
+filters:
+  - column: "some_col"
+    not_equal: ""       # exclude rows where some_col == ""
+  - column: "other_col"
+    not_empty: true     # exclude rows where other_col is blank
+
+# e-entity: one axis of the interaction matrix (e.g. drug, adsorbate, gene)
+e:
+  name: "drug"
+  type: "molecule"          # molecule | material | biomolecule | gene
+  extract:
+    column: "smiles"        # column whose values identify each entity
+  feature_sets:
+    - rdkit_descriptors
+    - physicochemical
+
+# f-entity: the other axis (e.g. protein, surface, phenotype)
+f:
+  name: "protein"
+  type: "biomolecule"
+  extract:
+    column: "sequence"
+  feature_sets:
+    - sequence_properties
+
+# DataSAIL splitting parameters
+splitting:
+  techniques: [R, I1e, I1f, I2, C1e, C1f, C2]
+  splits: [8, 2]            # ratio: 80% train, 20% test
+  names: ["train", "test"]
+  f_clusters: 30
+  max_sec: 300
+  solver: "SCIP"
+```
+
+---
+
+## Entity Types and Feature Sets
+
+### `molecule` — small molecules
+
+Input: SMILES strings (directly in a column, or via `smiles_map` for non-standard identifiers).
+
+| Feature set | Dimensions | Dependencies | Description |
+|-------------|-----------|--------------|-------------|
+| `rdkit_descriptors` | 9 | RDKit | MW, HBD, HBA, lone pairs, TPSA, LogP, heavy atoms, valence/radical electrons |
+| `physicochemical` | 11 | RDKit | MW, atom counts, rotatable bonds, ring counts, aromaticity, fraction sp3 |
+| `composition` | variable | RDKit | Per-element counts + weighted elemental property means (electronegativity, radius, etc.) |
+
+Optional config keys: `smiles_map` (dict mapping identifier → SMILES, for non-SMILES columns).
+
+### `material` — bulk inorganic materials
+
+Input: chemical formula strings (e.g. `Fe2O3`, `Cu3Au`).
+
+| Feature set | Dimensions | Dependencies | Description |
+|-------------|-----------|--------------|-------------|
+| `magpie_properties` | ~130 | none | MAGPIE elemental statistics (mean, range, min, max, std) over the composition |
+| `stoichiometry` | ~10 | none | L1/L2/L3/L5/L7/L10 norms of the stoichiometric vector, element count |
+| `electronic` | ~20 | none | Electronegativity, electron affinity, ionisation energy stats |
+| `bonding` | ~10 | none | Atomic radius, covalent radius stats |
+| `thermodynamic` | ~10 | none | Melting point, cohesive energy stats |
+| `classification` | ~10 | none | Fraction of each block (s/p/d/f), metal/nonmetal/metalloid fractions |
+
+### `biomolecule` — proteins
+
+Input: amino acid sequences (single-letter code).
+
+| Feature set | Dimensions | Dependencies | Description |
+|-------------|-----------|--------------|-------------|
+| `sequence_properties` | 16 | none | Length, MW, hydrophobicity, charge, pI estimate, fraction hydrophobic/polar/aromatic/charged, flexibility, volume, surface area |
+| `esm_embedding` | 320–5120 | torch, transformers | ESM2 protein language model mean-pooled embeddings |
+| `precomputed_embedding` | any | numpy | Load pre-computed embeddings from file (see below) |
+
+Optional config keys:
+- `esm_model`: `esm2_t6` (8M, 320d), `esm2_t12` (35M, 480d), `esm2_t30` (150M, 640d), `esm2_t33` (650M, 1280d, default), `esm2_t36` (3B, 2560d), `esm2_t48` (15B, 5120d)
+- `esm_batch_size`: batch size for GPU inference (default: 8)
+- `embedding_file`: path for `precomputed_embedding`
+
+### `gene` — DNA/RNA sequences
+
+Input: nucleotide sequences (DNA or RNA; U is automatically normalised to T).
+
+| Feature set | Dimensions | Dependencies | Description |
+|-------------|-----------|--------------|-------------|
+| `nucleotide_composition` | 11 | none | Length, per-base frequencies (A/T/G/C), GC%, AT%, GC skew, AT skew, CpG O/E ratio, melting temperature estimate |
+| `kmer_frequencies` | 80 | none | Sliding-window dinucleotide (16) and trinucleotide/codon (64) relative frequencies |
+| `nt_embedding` | 1024–2560 | torch, transformers | DNA language model mean-pooled embeddings (Nucleotide Transformer or DNABERT-2) |
+| `precomputed_embedding` | any | numpy | Load pre-computed embeddings from file |
+
+Optional config keys:
+- `nt_model`: `nt_500m_human_ref` (default), `nt_500m_1000g`, `nt_2500m_multi_species`, `nt_2500m_1000g`, `dnabert2`
+- `nt_batch_size`: batch size for GPU inference (default: 8)
+- `embedding_file`: path for `precomputed_embedding`
+
+#### Precomputed embedding file formats (biomolecule and gene)
+
+| Extension | Expected structure |
+|-----------|-------------------|
+| `.csv` | First column = entity ID (index), remaining columns = embedding dimensions |
+| `.npy` | 2-D array; rows assumed to be in the same order as entities |
+| `.npz` | Must contain `ids` (array of entity IDs) and `embeddings` (2-D float array) |
+| `.pt` / `.pth` | Dict `{entity_id: tensor}` or a bare 2-D tensor (same order as entities) |
+
+---
+
+## Splitting Techniques
+
+DataSAIL provides the following splitting strategies (configure under `splitting.techniques`):
+
+| Code | Name | Description |
+|------|------|-------------|
+| `R` | Random | Baseline random split; no structural constraints |
+| `I1e` | Identity 1 (e-axis) | Split by e-entity identity; no e-entity appears in both sets |
+| `I1f` | Identity 1 (f-axis) | Split by f-entity identity; no f-entity appears in both sets |
+| `I2` | Identity 2 | No e- or f-entity appears in both sets |
+| `C1e` | Cluster 1 (e-axis) | Cluster e-entities by feature similarity; split at cluster boundaries |
+| `C1f` | Cluster 1 (f-axis) | Cluster f-entities by feature similarity; split at cluster boundaries |
+| `C2` | Cluster 2 | Cluster both axes; split at both cluster boundaries simultaneously |
+
+`C1e`, `C1f`, and `C2` are the most stringent and best reflect out-of-distribution generalisation.
+
+Additional splitting parameters:
+- `splits`: list of integers defining split ratios (e.g. `[8, 2]` → 80/20)
+- `names`: split labels (e.g. `["train", "test"]` or `["train", "val", "test"]`)
+- `f_clusters`: number of clusters for f-entity clustering (default: 30)
+- `max_sec`: solver time limit in seconds (default: 300)
+- `solver`: ILP solver (`SCIP` default; `GLPK`, `CPLEX` also supported)
+
+---
+
+## Output
+
+All outputs are written to `<output_dir>/`.
+
+### Feature files
+
+```
+<output_dir>/features/<dataset_name>/<entity_name>/features.csv
+```
+
+One row per unique entity, columns are feature dimensions. These can be reused or inspected independently.
+
+### Split assignment files
+
+```
+<output_dir>/split_result/datasail_split_<technique>_<dataset_name>.csv
+```
+
+One file per splitting technique. Each file has two columns:
+
+| Column | Description |
+|--------|-------------|
+| `_row_id` | Row identifier from the input file |
+| `split` | Assigned split name (`train`, `test`, etc.) or `not selected` |
+
+A summary is printed to stdout for each technique:
+
+```
+--- C2 ---
+  Train: 8,432 (80.1%)
+  Test:  2,098 (19.9%)
+  Saved to output/split_result/datasail_split_C2_my_dataset.csv
+```
+
+---
+
+## Example Configs
+
+### Drug–Protein (molecule + biomolecule)
+
+```yaml
+input_file: "data/drug_protein.csv"
+output_dir: "output"
+dataset_name: "dti"
+
+e:
+  name: "drug"
+  type: "molecule"
+  extract:
+    column: "smiles"
+  feature_sets: [rdkit_descriptors, physicochemical]
+
+f:
+  name: "protein"
+  type: "biomolecule"
+  extract:
+    column: "sequence"
+  feature_sets: [sequence_properties]
+
+splitting:
+  techniques: [R, I1e, I1f, I2, C1e, C1f, C2]
+  splits: [8, 2]
+  names: ["train", "test"]
+```
+
+### Gene–Drug (gene + molecule)
+
+```yaml
+input_file: "data/gene_drug.csv"
+output_dir: "output"
+dataset_name: "gene_drug"
+
+e:
+  name: "gene"
+  type: "gene"
+  extract:
+    column: "nucleotide_sequence"
+  feature_sets: [nucleotide_composition, kmer_frequencies]
+
+f:
+  name: "drug"
+  type: "molecule"
+  extract:
+    column: "smiles"
+  feature_sets: [rdkit_descriptors, physicochemical]
+
+splitting:
+  techniques: [R, I1e, I1f, I2, C1e, C1f, C2]
+  splits: [8, 2]
+  names: ["train", "test"]
+```
+
+### Adsorbate–Surface from OC22 (molecule + material)
+
+```yaml
+input_file: "data/oc22/metadata.json"
+output_dir: "output"
+dataset_name: "oc22"
+
+filters:
+  - column: "ads_symbols"
+    not_equal: ""
+
+e:
+  name: "adsorbate"
+  type: "molecule"
+  extract:
+    column: "ads_symbols"
+  feature_sets: [rdkit_descriptors, composition, physicochemical]
+  smiles_map:
+    "CO": "[C-]#[O+]"
+    "H2O": "O"
+    "O2": "O=O"
+
+f:
+  name: "adsorbent"
+  type: "material"
+  extract:
+    column: "bulk_symbols"
+  feature_sets: [magpie_properties, stoichiometry, electronic, bonding]
+
+splitting:
+  techniques: [R, I1e, I1f, I2, C1e, C1f, C2]
+  splits: [8, 2]
+  names: ["train", "test"]
+  f_clusters: 30
+  solver: "SCIP"
+```
+
+### PDB Protein–Ligand (biomolecule from structure file)
+
+For PDB/mmCIF inputs the loader automatically extracts chains as sequences and detects ligands. The resulting table has one row per (chain, ligand) pair.
+
+```yaml
+input_file: "data/structures/"    # directory of .pdb files
+output_dir: "output"
+dataset_name: "plip"
+
+e:
+  name: "protein"
+  type: "biomolecule"
+  extract:
+    column: "sequence"
+  feature_sets: [sequence_properties]
+
+f:
+  name: "ligand"
+  type: "molecule"
+  extract:
+    column: "ligand_id"           # 3-letter residue name from PDB HETATM
+  feature_sets: [rdkit_descriptors]
+
+splitting:
+  techniques: [R, I1e, I1f, C1e, C1f, C2]
+  splits: [8, 2]
+  names: ["train", "test"]
+```
+
+---
+
+## Installation
+
+### 1. Create a conda environment
 
 ```bash
-python 1_datasail_split.py \
-  --e-embedding features/oc22/adsorbate/physchem_features.csv features/oc22/adsorbate/composition_features.csv \
-  --f-embedding features/oc22/adsorbent/property_features.csv features/oc22/adsorbent/stoichiometry_features.csv
+conda create -n palm python=3.12 -y
+conda activate palm
 ```
 
-**Full options:**
+### 2. Essential packages
 
-```
---e-embedding FILE [FILE ...]   Adsorbate embedding CSV(s)
---f-embedding FILE [FILE ...]   Adsorbent embedding CSV(s)
---f-clusters N                  Number of adsorbent clusters (default: 200)
---max-sec N                     Solver time limit in seconds (default: 300)
---techniques T [T ...]          Splitting techniques (default: R I1e I1f I2 C1e C1f C2)
---splits N [N ...]              Split ratios (default: 8 2)
---names NAME [NAME ...]         Split names (default: train test)
-```
-
-**Available techniques:**
-
-| Technique | Description |
-|-----------|-------------|
-| `R` | Random split |
-| `I1e` | Identity-cold on adsorbate |
-| `I1f` | Identity-cold on adsorbent |
-| `I2` | Identity-cold on both |
-| `C1e` | Cluster-cold on adsorbate |
-| `C1f` | Cluster-cold on adsorbent |
-| `C2` | Cluster-cold on both (double-cold) |
-
-Output CSVs are saved to `output/split_result/` with columns `system_id` and `split`, tagged by embedding names (e.g., `datasail_split_C2__e_physchem__f_property.csv`).
-
-### 3. Summary Dashboard
-
-`2_summary.py` generates overview figures for comparing all feature pair combinations, showing raw coverage and overlap metrics side by side. Use this to narrow down which (method, feature pair) to use.
+These are required for the pipeline to run at all.
 
 ```bash
-# Compare all feature pairs across all methods
-python 2_summary.py
+# Core pipeline (splitting engine, config, data loading)
+pip install datasail pandas numpy pyyaml scipy
 
-# Compare feature pairs for a specific method
-python 2_summary.py --method C1e
-
-# Custom output directory
-python 2_summary.py -o output/summary
+# Molecule featurisation and SDF/MOL/MOL2 file loading
+pip install rdkit
 ```
 
-**Per-method figures** (`output/summary/summary_{method}.png`):
-- **(a) Coverage** — stacked train/test bar chart with coverage % annotations
-- **(b) Overlap** — grouped bars for pair, adsorbate, and adsorbent overlap counts
+### 3. Optional packages
 
-**Cross-method figure** (`output/summary/summary_cross_method.png`):
-- **(a) Coverage heatmap** — feature pairs (rows) × methods (columns), colored by coverage %
-- **(b) Overlap heatmap** — same layout, showing P(air)/A(dsorbate)/B(adsorbent) overlap breakdown per cell
+Install only what you need for your data type.
 
-### 4. Deep Analysis
+#### Web app UI (FastAPI server)
 
-`3_analysis.py` performs detailed analysis on selected splits. Use this after narrowing down candidates with the summary dashboard.
+Mandatory for the current web app phase.
 
 ```bash
-# Analyze a single split
-python 3_analysis.py output/split_result/datasail_split_C2__e_rdkit_descriptors__f_stoichiometry.csv
-
-# Compare multiple selected splits
-python 3_analysis.py output/split_result/datasail_split_C2__e_rdkit_descriptors__f_stoichiometry.csv \
-                      output/split_result/datasail_split_C1e__e_rdkit_descriptors__f_bonding.csv
-
-# Custom embeddings for UMAP and NN distance computation
-python 3_analysis.py --e-embedding features/oc22/adsorbate/physchem_features.csv \
-                     --f-embedding features/oc22/adsorbent/property_features.csv \
-                     output/split_result/datasail_split_C2__e_rdkit_descriptors__f_stoichiometry.csv
+# FastAPI app server + ASGI runtime
+pip install fastapi uvicorn pydantic python-multipart
 ```
 
-**Per-split figures** (`output/analysis/analysis_{label}.png`):
-- **(a) Adsorbent UMAP** — 2D projection colored by train/test/not-selected
-- **(b) Adsorbate UMAP** — 2D projection with labeled points
-- **(c) Adsorbate distribution** — per-adsorbate train vs test system counts
-- **(d) Adsorbent NN distance** — histogram of test→nearest-train distances in feature space
-- **(e) Adsorbate NN distance** — histogram of test→nearest-train distances
-- **(f) Summary statistics** — table with all key metrics
+#### Biomolecule / material entity types
 
-**Comparison figure** (`output/analysis/analysis_comparison.png`, when multiple splits given):
-- **(a) Entity overlap** — grouped bars comparing pair/adsorbate/adsorbent overlap
-- **(b) Split size distribution** — stacked bars with coverage %
-- **(c) Mean NN distances** — grouped bars for adsorbate and adsorbent separation
-- **(d) NN distance distributions** — box plots for direct comparison
+```bash
+# PDB and mmCIF structure loading — falls back to built-in parser if absent
+pip install biopython
 
-## Dataset
-The dataset is downloaded from [is2res_total_train_val_test_lmdbs](https://dl.fbaipublicfiles.com/opencatalystproject/data/oc22/is2res_total_train_val_test_lmdbs.tar.gz)
-
-## Generated Features
-
-### Adsorbate Features (`features/oc22/adsorbate/`)
-
-| File | Features | Description |
-|------|----------|-------------|
-| `physchem_features.csv` | 15 | Catalysis-relevant physicochemical properties (hardcoded per adsorbate): mol weight, atom counts, radical info, dipole moment, proton affinity, gas-phase BDE, electron affinity, ionization energy, polarizability |
-| `rdkit_descriptors_features.csv` | 9 | RDKit molecular descriptors corrected for small radical species: MolWt, H-bond donors/acceptors, lone pairs, TPSA, MolLogP, valence/radical electrons |
-| `composition_features.csv` | 10 | Element counts + composition-weighted elemental property means |
-| `adsorption_features.csv` | 12 | Surface interaction descriptors (hardcoded from NIST/literature): HOMO/LUMO energies, chemical hardness/softness, electrophilicity index, formation enthalpy, entropy, characteristic vibrational frequency, bond order, lone pair/pi bond flags, surface binding mode |
-
-### Adsorbent Features (`features/oc22/adsorbent/`)
-
-| File | Features | Description |
-|------|----------|-------------|
-| `property_features.csv` | 30 | Magpie-style statistics (mean, std, min, max, range) of 6 elemental properties (atomic number, mass, electronegativity, covalent radius, electron affinity, ionization energy) weighted by composition |
-| `stoichiometry_features.csv` | 8 | Num elements, total atoms, Shannon entropy, and p-norms of composition vector (L2, L3, L5, L7, L10) |
-| `electronic_features.csv` | 12 | d-electron statistics (mean, std, range, max, min), valence electron stats, oxidation state stats, work function stats — d-band center proxies for catalytic activity |
-| `bonding_features.csv` | 10 | Metal-oxygen bonding character: electronegativity difference, ionic radius, radius ratio, Pauling bond ionicity, Sanderson oxide basicity, metal-to-O ratio, polarizability, perovskite tolerance factor |
-| `thermodynamic_features.csv` | 8 | Stability/reactivity indicators: metal melting point stats, oxide formation enthalpy, reducibility index, mass-weighted mixing entropy |
-| `catalytic_features.csv` | 8 | Catalysis-specific: transition metal/noble metal/rare earth flags, TM fraction, d-band filling, metal diversity, electronegativity spread, weighted electron affinity |
-
-## Project Structure
-
-```
-PALM/
-├── 0_gen_features.py          # Feature generation
-├── 1_datasail_split.py        # DataSAIL splitting
-├── 2_summary.py               # Summary dashboard (coverage & overlap comparison)
-├── 3_analysis.py              # Deep analysis (UMAP, NN distances, distributions)
-├── data/oc22/                 # Raw dataset
-├── features/oc22/             # Generated features
-│   ├── adsorbate/             #   Adsorbate feature CSVs
-│   └── adsorbent/             #   Adsorbent feature CSVs
-└── output/
-    ├── split_result/          # Split CSV outputs
-    ├── summary/               # Summary dashboard figures
-    └── analysis/              # Deep analysis figures
+# CIF, XYZ, and ASE .db file loading (material entity type)
+pip install ase
 ```
 
-## Contributors
-- [Ray Zhu](https://github.com/Ray16)
-- [Rodrigo Ferreira](https://github.com/rpf00)
+#### Language model embeddings
 
-## License
-The dataset is licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode)
+Only needed if you include `esm_embedding` (proteins) or `nt_embedding` (genes)
+in your feature sets.
 
-## Contribution
-Contributions are welcome! Please open an issue or submit a pull request.
+```bash
+# PyTorch — match your CUDA version; see https://pytorch.org
+pip install torch
+
+# ESM2 (proteins), Nucleotide Transformer / DNABERT-2 (genes)
+pip install transformers
+```
+
+#### Cluster-based splitting (`C1e`, `C1f`, `C2` techniques)
+
+DataSAIL uses external bioinformatics tools for sequence/structure clustering.
+These are only needed when using `C1e`, `C1f`, or `C2` with biomolecule or gene
+entities. For molecule and material entities, clustering uses built-in
+feature-vector methods and none of these are required.
+
+```bash
+# Protein and nucleotide sequence clustering
+mamba install -c bioconda mmseqs2 cd-hit -y
+
+# Protein homology search
+mamba install -c bioconda diamond -y
+
+# Structure-based clustering and alignment
+mamba install -c bioconda foldseek -y
+mamba install -c bioconda tmalign -y
+
+# k-mer sketch similarity (genomic data)
+mamba install -c bioconda mash -y
+```
+
+### 4. Verify installation
+
+```bash
+# Essential
+python -c "import datasail, rdkit, pandas, numpy; print('Essential deps OK')"
+
+# Mandatory for current web app phase
+python -c "import fastapi, uvicorn, pydantic, multipart; print('web app deps OK')"
+
+# Optional (run whichever apply to your use case)
+python -c "import ase; from Bio import SeqIO; print('biomolecule/material deps OK')"
+python -c "import torch, transformers; print('LM embedding deps OK')"
+```
+
+---
+
+## Dependencies
+
+### Essential
+
+| Package | Purpose |
+|---------|---------|
+| `datasail` | Splitting engine (ILP-based train/test assignment) |
+| `pandas`, `numpy` | Data loading and feature matrices |
+| `pyyaml` | Config file parsing |
+| `scipy` | Distance matrix computation for clustering |
+| `rdkit` | Molecule featurisation; SDF/MOL/MOL2 file loading |
+
+### Optional
+
+| Package | Purpose | Required for |
+|---------|---------|-------------|
+| `biopython` | PDB/mmCIF parsing | Biomolecule entity from structure files; falls back to built-in parser if absent |
+| `ase` | CIF/XYZ/.db file loading | Material entity from structure files |
+| `fastapi`, `uvicorn`, `pydantic`, `python-multipart` | Web server, request models, file upload handling | Web app UI (`PALM.webapp.app`) |
+| `torch` | GPU tensor computation | `esm_embedding` or `nt_embedding` feature sets |
+| `transformers` | ESM2, Nucleotide Transformer, DNABERT-2 | `esm_embedding` or `nt_embedding` feature sets |
+
+### Optional external binaries (cluster-based splitting only)
+
+Only needed for `C1e`, `C1f`, `C2` techniques with biomolecule or gene entities.
+Molecule and material clustering uses built-in feature-vector methods.
+
+| Tool | Install via | Purpose |
+|------|------------|---------|
+| `mmseqs2` | `mamba install -c bioconda mmseqs2` | Sequence clustering (proteins, genes) |
+| `cd-hit` | `mamba install -c bioconda cd-hit` | Protein sequence clustering |
+| `diamond` | `mamba install -c bioconda diamond` | Protein homology search |
+| `foldseek` | `mamba install -c bioconda foldseek` | Structure-based clustering |
+| `TMalign` | `mamba install -c bioconda tmalign` | Structure alignment |
+| `mash` | `mamba install -c bioconda mash` | k-mer sketch similarity (genomic) |
