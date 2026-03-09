@@ -188,6 +188,7 @@ select:focus,input[type=text]:focus{border-color:var(--primary);
           </svg>
           <span id="file-name-text"></span>
         </div>
+        <p id="detect-summary" style="display:none;margin-top:.6rem;font-size:.82rem;color:var(--muted);"></p>
       </div>
       <input type="file" id="file-input" accept=".csv,.json,.sdf,.smi,.smiles,.fasta,.fa,.faa,.pdb,.cif,.mmcif,.mol,.mol2">
       <div class="btn-row">
@@ -202,11 +203,25 @@ select:focus,input[type=text]:focus{border-color:var(--primary);
   <div class="panel" id="p2">
     <div class="card">
       <div class="card-title">⚙️ Configure entities</div>
-      <div class="grid-2">
+
+      <!-- Mode toggle -->
+      <div class="form-group" style="margin-bottom:1.25rem;">
+        <label>Splitting mode</label>
+        <div style="display:flex;gap:.5rem;margin-top:.3rem;">
+          <label class="feat-pill" style="padding:.4rem .9rem;font-size:.85rem;">
+            <input type="radio" name="split-mode" value="1d" onchange="toggleMode()"> Single entity (1D)
+          </label>
+          <label class="feat-pill" style="padding:.4rem .9rem;font-size:.85rem;">
+            <input type="radio" name="split-mode" value="2d" checked onchange="toggleMode()"> Interaction (2D)
+          </label>
+        </div>
+      </div>
+
+      <div class="grid-2" id="entity-grid">
 
         <!-- E entity -->
         <div class="entity-card">
-          <div class="entity-title">Entity 1 <span>1</span></div>
+          <div class="entity-title" id="e-title">Entity 1 <span>1</span></div>
           <div class="form-group">
             <label>Name</label>
             <input type="text" id="e-name" placeholder="e.g. drug" value="entity_1">
@@ -231,7 +246,7 @@ select:focus,input[type=text]:focus{border-color:var(--primary);
         </div>
 
         <!-- F entity -->
-        <div class="entity-card">
+        <div class="entity-card" id="f-entity-card">
           <div class="entity-title">Entity 2 <span>2</span></div>
           <div class="form-group">
             <label>Name</label>
@@ -376,7 +391,7 @@ const FEAT_DEFAULTS = {
   gene:        ['nucleotide_composition','kmer_frequencies'],
 };
 
-const TECHNIQUES = [
+const TECHNIQUES_2D = [
   {id:'R',   name:'Random',          desc:'Baseline random split'},
   {id:'I1e', name:'Identity (1)',    desc:'No entity 1 shared across sets'},
   {id:'I1f', name:'Identity (2)',    desc:'No entity 2 shared across sets'},
@@ -386,6 +401,12 @@ const TECHNIQUES = [
   {id:'C2',  name:'Cluster (both)', desc:'Cluster both axes (most rigorous)'},
 ];
 
+const TECHNIQUES_1D = [
+  {id:'R',   name:'Random',    desc:'Baseline random split'},
+  {id:'I1e', name:'Identity',  desc:'No shared entities across sets'},
+  {id:'C1e', name:'Cluster',   desc:'Cluster entities by features (most rigorous)'},
+];
+
 // ── Initialise ────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
   setupDropzone();
@@ -393,6 +414,20 @@ window.addEventListener('DOMContentLoaded', () => {
   updateFeatures('e');
   updateFeatures('f');
 });
+
+function getMode() {
+  return document.querySelector('input[name="split-mode"]:checked')?.value || '2d';
+}
+
+function toggleMode() {
+  const is1d = getMode() === '1d';
+  document.getElementById('f-entity-card').style.display = is1d ? 'none' : '';
+  document.getElementById('entity-grid').style.gridTemplateColumns = is1d ? '1fr' : '1fr 1fr';
+  document.getElementById('e-title').innerHTML = is1d
+    ? 'Entity'
+    : 'Entity 1 <span>1</span>';
+  buildTechniqueGrid();
+}
 
 // ── Steps ─────────────────────────────────────────────────────────────────
 function goStep(n) {
@@ -454,8 +489,70 @@ async function handleFile(file) {
     if (columns.length >= 2) {
       document.getElementById('f-col').value = columns[1];
     }
+
+    // Apply auto-detection hints (user can still override everything)
+    applyHints(data.hints);
+
   } catch(err) {
     showError('upload', err.message);
+  }
+}
+
+const TYPE_LABELS = {
+  molecule: 'Molecule', material: 'Material',
+  biomolecule: 'Biomolecule', gene: 'Gene',
+};
+
+function applyHints(hints) {
+  const summary = document.getElementById('detect-summary');
+  if (!hints) { summary.style.display = 'none'; return; }
+
+  const parts = [];
+
+  if (hints.suggested_e) {
+    applyEntityHint('e', hints.suggested_e);
+    parts.push(`${hints.suggested_e.name} (${TYPE_LABELS[hints.suggested_e.type] || hints.suggested_e.type})`);
+  }
+  if (hints.suggested_f) {
+    applyEntityHint('f', hints.suggested_f);
+    parts.push(`${hints.suggested_f.name} (${TYPE_LABELS[hints.suggested_f.type] || hints.suggested_f.type})`);
+  }
+
+  // Auto-select 1D mode when only one entity type detected
+  if (hints.suggested_e && !hints.suggested_f) {
+    document.querySelector('input[name="split-mode"][value="1d"]').checked = true;
+    toggleMode();
+    parts.push('(1D mode)');
+  } else if (hints.suggested_e && hints.suggested_f) {
+    document.querySelector('input[name="split-mode"][value="2d"]').checked = true;
+    toggleMode();
+  }
+
+  if (parts.length) {
+    summary.textContent = 'Auto-detected: ' + parts.join(' + ');
+    summary.style.display = 'block';
+  } else {
+    summary.style.display = 'none';
+  }
+}
+
+function applyEntityHint(axis, hint) {
+  if (hint.type) {
+    document.getElementById(axis + '-type').value = hint.type;
+  }
+  if (hint.column && columns.includes(hint.column)) {
+    document.getElementById(axis + '-col').value = hint.column;
+  }
+  if (hint.name) {
+    document.getElementById(axis + '-name').value = hint.name;
+  }
+  // Rebuild feature checkboxes for the detected type
+  updateFeatures(axis);
+  // Override with hint-specific feature sets if provided
+  if (hint.feature_sets && hint.feature_sets.length) {
+    document.querySelectorAll(`input[name="${axis}-feat"]`).forEach(cb => {
+      cb.checked = hint.feature_sets.includes(cb.value);
+    });
   }
 }
 
@@ -476,11 +573,16 @@ function updateFeatures(axis) {
 
 // ── Technique grid ────────────────────────────────────────────────────────
 function buildTechniqueGrid() {
+  const is1d = getMode() === '1d';
+  const techniques = is1d ? TECHNIQUES_1D : TECHNIQUES_2D;
+  const defaults1d = ['R', 'C1e'];
+  const defaults2d = ['R', 'I2'];
+  const defaults = is1d ? defaults1d : defaults2d;
   const grid = document.getElementById('technique-grid');
-  grid.innerHTML = TECHNIQUES.map(t => `
+  grid.innerHTML = techniques.map(t => `
     <label class="technique-item">
       <input type="checkbox" name="technique" value="${t.id}"
-        ${['R','I2'].includes(t.id) ? 'checked' : ''}>
+        ${defaults.includes(t.id) ? 'checked' : ''}>
       <div>
         <div class="technique-name">${t.name} <code style="font-size:.7rem;opacity:.7">${t.id}</code></div>
         <div class="technique-desc">${t.desc}</div>
@@ -497,28 +599,50 @@ function getChecked(name) {
 async function startJob() {
   if (!jobId) { alert('Please upload a file first.'); return; }
 
+  const is1d = getMode() === '1d';
   const techniques = getChecked('technique');
   if (!techniques.length) { alert('Select at least one splitting technique.'); return; }
+
+  const eFeatSets = getChecked('e-feat');
+  if (!eFeatSets.length) { alert('Select at least one feature set for Entity 1.'); return; }
+
+  const eName = document.getElementById('e-name').value.trim();
+  if (!eName) { alert('Entity name cannot be empty.'); return; }
+
+  const eCol = document.getElementById('e-col').value;
 
   const payload = {
     dataset_name: document.getElementById('dataset-name').value || 'dataset',
     e: {
-      name:         document.getElementById('e-name').value || 'entity_1',
+      name:         eName,
       type:         document.getElementById('e-type').value,
-      column:       document.getElementById('e-col').value,
-      feature_sets: getChecked('e-feat'),
-    },
-    f: {
-      name:         document.getElementById('f-name').value || 'entity_2',
-      type:         document.getElementById('f-type').value,
-      column:       document.getElementById('f-col').value,
-      feature_sets: getChecked('f-feat'),
+      column:       eCol,
+      feature_sets: eFeatSets,
     },
     splitting: {
       techniques,
       ratio: document.getElementById('ratio').value,
     },
   };
+
+  if (!is1d) {
+    const fCol = document.getElementById('f-col').value;
+    if (eCol === fCol) { alert('Entity 1 and Entity 2 must use different columns.'); return; }
+
+    const fFeatSets = getChecked('f-feat');
+    if (!fFeatSets.length) { alert('Select at least one feature set for Entity 2.'); return; }
+
+    const fName = document.getElementById('f-name').value.trim();
+    if (!fName) { alert('Entity 2 name cannot be empty.'); return; }
+    if (eName === fName) { alert('Entity 1 and Entity 2 must have different names.'); return; }
+
+    payload.f = {
+      name:         fName,
+      type:         document.getElementById('f-type').value,
+      column:       fCol,
+      feature_sets: fFeatSets,
+    };
+  }
 
   goStep(3);
   resetProgress();
@@ -632,6 +756,7 @@ function resetAll() {
   if (evtSrc) { evtSrc.close(); evtSrc = null; }
   document.getElementById('file-input').value = '';
   document.getElementById('file-name-badge').style.display = 'none';
+  document.getElementById('detect-summary').style.display = 'none';
   document.getElementById('btn-next-1').disabled = true;
   goStep(1);
 }

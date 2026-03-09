@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "palm"
+version = "0.2.0"
+description = "Physics-Aware Leakage Minimizer — scientifically rigorous train/test splitting"
+license = "MIT"
+requires-python = ">=3.10"
+dependencies = [
+    "datasail",
+    "pandas",
+    "numpy",
+    "pyyaml",
+    "scipy",
+    "scikit-learn",
+]
+
+[project.optional-dependencies]
+web = [
+    "fastapi",
+    "uvicorn",
+    "pydantic",
+    "python-multipart",
+]
+molecules = [
+    "rdkit",
+]
+materials = [
+    "ase",
+]
+bio = [
+    "biopython",
+]
+embeddings = [
+    "torch",
+    "transformers",
+]
+all = [
+    "palm[web,molecules,materials,bio,embeddings]",
+]
+dev = [
+    "palm[all]",
+    "pytest",
+]
+
+[project.scripts]
+palm = "PALM.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["PALM*"]

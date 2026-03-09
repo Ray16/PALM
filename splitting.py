@@ -1,10 +1,14 @@
-"""DataSAIL integration for 2D dataset splitting."""
+"""DataSAIL integration for 1D and 2D dataset splitting."""
 
+import logging
+import os
 import time
 import numpy as np
 from scipy.spatial.distance import pdist, squareform
 from sklearn.preprocessing import StandardScaler
 from datasail.sail import datasail
+
+logger = logging.getLogger(__name__)
 
 
 def compute_dist_matrix(data_dict, use_cosine=False, use_pca=False, pca_components=20):
@@ -48,71 +52,71 @@ def run_technique(technique, common_kwargs):
     return technique, i_s[technique], time.time() - t0
 
 
-def run_splitting(e_data, f_data, interactions, config):
+def run_splitting(e1_data, e2_data, interactions, config):
     """Run DataSAIL splitting with adaptive sparsity handling.
 
     Args:
-        e_data: dict {entity_name: feature_vector} for e-entities
-        f_data: dict {entity_name: feature_vector} for f-entities
-        interactions: list of (e_name, f_name) tuples
+        e1_data: dict {entity_name: feature_vector} for e1-entities
+        e2_data: dict {entity_name: feature_vector} for e2-entities
+        interactions: list of (e1_name, e2_name) tuples
         config: SplittingConfig object
 
     Returns:
-        dict mapping technique -> dict mapping (e_id, f_id) -> split_name
+        dict mapping technique -> dict mapping (e1_id, e2_id) -> split_name
     """
     from concurrent.futures import ProcessPoolExecutor, as_completed
 
     # Check feature sparsity
-    e_features = np.array([e_data[n] for n in sorted(e_data.keys())])
-    f_features = np.array([f_data[n] for n in sorted(f_data.keys())])
-    e_sparsity = (e_features == 0).sum() / e_features.size
-    f_sparsity = (f_features == 0).sum() / f_features.size
-    print(f"  E-entity feature sparsity: {e_sparsity * 100:.1f}%")
-    print(f"  F-entity feature sparsity: {f_sparsity * 100:.1f}%")
+    e1_features = np.array([e1_data[n] for n in sorted(e1_data.keys())])
+    e2_features = np.array([e2_data[n] for n in sorted(e2_data.keys())])
+    e1_sparsity = (e1_features == 0).sum() / e1_features.size
+    e2_sparsity = (e2_features == 0).sum() / e2_features.size
+    logger.info(f"  Entity1 feature sparsity: {e1_sparsity * 100:.1f}%")
+    logger.info(f"  Entity2 feature sparsity: {e2_sparsity * 100:.1f}%")
 
     # Adaptive distance metric selection
-    use_pca_e = e_sparsity > 0.9 and "C2" in config.techniques
-    use_pca_f = f_sparsity > 0.9 and "C2" in config.techniques
-    use_cosine_e = e_sparsity > 0.5 and not use_pca_e
-    use_cosine_f = f_sparsity > 0.5 and not use_pca_f
+    use_pca_e1 = e1_sparsity > 0.9 and "C2" in config.techniques
+    use_pca_e2 = e2_sparsity > 0.9 and "C2" in config.techniques
+    use_cosine_e1 = e1_sparsity > 0.5 and not use_pca_e1
+    use_cosine_e2 = e2_sparsity > 0.5 and not use_pca_e2
 
-    if use_pca_e or use_pca_f:
-        print(f"  Using PCA dimensionality reduction: {'E' if use_pca_e else ''}{' F' if use_pca_f else ''}")
-    if use_cosine_e or use_cosine_f:
-        print(f"  Using cosine distance for: {'E' if use_cosine_e else ''}{' F' if use_cosine_f else ''}")
+    if use_pca_e1 or use_pca_e2:
+        logger.info(f"  Using PCA dimensionality reduction: {'E1' if use_pca_e1 else ''}{' E2' if use_pca_e2 else ''}")
+    if use_cosine_e1 or use_cosine_e2:
+        logger.info(f"  Using cosine distance for: {'E1' if use_cosine_e1 else ''}{' E2' if use_cosine_e2 else ''}")
 
     # Compute distance matrices
-    e_names, e_dist = compute_dist_matrix(e_data, use_cosine=use_cosine_e, use_pca=use_pca_e)
-    f_names, f_dist = compute_dist_matrix(f_data, use_cosine=use_cosine_f, use_pca=use_pca_f)
-    print(f"  Distance matrices: e={e_dist.shape}, f={f_dist.shape}")
+    e1_names, e1_dist = compute_dist_matrix(e1_data, use_cosine=use_cosine_e1, use_pca=use_pca_e1)
+    e2_names, e2_dist = compute_dist_matrix(e2_data, use_cosine=use_cosine_e2, use_pca=use_pca_e2)
+    logger.info(f"  Distance matrices: e1={e1_dist.shape}, e2={e2_dist.shape}")
 
-    # Adaptive f_clusters based on sparsity
-    if f_sparsity > 0.5:
-        if f_sparsity > 0.9:
-            adaptive_f_clusters = max(5, min(10, len(f_data) // 50))
+    # Adaptive e2_clusters based on sparsity
+    if e2_sparsity > 0.5:
+        if e2_sparsity > 0.9:
+            adaptive_e2_clusters = max(5, min(10, len(e2_data) // 50))
         else:
-            adaptive_f_clusters = min(20, len(f_data) // 20)
-        print(f"  High sparsity detected! Reducing f_clusters: {config.f_clusters} -> {adaptive_f_clusters}")
+            adaptive_e2_clusters = min(20, len(e2_data) // 20)
+        logger.info(f"  High sparsity detected! Reducing e2_clusters: {config.e2_clusters} -> {adaptive_e2_clusters}")
     else:
-        adaptive_f_clusters = config.f_clusters
-        print(f"  Using f_clusters: {adaptive_f_clusters}")
+        adaptive_e2_clusters = config.e2_clusters
+        logger.info(f"  Using e2_clusters: {adaptive_e2_clusters}")
 
-    # Adaptive e_clusters and relaxation for C2 with sparse features
-    adaptive_e_clusters = min(9, len(e_data))
+    # Adaptive e1_clusters and relaxation for C2 with sparse features
+    adaptive_e1_clusters = min(9, len(e1_data))
     adaptive_delta = 0.1
     adaptive_epsilon = 0.1
     adaptive_max_sec = config.max_sec
 
-    if "C2" in config.techniques and f_sparsity > 0.5:
-        adaptive_e_clusters = max(2, min(3, len(e_data) // 3))
+    if "C2" in config.techniques and e2_sparsity > 0.5:
+        adaptive_e1_clusters = max(2, min(3, len(e1_data) // 3))
         adaptive_delta = 0.4
         adaptive_epsilon = 0.4
         adaptive_max_sec = max(600, config.max_sec * 2)
-        print(f"  C2 constraint relaxation for sparse features:")
-        print(f"    e_clusters: {min(9, len(e_data))} -> {adaptive_e_clusters}")
-        print(f"    delta/epsilon: 0.1 -> {adaptive_delta}")
-        print(f"    max_sec: {config.max_sec} -> {adaptive_max_sec}")
-        print(f"  WARNING: C2 may still fail with high-sparsity features!")
+        logger.info(f"  C2 constraint relaxation for sparse features:")
+        logger.info(f"    e1_clusters: {min(9, len(e1_data))} -> {adaptive_e1_clusters}")
+        logger.info(f"    delta/epsilon: 0.1 -> {adaptive_delta}")
+        logger.info(f"    max_sec: {config.max_sec} -> {adaptive_max_sec}")
+        logger.warning(f"  C2 may still fail with high-sparsity features!")
 
     # Build DataSAIL kwargs
     common_kwargs = dict(
@@ -122,35 +126,147 @@ def run_splitting(e_data, f_data, interactions, config):
         solver=config.solver,
         max_sec=adaptive_max_sec,
         e_type="O",
-        e_data=e_data,
-        e_dist=(e_names, e_dist),
-        e_clusters=adaptive_e_clusters,
+        e_data=e1_data,
+        e_dist=(e1_names, e1_dist),
+        e_clusters=adaptive_e1_clusters,
         f_type="O",
-        f_data=f_data,
-        f_dist=(f_names, f_dist),
-        f_clusters=adaptive_f_clusters,
+        f_data=e2_data,
+        f_dist=(e2_names, e2_dist),
+        f_clusters=adaptive_e2_clusters,
         inter=interactions,
         delta=adaptive_delta,
         epsilon=adaptive_epsilon,
     )
 
     # Run techniques in parallel
-    print(f"  Running {len(config.techniques)} techniques in parallel...")
+    logger.info(f"  Running {len(config.techniques)} techniques in parallel...")
     all_inter_splits = {}
     t_start = time.time()
 
-    with ProcessPoolExecutor(max_workers=len(config.techniques)) as pool:
+    with ProcessPoolExecutor(max_workers=min(len(config.techniques), os.cpu_count() or 4)) as pool:
         futures = {pool.submit(run_technique, t, common_kwargs): t for t in config.techniques}
         for future in as_completed(futures):
             technique, result, elapsed = future.result()
             all_inter_splits[technique] = result
-            print(f"    {technique} finished in {elapsed:.1f}s")
+            logger.info(f"    {technique} finished in {elapsed:.1f}s")
 
-    print(f"  All techniques finished in {time.time() - t_start:.1f}s")
+    logger.info(f"  All techniques finished in {time.time() - t_start:.1f}s")
 
     # Extract first run results
     results = {}
     for technique, run_results in all_inter_splits.items():
         results[technique] = run_results[0]
 
+    return results
+
+
+# ── 1D splitting (single entity, no interactions) ────────────────────────
+
+# Techniques that work for 1D (no e2-entity / no interactions)
+TECHNIQUES_1D = {"R", "I1e", "C1e"}
+
+# Map 2D techniques to 1D equivalents
+TECHNIQUE_MAP_1D = {
+    "R": "R", "I1e": "I1e", "C1e": "C1e",
+    "I1f": "I1e", "I2": "I1e",
+    "C1f": "C1e", "C2": "C1e",
+}
+
+
+def run_technique_1d(technique, common_kwargs, use_self_inter):
+    """Run a single 1D DataSAIL technique."""
+    t0 = time.time()
+    e_s, f_s, i_s = datasail(techniques=[technique], **common_kwargs)
+    if use_self_inter:
+        # R technique: extract from i_splits, convert (e,e) -> e
+        result = {k[0]: v for k, v in i_s[technique][0].items()}
+    else:
+        # C1e / I1e: extract from e_splits
+        result = e_s[technique][0]
+    return technique, result, time.time() - t0
+
+
+def run_splitting_1d(e_data, config):
+    """Run DataSAIL splitting for 1D data (single entity, no interactions).
+
+    Args:
+        e_data: dict {entity_name: feature_vector}
+        config: SplittingConfig object
+
+    Returns:
+        dict mapping technique -> dict mapping entity_id -> split_name
+    """
+    from concurrent.futures import ProcessPoolExecutor, as_completed
+
+    # Map requested techniques to valid 1D equivalents (deduplicate)
+    mapped = {}
+    for t in config.techniques:
+        t1d = TECHNIQUE_MAP_1D.get(t, t)
+        if t1d not in TECHNIQUES_1D:
+            logger.warning(f"  Skipping unsupported 1D technique: {t}")
+            continue
+        if t1d not in mapped:
+            mapped[t1d] = t  # keep original name for first mapping
+
+    if not mapped:
+        raise ValueError("No valid 1D techniques selected")
+
+    techniques_to_run = list(mapped.keys())
+    logger.info(f"  1D techniques: {techniques_to_run}")
+
+    # Check feature sparsity
+    e_features = np.array([e_data[n] for n in sorted(e_data.keys())])
+    e_sparsity = (e_features == 0).sum() / e_features.size
+    logger.info(f"  Feature sparsity: {e_sparsity * 100:.1f}%")
+
+    use_pca = e_sparsity > 0.9
+    use_cosine = e_sparsity > 0.5 and not use_pca
+
+    # Compute distance matrix
+    e_names, e_dist = compute_dist_matrix(e_data, use_cosine=use_cosine, use_pca=use_pca)
+    logger.info(f"  Distance matrix: {e_dist.shape}")
+
+    adaptive_e_clusters = min(9, len(e_data))
+
+    # Build separate kwargs for R (needs self-interactions) vs C1e/I1e (does not)
+    base_kwargs = dict(
+        splits=config.splits,
+        names=config.names,
+        runs=1,
+        solver=config.solver,
+        max_sec=config.max_sec,
+        e_type="O",
+        e_data=e_data,
+        e_dist=(e_names, e_dist),
+        e_clusters=adaptive_e_clusters,
+        delta=0.1,
+        epsilon=0.1,
+    )
+
+    # R technique needs self-interactions + f_data
+    r_kwargs = dict(
+        **base_kwargs,
+        f_type="O",
+        f_data=e_data,
+        f_dist=(e_names, e_dist),
+        f_clusters=adaptive_e_clusters,
+        inter=[(n, n) for n in sorted(e_data.keys())],
+    )
+
+    results = {}
+    t_start = time.time()
+
+    with ProcessPoolExecutor(max_workers=min(len(techniques_to_run), os.cpu_count() or 4)) as pool:
+        futures = {}
+        for t in techniques_to_run:
+            use_self_inter = (t == "R")
+            kwargs = r_kwargs if use_self_inter else base_kwargs
+            futures[pool.submit(run_technique_1d, t, kwargs, use_self_inter)] = t
+
+        for future in as_completed(futures):
+            technique, result, elapsed = future.result()
+            results[technique] = result
+            logger.info(f"    {technique} finished in {elapsed:.1f}s")
+
+    logger.info(f"  All techniques finished in {time.time() - t_start:.1f}s")
     return results

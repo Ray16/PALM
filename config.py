@@ -2,7 +2,7 @@
 
 import os
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import List, Optional
 
 import yaml
 
@@ -52,7 +52,7 @@ class SplittingConfig:
     techniques: list = field(default_factory=lambda: ["R", "I1e", "I1f", "I2", "C1e", "C1f", "C2"])
     splits: list = field(default_factory=lambda: [8, 2])
     names: list = field(default_factory=lambda: ["train", "test"])
-    f_clusters: int = 30
+    e2_clusters: int = 30
     max_sec: int = 300
     solver: str = "SCIP"
 
@@ -69,10 +69,26 @@ class PipelineConfig:
     input_file: str
     output_dir: str
     dataset_name: str
-    e: EntityConfig
-    f: EntityConfig
+    e1: EntityConfig
+    e2: Optional[EntityConfig] = None
     splitting: SplittingConfig = field(default_factory=SplittingConfig)
     filters: list = field(default_factory=list)
+
+
+def _parse_entity(raw: dict) -> EntityConfig:
+    """Parse an entity config block from YAML."""
+    return EntityConfig(
+        name=raw["name"],
+        type=raw["type"],
+        extract_column=raw["extract"]["column"],
+        feature_sets=raw.get("feature_sets", []),
+        smiles_map=raw.get("smiles_map"),
+        esm_model=raw.get("esm_model", "esm2_t33"),
+        esm_batch_size=raw.get("esm_batch_size", 8),
+        nt_model=raw.get("nt_model", "nt_500m_human_ref"),
+        nt_batch_size=raw.get("nt_batch_size", 8),
+        embedding_file=raw.get("embedding_file"),
+    )
 
 
 def load_config(path):
@@ -80,34 +96,11 @@ def load_config(path):
     with open(path) as fh:
         raw = yaml.safe_load(fh)
 
-    # Parse entities
-    e_raw = raw["e"]
-    e_cfg = EntityConfig(
-        name=e_raw["name"],
-        type=e_raw["type"],
-        extract_column=e_raw["extract"]["column"],
-        feature_sets=e_raw.get("feature_sets", []),
-        smiles_map=e_raw.get("smiles_map"),
-        esm_model=e_raw.get("esm_model", "esm2_t33"),
-        esm_batch_size=e_raw.get("esm_batch_size", 8),
-        nt_model=e_raw.get("nt_model", "nt_500m_human_ref"),
-        nt_batch_size=e_raw.get("nt_batch_size", 8),
-        embedding_file=e_raw.get("embedding_file"),
-    )
-
-    f_raw = raw["f"]
-    f_cfg = EntityConfig(
-        name=f_raw["name"],
-        type=f_raw["type"],
-        extract_column=f_raw["extract"]["column"],
-        feature_sets=f_raw.get("feature_sets", []),
-        smiles_map=f_raw.get("smiles_map"),
-        esm_model=f_raw.get("esm_model", "esm2_t33"),
-        esm_batch_size=f_raw.get("esm_batch_size", 8),
-        nt_model=f_raw.get("nt_model", "nt_500m_human_ref"),
-        nt_batch_size=f_raw.get("nt_batch_size", 8),
-        embedding_file=f_raw.get("embedding_file"),
-    )
+    # Parse entities (support both old "e"/"f" and new "e1"/"e2" keys)
+    e1_key = "e1" if "e1" in raw else "e"
+    e2_key = "e2" if "e2" in raw else "f"
+    e1_cfg = _parse_entity(raw[e1_key])
+    e2_cfg = _parse_entity(raw[e2_key]) if e2_key in raw else None
 
     # Parse filters
     filters = []
@@ -125,7 +118,7 @@ def load_config(path):
         techniques=split_raw.get("techniques", _defaults.techniques),
         splits=split_raw.get("splits", _defaults.splits),
         names=split_raw.get("names", _defaults.names),
-        f_clusters=split_raw.get("f_clusters", 30),
+        e2_clusters=split_raw.get("e2_clusters", split_raw.get("f_clusters", 30)),
         max_sec=split_raw.get("max_sec", 300),
         solver=split_raw.get("solver", "SCIP"),
     )
@@ -134,8 +127,8 @@ def load_config(path):
         input_file=raw["input_file"],
         output_dir=raw["output_dir"],
         dataset_name=raw["dataset_name"],
-        e=e_cfg,
-        f=f_cfg,
+        e1=e1_cfg,
+        e2=e2_cfg,
         splitting=splitting,
         filters=filters,
     )

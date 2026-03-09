@@ -1,11 +1,18 @@
 """Entry point: python -m PALM config.yaml"""
 
+import logging
 import sys
+
 from .config import load_config
 from .pipeline import run_pipeline
 
 
 def main():
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(message)s",
+    )
+
     if len(sys.argv) < 2:
         print("Usage: python -m PALM <config.yaml>")
         sys.exit(1)

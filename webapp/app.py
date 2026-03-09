@@ -97,26 +97,29 @@ async def upload(file: UploadFile = File(...)):
     job_dir.mkdir(parents=True)
 
     data      = await file.read()
-    file_path = job_dir / file.filename
+    # Sanitize filename to prevent path traversal
+    safe_name = Path(file.filename).name
+    if not safe_name:
+        raise HTTPException(400, "Invalid filename")
+    file_path = job_dir / safe_name
     file_path.write_bytes(data)
 
-    columns, fmt = [], "unknown"
+    columns, fmt, hints = [], "unknown", None
     try:
-        import pandas as pd
-        from ..loaders import _detect_format
+        from ..loaders import _detect_format, load_data, build_upload_hints
         fmt = _detect_format(str(file_path))
-        if fmt == "csv":
-            df = pd.read_csv(file_path, nrows=0)
-            columns = [c for c in df.columns if c != "_row_id"]
-        elif fmt == "json":
-            df = pd.read_json(file_path)
-            columns = [c for c in df.columns if c != "_row_id"]
+        df = load_data(str(file_path))
+        columns = [c for c in df.columns if c != "_row_id"]
+        try:
+            hints = build_upload_hints(df, fmt)
+        except Exception:
+            pass
     except Exception:
         pass
 
-    _init_job(job_id, file_path=str(file_path), file_name=file.filename)
+    _init_job(job_id, file_path=str(file_path), file_name=safe_name)
     return {"job_id": job_id, "filename": file.filename,
-            "columns": columns, "format": fmt}
+            "columns": columns, "format": fmt, "hints": hints}
 
 
 # ── Run request model ─────────────────────────────────────────────────────
@@ -134,8 +137,8 @@ class SplitSpec(BaseModel):
 
 
 class RunRequest(BaseModel):
-    e: EntitySpec
-    f: EntitySpec
+    e1: EntitySpec
+    e2: Optional[EntitySpec] = None
     splitting: SplitSpec
     dataset_name: str = "dataset"
 
@@ -161,20 +164,24 @@ def _build_config(job_id: str, req: RunRequest) -> PipelineConfig:
     ratio_map = {"70/30": [7, 3], "80/20": [8, 2], "90/10": [9, 1]}
     splits = ratio_map.get(req.splitting.ratio, [8, 2])
 
+    e2_config = None
+    if req.e2 is not None:
+        e2_config = EntityConfig(
+            name=req.e2.name, type=req.e2.type,
+            extract_column=req.e2.column,
+            feature_sets=req.e2.feature_sets,
+        )
+
     return PipelineConfig(
         input_file=snap["file_path"],
         output_dir=str(out_dir),
         dataset_name=req.dataset_name or job_id[:8],
-        e=EntityConfig(
-            name=req.e.name, type=req.e.type,
-            extract_column=req.e.column,
-            feature_sets=req.e.feature_sets,
+        e1=EntityConfig(
+            name=req.e1.name, type=req.e1.type,
+            extract_column=req.e1.column,
+            feature_sets=req.e1.feature_sets,
         ),
-        f=EntityConfig(
-            name=req.f.name, type=req.f.type,
-            extract_column=req.f.column,
-            feature_sets=req.f.feature_sets,
-        ),
+        e2=e2_config,
         splitting=SplittingConfig(
             techniques=req.splitting.techniques,
             splits=splits,
@@ -207,7 +214,10 @@ async def stream(job_id: str):
 
     async def generator():
         last_len = 0
-        while True:
+        max_idle = 600  # timeout after 10 minutes of no completion
+        elapsed = 0.0
+        poll_interval = 0.3
+        while elapsed < max_idle:
             with _lock:
                 if job_id not in _jobs:
                     yield f"data: {json.dumps({'error': 'not found'})}\n\n"
@@ -220,7 +230,10 @@ async def stream(job_id: str):
 
             if job["status"] in ("completed", "failed"):
                 return
-            await asyncio.sleep(0.3)
+            await asyncio.sleep(poll_interval)
+            elapsed += poll_interval
+
+        yield f"data: {json.dumps({'error': 'stream timeout', 'status': 'failed'})}\n\n"
 
     return StreamingResponse(
         generator(),

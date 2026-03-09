@@ -1,8 +1,13 @@
 """Multi-format data loading (CSV, JSON, ASE .db, CIF, XYZ, SMILES, PDB, mmCIF, SDF, MOL, MOL2)."""
 
+import logging
 import os
 import json
+import re
+
 import pandas as pd
+
+logger = logging.getLogger(__name__)
 
 
 def _detect_format(path):
@@ -462,9 +467,8 @@ def load_sdf(path):
             "formula": formula,
         }
         # Extract SDF properties
-        for prop_name in mol.GetPropsAsDict():
-            if prop_name != "_Name":
-                rec[prop_name] = mol.GetPropsAsDict()[prop_name]
+        props = mol.GetPropsAsDict()
+        rec.update({k: v for k, v in props.items() if k != "_Name"})
 
         records.append(rec)
     return pd.DataFrame(records)
@@ -555,3 +559,278 @@ def load_data(path, fmt=None, filters=None):
                 df = df[df[filt.column].astype(str).str.strip() != ""]
 
     return df.reset_index(drop=True)
+
+
+# ── Column-level entity type inference ───────────────────────────────────
+
+# Unambiguous file format → default entity type and column
+FORMAT_TYPE_DEFAULTS = {
+    "smiles":    {"type": "molecule",    "column": "smiles"},
+    "sdf":       {"type": "molecule",    "column": "smiles"},
+    "mol":       {"type": "molecule",    "column": "smiles"},
+    "mol2":      {"type": "molecule",    "column": "smiles"},
+    "fasta":     {"type": "biomolecule", "column": "sequence"},
+    "pdb":       {"type": "biomolecule", "column": "sequence"},
+    "pdb_dir":   {"type": "biomolecule", "column": "sequence"},
+    "mmcif":     {"type": "biomolecule", "column": "sequence"},
+    "mmcif_dir": {"type": "biomolecule", "column": "sequence"},
+    "ase_db":    {"type": "material",    "column": "formula"},
+    "cif_dir":   {"type": "material",    "column": "formula"},
+    "xyz_dir":   {"type": "material",    "column": "formula"},
+}
+
+TYPE_DEFAULT_NAMES = {
+    "molecule":    "compound",
+    "material":    "material",
+    "biomolecule": "protein",
+    "gene":        "gene",
+}
+
+FEAT_DEFAULTS = {
+    "molecule":    ["rdkit_descriptors", "physicochemical"],
+    "material":    ["magpie_properties", "stoichiometry", "electronic"],
+    "biomolecule": ["sequence_properties"],
+    "gene":        ["nucleotide_composition", "kmer_frequencies"],
+}
+
+# Regex for chemical formulas: e.g. Fe2O3, TiO2, CaCO3, H2O
+_FORMULA_RE = re.compile(
+    r"^[A-Z][a-z]?(\d+(\.\d+)?)?([A-Z][a-z]?(\d+(\.\d+)?)?)*$"
+)
+_AA_CHARS = set("ACDEFGHIKLMNPQRSTVWY")
+_NT_CHARS = set("ATCGUN")
+
+
+def _is_smiles(val):
+    """Check if a string is a valid SMILES (requires RDKit)."""
+    try:
+        from rdkit import Chem, RDLogger
+        RDLogger.DisableLog("rdApp.*")
+        if len(val) < 2:
+            return False
+        mol = Chem.MolFromSmiles(val)
+        return mol is not None
+    except Exception:
+        return False
+
+
+def _is_formula(val):
+    """Check if a string looks like a chemical formula with at least one digit."""
+    if len(val) < 2 or len(val) > 100:
+        return False
+    if not _FORMULA_RE.match(val):
+        return False
+    # Require at least one digit to distinguish from short AA sequences or element symbols
+    return any(c.isdigit() for c in val)
+
+
+def _is_amino_acid_sequence(val):
+    """Check if a string looks like a protein sequence."""
+    if len(val) < 15:
+        return False
+    upper = val.upper()
+    aa_count = sum(1 for c in upper if c in _AA_CHARS)
+    return aa_count / len(upper) >= 0.90
+
+
+def _is_nucleotide_sequence(val):
+    """Check if a string looks like a DNA/RNA sequence."""
+    if len(val) < 15:
+        return False
+    upper = val.upper()
+    nt_count = sum(1 for c in upper if c in _NT_CHARS)
+    return nt_count / len(upper) >= 0.85
+
+
+def _classify_value(val):
+    """Classify a single string value as an entity type.
+
+    Returns type string or None. Gene check runs before biomolecule
+    because ATCG is a subset of amino acid codes.
+    """
+    s = str(val).strip()
+    if not s or len(s) < 2:
+        return None
+
+    # Try numeric check — skip pure numbers
+    try:
+        float(s)
+        return None
+    except ValueError:
+        pass
+
+    # Gene before biomolecule (ATCG ⊂ amino acid alphabet)
+    if _is_nucleotide_sequence(s):
+        return "gene"
+    if _is_amino_acid_sequence(s):
+        return "biomolecule"
+    if _is_formula(s):
+        return "material"
+    if _is_smiles(s):
+        return "molecule"
+
+    return None
+
+
+def infer_column_types(df, sample_size=50):
+    """Infer entity types for each column by sampling values.
+
+    Args:
+        df: DataFrame with data
+        sample_size: number of rows to sample per column
+
+    Returns:
+        dict mapping column_name -> {"type": str|None, "confidence": float}
+    """
+    result = {}
+    skip_cols = {"_row_id"}
+
+    for col in df.columns:
+        if col in skip_cols:
+            continue
+
+        values = df[col].dropna().astype(str).str.strip()
+        values = values[values != ""]
+        if len(values) == 0:
+            result[col] = {"type": None, "confidence": 0.0}
+            continue
+
+        # Skip columns that are all short strings (likely IDs or labels)
+        median_len = values.str.len().median()
+        if median_len < 2:
+            result[col] = {"type": None, "confidence": 0.0}
+            continue
+
+        sample = values.sample(min(sample_size, len(values)), random_state=42)
+        votes = {"molecule": 0, "material": 0, "biomolecule": 0, "gene": 0}
+        total = len(sample)
+
+        for val in sample:
+            t = _classify_value(val)
+            if t is not None:
+                votes[t] += 1
+
+        best_type = max(votes, key=votes.get)
+        best_count = votes[best_type]
+        confidence = best_count / total if total > 0 else 0.0
+
+        if confidence >= 0.5:
+            result[col] = {"type": best_type, "confidence": round(confidence, 3)}
+        else:
+            result[col] = {"type": None, "confidence": 0.0}
+
+    return result
+
+
+def build_upload_hints(df, fmt):
+    """Build auto-detection hints for the upload response.
+
+    Args:
+        df: loaded DataFrame
+        fmt: detected file format string
+
+    Returns:
+        dict with column_types, suggested_e, suggested_f (or None on failure)
+    """
+    try:
+        col_types = infer_column_types(df)
+    except Exception:
+        logger.debug("Column type inference failed", exc_info=True)
+        col_types = {}
+
+    format_default = FORMAT_TYPE_DEFAULTS.get(fmt)
+
+    # Rank columns by confidence, only those with a detected type
+    typed_cols = [
+        (col, info["type"], info["confidence"])
+        for col, info in col_types.items()
+        if info["type"] is not None
+    ]
+    typed_cols.sort(key=lambda x: x[2], reverse=True)
+
+    suggested_e = None
+    suggested_f = None
+
+    if format_default:
+        # Unambiguous format — use the format default for the primary entity
+        e_type = format_default["type"]
+        e_col = format_default["column"]
+        # Verify column actually exists
+        if e_col not in df.columns:
+            # Fallback: pick first typed column matching this type
+            e_col = next((c for c, t, _ in typed_cols if t == e_type), None)
+
+        if e_col:
+            suggested_e = {
+                "type": e_type,
+                "column": e_col,
+                "name": TYPE_DEFAULT_NAMES[e_type],
+                "feature_sets": FEAT_DEFAULTS[e_type],
+            }
+
+        # For PDB/mmCIF with ligands, suggest molecule as second entity
+        if fmt in ("pdb", "pdb_dir", "mmcif", "mmcif_dir") and "ligand_id" in df.columns:
+            has_ligand = df.get("has_ligand", pd.Series([False]))
+            if has_ligand.any():
+                suggested_f = {
+                    "type": "molecule",
+                    "column": "ligand_id",
+                    "name": "ligand",
+                    "feature_sets": FEAT_DEFAULTS["molecule"],
+                }
+
+        # If no second entity yet, pick best column of a different type
+        if suggested_f is None and typed_cols:
+            for col, ctype, conf in typed_cols:
+                if suggested_e and col == suggested_e["column"]:
+                    continue
+                if suggested_e and ctype != suggested_e["type"]:
+                    suggested_f = {
+                        "type": ctype,
+                        "column": col,
+                        "name": TYPE_DEFAULT_NAMES[ctype],
+                        "feature_sets": FEAT_DEFAULTS[ctype],
+                    }
+                    break
+    else:
+        # Ambiguous format (CSV, JSON) — assign from inferred column types
+        if len(typed_cols) >= 1:
+            c1, t1, _ = typed_cols[0]
+            suggested_e = {
+                "type": t1,
+                "column": c1,
+                "name": TYPE_DEFAULT_NAMES[t1],
+                "feature_sets": FEAT_DEFAULTS[t1],
+            }
+
+        if len(typed_cols) >= 2:
+            # Prefer a column with a different type
+            for c, t, _ in typed_cols[1:]:
+                if t != typed_cols[0][1]:
+                    suggested_f = {
+                        "type": t,
+                        "column": c,
+                        "name": TYPE_DEFAULT_NAMES[t],
+                        "feature_sets": FEAT_DEFAULTS[t],
+                    }
+                    break
+
+            # Fallback: second highest confidence column even if same type
+            if suggested_f is None:
+                c2, t2, _ = typed_cols[1]
+                name = TYPE_DEFAULT_NAMES[t2]
+                if suggested_e and t2 == suggested_e["type"]:
+                    name = name + "_2"
+                suggested_f = {
+                    "type": t2,
+                    "column": c2,
+                    "name": name,
+                    "feature_sets": FEAT_DEFAULTS[t2],
+                }
+
+    return {
+        "column_types": col_types,
+        "format_default": format_default,
+        "suggested_e": suggested_e,
+        "suggested_f": suggested_f,
+    }
