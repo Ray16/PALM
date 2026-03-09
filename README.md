@@ -56,19 +56,21 @@ python -m PALM config.yaml
 
 ## Minimal Config Example
 
+### 2D (interaction) dataset
+
 ```yaml
 input_file: "data.csv"
 output_dir: "output"
 dataset_name: "my_dataset"
 
-e:
+e1:
   name: "drug"
   type: "molecule"
   extract:
     column: "smiles"
   feature_sets: [rdkit_descriptors]
 
-f:
+e2:
   name: "protein"
   type: "biomolecule"
   extract:
@@ -80,6 +82,28 @@ splitting:
   splits: [8, 2]
   names: ["train", "test"]
 ```
+
+### 1D (single entity) dataset
+
+```yaml
+input_file: "data.csv"
+output_dir: "output"
+dataset_name: "my_dataset"
+
+e1:
+  name: "compound"
+  type: "molecule"
+  extract:
+    column: "smiles"
+  feature_sets: [rdkit_descriptors]
+
+splitting:
+  techniques: [R, I1e, C1e]
+  splits: [8, 2]
+  names: ["train", "test"]
+```
+
+> **Note:** The old `e`/`f` config keys are still accepted for backwards compatibility.
 
 ## Input Data (Supported)
 
@@ -94,10 +118,12 @@ PALM auto-detects format from file extension (or directory contents):
 ## Splitting Techniques
 
 - `R`: random baseline
-- `I1e` / `I1f`: no overlap of entity identities on one axis
+- `I1e` / `I1f`: no overlap of entity identities on one axis (entity1 or entity2)
 - `I2`: no overlap on either axis
-- `C1e` / `C1f`: cluster-based split on one axis
+- `C1e` / `C1f`: cluster-based split on one axis (entity1 or entity2)
 - `C2`: cluster-based split on both axes (most stringent)
+
+For 1D datasets (single entity), only `R`, `I1e`, and `C1e` apply; 2D techniques are automatically mapped to their 1D equivalents.
 
 ## Outputs
 
