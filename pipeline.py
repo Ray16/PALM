@@ -12,7 +12,10 @@ from .features.material_features import compute_material_features
 from .features.molecule_features import compute_molecule_features
 from .features.biomolecule_features import compute_biomolecule_features
 from .features.gene_features import compute_gene_features
+from .cache import get_cached_features, save_cached_features
+from .metrics import compute_split_metrics, save_metrics
 from .splitting import run_splitting, run_splitting_1d
+from .visualization import generate_split_plots, generate_comparison_chart, _reduce
 
 
 def _extract_entities(df, entity_config):
@@ -25,10 +28,34 @@ def _extract_entities(df, entity_config):
 
 
 def _featurize(entities, entity_config):
+    """Generate features for entities based on their type (with caching)."""
+    feature_sets = entity_config.feature_sets or None
+
+    # Include structure_dir in cache key when set
+    cache_sets = list(feature_sets or [])
+    if getattr(entity_config, "structure_dir", None):
+        cache_sets.append(f"_structdir:{entity_config.structure_dir}")
+
+    # Check cache
+    cached = get_cached_features(entities, entity_config.type, cache_sets)
+    if cached is not None:
+        return cached
+
+    result = _featurize_uncached(entities, entity_config)
+
+    # Save to cache
+    save_cached_features(entities, entity_config.type, cache_sets, result)
+    return result
+
+
+def _featurize_uncached(entities, entity_config):
     """Generate features for entities based on their type."""
     feature_sets = entity_config.feature_sets or None
     if entity_config.type == "material":
-        return compute_material_features(entities, feature_sets=feature_sets)
+        return compute_material_features(
+            entities, feature_sets=feature_sets,
+            structure_dir=entity_config.structure_dir,
+        )
     elif entity_config.type == "molecule":
         return compute_molecule_features(
             entities,
@@ -98,19 +125,21 @@ def _save_split_data(df, out_df, split_dir, technique, dataset_name, input_file,
     elif fmt in ("pdb_dir", "mmcif_dir"):
         # Map row IDs back to source structure files via structure_id column
         ext_map = {"pdb_dir": ".pdb", "mmcif_dir": (".cif", ".mmcif")}
+        # Build lookup map once: {stem: filename}
+        file_lookup = {}
+        for fname in os.listdir(input_file):
+            if fname.endswith(ext_map[fmt]):
+                file_lookup[os.path.splitext(fname)[0]] = fname
         for name in split_names:
             dest = os.path.join(technique_dir, name)
             os.makedirs(dest, exist_ok=True)
             mask = merged["split"] == name
             structure_ids = merged.loc[mask, "structure_id"].unique()
             for sid in structure_ids:
-                # Find the source file
-                for fname in os.listdir(input_file):
-                    stem = os.path.splitext(fname)[0]
-                    if stem == sid and fname.endswith(ext_map[fmt]):
-                        src = os.path.join(input_file, fname)
-                        shutil.copy2(src, os.path.join(dest, fname))
-                        break
+                fname = file_lookup.get(sid)
+                if fname:
+                    src = os.path.join(input_file, fname)
+                    shutil.copy2(src, os.path.join(dest, fname))
 
     elif fmt in ("cif_dir", "xyz_dir"):
         # _row_id is the filename stem
@@ -125,8 +154,8 @@ def _save_split_data(df, out_df, split_dir, technique, dataset_name, input_file,
                 if os.path.isfile(src):
                     shutil.copy2(src, os.path.join(dest, fname))
 
-    elif fmt in ("pdb", "mmcif"):
-        # Single structure file — copy it into train or test based on majority
+    elif fmt in ("pdb", "mmcif", "cif"):
+        # Single structure file — copy it into each split folder
         for name in split_names:
             dest = os.path.join(technique_dir, name)
             os.makedirs(dest, exist_ok=True)
@@ -134,12 +163,109 @@ def _save_split_data(df, out_df, split_dir, technique, dataset_name, input_file,
                 shutil.copy2(input_file, os.path.join(dest,
                              os.path.basename(input_file)))
 
-    elif fmt in ("sdf", "smi", "smiles", "mol", "mol2", "fasta", "ase_db"):
-        # For these formats, save as CSV since splitting individual
-        # entries back into the original format is lossy
+    elif fmt == "sdf":
+        # Write split molecules back as SDF files using RDKit
+        from rdkit import Chem
+        suppl = Chem.SDMolSupplier(input_file, removeHs=False)
+        mol_map = {}
+        for i, mol in enumerate(suppl):
+            if mol is None:
+                continue
+            mol_name = (mol.GetProp("_Name")
+                        if mol.HasProp("_Name") and mol.GetProp("_Name").strip()
+                        else str(i))
+            mol_map[mol_name] = mol
+
         for name in split_names:
-            subset = merged[merged["split"] == name].drop(columns=["split", "_row_id"])
-            subset.to_csv(os.path.join(technique_dir, f"{name}.csv"), index=False)
+            row_ids = set(merged.loc[merged["split"] == name, "_row_id"])
+            out_path = os.path.join(technique_dir, f"{name}.sdf")
+            writer = Chem.SDWriter(out_path)
+            for rid in row_ids:
+                if rid in mol_map:
+                    writer.write(mol_map[rid])
+            writer.close()
+
+    elif fmt == "sdf_dir":
+        # Copy source SDF files into train/test folders
+        for name in split_names:
+            dest = os.path.join(technique_dir, name)
+            os.makedirs(dest, exist_ok=True)
+            subset = merged[merged["split"] == name]
+            if "_source_file" in subset.columns:
+                src_files = subset["_source_file"].dropna().unique()
+            else:
+                # Fallback: try _row_id + .sdf
+                src_files = [rid + ".sdf" for rid in subset["_row_id"].unique()]
+            for fname in src_files:
+                src = os.path.join(input_file, fname)
+                if os.path.isfile(src):
+                    shutil.copy2(src, os.path.join(dest, fname))
+
+    elif fmt == "fasta":
+        # Write split sequences back as FASTA files
+        seqs = {}  # _row_id → (header_line, sequence)
+        cur_id, cur_header, cur_seq = None, None, []
+        with open(input_file) as fh:
+            for line in fh:
+                line_s = line.strip()
+                if line_s.startswith(">"):
+                    if cur_id is not None:
+                        seqs[cur_id] = (cur_header, "".join(cur_seq))
+                    parts = line_s[1:].split()
+                    cur_id = parts[0] if parts else str(len(seqs))
+                    cur_header = line_s
+                    cur_seq = []
+                else:
+                    cur_seq.append(line_s)
+            if cur_id is not None:
+                seqs[cur_id] = (cur_header, "".join(cur_seq))
+
+        for name in split_names:
+            row_ids = merged.loc[merged["split"] == name, "_row_id"]
+            out_path = os.path.join(technique_dir, f"{name}.fasta")
+            with open(out_path, "w") as fh:
+                for rid in row_ids:
+                    if rid in seqs:
+                        header, seq = seqs[rid]
+                        fh.write(header + "\n")
+                        for j in range(0, len(seq), 80):
+                            fh.write(seq[j:j + 80] + "\n")
+
+    elif fmt in ("smiles",):
+        # Write split SMILES back as .smi files
+        for name in split_names:
+            subset = merged[merged["split"] == name]
+            out_path = os.path.join(technique_dir, f"{name}.smi")
+            with open(out_path, "w") as fh:
+                for _, row in subset.iterrows():
+                    fh.write(f"{row['smiles']} {row['_row_id']}\n")
+
+    elif fmt in ("mol", "mol2"):
+        # Single-molecule file — copy into each split folder
+        for name in split_names:
+            dest = os.path.join(technique_dir, name)
+            os.makedirs(dest, exist_ok=True)
+            if (merged["split"] == name).any():
+                shutil.copy2(input_file, os.path.join(dest,
+                             os.path.basename(input_file)))
+
+    elif fmt == "ase_db":
+        # ASE database — save split subsets as new .db files
+        try:
+            from ase.db import connect
+            src_db = connect(input_file)
+            for name in split_names:
+                row_ids = set(merged.loc[merged["split"] == name, "_row_id"])
+                out_path = os.path.join(technique_dir, f"{name}.db")
+                dst_db = connect(out_path)
+                for row in src_db.select():
+                    if str(row.id - 1) in row_ids or row.get("formula", "") in row_ids:
+                        dst_db.write(row.toatoms(), key_value_pairs=row.key_value_pairs)
+        except Exception:
+            # Fallback to CSV if ASE write fails
+            for name in split_names:
+                subset = merged[merged["split"] == name].drop(columns=["split", "_row_id"])
+                subset.to_csv(os.path.join(technique_dir, f"{name}.csv"), index=False)
 
 
 def run_pipeline(config: PipelineConfig, progress_callback=None):
@@ -170,6 +296,14 @@ def run_pipeline(config: PipelineConfig, progress_callback=None):
     _report(5,  f"\n[1/5] Loading data from {config.input_file}")
     df = load_data(config.input_file, filters=config.filters)
     _report(15, f"  Loaded {len(df)} rows")
+
+    # Auto-populate structure_dir for material entities when using structure dirs
+    fmt = _detect_format(config.input_file)
+    if fmt in ("cif_dir", "xyz_dir"):
+        if config.e1.type == "material" and config.e1.structure_dir is None:
+            config.e1.structure_dir = config.input_file
+        if config.e2 is not None and config.e2.type == "material" and config.e2.structure_dir is None:
+            config.e2.structure_dir = config.input_file
 
     # 2. Extract entities
     _report(20, f"\n[2/5] Extracting entities")
@@ -242,8 +376,20 @@ def run_pipeline(config: PipelineConfig, progress_callback=None):
     split_dir = os.path.join(config.output_dir, "split_result")
     os.makedirs(split_dir, exist_ok=True)
 
-    # Detect input format for producing format-specific outputs
-    fmt = _detect_format(config.input_file)
+
+    all_technique_metrics = {}
+
+    # Pre-compute dimensionality reduction once for all techniques
+    _viz_coords = None
+    try:
+        _sorted_names = sorted(e1_data.keys())
+        _X_viz = np.array([e1_data[n] for n in _sorted_names])
+        if _X_viz.shape[0] >= 3:
+            _reduced = _reduce(_X_viz, "tsne")
+            if _reduced is not None:
+                _viz_coords = (_sorted_names, _reduced)
+    except Exception:
+        pass
 
     for technique in sorted(split_results.keys()):
         result = split_results[technique]
@@ -272,6 +418,7 @@ def run_pipeline(config: PipelineConfig, progress_callback=None):
             summary.append(f"    Not selected: {n_not:,}")
 
         # Entity overlap analysis between splits
+        overlap_info = {}
         if len(config.splitting.names) >= 2:
             split_entities = {}
             for name in config.splitting.names:
@@ -287,9 +434,15 @@ def run_pipeline(config: PipelineConfig, progress_callback=None):
             n0, n1 = config.splitting.names[0], config.splitting.names[1]
             if n0 in split_entities and n1 in split_entities:
                 e1_overlap = split_entities[n0]["e1"] & split_entities[n1]["e1"]
+                e1_total = len(split_entities[n0]["e1"] | split_entities[n1]["e1"])
+                overlap_info["e1_overlap"] = len(e1_overlap)
+                overlap_info["e1_total"] = e1_total
                 summary.append(f"    {config.e1.name} overlap ({n0}∩{n1}): {len(e1_overlap)}")
                 if not is_1d:
                     e2_overlap = split_entities[n0]["e2"] & split_entities[n1]["e2"]
+                    e2_total = len(split_entities[n0]["e2"] | split_entities[n1]["e2"])
+                    overlap_info["e2_overlap"] = len(e2_overlap)
+                    overlap_info["e2_total"] = e2_total
                     summary.append(f"    {config.e2.name} overlap ({n0}∩{n1}): {len(e2_overlap)}")
 
         out_path = os.path.join(split_dir, f"datasail_split_{technique}_{config.dataset_name}.csv")
@@ -306,7 +459,66 @@ def run_pipeline(config: PipelineConfig, progress_callback=None):
         except Exception as exc:
             summary.append(f"    Warning: could not save split data files: {exc}")
 
+        # Build entity-level split assignments for metrics & visualization
+        if is_1d:
+            entity_splits = result  # entity_id -> split_name
+        else:
+            # Majority vote: each entity gets the split it appears in most often
+            from collections import Counter
+            entity_vote = {}
+            for (e1_id, e2_id), split in result.items():
+                entity_vote.setdefault(e1_id, []).append(split)
+            entity_splits = {eid: Counter(votes).most_common(1)[0][0]
+                             for eid, votes in entity_vote.items()}
+
+        # Compute split quality metrics
+        try:
+            split_metrics = compute_split_metrics(
+                e1_data, entity_splits, config.splitting.names,
+                entity_overlap=overlap_info if overlap_info else None,
+            )
+            metrics_path = save_metrics(
+                split_metrics, config.output_dir, technique, config.dataset_name,
+            )
+            all_technique_metrics[technique] = split_metrics
+            nn = split_metrics.get("nn_leakage", {})
+            if nn:
+                summary.append(f"    NN leakage: {nn.get('zero_dist_count', 0)} zero-dist pairs "
+                               f"(mean dist: {nn.get('mean_nn_dist', 'N/A')})")
+            ds = split_metrics.get("distribution_shift", {})
+            if ds:
+                summary.append(f"    Distribution shift: {ds.get('mean_normalized_shift', 'N/A')} "
+                               f"(max: {ds.get('max_normalized_shift', 'N/A')})")
+            cov = split_metrics.get("coverage", 0)
+            summary.append(f"    Coverage: {cov * 100:.1f}%")
+        except Exception as exc:
+            summary.append(f"    Warning: metrics computation failed: {exc}")
+
+        # Generate visualization
+        try:
+            plot_path = generate_split_plots(
+                e1_data, entity_splits, config.output_dir,
+                config.dataset_name, config.e1.name, technique,
+                split_names=config.splitting.names,
+                precomputed_coords=_viz_coords,
+            )
+            if plot_path:
+                summary.append(f"    Plot: {plot_path}")
+        except Exception as exc:
+            summary.append(f"    Warning: visualization failed: {exc}")
+
         for line in summary:
             _report(95, line)
+
+    # Generate comparison chart across all techniques
+    if all_technique_metrics:
+        try:
+            chart_path = generate_comparison_chart(
+                all_technique_metrics, config.output_dir, config.dataset_name,
+            )
+            if chart_path:
+                _report(98, f"  Comparison chart: {chart_path}")
+        except Exception as exc:
+            _report(98, f"  Warning: comparison chart failed: {exc}")
 
     _report(100, f"\nDone! Results saved to {config.output_dir}/")

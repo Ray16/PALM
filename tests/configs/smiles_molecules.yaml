@@ -1,0 +1,19 @@
+# SMILES file — 1D molecule splitting
+input_file: "/nfs/lambda_stor_01/homes/rzhu/PALM/tests/data/molecules.smi"
+output_dir: "/nfs/lambda_stor_01/homes/rzhu/PALM/tests/output/smiles_molecules"
+dataset_name: "smiles_molecules"
+
+e1:
+  name: "compound"
+  type: "molecule"
+  extract:
+    column: "smiles"
+  feature_sets:
+    - rdkit_descriptors
+
+splitting:
+  techniques: [R, C1e]
+  splits: [8, 2]
+  names: ["train", "test"]
+  max_sec: 120
+  solver: "SCIP"

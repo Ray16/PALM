@@ -1,0 +1,17 @@
+{
+  "split_counts": {
+    "train": 0,
+    "test": 18
+  },
+  "split_fractions": {
+    "train": 0.0,
+    "test": 1.0
+  },
+  "coverage": 0.45,
+  "entity_overlap": {
+    "e1_overlap": 0,
+    "e1_total": 40,
+    "e2_overlap": 0,
+    "e2_total": 84
+  }
+}

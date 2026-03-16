@@ -1,0 +1,38 @@
+# generated using pymatgen
+data_LaSi2Rh3
+_symmetry_space_group_name_H-M   'P 1'
+_cell_length_a   5.62943876
+_cell_length_b   6.68837225
+_cell_length_c   6.68837204
+_cell_angle_alpha   64.58121477
+_cell_angle_beta   65.09441185
+_cell_angle_gamma   65.09441438
+_symmetry_Int_Tables_number   1
+_chemical_formula_structural   LaSi2Rh3
+_chemical_formula_sum   'La2 Si4 Rh6'
+_cell_volume   197.21835571
+_cell_formula_units_Z   2
+loop_
+ _symmetry_equiv_pos_site_id
+ _symmetry_equiv_pos_as_xyz
+  1  'x, y, z'
+loop_
+ _atom_site_type_symbol
+ _atom_site_label
+ _atom_site_symmetry_multiplicity
+ _atom_site_fract_x
+ _atom_site_fract_y
+ _atom_site_fract_z
+ _atom_site_occupancy
+  La  La0  1  0.54068171  0.75001533  0.75001601  1
+  La  La1  1  0.45931935  0.24998348  0.24998439  1
+  Si  Si2  1  0.22502355  0.57772191  0.57772202  1
+  Si  Si3  1  0.77497668  0.42227789  0.42227792  1
+  Si  Si4  1  0.11899784  0.07782954  0.07782929  1
+  Si  Si5  1  0.88100244  0.92217058  0.92217036  1
+  Rh  Rh6  1  0.49999983  0.21605657  0.78394336  1
+  Rh  Rh7  1  -0.00000033  0.71616625  0.28383400  1
+  Rh  Rh8  1  0.50000004  0.78394320  0.21605652  1
+  Rh  Rh9  1  -0.00000066  0.28383416  0.71616638  1
+  Rh  Rh10  1  0.00000008  0.50000032  -0.00000031  1
+  Rh  Rh11  1  -0.00000052  0.99999978  0.50000008  1

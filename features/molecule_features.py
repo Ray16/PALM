@@ -1,4 +1,4 @@
-"""SMILES-based molecule featurization (3 feature sets).
+"""SMILES-based molecule featurization (4 feature sets).
 
 Generalized from OC22 adsorbate featurization — works with any SMILES string.
 """
@@ -10,12 +10,12 @@ from .elemental_data import ELEM_PROPS, PROP_NAMES
 from .utils import parse_formula
 
 
-def rdkit_descriptors(smiles):
-    """Compute RDKit molecular descriptors from a SMILES string."""
+def rdkit_descriptors(smiles_or_mol):
+    """Compute RDKit molecular descriptors from a SMILES string or mol object."""
     from rdkit import Chem
     from rdkit.Chem import Descriptors
 
-    mol = Chem.MolFromSmiles(smiles)
+    mol = smiles_or_mol if hasattr(smiles_or_mol, 'GetNumAtoms') else Chem.MolFromSmiles(smiles_or_mol)
     if mol is None:
         return {k: 0.0 for k in [
             "MolWt", "NumHBondDonors", "NumHBondAcceptors", "NumLonePairs",
@@ -75,15 +75,15 @@ def composition(formula):
     return feats
 
 
-def physicochemical(smiles):
-    """Physicochemical features computed from SMILES via RDKit.
+def physicochemical(smiles_or_mol):
+    """Physicochemical features computed from SMILES or mol object via RDKit.
 
     Replaces hardcoded property tables by computing everything from structure.
     """
     from rdkit import Chem
     from rdkit.Chem import Descriptors, rdMolDescriptors
 
-    mol = Chem.MolFromSmiles(smiles)
+    mol = smiles_or_mol if hasattr(smiles_or_mol, 'GetNumAtoms') else Chem.MolFromSmiles(smiles_or_mol)
     if mol is None:
         return {k: 0.0 for k in [
             "mol_weight", "num_atoms", "num_heavy_atoms", "num_H",
@@ -111,11 +111,29 @@ def physicochemical(smiles):
     }
 
 
+def morgan_fingerprint(smiles_or_mol, radius=2, n_bits=2048):
+    """Morgan (ECFP) circular fingerprint as a bit vector.
+
+    Produces a 2048-bit fingerprint that captures molecular substructure
+    topology. Best used with Tanimoto distance for clustering.
+    """
+    from rdkit import Chem
+    from rdkit.Chem import AllChem
+
+    mol = smiles_or_mol if hasattr(smiles_or_mol, 'GetNumAtoms') else Chem.MolFromSmiles(smiles_or_mol)
+    if mol is None:
+        return {f"morgan_{i}": 0 for i in range(n_bits)}
+
+    fp = AllChem.GetMorganFingerprintAsBitVect(mol, radius, nBits=n_bits)
+    return {f"morgan_{i}": int(fp[i]) for i in range(n_bits)}
+
+
 # Registry of all molecule feature sets
 MOLECULE_FEATURE_SETS = {
     "rdkit_descriptors": rdkit_descriptors,
     "composition": composition,
     "physicochemical": physicochemical,
+    "morgan_fingerprint": morgan_fingerprint,
 }
 
 
@@ -134,23 +152,24 @@ def compute_molecule_features(entities, feature_sets=None, smiles_map=None):
     if feature_sets is None:
         feature_sets = list(MOLECULE_FEATURE_SETS.keys())
 
+    from rdkit import Chem
+
     rows = {}
     for entity_id, identifier in entities.items():
         smiles = smiles_map.get(identifier, identifier) if smiles_map else identifier
+        mol = Chem.MolFromSmiles(smiles)
         feats = {}
         for fs_name in feature_sets:
             fn = MOLECULE_FEATURE_SETS[fs_name]
             if fs_name == "composition":
                 # Composition uses molecular formula, derive from SMILES
-                from rdkit import Chem
-                mol = Chem.MolFromSmiles(smiles)
                 if mol is not None:
                     formula = Chem.rdMolDescriptors.CalcMolFormula(Chem.AddHs(mol))
                 else:
                     formula = identifier
                 feats.update(fn(formula))
             else:
-                feats.update(fn(smiles))
+                feats.update(fn(mol if mol is not None else smiles))
         rows[entity_id] = feats
 
     df = pd.DataFrame.from_dict(rows, orient="index")

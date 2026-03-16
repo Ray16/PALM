@@ -2,16 +2,37 @@
 
 import logging
 import os
+import sys
 import time
 import numpy as np
 from scipy.spatial.distance import pdist, squareform
 from sklearn.preprocessing import StandardScaler
-from datasail.sail import datasail
+
+from .cache import get_cached_dist, save_cached_dist
+
+# Suppress DataSAIL's "tool not found" shell messages during import.
+# DataSAIL's settings.py runs os.system("cd-hit -h > /dev/null") etc. at import
+# time, producing shell "not found" messages on fd 2 of child processes.
+_saved_fd2 = os.dup(2)
+_devnull_fd = os.open(os.devnull, os.O_WRONLY)
+os.dup2(_devnull_fd, 2)
+try:
+    from datasail.sail import datasail
+finally:
+    os.dup2(_saved_fd2, 2)
+    os.close(_saved_fd2)
+    os.close(_devnull_fd)
 
 logger = logging.getLogger(__name__)
 
 
-def compute_dist_matrix(data_dict, use_cosine=False, use_pca=False, pca_components=20):
+def _is_binary_fingerprint(X):
+    """Check if feature matrix looks like a binary fingerprint (all 0/1 values)."""
+    return X.shape[1] >= 128 and np.all((X == 0) | (X == 1))
+
+
+def compute_dist_matrix(data_dict, use_cosine=False, use_pca=False,
+                        pca_components=20, use_tanimoto=None):
     """Compute normalized distance matrix from entity embeddings.
 
     Args:
@@ -19,6 +40,8 @@ def compute_dist_matrix(data_dict, use_cosine=False, use_pca=False, pca_componen
         use_cosine: use cosine distance instead of Euclidean
         use_pca: apply PCA before distance computation
         pca_components: number of PCA components
+        use_tanimoto: use Tanimoto distance (auto-detected from binary fingerprints
+                      if None)
 
     Returns:
         (names, dist_matrix) tuple
@@ -27,6 +50,19 @@ def compute_dist_matrix(data_dict, use_cosine=False, use_pca=False, pca_componen
 
     names = sorted(data_dict.keys())
     X = np.array([data_dict[n] for n in names])
+
+    # Auto-detect binary fingerprints and use Tanimoto distance
+    if use_tanimoto is None:
+        use_tanimoto = _is_binary_fingerprint(X)
+
+    if use_tanimoto:
+        logger.info("  Using Tanimoto distance (binary fingerprint detected)")
+        # Tanimoto distance: 1 - |A & B| / |A | B|
+        # Equivalent to Jaccard distance for binary vectors
+        dist = squareform(pdist(X, metric="jaccard"))
+        # Handle NaN (when both vectors are all-zero)
+        dist = np.nan_to_num(dist, nan=1.0)
+        return names, dist
 
     if use_pca and X.shape[1] > pca_components:
         n_components = min(pca_components, X.shape[0] - 1, X.shape[1])
@@ -48,8 +84,11 @@ def compute_dist_matrix(data_dict, use_cosine=False, use_pca=False, pca_componen
 def run_technique(technique, common_kwargs):
     """Run a single DataSAIL technique. Module-level for multiprocessing."""
     t0 = time.time()
-    e_s, f_s, i_s = datasail(techniques=[technique], **common_kwargs)
-    return technique, i_s[technique], time.time() - t0
+    try:
+        e_s, f_s, i_s = datasail(techniques=[technique], **common_kwargs)
+        return technique, i_s[technique], time.time() - t0, None
+    except Exception as exc:
+        return technique, None, time.time() - t0, str(exc)
 
 
 def run_splitting(e1_data, e2_data, interactions, config):
@@ -64,8 +103,6 @@ def run_splitting(e1_data, e2_data, interactions, config):
     Returns:
         dict mapping technique -> dict mapping (e1_id, e2_id) -> split_name
     """
-    from concurrent.futures import ProcessPoolExecutor, as_completed
-
     # Check feature sparsity
     e1_features = np.array([e1_data[n] for n in sorted(e1_data.keys())])
     e2_features = np.array([e2_data[n] for n in sorted(e2_data.keys())])
@@ -85,9 +122,21 @@ def run_splitting(e1_data, e2_data, interactions, config):
     if use_cosine_e1 or use_cosine_e2:
         logger.info(f"  Using cosine distance for: {'E1' if use_cosine_e1 else ''}{' E2' if use_cosine_e2 else ''}")
 
-    # Compute distance matrices
-    e1_names, e1_dist = compute_dist_matrix(e1_data, use_cosine=use_cosine_e1, use_pca=use_pca_e1)
-    e2_names, e2_dist = compute_dist_matrix(e2_data, use_cosine=use_cosine_e2, use_pca=use_pca_e2)
+    # Compute distance matrices (with caching)
+    cached_e1 = get_cached_dist(e1_data, "e1", config.techniques)
+    if cached_e1 is not None:
+        e1_names, e1_dist = cached_e1
+    else:
+        e1_names, e1_dist = compute_dist_matrix(e1_data, use_cosine=use_cosine_e1, use_pca=use_pca_e1)
+        save_cached_dist(e1_data, "e1", config.techniques, e1_names, e1_dist)
+
+    cached_e2 = get_cached_dist(e2_data, "e2", config.techniques)
+    if cached_e2 is not None:
+        e2_names, e2_dist = cached_e2
+    else:
+        e2_names, e2_dist = compute_dist_matrix(e2_data, use_cosine=use_cosine_e2, use_pca=use_pca_e2)
+        save_cached_dist(e2_data, "e2", config.techniques, e2_names, e2_dist)
+
     logger.info(f"  Distance matrices: e1={e1_dist.shape}, e2={e2_dist.shape}")
 
     # Adaptive e2_clusters based on sparsity
@@ -102,7 +151,7 @@ def run_splitting(e1_data, e2_data, interactions, config):
         logger.info(f"  Using e2_clusters: {adaptive_e2_clusters}")
 
     # Adaptive e1_clusters and relaxation for C2 with sparse features
-    adaptive_e1_clusters = min(9, len(e1_data))
+    adaptive_e1_clusters = min(max(9, len(e1_data) // 20), len(e1_data))
     adaptive_delta = 0.1
     adaptive_epsilon = 0.1
     adaptive_max_sec = config.max_sec
@@ -138,19 +187,24 @@ def run_splitting(e1_data, e2_data, interactions, config):
         epsilon=adaptive_epsilon,
     )
 
-    # Run techniques in parallel
-    logger.info(f"  Running {len(config.techniques)} techniques in parallel...")
+    # Run techniques sequentially (ProcessPoolExecutor causes hangs due to
+    # SCIP solver child processes not terminating cleanly on shutdown)
+    logger.info(f"  Running {len(config.techniques)} techniques...")
     all_inter_splits = {}
     t_start = time.time()
 
-    with ProcessPoolExecutor(max_workers=min(len(config.techniques), os.cpu_count() or 4)) as pool:
-        futures = {pool.submit(run_technique, t, common_kwargs): t for t in config.techniques}
-        for future in as_completed(futures):
-            technique, result, elapsed = future.result()
+    for t in config.techniques:
+        technique, result, elapsed, error = run_technique(t, common_kwargs)
+        if error is not None:
+            logger.warning(f"    {technique} FAILED after {elapsed:.1f}s: {error}")
+        else:
             all_inter_splits[technique] = result
             logger.info(f"    {technique} finished in {elapsed:.1f}s")
 
     logger.info(f"  All techniques finished in {time.time() - t_start:.1f}s")
+
+    if not all_inter_splits:
+        raise RuntimeError("All splitting techniques failed. Check logs for details.")
 
     # Extract first run results
     results = {}
@@ -176,14 +230,17 @@ TECHNIQUE_MAP_1D = {
 def run_technique_1d(technique, common_kwargs, use_self_inter):
     """Run a single 1D DataSAIL technique."""
     t0 = time.time()
-    e_s, f_s, i_s = datasail(techniques=[technique], **common_kwargs)
-    if use_self_inter:
-        # R technique: extract from i_splits, convert (e,e) -> e
-        result = {k[0]: v for k, v in i_s[technique][0].items()}
-    else:
-        # C1e / I1e: extract from e_splits
-        result = e_s[technique][0]
-    return technique, result, time.time() - t0
+    try:
+        e_s, f_s, i_s = datasail(techniques=[technique], **common_kwargs)
+        if use_self_inter:
+            # R technique: extract from i_splits, convert (e,e) -> e
+            result = {k[0]: v for k, v in i_s[technique][0].items()}
+        else:
+            # C1e / I1e: extract from e_splits
+            result = e_s[technique][0]
+        return technique, result, time.time() - t0, None
+    except Exception as exc:
+        return technique, None, time.time() - t0, str(exc)
 
 
 def run_splitting_1d(e_data, config):
@@ -196,8 +253,6 @@ def run_splitting_1d(e_data, config):
     Returns:
         dict mapping technique -> dict mapping entity_id -> split_name
     """
-    from concurrent.futures import ProcessPoolExecutor, as_completed
-
     # Map requested techniques to valid 1D equivalents (deduplicate)
     mapped = {}
     for t in config.techniques:
@@ -222,11 +277,16 @@ def run_splitting_1d(e_data, config):
     use_pca = e_sparsity > 0.9
     use_cosine = e_sparsity > 0.5 and not use_pca
 
-    # Compute distance matrix
-    e_names, e_dist = compute_dist_matrix(e_data, use_cosine=use_cosine, use_pca=use_pca)
+    # Compute distance matrix (with caching)
+    cached = get_cached_dist(e_data, "e1", list(mapped.keys()))
+    if cached is not None:
+        e_names, e_dist = cached
+    else:
+        e_names, e_dist = compute_dist_matrix(e_data, use_cosine=use_cosine, use_pca=use_pca)
+        save_cached_dist(e_data, "e1", list(mapped.keys()), e_names, e_dist)
     logger.info(f"  Distance matrix: {e_dist.shape}")
 
-    adaptive_e_clusters = min(9, len(e_data))
+    adaptive_e_clusters = min(max(9, len(e_data) // 20), len(e_data))
 
     # Build separate kwargs for R (needs self-interactions) vs C1e/I1e (does not)
     base_kwargs = dict(
@@ -256,17 +316,19 @@ def run_splitting_1d(e_data, config):
     results = {}
     t_start = time.time()
 
-    with ProcessPoolExecutor(max_workers=min(len(techniques_to_run), os.cpu_count() or 4)) as pool:
-        futures = {}
-        for t in techniques_to_run:
-            use_self_inter = (t == "R")
-            kwargs = r_kwargs if use_self_inter else base_kwargs
-            futures[pool.submit(run_technique_1d, t, kwargs, use_self_inter)] = t
-
-        for future in as_completed(futures):
-            technique, result, elapsed = future.result()
+    for t in techniques_to_run:
+        use_self_inter = (t == "R")
+        kwargs = r_kwargs if use_self_inter else base_kwargs
+        technique, result, elapsed, error = run_technique_1d(t, kwargs, use_self_inter)
+        if error is not None:
+            logger.warning(f"    {technique} FAILED after {elapsed:.1f}s: {error}")
+        else:
             results[technique] = result
             logger.info(f"    {technique} finished in {elapsed:.1f}s")
 
     logger.info(f"  All techniques finished in {time.time() - t_start:.1f}s")
+
+    if not results:
+        raise RuntimeError("All splitting techniques failed. Check logs for details.")
+
     return results

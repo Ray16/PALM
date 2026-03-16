@@ -1,0 +1,19 @@
+# Lipophilicity (logD) — 4200 molecules, 1D splitting
+input_file: "PALM/tests/data/lipophilicity/lipophilicity.csv"
+output_dir: "PALM/tests/output/lipophilicity"
+dataset_name: "lipophilicity"
+
+e:
+  name: "compound"
+  type: "molecule"
+  extract:
+    column: "smiles"
+  feature_sets:
+    - morgan_fingerprint
+
+splitting:
+  techniques: [R, C1e]
+  splits: [8, 2]
+  names: ["train", "test"]
+  max_sec: 600
+  solver: "SCIP"

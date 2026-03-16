@@ -151,6 +151,54 @@ select:focus,input[type=text]:focus{border-color:var(--primary);
 .alert{padding:.75rem 1rem;border-radius:8px;font-size:.875rem;margin-bottom:1rem;}
 .alert-error{background:var(--err-light);color:var(--error);border:1px solid #fca5a5;}
 
+/* ── Data preview table ── */
+.preview-wrap{margin-top:1rem;overflow-x:auto;}
+.preview-table{width:100%;border-collapse:collapse;font-size:.78rem;font-family:'SF Mono',Consolas,monospace;}
+.preview-table th{background:var(--bg);padding:.4rem .6rem;text-align:left;font-weight:600;
+  border-bottom:2px solid var(--border);color:var(--muted);white-space:nowrap;position:sticky;top:0;}
+.preview-table td{padding:.35rem .6rem;border-bottom:1px solid var(--border);white-space:nowrap;
+  max-width:200px;overflow:hidden;text-overflow:ellipsis;}
+.preview-table tr:hover td{background:var(--pri-light);}
+.stats-bar{display:flex;gap:1rem;margin-top:.6rem;font-size:.82rem;color:var(--muted);}
+.stats-bar span{display:inline-flex;align-items:center;gap:.3rem;}
+.stats-bar strong{color:var(--text);}
+
+/* ── Technique results ── */
+.technique-results{margin:1.5rem 0;}
+.technique-block{border:1px solid var(--border);border-radius:8px;margin-bottom:.75rem;overflow:hidden;}
+.technique-header{display:flex;justify-content:space-between;align-items:center;
+  padding:.6rem 1rem;background:var(--bg);cursor:pointer;user-select:none;}
+.technique-header:hover{background:var(--pri-light);}
+.technique-header .tech-name{font-weight:600;font-size:.9rem;}
+.technique-header .btn-sm{padding:.25rem .7rem;font-size:.78rem;border-radius:6px;
+  border:1px solid var(--primary);background:var(--card);color:var(--primary);
+  cursor:pointer;font-weight:500;transition:.15s;}
+.technique-header .btn-sm:hover{background:var(--pri-light);}
+.technique-files{padding:.5rem 1rem;font-size:.8rem;color:var(--muted);
+  font-family:'SF Mono',Consolas,monospace;border-top:1px solid var(--border);}
+.technique-files div{padding:2px 0;}
+
+/* ── Metrics dashboard ── */
+.metrics-dashboard{margin-top:1rem;}
+.metrics-dashboard .section-label{margin-bottom:.75rem;}
+.metric-section{margin-bottom:1.25rem;}
+.metric-section-title{font-size:.85rem;font-weight:600;margin-bottom:.5rem;color:var(--text);}
+.metric-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem;}
+.metric-row .tech-label{width:60px;font-size:.78rem;font-weight:600;color:var(--muted);text-align:right;flex-shrink:0;}
+.metric-bar-wrap{flex:1;height:22px;background:var(--bg);border-radius:4px;overflow:hidden;position:relative;}
+.metric-bar{height:100%;border-radius:4px;transition:width .5s ease;min-width:2px;}
+.metric-bar.green{background:linear-gradient(90deg,#16a34a,#4ade80);}
+.metric-bar.yellow{background:linear-gradient(90deg,#d97706,#fbbf24);}
+.metric-bar.red{background:linear-gradient(90deg,#dc2626,#f87171);}
+.metric-value{font-size:.75rem;font-weight:600;color:var(--text);width:80px;text-align:left;flex-shrink:0;}
+.metric-best-badge{font-size:.65rem;font-weight:700;color:#16a34a;background:#f0fdf4;
+  padding:1px 6px;border-radius:999px;border:1px solid #bbf7d0;}
+
+/* ── Plot gallery ── */
+.plot-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:.75rem;margin-top:.75rem;}
+.plot-gallery .comparison-plot{grid-column:1 / -1;}
+.plot-gallery img{width:100%;border-radius:8px;box-shadow:var(--shadow);}
+
 /* ── Panel visibility ── */
 .panel{display:none;}
 .panel.active{display:block;}
@@ -181,7 +229,11 @@ select:focus,input[type=text]:focus{border-color:var(--primary);
       <div class="dropzone" id="dropzone" onclick="document.getElementById('file-input').click()">
         <div class="dropzone-icon">📄</div>
         <p>Drag &amp; drop your file here, or <strong>browse</strong></p>
-        <p style="margin-top:.4rem;font-size:.8rem;">CSV · JSON · SDF · SMILES · FASTA · PDB · mmCIF · MOL · MOL2</p>
+        <p style="margin-top:.3rem;font-size:.8rem;">CSV · JSON · SDF · SMILES · FASTA · PDB · mmCIF · CIF · XYZ · MOL · MOL2 · ASE DB</p>
+        <p style="margin-top:.3rem;">
+          <strong onclick="event.stopPropagation(); document.getElementById('folder-input').click();" style="color:var(--primary);cursor:pointer;">Upload folder</strong>
+          <span style="font-size:.8rem;color:var(--muted);"> (for directories of structures: SDF, CIF, PDB, XYZ)</span>
+        </p>
         <div id="file-name-badge" style="display:none;" class="file-badge">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -190,7 +242,14 @@ select:focus,input[type=text]:focus{border-color:var(--primary);
         </div>
         <p id="detect-summary" style="display:none;margin-top:.6rem;font-size:.82rem;color:var(--muted);"></p>
       </div>
-      <input type="file" id="file-input" accept=".csv,.json,.sdf,.smi,.smiles,.fasta,.fa,.faa,.pdb,.cif,.mmcif,.mol,.mol2">
+      <div id="data-preview" style="display:none;">
+        <div class="stats-bar" id="stats-bar"></div>
+        <div class="preview-wrap" style="max-height:240px;overflow-y:auto;">
+          <table class="preview-table" id="preview-table"></table>
+        </div>
+      </div>
+      <input type="file" id="file-input" accept=".csv,.json,.sdf,.smi,.smiles,.fasta,.fa,.faa,.pdb,.cif,.mmcif,.mol,.mol2,.xyz,.db,.zip" multiple>
+      <input type="file" id="folder-input" webkitdirectory style="display:none;">
       <div class="btn-row">
         <button class="btn btn-primary" id="btn-next-1" disabled onclick="goStep(2)">
           Next: Configure →
@@ -277,11 +336,13 @@ select:focus,input[type=text]:focus{border-color:var(--primary);
       <div class="card-title">🔀 Splitting configuration</div>
       <div class="grid-2">
         <div class="form-group">
-          <label>Train / Test ratio</label>
+          <label>Split ratio</label>
           <select id="ratio">
-            <option value="70/30">70 / 30</option>
-            <option value="80/20" selected>80 / 20</option>
-            <option value="90/10">90 / 10</option>
+            <option value="70/30">Train 70 / Test 30</option>
+            <option value="80/20" selected>Train 80 / Test 20</option>
+            <option value="90/10">Train 90 / Test 10</option>
+            <option value="70/15/15">Train 70 / Val 15 / Test 15</option>
+            <option value="80/10/10">Train 80 / Val 10 / Test 10</option>
           </select>
         </div>
         <div class="form-group">
@@ -337,10 +398,11 @@ select:focus,input[type=text]:focus{border-color:var(--primary);
         Your dataset has been split. Download the results below.
       </p>
       <div class="result-grid" id="result-grid"></div>
+      <div class="technique-results" id="technique-results"></div>
       <div class="btn-row" style="justify-content:center;margin-top:1.5rem;">
         <button class="btn btn-outline" onclick="goStep(2)">← Back</button>
         <button class="btn btn-success" id="btn-download" onclick="downloadResults()">
-          ⬇ Download Results (.zip)
+          ⬇ Download All Results (.zip)
         </button>
         <button class="btn btn-outline" onclick="resetAll()">Start over</button>
       </div>
@@ -361,6 +423,7 @@ const FEATURES = {
     {id:'rdkit_descriptors', label:'RDKit Descriptors',    desc:'MW, HBD, HBA, TPSA, LogP (9 feat)'},
     {id:'physicochemical',   label:'Physicochemical',      desc:'Atom counts, rings, aromaticity (11 feat)'},
     {id:'composition',       label:'Composition',          desc:'Elemental counts + weighted properties'},
+    {id:'morgan_fingerprint', label:'Morgan Fingerprint',   desc:'ECFP4 circular fingerprint (2048 bits, uses Tanimoto distance)'},
   ],
   material:    [
     {id:'magpie_properties', label:'MAGPIE Properties',    desc:'Statistical elemental descriptors (~130 feat)'},
@@ -369,6 +432,10 @@ const FEATURES = {
     {id:'bonding',           label:'Bonding',              desc:'Atomic/covalent radius stats'},
     {id:'thermodynamic',     label:'Thermodynamic',        desc:'Melting point, cohesive energy'},
     {id:'classification',    label:'Classification',       desc:'Metal/nonmetal/block fractions'},
+    {id:'matminer_elementproperty', label:'Matminer MAGPIE', desc:'MAGPIE via matminer (requires matminer)'},
+    {id:'mat2vec_embedding',  label:'Mat2Vec Embedding',    desc:'Composition-weighted mat2vec (200 feat)'},
+    {id:'crystalnn_fingerprint', label:'CrystalNN Fingerprint', desc:'Site fingerprints (requires structure)'},
+    {id:'soap_descriptor',    label:'SOAP Descriptor',      desc:'SOAP descriptors (requires structure)'},
   ],
   biomolecule: [
     {id:'sequence_properties',   label:'Sequence Properties', desc:'Length, MW, hydrophobicity, charge (16 feat)'},
@@ -385,7 +452,7 @@ const FEATURES = {
 
 // Defaults per type (pre-checked on type change)
 const FEAT_DEFAULTS = {
-  molecule:    ['rdkit_descriptors','physicochemical'],
+  molecule:    ['rdkit_descriptors','physicochemical','morgan_fingerprint'],
   material:    ['magpie_properties','stoichiometry','electronic'],
   biomolecule: ['sequence_properties'],
   gene:        ['nucleotide_composition','kmer_frequencies'],
@@ -453,11 +520,105 @@ function setupDropzone() {
   ['dragleave','drop'].forEach(e => dz.addEventListener(e, ev => {
     ev.preventDefault(); dz.classList.remove('over');
   }));
-  dz.addEventListener('drop', ev => handleFile(ev.dataTransfer.files[0]));
-  fi.addEventListener('change', () => handleFile(fi.files[0]));
+  dz.addEventListener('drop', ev => {
+    const items = ev.dataTransfer.items;
+    const files = ev.dataTransfer.files;
+    if (files.length > 1) {
+      handleMultiFile(files);
+    } else {
+      handleFile(files[0]);
+    }
+  });
+  fi.addEventListener('change', () => {
+    if (fi.files.length > 1) {
+      handleMultiFile(fi.files);
+    } else {
+      handleFile(fi.files[0]);
+    }
+  });
+  const folderInput = document.getElementById('folder-input');
+  folderInput.addEventListener('change', () => handleMultiFile(folderInput.files));
 }
 
-async function handleFile(file) {
+async function handleMultiFile(fileList) {
+  if (!fileList || !fileList.length) return;
+  showError('upload', '');
+  const statusEl = document.getElementById('file-name-text');
+  const badgeEl = document.getElementById('file-name-badge');
+  badgeEl.style.display = 'inline-flex';
+  statusEl.textContent = `Zipping ${fileList.length} files...`;
+
+  try {
+    const zipBlob = await buildZip(fileList);
+    const zipFile = new File([zipBlob], 'upload.zip', {type:'application/zip'});
+    await handleFile(zipFile, `${fileList.length} files`);
+  } catch(err) {
+    showError('upload', 'Failed to create ZIP: ' + err.message);
+  }
+}
+
+async function buildZip(fileList) {
+  // Minimal ZIP builder (store-only, no compression — simple and fast)
+  const files = [];
+  for (const f of fileList) {
+    // Use webkitRelativePath if available (folder upload), otherwise just name
+    const name = f.webkitRelativePath || f.name;
+    const data = new Uint8Array(await f.arrayBuffer());
+    files.push({name, data});
+  }
+
+  const parts = [];
+  const centralDir = [];
+  let offset = 0;
+
+  for (const {name, data} of files) {
+    const nameBytes = new TextEncoder().encode(name);
+    // Local file header
+    const local = new Uint8Array(30 + nameBytes.length);
+    const lv = new DataView(local.buffer);
+    lv.setUint32(0, 0x04034b50, true);  // signature
+    lv.setUint16(4, 20, true);           // version needed
+    lv.setUint16(8, 0, true);            // method: store
+    lv.setUint32(18, data.length, true); // compressed size
+    lv.setUint32(22, data.length, true); // uncompressed size
+    lv.setUint16(26, nameBytes.length, true);
+    local.set(nameBytes, 30);
+
+    // Central directory entry
+    const cd = new Uint8Array(46 + nameBytes.length);
+    const cv = new DataView(cd.buffer);
+    cv.setUint32(0, 0x02014b50, true);
+    cv.setUint16(4, 20, true);
+    cv.setUint16(6, 20, true);
+    cv.setUint16(10, 0, true);
+    cv.setUint32(20, data.length, true);
+    cv.setUint32(24, data.length, true);
+    cv.setUint16(28, nameBytes.length, true);
+    cv.setUint32(42, offset, true);
+    cd.set(nameBytes, 46);
+
+    parts.push(local, data);
+    centralDir.push(cd);
+    offset += local.length + data.length;
+  }
+
+  const cdOffset = offset;
+  let cdSize = 0;
+  for (const cd of centralDir) { cdSize += cd.length; }
+
+  // End of central directory
+  const eocd = new Uint8Array(22);
+  const ev = new DataView(eocd.buffer);
+  ev.setUint32(0, 0x06054b50, true);
+  ev.setUint16(8, files.length, true);
+  ev.setUint16(10, files.length, true);
+  ev.setUint32(12, cdSize, true);
+  ev.setUint32(16, cdOffset, true);
+
+  return new Blob([...parts, ...centralDir, eocd], {type:'application/zip'});
+}
+
+async function handleFile(file, displayName) {
   if (!file) return;
   showError('upload', '');
 
@@ -472,9 +633,15 @@ async function handleFile(file) {
     jobId   = data.job_id;
     columns = data.columns || [];
 
+    // Show load errors (e.g. format detection failed)
+    if (data.load_error) {
+      showError('upload', 'Warning: ' + data.load_error);
+    }
+
     // Update UI
+    const label = displayName || file.name;
     document.getElementById('file-name-text').textContent =
-      `${file.name}  (${(file.size/1024).toFixed(1)} KB)`;
+      `${label}  (${(file.size/1024).toFixed(1)} KB)`;
     document.getElementById('file-name-badge').style.display = 'inline-flex';
     document.getElementById('btn-next-1').disabled = false;
 
@@ -490,12 +657,53 @@ async function handleFile(file) {
       document.getElementById('f-col').value = columns[1];
     }
 
+    // Show format detection
+    const summary = document.getElementById('detect-summary');
+    if (data.format && data.format !== 'unknown') {
+      summary.textContent = `Detected format: ${data.format} (${columns.length} columns, ${data.stats ? data.stats.total_rows + ' rows' : '?'})`;
+      summary.style.display = 'block';
+    }
+
     // Apply auto-detection hints (user can still override everything)
     applyHints(data.hints);
+
+    // Show data preview
+    showPreview(data.preview, data.stats);
 
   } catch(err) {
     showError('upload', err.message);
   }
+}
+
+function showPreview(preview, stats) {
+  const el = document.getElementById('data-preview');
+  if (!preview || !preview.rows || !preview.rows.length) {
+    el.style.display = 'none';
+    return;
+  }
+  el.style.display = 'block';
+
+  // Stats bar
+  const bar = document.getElementById('stats-bar');
+  const parts = [];
+  if (stats) {
+    parts.push(`<span><strong>${stats.total_rows.toLocaleString()}</strong> rows</span>`);
+    parts.push(`<span><strong>${stats.total_columns}</strong> columns</span>`);
+    if (stats.columns) {
+      for (const [col, info] of Object.entries(stats.columns)) {
+        parts.push(`<span>${col}: <strong>${info.unique}</strong> unique ${info.type}s</span>`);
+      }
+    }
+  }
+  bar.innerHTML = parts.join('');
+
+  // Table
+  const table = document.getElementById('preview-table');
+  const hdr = '<tr>' + preview.columns.map(c => `<th>${c}</th>`).join('') + '</tr>';
+  const rows = preview.rows.map(r =>
+    '<tr>' + r.map(v => `<td title="${String(v)}">${v === null ? '' : v}</td>`).join('') + '</tr>'
+  ).join('');
+  table.innerHTML = hdr + rows;
 }
 
 const TYPE_LABELS = {
@@ -613,7 +821,7 @@ async function startJob() {
 
   const payload = {
     dataset_name: document.getElementById('dataset-name').value || 'dataset',
-    e: {
+    e1: {
       name:         eName,
       type:         document.getElementById('e-type').value,
       column:       eCol,
@@ -636,7 +844,7 @@ async function startJob() {
     if (!fName) { alert('Entity 2 name cannot be empty.'); return; }
     if (eName === fName) { alert('Entity 1 and Entity 2 must have different names.'); return; }
 
-    payload.f = {
+    payload.e2 = {
       name:         fName,
       type:         document.getElementById('f-type').value,
       column:       fCol,
@@ -654,6 +862,8 @@ async function startJob() {
   if (!res.ok) {
     const err = await res.json();
     appendLog('✗ Failed to start job: ' + (err.detail || JSON.stringify(err)), true);
+    document.getElementById('status-badge').textContent = 'Failed';
+    document.getElementById('status-badge').className   = 'status-badge failed';
     return;
   }
 
@@ -711,19 +921,24 @@ function handleEvent(data) {
 // ── Done panel ────────────────────────────────────────────────────────────
 async function showDone() {
   goStep(4);
-  // Fetch status for summary
+  // Fetch status + file listing in parallel
   try {
-    const res  = await fetch(`/api/status/${jobId}`);
-    const data = await res.json();
-    const log  = data.log || [];
+    const [statusRes, filesRes] = await Promise.all([
+      fetch(`/api/status/${jobId}`),
+      fetch(`/api/files/${jobId}`),
+    ]);
+    const data  = await statusRes.json();
+    const files = await filesRes.json();
+    const log   = data.log || [];
 
-    // Parse train/test counts from log
+    // Parse train/test counts from log (deduplicate — show only first technique's counts)
     const tiles = [];
+    const seen = new Set();
     log.forEach(line => {
-      const m = line.match(/^\s*(Train|Test):\s+([\d,]+)\s+\((\d+\.\d+)%\)/i);
-      if (m) tiles.push({label: m[1], val: m[2], pct: m[3]});
+      const m = line.match(/^\s*(Train|Val|Test):\s+([\d,]+)\s+\((\d+\.\d+)%\)/i);
+      if (m && !seen.has(m[1])) { tiles.push({label: m[1], val: m[2], pct: m[3]}); seen.add(m[1]); }
     });
-    // Count techniques from log
+    // Count techniques
     const techs = [...new Set(log.map(l => { const m=l.match(/---\s+(\w+)\s+---/); return m && m[1]; }).filter(Boolean))];
 
     const grid = document.getElementById('result-grid');
@@ -734,10 +949,58 @@ async function showDone() {
       </div>`),
       techs.length ? `<div class="result-tile">
         <div class="tile-val">${techs.length}</div>
-        <div class="tile-label">Techniques run</div>
+        <div class="tile-label">Technique${techs.length > 1 ? 's' : ''} run</div>
       </div>` : '',
     ].join('');
-  } catch(_) {}
+
+    // Build per-technique file listing with download buttons
+    const techResults = document.getElementById('technique-results');
+    if (files.techniques && files.techniques.length) {
+      techResults.innerHTML = '<div class="section-label" style="margin-bottom:.5rem;">Output files by technique</div>' +
+        files.techniques.map(t => `
+          <div class="technique-block">
+            <div class="technique-header" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'">
+              <span class="tech-name">${t.name}</span>
+              <button class="btn-sm" onclick="event.stopPropagation(); window.location.href='/api/download/${jobId}/${t.name}'">Download</button>
+            </div>
+            <div class="technique-files">
+              ${t.files.map(f => `<div>${f}</div>`).join('')}
+            </div>
+          </div>`).join('');
+    }
+
+    // Parse overlap info from log
+    const overlapLines = log.filter(l => l.includes('overlap'));
+    if (overlapLines.length) {
+      const overlapHtml = overlapLines.map(l => `<div style="font-size:.82rem;color:var(--muted);padding:2px 0;">${l.trim()}</div>`).join('');
+      techResults.innerHTML += `<div style="margin-top:.75rem;"><div class="section-label">Entity overlap analysis</div>${overlapHtml}</div>`;
+    }
+
+    // Show split quality metrics as visual dashboard
+    try {
+      const metricsRes = await fetch(`/api/metrics/${jobId}`);
+      const metricsData = await metricsRes.json();
+      if (metricsData.metrics && Object.keys(metricsData.metrics).length) {
+        techResults.innerHTML += renderMetricsDashboard(metricsData.metrics);
+      }
+    } catch(err) { console.warn('Metrics fetch failed:', err); }
+
+    // Show split visualization plots
+    if (files.plots && files.plots.length) {
+      const comparison = files.plots.filter(p => p.startsWith('comparison_'));
+      const perTech = files.plots.filter(p => !p.startsWith('comparison_'));
+      let plotHtml = '<div style="margin-top:1rem;"><div class="section-label">Split visualizations</div><div class="plot-gallery">';
+      comparison.forEach(p => {
+        plotHtml += `<div class="comparison-plot"><img src="/api/plot/${jobId}/${p}" alt="${p}"></div>`;
+      });
+      perTech.forEach(p => {
+        plotHtml += `<div><img src="/api/plot/${jobId}/${p}" alt="${p}"></div>`;
+      });
+      plotHtml += '</div></div>';
+      techResults.innerHTML += plotHtml;
+    }
+
+  } catch(err) { console.warn('showDone failed:', err); }
 }
 
 async function downloadResults() {
@@ -751,13 +1014,76 @@ function showError(panel, msg) {
   el.style.display = msg ? 'block' : 'none';
 }
 
+function renderMetricsDashboard(metrics) {
+  const techs = Object.keys(metrics);
+  if (!techs.length) return '';
+
+  const metricDefs = [
+    {key: 'coverage', label: 'Coverage', extract: m => (m.coverage || 0) * 100, unit: '%', higherBetter: true},
+    {key: 'entity_overlap', label: 'Entity Overlap', extract: m => {
+      const eo = m.entity_overlap || {};
+      return eo.e1_overlap !== undefined ? eo.e1_overlap : 0;
+    }, unit: '', higherBetter: false},
+    {key: 'nn_separation', label: 'NN Separation (mean dist)', extract: m => {
+      const nn = m.nn_leakage || {};
+      return nn.mean_nn_dist || 0;
+    }, unit: '', higherBetter: true},
+    {key: 'dist_shift', label: 'Distribution Shift', extract: m => {
+      const ds = m.distribution_shift || {};
+      return ds.mean_normalized_shift || 0;
+    }, unit: '', higherBetter: false},
+  ];
+
+  let html = '<div class="metrics-dashboard"><div class="section-label">Split quality metrics</div>';
+
+  for (const def of metricDefs) {
+    const values = techs.map(t => def.extract(metrics[t]));
+    if (values.every(v => v === 0)) continue;
+
+    const maxVal = Math.max(...values) || 1;
+    const bestIdx = def.higherBetter
+      ? values.indexOf(Math.max(...values))
+      : values.indexOf(Math.min(...values.filter(v => v >= 0)));
+
+    html += `<div class="metric-section"><div class="metric-section-title">${def.label}</div>`;
+    techs.forEach((t, i) => {
+      const v = values[i];
+      const pct = (v / maxVal) * 100;
+      const isBest = i === bestIdx;
+      let colorClass;
+      if (isBest) {
+        colorClass = 'green';
+      } else if (def.higherBetter) {
+        colorClass = v >= maxVal * 0.7 ? 'yellow' : 'red';
+      } else {
+        const minVal = Math.min(...values.filter(x => x >= 0));
+        colorClass = v <= minVal * 1.5 || v === 0 ? 'yellow' : 'red';
+      }
+      const fmt = v >= 1 ? v.toFixed(1) : v.toFixed(4);
+      const badge = isBest ? ' <span class="metric-best-badge">Best</span>' : '';
+
+      html += `<div class="metric-row">
+        <span class="tech-label">${t}</span>
+        <div class="metric-bar-wrap"><div class="metric-bar ${colorClass}" style="width:${Math.max(pct, 2)}%"></div></div>
+        <span class="metric-value">${fmt}${def.unit}${badge}</span>
+      </div>`;
+    });
+    html += '</div>';
+  }
+
+  html += '</div>';
+  return html;
+}
+
 function resetAll() {
   jobId = null; columns = [];
   if (evtSrc) { evtSrc.close(); evtSrc = null; }
   document.getElementById('file-input').value = '';
+  document.getElementById('folder-input').value = '';
   document.getElementById('file-name-badge').style.display = 'none';
   document.getElementById('detect-summary').style.display = 'none';
   document.getElementById('btn-next-1').disabled = true;
+  document.getElementById('data-preview').style.display = 'none';
   goStep(1);
 }
 </script>

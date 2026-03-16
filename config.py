@@ -31,6 +31,7 @@ class EntityConfig:
     nt_model: str = "nt_500m_human_ref"
     nt_batch_size: int = 8
     embedding_file: Optional[str] = None
+    structure_dir: Optional[str] = None
 
     def __post_init__(self):
         if self.type not in ENTITY_FEATURE_SETS:
@@ -88,6 +89,7 @@ def _parse_entity(raw: dict) -> EntityConfig:
         nt_model=raw.get("nt_model", "nt_500m_human_ref"),
         nt_batch_size=raw.get("nt_batch_size", 8),
         embedding_file=raw.get("embedding_file"),
+        structure_dir=raw.get("structure_dir"),
     )
 
 

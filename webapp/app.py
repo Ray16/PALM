@@ -86,12 +86,15 @@ def _snapshot(job_id: str) -> dict:
 
 @app.get("/", response_class=HTMLResponse)
 async def index():
-    return HTMLResponse((WEBAPP_DIR / "static" / "index.html").read_text())
+    return HTMLResponse(
+        (WEBAPP_DIR / "static" / "index.html").read_text(),
+        headers={"Cache-Control": "no-cache, no-store, must-revalidate"},
+    )
 
 
 @app.post("/api/upload")
 async def upload(file: UploadFile = File(...)):
-    """Accept a data file, return job_id + detected column names."""
+    """Accept a data file (or ZIP archive of a directory), return job_id + detected column names."""
     job_id   = str(uuid.uuid4())
     job_dir  = JOBS_DIR / job_id
     job_dir.mkdir(parents=True)
@@ -104,22 +107,82 @@ async def upload(file: UploadFile = File(...)):
     file_path = job_dir / safe_name
     file_path.write_bytes(data)
 
-    columns, fmt, hints = [], "unknown", None
+    # If ZIP, extract into a subdirectory and use that as the input path
+    if safe_name.lower().endswith(".zip"):
+        extract_dir = job_dir / "extracted"
+        extract_dir.mkdir(exist_ok=True)
+        try:
+            with zipfile.ZipFile(file_path, "r") as zf:
+                zf.extractall(extract_dir)
+        except zipfile.BadZipFile:
+            raise HTTPException(400, "Invalid ZIP file")
+
+        # Filter out Mac metadata and hidden files
+        top_entries = [e for e in extract_dir.iterdir()
+                       if not e.name.startswith((".", "_"))]
+
+        if len(top_entries) == 1 and top_entries[0].is_dir():
+            # Single top-level directory: use it directly
+            file_path = top_entries[0]
+        elif len(top_entries) == 1 and top_entries[0].is_file():
+            # Single file: use it directly (e.g., single SDF in a ZIP)
+            file_path = top_entries[0]
+        else:
+            # Multiple files/dirs: use the extract directory
+            file_path = extract_dir
+
+    columns, fmt, hints, preview, stats = [], "unknown", None, None, None
+    load_error = None
     try:
         from ..loaders import _detect_format, load_data, build_upload_hints
         fmt = _detect_format(str(file_path))
         df = load_data(str(file_path))
-        columns = [c for c in df.columns if c != "_row_id"]
+        columns = [c for c in df.columns if not c.startswith("_")]
         try:
             hints = build_upload_hints(df, fmt)
         except Exception:
             pass
-    except Exception:
-        pass
+        # Build data preview (first 10 rows) and stats
+        try:
+            display_cols = [c for c in df.columns if not c.startswith("_")]
+            preview_df = df[display_cols].head(10)
+            # Truncate long string values for display
+            for col in preview_df.columns:
+                if preview_df[col].dtype == object:
+                    preview_df[col] = preview_df[col].astype(str).str[:80]
+            preview = {
+                "columns": list(preview_df.columns),
+                "rows": preview_df.values.tolist(),
+            }
+            stats = {
+                "total_rows": len(df),
+                "total_columns": len(display_cols),
+            }
+            # Per-column stats for detected entity columns
+            if hints and hints.get("column_types"):
+                col_stats = {}
+                for col, info in hints["column_types"].items():
+                    if info.get("type"):
+                        vals = df[col].dropna().astype(str)
+                        col_stats[col] = {
+                            "unique": int(vals.nunique()),
+                            "type": info["type"],
+                        }
+                stats["columns"] = col_stats
+        except Exception as exc:
+            print(f"[upload] Preview error: {exc}")
+    except Exception as exc:
+        import traceback
+        print(f"[upload] Load error: {exc}\n{traceback.format_exc()}")
+        load_error = str(exc)
 
     _init_job(job_id, file_path=str(file_path), file_name=safe_name)
-    return {"job_id": job_id, "filename": file.filename,
-            "columns": columns, "format": fmt, "hints": hints}
+    resp = {"job_id": job_id, "filename": file.filename,
+            "columns": columns, "format": fmt, "hints": hints,
+            "preview": preview, "stats": stats}
+    if load_error:
+        resp["load_error"] = load_error
+    return resp
 
 
 # ── Run request model ─────────────────────────────────────────────────────
@@ -161,7 +224,10 @@ def _build_config(job_id: str, req: RunRequest) -> PipelineConfig:
     out_dir = job_dir / "output"
     out_dir.mkdir(exist_ok=True)
 
-    ratio_map = {"70/30": [7, 3], "80/20": [8, 2], "90/10": [9, 1]}
+    ratio_map = {
+        "70/30": [7, 3], "80/20": [8, 2], "90/10": [9, 1],
+        "70/15/15": [70, 15, 15], "80/10/10": [80, 10, 10],
+    }
     splits = ratio_map.get(req.splitting.ratio, [8, 2])
 
     e2_config = None
@@ -185,12 +251,13 @@ def _build_config(job_id: str, req: RunRequest) -> PipelineConfig:
         splitting=SplittingConfig(
             techniques=req.splitting.techniques,
             splits=splits,
-            names=["train", "test"],
+            names=["train", "val", "test"] if len(splits) == 3 else ["train", "test"],
         ),
     )
 
 
 def _run_task(job_id: str, req: RunRequest):
+    import traceback as _tb
     try:
         config = _build_config(job_id, req)
 
@@ -202,6 +269,8 @@ def _run_task(job_id: str, req: RunRequest):
         _append_log(job_id, "✓ Done! Results are ready for download.", progress=100)
 
     except Exception as exc:
+        tb = _tb.format_exc()
+        print(f"[job {job_id}] Pipeline error:\n{tb}")
         _update(job_id, status="failed", error=str(exc))
         _append_log(job_id, f"✗ Error: {exc}")
 
@@ -269,5 +338,90 @@ async def download(job_id: str):
     return FileResponse(
         zip_path,
         filename=f"datasail_{name}.zip",
+        media_type="application/zip",
+    )
+
+
+@app.get("/api/files/{job_id}")
+async def list_files(job_id: str):
+    """Return a tree of output files grouped by split technique."""
+    snap = _snapshot(job_id)
+    if snap["status"] != "completed":
+        raise HTTPException(400, "Job not yet completed")
+
+    out_dir = JOBS_DIR / job_id / "output"
+    split_dir = out_dir / "split_result"
+    techniques = []
+
+    if split_dir.is_dir():
+        for entry in sorted(split_dir.iterdir()):
+            if entry.is_dir():
+                files = sorted(
+                    str(f.relative_to(split_dir))
+                    for f in entry.rglob("*") if f.is_file()
+                )
+                techniques.append({"name": entry.name, "files": files})
+
+    # Include plot URLs
+    plot_dir = out_dir / "plots"
+    plots = []
+    if plot_dir.is_dir():
+        for p in sorted(plot_dir.iterdir()):
+            if p.suffix == ".png":
+                plots.append(p.name)
+
+    return {"techniques": techniques, "plots": plots}
+
+
+@app.get("/api/metrics/{job_id}")
+async def get_metrics(job_id: str):
+    """Return split quality metrics for all techniques."""
+    snap = _snapshot(job_id)
+    if snap["status"] != "completed":
+        raise HTTPException(400, "Job not yet completed")
+
+    metrics_dir = JOBS_DIR / job_id / "output" / "metrics"
+    if not metrics_dir.is_dir():
+        return {"metrics": {}}
+
+    all_metrics = {}
+    for f in sorted(metrics_dir.iterdir()):
+        if f.suffix == ".json":
+            all_metrics[f.stem] = json.loads(f.read_text())
+
+    return {"metrics": all_metrics}
+
+
+@app.get("/api/plot/{job_id}/{filename}")
+async def get_plot(job_id: str, filename: str):
+    """Serve a split visualization plot."""
+    # Sanitize filename
+    safe = Path(filename).name
+    plot_path = JOBS_DIR / job_id / "output" / "plots" / safe
+    if not plot_path.is_file():
+        raise HTTPException(404, "Plot not found")
+    return FileResponse(plot_path, media_type="image/png")
+
+
+@app.get("/api/download/{job_id}/{technique}")
+async def download_technique(job_id: str, technique: str):
+    """Download a single technique's split results as a ZIP."""
+    snap = _snapshot(job_id)
+    if snap["status"] != "completed":
+        raise HTTPException(400, "Job not yet completed")
+
+    technique_dir = JOBS_DIR / job_id / "output" / "split_result" / technique
+    if not technique_dir.is_dir():
+        raise HTTPException(404, f"Technique folder not found: {technique}")
+
+    zip_path = JOBS_DIR / job_id / f"{technique}.zip"
+    with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
+        for f in sorted(technique_dir.rglob("*")):
+            if f.is_file():
+                zf.write(f, f.relative_to(technique_dir))
+
+    return FileResponse(
+        zip_path,
+        filename=f"{technique}.zip",
         media_type="application/zip",
     )

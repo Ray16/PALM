@@ -1,0 +1,29 @@
+# Davis DTI expanded — 40 drugs x 100 targets = 4000 interactions, 2D splitting
+input_file: "PALM/tests/data/davis_large/interactions.csv"
+output_dir: "PALM/tests/output/davis_large"
+dataset_name: "davis_large"
+
+e:
+  name: "drug"
+  type: "molecule"
+  extract:
+    column: "smiles"
+  feature_sets:
+    - rdkit_descriptors
+    - physicochemical
+    - morgan_fingerprint
+
+f:
+  name: "target"
+  type: "biomolecule"
+  extract:
+    column: "sequence"
+  feature_sets:
+    - sequence_properties
+
+splitting:
+  techniques: [R, I1e, I1f, I2, C1e, C1f, C2]
+  splits: [8, 2]
+  names: ["train", "test"]
+  max_sec: 600
+  solver: "SCIP"

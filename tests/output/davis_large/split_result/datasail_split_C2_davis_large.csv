@@ -1,0 +1,4001 @@
+_row_id,split
+0,train
+1,train
+2,train
+3,train
+4,train
+5,train
+6,train
+7,train
+8,train
+9,train
+10,train
+11,train
+12,train
+13,train
+14,train
+15,train
+16,train
+17,train
+18,train
+19,train
+20,train
+21,train
+22,train
+23,train
+24,train
+25,train
+26,train
+27,train
+28,train
+29,train
+30,train
+31,train
+32,train
+33,train
+34,train
+35,train
+36,train
+37,train
+38,train
+39,train
+40,train
+41,train
+42,train
+43,train
+44,train
+45,train
+46,train
+47,train
+48,train
+49,train
+50,train
+51,train
+52,train
+53,train
+54,train
+55,train
+56,train
+57,train
+58,train
+59,train
+60,train
+61,train
+62,train
+63,train
+64,train
+65,train
+66,train
+67,train
+68,train
+69,train
+70,train
+71,train
+72,train
+73,train
+74,train
+75,train
+76,train
+77,train
+78,train
+79,train
+80,train
+81,train
+82,train
+83,train
+84,train
+85,train
+86,train
+87,train
+88,train
+89,train
+90,train
+91,train
+92,train
+93,train
+94,train
+95,train
+96,train
+97,train
+98,train
+99,train
+100,train
+101,train
+102,train
+103,train
+104,train
+105,train
+106,train
+107,train
+108,train
+109,train
+110,train
+111,train
+112,train
+113,train
+114,train
+115,train
+116,train
+117,train
+118,train
+119,train
+120,train
+121,train
+122,train
+123,train
+124,train
+125,train
+126,train
+127,train
+128,train
+129,train
+130,train
+131,train
+132,train
+133,train
+134,train
+135,train
+136,train
+137,train
+138,train
+139,train
+140,train
+141,train
+142,train
+143,train
+144,train
+145,train
+146,train
+147,train
+148,train
+149,train
+150,train
+151,train
+152,train
+153,train
+154,train
+155,train
+156,train
+157,train
+158,train
+159,train
+160,train
+161,train
+162,train
+163,train
+164,train
+165,train
+166,train
+167,train
+168,train
+169,train
+170,train
+171,train
+172,train
+173,train
+174,train
+175,train
+176,train
+177,train
+178,train
+179,train
+180,train
+181,train
+182,train
+183,train
+184,train
+185,train
+186,train
+187,train
+188,train
+189,train
+190,train
+191,train
+192,train
+193,train
+194,train
+195,train
+196,train
+197,train
+198,train
+199,train
+200,not selected
+201,not selected
+202,not selected
+203,not selected
+204,not selected
+205,not selected
+206,not selected
+207,not selected
+208,not selected
+209,not selected
+210,not selected
+211,not selected
+212,not selected
+213,not selected
+214,not selected
+215,not selected
+216,not selected
+217,not selected
+218,not selected
+219,not selected
+220,not selected
+221,not selected
+222,not selected
+223,not selected
+224,not selected
+225,not selected
+226,not selected
+227,not selected
+228,not selected
+229,not selected
+230,not selected
+231,not selected
+232,not selected
+233,not selected
+234,not selected
+235,not selected
+236,not selected
+237,not selected
+238,not selected
+239,not selected
+240,not selected
+241,not selected
+242,not selected
+243,not selected
+244,not selected
+245,not selected
+246,not selected
+247,not selected
+248,not selected
+249,not selected
+250,not selected
+251,not selected
+252,not selected
+253,not selected
+254,not selected
+255,not selected
+256,not selected
+257,not selected
+258,not selected
+259,not selected
+260,not selected
+261,not selected
+262,not selected
+263,not selected
+264,not selected
+265,not selected
+266,not selected
+267,not selected
+268,not selected
+269,not selected
+270,not selected
+271,not selected
+272,not selected
+273,not selected
+274,not selected
+275,not selected
+276,not selected
+277,not selected
+278,not selected
+279,not selected
+280,not selected
+281,not selected
+282,not selected
+283,not selected
+284,not selected
+285,not selected
+286,not selected
+287,not selected
+288,not selected
+289,not selected
+290,not selected
+291,not selected
+292,not selected
+293,not selected
+294,not selected
+295,not selected
+296,not selected
+297,not selected
+298,not selected
+299,not selected
+300,train
+301,train
+302,train
+303,train
+304,train
+305,train
+306,train
+307,train
+308,train
+309,train
+310,train
+311,train
+312,train
+313,train
+314,train
+315,train
+316,train
+317,train
+318,train
+319,train
+320,train
+321,train
+322,train
+323,train
+324,train
+325,train
+326,train
+327,train
+328,train
+329,train
+330,train
+331,train
+332,train
+333,train
+334,train
+335,train
+336,train
+337,train
+338,train
+339,train
+340,train
+341,train
+342,train
+343,train
+344,train
+345,train
+346,train
+347,train
+348,train
+349,train
+350,train
+351,train
+352,train
+353,train
+354,train
+355,train
+356,train
+357,train
+358,train
+359,train
+360,train
+361,train
+362,train
+363,train
+364,train
+365,train
+366,train
+367,train
+368,train
+369,train
+370,train
+371,train
+372,train
+373,train
+374,train
+375,train
+376,train
+377,train
+378,train
+379,train
+380,train
+381,train
+382,train
+383,train
+384,train
+385,train
+386,train
+387,train
+388,train
+389,train
+390,train
+391,train
+392,train
+393,train
+394,train
+395,train
+396,train
+397,train
+398,train
+399,train
+400,train
+401,train
+402,train
+403,train
+404,train
+405,train
+406,train
+407,train
+408,train
+409,train
+410,train
+411,train
+412,train
+413,train
+414,train
+415,train
+416,train
+417,train
+418,train
+419,train
+420,train
+421,train
+422,train
+423,train
+424,train
+425,train
+426,train
+427,train
+428,train
+429,train
+430,train
+431,train
+432,train
+433,train
+434,train
+435,train
+436,train
+437,train
+438,train
+439,train
+440,train
+441,train
+442,train
+443,train
+444,train
+445,train
+446,train
+447,train
+448,train
+449,train
+450,train
+451,train
+452,train
+453,train
+454,train
+455,train
+456,train
+457,train
+458,train
+459,train
+460,train
+461,train
+462,train
+463,train
+464,train
+465,train
+466,train
+467,train
+468,train
+469,train
+470,train
+471,train
+472,train
+473,train
+474,train
+475,train
+476,train
+477,train
+478,train
+479,train
+480,train
+481,train
+482,train
+483,train
+484,train
+485,train
+486,train
+487,train
+488,train
+489,train
+490,train
+491,train
+492,train
+493,train
+494,train
+495,train
+496,train
+497,train
+498,train
+499,train
+500,train
+501,train
+502,train
+503,train
+504,train
+505,train
+506,train
+507,train
+508,train
+509,train
+510,train
+511,train
+512,train
+513,train
+514,train
+515,train
+516,train
+517,train
+518,train
+519,train
+520,train
+521,train
+522,train
+523,train
+524,train
+525,train
+526,train
+527,train
+528,train
+529,train
+530,train
+531,train
+532,train
+533,train
+534,train
+535,train
+536,train
+537,train
+538,train
+539,train
+540,train
+541,train
+542,train
+543,train
+544,train
+545,train
+546,train
+547,train
+548,train
+549,train
+550,train
+551,train
+552,train
+553,train
+554,train
+555,train
+556,train
+557,train
+558,train
+559,train
+560,train
+561,train
+562,train
+563,train
+564,train
+565,train
+566,train
+567,train
+568,train
+569,train
+570,train
+571,train
+572,train
+573,train
+574,train
+575,train
+576,train
+577,train
+578,train
+579,train
+580,train
+581,train
+582,train
+583,train
+584,train
+585,train
+586,train
+587,train
+588,train
+589,train
+590,train
+591,train
+592,train
+593,train
+594,train
+595,train
+596,train
+597,train
+598,train
+599,train
+600,train
+601,train
+602,train
+603,train
+604,train
+605,train
+606,train
+607,train
+608,train
+609,train
+610,train
+611,train
+612,train
+613,train
+614,train
+615,train
+616,train
+617,train
+618,train
+619,train
+620,train
+621,train
+622,train
+623,train
+624,train
+625,train
+626,train
+627,train
+628,train
+629,train
+630,train
+631,train
+632,train
+633,train
+634,train
+635,train
+636,train
+637,train
+638,train
+639,train
+640,train
+641,train
+642,train
+643,train
+644,train
+645,train
+646,train
+647,train
+648,train
+649,train
+650,train
+651,train
+652,train
+653,train
+654,train
+655,train
+656,train
+657,train
+658,train
+659,train
+660,train
+661,train
+662,train
+663,train
+664,train
+665,train
+666,train
+667,train
+668,train
+669,train
+670,train
+671,train
+672,train
+673,train
+674,train
+675,train
+676,train
+677,train
+678,train
+679,train
+680,train
+681,train
+682,train
+683,train
+684,train
+685,train
+686,train
+687,train
+688,train
+689,train
+690,train
+691,train
+692,train
+693,train
+694,train
+695,train
+696,train
+697,train
+698,train
+699,train
+700,not selected
+701,not selected
+702,not selected
+703,not selected
+704,not selected
+705,not selected
+706,not selected
+707,not selected
+708,not selected
+709,not selected
+710,not selected
+711,not selected
+712,not selected
+713,not selected
+714,not selected
+715,not selected
+716,not selected
+717,not selected
+718,not selected
+719,not selected
+720,not selected
+721,not selected
+722,not selected
+723,not selected
+724,not selected
+725,not selected
+726,not selected
+727,not selected
+728,not selected
+729,not selected
+730,not selected
+731,not selected
+732,not selected
+733,not selected
+734,not selected
+735,not selected
+736,not selected
+737,not selected
+738,not selected
+739,not selected
+740,not selected
+741,not selected
+742,not selected
+743,not selected
+744,not selected
+745,not selected
+746,not selected
+747,not selected
+748,not selected
+749,not selected
+750,not selected
+751,not selected
+752,not selected
+753,not selected
+754,not selected
+755,not selected
+756,not selected
+757,not selected
+758,not selected
+759,not selected
+760,not selected
+761,not selected
+762,not selected
+763,not selected
+764,not selected
+765,not selected
+766,not selected
+767,not selected
+768,not selected
+769,not selected
+770,not selected
+771,not selected
+772,not selected
+773,not selected
+774,not selected
+775,not selected
+776,not selected
+777,not selected
+778,not selected
+779,not selected
+780,not selected
+781,not selected
+782,not selected
+783,not selected
+784,not selected
+785,not selected
+786,not selected
+787,not selected
+788,not selected
+789,not selected
+790,not selected
+791,not selected
+792,not selected
+793,not selected
+794,not selected
+795,not selected
+796,not selected
+797,not selected
+798,not selected
+799,not selected
+800,train
+801,train
+802,train
+803,train
+804,train
+805,train
+806,train
+807,train
+808,train
+809,train
+810,train
+811,train
+812,train
+813,train
+814,train
+815,train
+816,train
+817,train
+818,train
+819,train
+820,train
+821,train
+822,train
+823,train
+824,train
+825,train
+826,train
+827,train
+828,train
+829,train
+830,train
+831,train
+832,train
+833,train
+834,train
+835,train
+836,train
+837,train
+838,train
+839,train
+840,train
+841,train
+842,train
+843,train
+844,train
+845,train
+846,train
+847,train
+848,train
+849,train
+850,train
+851,train
+852,train
+853,train
+854,train
+855,train
+856,train
+857,train
+858,train
+859,train
+860,train
+861,train
+862,train
+863,train
+864,train
+865,train
+866,train
+867,train
+868,train
+869,train
+870,train
+871,train
+872,train
+873,train
+874,train
+875,train
+876,train
+877,train
+878,train
+879,train
+880,train
+881,train
+882,train
+883,train
+884,train
+885,train
+886,train
+887,train
+888,train
+889,train
+890,train
+891,train
+892,train
+893,train
+894,train
+895,train
+896,train
+897,train
+898,train
+899,train
+900,not selected
+901,not selected
+902,not selected
+903,not selected
+904,not selected
+905,not selected
+906,not selected
+907,not selected
+908,not selected
+909,not selected
+910,not selected
+911,not selected
+912,not selected
+913,not selected
+914,not selected
+915,not selected
+916,not selected
+917,not selected
+918,not selected
+919,not selected
+920,not selected
+921,not selected
+922,not selected
+923,not selected
+924,not selected
+925,not selected
+926,not selected
+927,not selected
+928,not selected
+929,not selected
+930,not selected
+931,not selected
+932,not selected
+933,not selected
+934,not selected
+935,not selected
+936,not selected
+937,not selected
+938,not selected
+939,not selected
+940,not selected
+941,not selected
+942,not selected
+943,not selected
+944,not selected
+945,not selected
+946,not selected
+947,not selected
+948,not selected
+949,not selected
+950,not selected
+951,not selected
+952,not selected
+953,not selected
+954,not selected
+955,not selected
+956,not selected
+957,not selected
+958,not selected
+959,not selected
+960,not selected
+961,not selected
+962,not selected
+963,not selected
+964,not selected
+965,not selected
+966,not selected
+967,not selected
+968,not selected
+969,not selected
+970,not selected
+971,not selected
+972,not selected
+973,not selected
+974,not selected
+975,not selected
+976,not selected
+977,not selected
+978,not selected
+979,not selected
+980,not selected
+981,not selected
+982,not selected
+983,not selected
+984,not selected
+985,not selected
+986,not selected
+987,not selected
+988,not selected
+989,not selected
+990,not selected
+991,not selected
+992,not selected
+993,not selected
+994,not selected
+995,not selected
+996,not selected
+997,not selected
+998,not selected
+999,not selected
+1000,train
+1001,train
+1002,train
+1003,train
+1004,train
+1005,train
+1006,train
+1007,train
+1008,train
+1009,train
+1010,train
+1011,train
+1012,train
+1013,train
+1014,train
+1015,train
+1016,train
+1017,train
+1018,train
+1019,train
+1020,train
+1021,train
+1022,train
+1023,train
+1024,train
+1025,train
+1026,train
+1027,train
+1028,train
+1029,train
+1030,train
+1031,train
+1032,train
+1033,train
+1034,train
+1035,train
+1036,train
+1037,train
+1038,train
+1039,train
+1040,train
+1041,train
+1042,train
+1043,train
+1044,train
+1045,train
+1046,train
+1047,train
+1048,train
+1049,train
+1050,train
+1051,train
+1052,train
+1053,train
+1054,train
+1055,train
+1056,train
+1057,train
+1058,train
+1059,train
+1060,train
+1061,train
+1062,train
+1063,train
+1064,train
+1065,train
+1066,train
+1067,train
+1068,train
+1069,train
+1070,train
+1071,train
+1072,train
+1073,train
+1074,train
+1075,train
+1076,train
+1077,train
+1078,train
+1079,train
+1080,train
+1081,train
+1082,train
+1083,train
+1084,train
+1085,train
+1086,train
+1087,train
+1088,train
+1089,train
+1090,train
+1091,train
+1092,train
+1093,train
+1094,train
+1095,train
+1096,train
+1097,train
+1098,train
+1099,train
+1100,train
+1101,train
+1102,train
+1103,train
+1104,train
+1105,train
+1106,train
+1107,train
+1108,train
+1109,train
+1110,train
+1111,train
+1112,train
+1113,train
+1114,train
+1115,train
+1116,train
+1117,train
+1118,train
+1119,train
+1120,train
+1121,train
+1122,train
+1123,train
+1124,train
+1125,train
+1126,train
+1127,train
+1128,train
+1129,train
+1130,train
+1131,train
+1132,train
+1133,train
+1134,train
+1135,train
+1136,train
+1137,train
+1138,train
+1139,train
+1140,train
+1141,train
+1142,train
+1143,train
+1144,train
+1145,train
+1146,train
+1147,train
+1148,train
+1149,train
+1150,train
+1151,train
+1152,train
+1153,train
+1154,train
+1155,train
+1156,train
+1157,train
+1158,train
+1159,train
+1160,train
+1161,train
+1162,train
+1163,train
+1164,train
+1165,train
+1166,train
+1167,train
+1168,train
+1169,train
+1170,train
+1171,train
+1172,train
+1173,train
+1174,train
+1175,train
+1176,train
+1177,train
+1178,train
+1179,train
+1180,train
+1181,train
+1182,train
+1183,train
+1184,train
+1185,train
+1186,train
+1187,train
+1188,train
+1189,train
+1190,train
+1191,train
+1192,train
+1193,train
+1194,train
+1195,train
+1196,train
+1197,train
+1198,train
+1199,train
+1200,not selected
+1201,not selected
+1202,not selected
+1203,not selected
+1204,not selected
+1205,not selected
+1206,not selected
+1207,not selected
+1208,not selected
+1209,not selected
+1210,not selected
+1211,not selected
+1212,not selected
+1213,not selected
+1214,not selected
+1215,not selected
+1216,not selected
+1217,not selected
+1218,not selected
+1219,not selected
+1220,not selected
+1221,not selected
+1222,not selected
+1223,not selected
+1224,not selected
+1225,not selected
+1226,not selected
+1227,not selected
+1228,not selected
+1229,not selected
+1230,not selected
+1231,not selected
+1232,not selected
+1233,not selected
+1234,not selected
+1235,not selected
+1236,not selected
+1237,not selected
+1238,not selected
+1239,not selected
+1240,not selected
+1241,not selected
+1242,not selected
+1243,not selected
+1244,not selected
+1245,not selected
+1246,not selected
+1247,not selected
+1248,not selected
+1249,not selected
+1250,not selected
+1251,not selected
+1252,not selected
+1253,not selected
+1254,not selected
+1255,not selected
+1256,not selected
+1257,not selected
+1258,not selected
+1259,not selected
+1260,not selected
+1261,not selected
+1262,not selected
+1263,not selected
+1264,not selected
+1265,not selected
+1266,not selected
+1267,not selected
+1268,not selected
+1269,not selected
+1270,not selected
+1271,not selected
+1272,not selected
+1273,not selected
+1274,not selected
+1275,not selected
+1276,not selected
+1277,not selected
+1278,not selected
+1279,not selected
+1280,not selected
+1281,not selected
+1282,not selected
+1283,not selected
+1284,not selected
+1285,not selected
+1286,not selected
+1287,not selected
+1288,not selected
+1289,not selected
+1290,not selected
+1291,not selected
+1292,not selected
+1293,not selected
+1294,not selected
+1295,not selected
+1296,not selected
+1297,not selected
+1298,not selected
+1299,not selected
+1300,not selected
+1301,not selected
+1302,not selected
+1303,not selected
+1304,not selected
+1305,not selected
+1306,not selected
+1307,not selected
+1308,not selected
+1309,not selected
+1310,not selected
+1311,not selected
+1312,not selected
+1313,not selected
+1314,not selected
+1315,not selected
+1316,not selected
+1317,not selected
+1318,not selected
+1319,not selected
+1320,not selected
+1321,not selected
+1322,not selected
+1323,not selected
+1324,not selected
+1325,not selected
+1326,not selected
+1327,not selected
+1328,not selected
+1329,not selected
+1330,not selected
+1331,not selected
+1332,not selected
+1333,not selected
+1334,not selected
+1335,not selected
+1336,not selected
+1337,not selected
+1338,not selected
+1339,not selected
+1340,not selected
+1341,not selected
+1342,not selected
+1343,not selected
+1344,not selected
+1345,not selected
+1346,not selected
+1347,not selected
+1348,not selected
+1349,not selected
+1350,not selected
+1351,not selected
+1352,not selected
+1353,not selected
+1354,not selected
+1355,not selected
+1356,not selected
+1357,not selected
+1358,not selected
+1359,not selected
+1360,not selected
+1361,not selected
+1362,not selected
+1363,not selected
+1364,not selected
+1365,not selected
+1366,not selected
+1367,not selected
+1368,not selected
+1369,not selected
+1370,not selected
+1371,not selected
+1372,not selected
+1373,not selected
+1374,not selected
+1375,not selected
+1376,not selected
+1377,not selected
+1378,not selected
+1379,not selected
+1380,not selected
+1381,not selected
+1382,not selected
+1383,not selected
+1384,not selected
+1385,not selected
+1386,not selected
+1387,not selected
+1388,not selected
+1389,not selected
+1390,not selected
+1391,not selected
+1392,not selected
+1393,not selected
+1394,not selected
+1395,not selected
+1396,not selected
+1397,not selected
+1398,not selected
+1399,not selected
+1400,train
+1401,train
+1402,train
+1403,train
+1404,train
+1405,train
+1406,train
+1407,train
+1408,train
+1409,train
+1410,train
+1411,train
+1412,train
+1413,train
+1414,train
+1415,train
+1416,train
+1417,train
+1418,train
+1419,train
+1420,train
+1421,train
+1422,train
+1423,train
+1424,train
+1425,train
+1426,train
+1427,train
+1428,train
+1429,train
+1430,train
+1431,train
+1432,train
+1433,train
+1434,train
+1435,train
+1436,train
+1437,train
+1438,train
+1439,train
+1440,train
+1441,train
+1442,train
+1443,train
+1444,train
+1445,train
+1446,train
+1447,train
+1448,train
+1449,train
+1450,train
+1451,train
+1452,train
+1453,train
+1454,train
+1455,train
+1456,train
+1457,train
+1458,train
+1459,train
+1460,train
+1461,train
+1462,train
+1463,train
+1464,train
+1465,train
+1466,train
+1467,train
+1468,train
+1469,train
+1470,train
+1471,train
+1472,train
+1473,train
+1474,train
+1475,train
+1476,train
+1477,train
+1478,train
+1479,train
+1480,train
+1481,train
+1482,train
+1483,train
+1484,train
+1485,train
+1486,train
+1487,train
+1488,train
+1489,train
+1490,train
+1491,train
+1492,train
+1493,train
+1494,train
+1495,train
+1496,train
+1497,train
+1498,train
+1499,train
+1500,train
+1501,train
+1502,train
+1503,train
+1504,train
+1505,train
+1506,train
+1507,train
+1508,train
+1509,train
+1510,train
+1511,train
+1512,train
+1513,train
+1514,train
+1515,train
+1516,train
+1517,train
+1518,train
+1519,train
+1520,train
+1521,train
+1522,train
+1523,train
+1524,train
+1525,train
+1526,train
+1527,train
+1528,train
+1529,train
+1530,train
+1531,train
+1532,train
+1533,train
+1534,train
+1535,train
+1536,train
+1537,train
+1538,train
+1539,train
+1540,train
+1541,train
+1542,train
+1543,train
+1544,train
+1545,train
+1546,train
+1547,train
+1548,train
+1549,train
+1550,train
+1551,train
+1552,train
+1553,train
+1554,train
+1555,train
+1556,train
+1557,train
+1558,train
+1559,train
+1560,train
+1561,train
+1562,train
+1563,train
+1564,train
+1565,train
+1566,train
+1567,train
+1568,train
+1569,train
+1570,train
+1571,train
+1572,train
+1573,train
+1574,train
+1575,train
+1576,train
+1577,train
+1578,train
+1579,train
+1580,train
+1581,train
+1582,train
+1583,train
+1584,train
+1585,train
+1586,train
+1587,train
+1588,train
+1589,train
+1590,train
+1591,train
+1592,train
+1593,train
+1594,train
+1595,train
+1596,train
+1597,train
+1598,train
+1599,train
+1600,train
+1601,train
+1602,train
+1603,train
+1604,train
+1605,train
+1606,train
+1607,train
+1608,train
+1609,train
+1610,train
+1611,train
+1612,train
+1613,train
+1614,train
+1615,train
+1616,train
+1617,train
+1618,train
+1619,train
+1620,train
+1621,train
+1622,train
+1623,train
+1624,train
+1625,train
+1626,train
+1627,train
+1628,train
+1629,train
+1630,train
+1631,train
+1632,train
+1633,train
+1634,train
+1635,train
+1636,train
+1637,train
+1638,train
+1639,train
+1640,train
+1641,train
+1642,train
+1643,train
+1644,train
+1645,train
+1646,train
+1647,train
+1648,train
+1649,train
+1650,train
+1651,train
+1652,train
+1653,train
+1654,train
+1655,train
+1656,train
+1657,train
+1658,train
+1659,train
+1660,train
+1661,train
+1662,train
+1663,train
+1664,train
+1665,train
+1666,train
+1667,train
+1668,train
+1669,train
+1670,train
+1671,train
+1672,train
+1673,train
+1674,train
+1675,train
+1676,train
+1677,train
+1678,train
+1679,train
+1680,train
+1681,train
+1682,train
+1683,train
+1684,train
+1685,train
+1686,train
+1687,train
+1688,train
+1689,train
+1690,train
+1691,train
+1692,train
+1693,train
+1694,train
+1695,train
+1696,train
+1697,train
+1698,train
+1699,train
+1700,train
+1701,train
+1702,train
+1703,train
+1704,train
+1705,train
+1706,train
+1707,train
+1708,train
+1709,train
+1710,train
+1711,train
+1712,train
+1713,train
+1714,train
+1715,train
+1716,train
+1717,train
+1718,train
+1719,train
+1720,train
+1721,train
+1722,train
+1723,train
+1724,train
+1725,train
+1726,train
+1727,train
+1728,train
+1729,train
+1730,train
+1731,train
+1732,train
+1733,train
+1734,train
+1735,train
+1736,train
+1737,train
+1738,train
+1739,train
+1740,train
+1741,train
+1742,train
+1743,train
+1744,train
+1745,train
+1746,train
+1747,train
+1748,train
+1749,train
+1750,train
+1751,train
+1752,train
+1753,train
+1754,train
+1755,train
+1756,train
+1757,train
+1758,train
+1759,train
+1760,train
+1761,train
+1762,train
+1763,train
+1764,train
+1765,train
+1766,train
+1767,train
+1768,train
+1769,train
+1770,train
+1771,train
+1772,train
+1773,train
+1774,train
+1775,train
+1776,train
+1777,train
+1778,train
+1779,train
+1780,train
+1781,train
+1782,train
+1783,train
+1784,train
+1785,train
+1786,train
+1787,train
+1788,train
+1789,train
+1790,train
+1791,train
+1792,train
+1793,train
+1794,train
+1795,train
+1796,train
+1797,train
+1798,train
+1799,train
+1800,train
+1801,train
+1802,train
+1803,train
+1804,train
+1805,train
+1806,train
+1807,train
+1808,train
+1809,train
+1810,train
+1811,train
+1812,train
+1813,train
+1814,train
+1815,train
+1816,train
+1817,train
+1818,train
+1819,train
+1820,train
+1821,train
+1822,train
+1823,train
+1824,train
+1825,train
+1826,train
+1827,train
+1828,train
+1829,train
+1830,train
+1831,train
+1832,train
+1833,train
+1834,train
+1835,train
+1836,train
+1837,train
+1838,train
+1839,train
+1840,train
+1841,train
+1842,train
+1843,train
+1844,train
+1845,train
+1846,train
+1847,train
+1848,train
+1849,train
+1850,train
+1851,train
+1852,train
+1853,train
+1854,train
+1855,train
+1856,train
+1857,train
+1858,train
+1859,train
+1860,train
+1861,train
+1862,train
+1863,train
+1864,train
+1865,train
+1866,train
+1867,train
+1868,train
+1869,train
+1870,train
+1871,train
+1872,train
+1873,train
+1874,train
+1875,train
+1876,train
+1877,train
+1878,train
+1879,train
+1880,train
+1881,train
+1882,train
+1883,train
+1884,train
+1885,train
+1886,train
+1887,train
+1888,train
+1889,train
+1890,train
+1891,train
+1892,train
+1893,train
+1894,train
+1895,train
+1896,train
+1897,train
+1898,train
+1899,train
+1900,not selected
+1901,not selected
+1902,not selected
+1903,not selected
+1904,not selected
+1905,not selected
+1906,not selected
+1907,not selected
+1908,not selected
+1909,not selected
+1910,not selected
+1911,not selected
+1912,not selected
+1913,not selected
+1914,not selected
+1915,not selected
+1916,not selected
+1917,not selected
+1918,not selected
+1919,not selected
+1920,not selected
+1921,not selected
+1922,not selected
+1923,not selected
+1924,not selected
+1925,not selected
+1926,not selected
+1927,not selected
+1928,not selected
+1929,not selected
+1930,not selected
+1931,not selected
+1932,not selected
+1933,not selected
+1934,not selected
+1935,not selected
+1936,not selected
+1937,not selected
+1938,not selected
+1939,not selected
+1940,not selected
+1941,not selected
+1942,not selected
+1943,not selected
+1944,not selected
+1945,not selected
+1946,not selected
+1947,not selected
+1948,not selected
+1949,not selected
+1950,not selected
+1951,not selected
+1952,not selected
+1953,not selected
+1954,not selected
+1955,not selected
+1956,not selected
+1957,not selected
+1958,not selected
+1959,not selected
+1960,not selected
+1961,not selected
+1962,not selected
+1963,not selected
+1964,not selected
+1965,not selected
+1966,not selected
+1967,not selected
+1968,not selected
+1969,not selected
+1970,not selected
+1971,not selected
+1972,not selected
+1973,not selected
+1974,not selected
+1975,not selected
+1976,not selected
+1977,not selected
+1978,not selected
+1979,not selected
+1980,not selected
+1981,not selected
+1982,not selected
+1983,not selected
+1984,not selected
+1985,not selected
+1986,not selected
+1987,not selected
+1988,not selected
+1989,not selected
+1990,not selected
+1991,not selected
+1992,not selected
+1993,not selected
+1994,not selected
+1995,not selected
+1996,not selected
+1997,not selected
+1998,not selected
+1999,not selected
+2000,train
+2001,train
+2002,train
+2003,train
+2004,train
+2005,train
+2006,train
+2007,train
+2008,train
+2009,train
+2010,train
+2011,train
+2012,train
+2013,train
+2014,train
+2015,train
+2016,train
+2017,train
+2018,train
+2019,train
+2020,train
+2021,train
+2022,train
+2023,train
+2024,train
+2025,train
+2026,train
+2027,train
+2028,train
+2029,train
+2030,train
+2031,train
+2032,train
+2033,train
+2034,train
+2035,train
+2036,train
+2037,train
+2038,train
+2039,train
+2040,train
+2041,train
+2042,train
+2043,train
+2044,train
+2045,train
+2046,train
+2047,train
+2048,train
+2049,train
+2050,train
+2051,train
+2052,train
+2053,train
+2054,train
+2055,train
+2056,train
+2057,train
+2058,train
+2059,train
+2060,train
+2061,train
+2062,train
+2063,train
+2064,train
+2065,train
+2066,train
+2067,train
+2068,train
+2069,train
+2070,train
+2071,train
+2072,train
+2073,train
+2074,train
+2075,train
+2076,train
+2077,train
+2078,train
+2079,train
+2080,train
+2081,train
+2082,train
+2083,train
+2084,train
+2085,train
+2086,train
+2087,train
+2088,train
+2089,train
+2090,train
+2091,train
+2092,train
+2093,train
+2094,train
+2095,train
+2096,train
+2097,train
+2098,train
+2099,train
+2100,train
+2101,train
+2102,train
+2103,train
+2104,train
+2105,train
+2106,train
+2107,train
+2108,train
+2109,train
+2110,train
+2111,train
+2112,train
+2113,train
+2114,train
+2115,train
+2116,train
+2117,train
+2118,train
+2119,train
+2120,train
+2121,train
+2122,train
+2123,train
+2124,train
+2125,train
+2126,train
+2127,train
+2128,train
+2129,train
+2130,train
+2131,train
+2132,train
+2133,train
+2134,train
+2135,train
+2136,train
+2137,train
+2138,train
+2139,train
+2140,train
+2141,train
+2142,train
+2143,train
+2144,train
+2145,train
+2146,train
+2147,train
+2148,train
+2149,train
+2150,train
+2151,train
+2152,train
+2153,train
+2154,train
+2155,train
+2156,train
+2157,train
+2158,train
+2159,train
+2160,train
+2161,train
+2162,train
+2163,train
+2164,train
+2165,train
+2166,train
+2167,train
+2168,train
+2169,train
+2170,train
+2171,train
+2172,train
+2173,train
+2174,train
+2175,train
+2176,train
+2177,train
+2178,train
+2179,train
+2180,train
+2181,train
+2182,train
+2183,train
+2184,train
+2185,train
+2186,train
+2187,train
+2188,train
+2189,train
+2190,train
+2191,train
+2192,train
+2193,train
+2194,train
+2195,train
+2196,train
+2197,train
+2198,train
+2199,train
+2200,train
+2201,train
+2202,train
+2203,train
+2204,train
+2205,train
+2206,train
+2207,train
+2208,train
+2209,train
+2210,train
+2211,train
+2212,train
+2213,train
+2214,train
+2215,train
+2216,train
+2217,train
+2218,train
+2219,train
+2220,train
+2221,train
+2222,train
+2223,train
+2224,train
+2225,train
+2226,train
+2227,train
+2228,train
+2229,train
+2230,train
+2231,train
+2232,train
+2233,train
+2234,train
+2235,train
+2236,train
+2237,train
+2238,train
+2239,train
+2240,train
+2241,train
+2242,train
+2243,train
+2244,train
+2245,train
+2246,train
+2247,train
+2248,train
+2249,train
+2250,train
+2251,train
+2252,train
+2253,train
+2254,train
+2255,train
+2256,train
+2257,train
+2258,train
+2259,train
+2260,train
+2261,train
+2262,train
+2263,train
+2264,train
+2265,train
+2266,train
+2267,train
+2268,train
+2269,train
+2270,train
+2271,train
+2272,train
+2273,train
+2274,train
+2275,train
+2276,train
+2277,train
+2278,train
+2279,train
+2280,train
+2281,train
+2282,train
+2283,train
+2284,train
+2285,train
+2286,train
+2287,train
+2288,train
+2289,train
+2290,train
+2291,train
+2292,train
+2293,train
+2294,train
+2295,train
+2296,train
+2297,train
+2298,train
+2299,train
+2300,train
+2301,train
+2302,train
+2303,train
+2304,train
+2305,train
+2306,train
+2307,train
+2308,train
+2309,train
+2310,train
+2311,train
+2312,train
+2313,train
+2314,train
+2315,train
+2316,train
+2317,train
+2318,train
+2319,train
+2320,train
+2321,train
+2322,train
+2323,train
+2324,train
+2325,train
+2326,train
+2327,train
+2328,train
+2329,train
+2330,train
+2331,train
+2332,train
+2333,train
+2334,train
+2335,train
+2336,train
+2337,train
+2338,train
+2339,train
+2340,train
+2341,train
+2342,train
+2343,train
+2344,train
+2345,train
+2346,train
+2347,train
+2348,train
+2349,train
+2350,train
+2351,train
+2352,train
+2353,train
+2354,train
+2355,train
+2356,train
+2357,train
+2358,train
+2359,train
+2360,train
+2361,train
+2362,train
+2363,train
+2364,train
+2365,train
+2366,train
+2367,train
+2368,train
+2369,train
+2370,train
+2371,train
+2372,train
+2373,train
+2374,train
+2375,train
+2376,train
+2377,train
+2378,train
+2379,train
+2380,train
+2381,train
+2382,train
+2383,train
+2384,train
+2385,train
+2386,train
+2387,train
+2388,train
+2389,train
+2390,train
+2391,train
+2392,train
+2393,train
+2394,train
+2395,train
+2396,train
+2397,train
+2398,train
+2399,train
+2400,not selected
+2401,not selected
+2402,not selected
+2403,not selected
+2404,not selected
+2405,not selected
+2406,not selected
+2407,not selected
+2408,not selected
+2409,not selected
+2410,not selected
+2411,not selected
+2412,not selected
+2413,not selected
+2414,not selected
+2415,not selected
+2416,not selected
+2417,not selected
+2418,not selected
+2419,not selected
+2420,not selected
+2421,not selected
+2422,not selected
+2423,not selected
+2424,not selected
+2425,not selected
+2426,not selected
+2427,not selected
+2428,not selected
+2429,not selected
+2430,not selected
+2431,not selected
+2432,not selected
+2433,not selected
+2434,not selected
+2435,not selected
+2436,not selected
+2437,not selected
+2438,not selected
+2439,not selected
+2440,not selected
+2441,not selected
+2442,not selected
+2443,not selected
+2444,not selected
+2445,not selected
+2446,not selected
+2447,not selected
+2448,not selected
+2449,not selected
+2450,not selected
+2451,not selected
+2452,not selected
+2453,not selected
+2454,not selected
+2455,not selected
+2456,not selected
+2457,not selected
+2458,not selected
+2459,not selected
+2460,not selected
+2461,not selected
+2462,not selected
+2463,not selected
+2464,not selected
+2465,not selected
+2466,not selected
+2467,not selected
+2468,not selected
+2469,not selected
+2470,not selected
+2471,not selected
+2472,not selected
+2473,not selected
+2474,not selected
+2475,not selected
+2476,not selected
+2477,not selected
+2478,not selected
+2479,not selected
+2480,not selected
+2481,not selected
+2482,not selected
+2483,not selected
+2484,not selected
+2485,not selected
+2486,not selected
+2487,not selected
+2488,not selected
+2489,not selected
+2490,not selected
+2491,not selected
+2492,not selected
+2493,not selected
+2494,not selected
+2495,not selected
+2496,not selected
+2497,not selected
+2498,not selected
+2499,not selected
+2500,train
+2501,train
+2502,train
+2503,train
+2504,train
+2505,train
+2506,train
+2507,train
+2508,train
+2509,train
+2510,train
+2511,train
+2512,train
+2513,train
+2514,train
+2515,train
+2516,train
+2517,train
+2518,train
+2519,train
+2520,train
+2521,train
+2522,train
+2523,train
+2524,train
+2525,train
+2526,train
+2527,train
+2528,train
+2529,train
+2530,train
+2531,train
+2532,train
+2533,train
+2534,train
+2535,train
+2536,train
+2537,train
+2538,train
+2539,train
+2540,train
+2541,train
+2542,train
+2543,train
+2544,train
+2545,train
+2546,train
+2547,train
+2548,train
+2549,train
+2550,train
+2551,train
+2552,train
+2553,train
+2554,train
+2555,train
+2556,train
+2557,train
+2558,train
+2559,train
+2560,train
+2561,train
+2562,train
+2563,train
+2564,train
+2565,train
+2566,train
+2567,train
+2568,train
+2569,train
+2570,train
+2571,train
+2572,train
+2573,train
+2574,train
+2575,train
+2576,train
+2577,train
+2578,train
+2579,train
+2580,train
+2581,train
+2582,train
+2583,train
+2584,train
+2585,train
+2586,train
+2587,train
+2588,train
+2589,train
+2590,train
+2591,train
+2592,train
+2593,train
+2594,train
+2595,train
+2596,train
+2597,train
+2598,train
+2599,train
+2600,train
+2601,train
+2602,train
+2603,train
+2604,train
+2605,train
+2606,train
+2607,train
+2608,train
+2609,train
+2610,train
+2611,train
+2612,train
+2613,train
+2614,train
+2615,train
+2616,train
+2617,train
+2618,train
+2619,train
+2620,train
+2621,train
+2622,train
+2623,train
+2624,train
+2625,train
+2626,train
+2627,train
+2628,train
+2629,train
+2630,train
+2631,train
+2632,train
+2633,train
+2634,train
+2635,train
+2636,train
+2637,train
+2638,train
+2639,train
+2640,train
+2641,train
+2642,train
+2643,train
+2644,train
+2645,train
+2646,train
+2647,train
+2648,train
+2649,train
+2650,train
+2651,train
+2652,train
+2653,train
+2654,train
+2655,train
+2656,train
+2657,train
+2658,train
+2659,train
+2660,train
+2661,train
+2662,train
+2663,train
+2664,train
+2665,train
+2666,train
+2667,train
+2668,train
+2669,train
+2670,train
+2671,train
+2672,train
+2673,train
+2674,train
+2675,train
+2676,train
+2677,train
+2678,train
+2679,train
+2680,train
+2681,train
+2682,train
+2683,train
+2684,train
+2685,train
+2686,train
+2687,train
+2688,train
+2689,train
+2690,train
+2691,train
+2692,train
+2693,train
+2694,train
+2695,train
+2696,train
+2697,train
+2698,train
+2699,train
+2700,train
+2701,train
+2702,train
+2703,train
+2704,train
+2705,train
+2706,train
+2707,train
+2708,train
+2709,train
+2710,train
+2711,train
+2712,train
+2713,train
+2714,train
+2715,train
+2716,train
+2717,train
+2718,train
+2719,train
+2720,train
+2721,train
+2722,train
+2723,train
+2724,train
+2725,train
+2726,train
+2727,train
+2728,train
+2729,train
+2730,train
+2731,train
+2732,train
+2733,train
+2734,train
+2735,train
+2736,train
+2737,train
+2738,train
+2739,train
+2740,train
+2741,train
+2742,train
+2743,train
+2744,train
+2745,train
+2746,train
+2747,train
+2748,train
+2749,train
+2750,train
+2751,train
+2752,train
+2753,train
+2754,train
+2755,train
+2756,train
+2757,train
+2758,train
+2759,train
+2760,train
+2761,train
+2762,train
+2763,train
+2764,train
+2765,train
+2766,train
+2767,train
+2768,train
+2769,train
+2770,train
+2771,train
+2772,train
+2773,train
+2774,train
+2775,train
+2776,train
+2777,train
+2778,train
+2779,train
+2780,train
+2781,train
+2782,train
+2783,train
+2784,train
+2785,train
+2786,train
+2787,train
+2788,train
+2789,train
+2790,train
+2791,train
+2792,train
+2793,train
+2794,train
+2795,train
+2796,train
+2797,train
+2798,train
+2799,train
+2800,train
+2801,train
+2802,train
+2803,train
+2804,train
+2805,train
+2806,train
+2807,train
+2808,train
+2809,train
+2810,train
+2811,train
+2812,train
+2813,train
+2814,train
+2815,train
+2816,train
+2817,train
+2818,train
+2819,train
+2820,train
+2821,train
+2822,train
+2823,train
+2824,train
+2825,train
+2826,train
+2827,train
+2828,train
+2829,train
+2830,train
+2831,train
+2832,train
+2833,train
+2834,train
+2835,train
+2836,train
+2837,train
+2838,train
+2839,train
+2840,train
+2841,train
+2842,train
+2843,train
+2844,train
+2845,train
+2846,train
+2847,train
+2848,train
+2849,train
+2850,train
+2851,train
+2852,train
+2853,train
+2854,train
+2855,train
+2856,train
+2857,train
+2858,train
+2859,train
+2860,train
+2861,train
+2862,train
+2863,train
+2864,train
+2865,train
+2866,train
+2867,train
+2868,train
+2869,train
+2870,train
+2871,train
+2872,train
+2873,train
+2874,train
+2875,train
+2876,train
+2877,train
+2878,train
+2879,train
+2880,train
+2881,train
+2882,train
+2883,train
+2884,train
+2885,train
+2886,train
+2887,train
+2888,train
+2889,train
+2890,train
+2891,train
+2892,train
+2893,train
+2894,train
+2895,train
+2896,train
+2897,train
+2898,train
+2899,train
+2900,train
+2901,train
+2902,train
+2903,train
+2904,train
+2905,train
+2906,train
+2907,train
+2908,train
+2909,train
+2910,train
+2911,train
+2912,train
+2913,train
+2914,train
+2915,train
+2916,train
+2917,train
+2918,train
+2919,train
+2920,train
+2921,train
+2922,train
+2923,train
+2924,train
+2925,train
+2926,train
+2927,train
+2928,train
+2929,train
+2930,train
+2931,train
+2932,train
+2933,train
+2934,train
+2935,train
+2936,train
+2937,train
+2938,train
+2939,train
+2940,train
+2941,train
+2942,train
+2943,train
+2944,train
+2945,train
+2946,train
+2947,train
+2948,train
+2949,train
+2950,train
+2951,train
+2952,train
+2953,train
+2954,train
+2955,train
+2956,train
+2957,train
+2958,train
+2959,train
+2960,train
+2961,train
+2962,train
+2963,train
+2964,train
+2965,train
+2966,train
+2967,train
+2968,train
+2969,train
+2970,train
+2971,train
+2972,train
+2973,train
+2974,train
+2975,train
+2976,train
+2977,train
+2978,train
+2979,train
+2980,train
+2981,train
+2982,train
+2983,train
+2984,train
+2985,train
+2986,train
+2987,train
+2988,train
+2989,train
+2990,train
+2991,train
+2992,train
+2993,train
+2994,train
+2995,train
+2996,train
+2997,train
+2998,train
+2999,train
+3000,train
+3001,train
+3002,train
+3003,train
+3004,train
+3005,train
+3006,train
+3007,train
+3008,train
+3009,train
+3010,train
+3011,train
+3012,train
+3013,train
+3014,train
+3015,train
+3016,train
+3017,train
+3018,train
+3019,train
+3020,train
+3021,train
+3022,train
+3023,train
+3024,train
+3025,train
+3026,train
+3027,train
+3028,train
+3029,train
+3030,train
+3031,train
+3032,train
+3033,train
+3034,train
+3035,train
+3036,train
+3037,train
+3038,train
+3039,train
+3040,train
+3041,train
+3042,train
+3043,train
+3044,train
+3045,train
+3046,train
+3047,train
+3048,train
+3049,train
+3050,train
+3051,train
+3052,train
+3053,train
+3054,train
+3055,train
+3056,train
+3057,train
+3058,train
+3059,train
+3060,train
+3061,train
+3062,train
+3063,train
+3064,train
+3065,train
+3066,train
+3067,train
+3068,train
+3069,train
+3070,train
+3071,train
+3072,train
+3073,train
+3074,train
+3075,train
+3076,train
+3077,train
+3078,train
+3079,train
+3080,train
+3081,train
+3082,train
+3083,train
+3084,train
+3085,train
+3086,train
+3087,train
+3088,train
+3089,train
+3090,train
+3091,train
+3092,train
+3093,train
+3094,train
+3095,train
+3096,train
+3097,train
+3098,train
+3099,train
+3100,train
+3101,train
+3102,train
+3103,train
+3104,train
+3105,train
+3106,train
+3107,train
+3108,train
+3109,train
+3110,train
+3111,train
+3112,train
+3113,train
+3114,train
+3115,train
+3116,train
+3117,train
+3118,train
+3119,train
+3120,train
+3121,train
+3122,train
+3123,train
+3124,train
+3125,train
+3126,train
+3127,train
+3128,train
+3129,train
+3130,train
+3131,train
+3132,train
+3133,train
+3134,train
+3135,train
+3136,train
+3137,train
+3138,train
+3139,train
+3140,train
+3141,train
+3142,train
+3143,train
+3144,train
+3145,train
+3146,train
+3147,train
+3148,train
+3149,train
+3150,train
+3151,train
+3152,train
+3153,train
+3154,train
+3155,train
+3156,train
+3157,train
+3158,train
+3159,train
+3160,train
+3161,train
+3162,train
+3163,train
+3164,train
+3165,train
+3166,train
+3167,train
+3168,train
+3169,train
+3170,train
+3171,train
+3172,train
+3173,train
+3174,train
+3175,train
+3176,train
+3177,train
+3178,train
+3179,train
+3180,train
+3181,train
+3182,train
+3183,train
+3184,train
+3185,train
+3186,train
+3187,train
+3188,train
+3189,train
+3190,train
+3191,train
+3192,train
+3193,train
+3194,train
+3195,train
+3196,train
+3197,train
+3198,train
+3199,train
+3200,train
+3201,train
+3202,train
+3203,train
+3204,train
+3205,train
+3206,train
+3207,train
+3208,train
+3209,train
+3210,train
+3211,train
+3212,train
+3213,train
+3214,train
+3215,train
+3216,train
+3217,train
+3218,train
+3219,train
+3220,train
+3221,train
+3222,train
+3223,train
+3224,train
+3225,train
+3226,train
+3227,train
+3228,train
+3229,train
+3230,train
+3231,train
+3232,train
+3233,train
+3234,train
+3235,train
+3236,train
+3237,train
+3238,train
+3239,train
+3240,train
+3241,train
+3242,train
+3243,train
+3244,train
+3245,train
+3246,train
+3247,train
+3248,train
+3249,train
+3250,train
+3251,train
+3252,train
+3253,train
+3254,train
+3255,train
+3256,train
+3257,train
+3258,train
+3259,train
+3260,train
+3261,train
+3262,train
+3263,train
+3264,train
+3265,train
+3266,train
+3267,train
+3268,train
+3269,train
+3270,train
+3271,train
+3272,train
+3273,train
+3274,train
+3275,train
+3276,train
+3277,train
+3278,train
+3279,train
+3280,train
+3281,train
+3282,train
+3283,train
+3284,train
+3285,train
+3286,train
+3287,train
+3288,train
+3289,train
+3290,train
+3291,train
+3292,train
+3293,train
+3294,train
+3295,train
+3296,train
+3297,train
+3298,train
+3299,train
+3300,train
+3301,train
+3302,train
+3303,train
+3304,train
+3305,train
+3306,train
+3307,train
+3308,train
+3309,train
+3310,train
+3311,train
+3312,train
+3313,train
+3314,train
+3315,train
+3316,train
+3317,train
+3318,train
+3319,train
+3320,train
+3321,train
+3322,train
+3323,train
+3324,train
+3325,train
+3326,train
+3327,train
+3328,train
+3329,train
+3330,train
+3331,train
+3332,train
+3333,train
+3334,train
+3335,train
+3336,train
+3337,train
+3338,train
+3339,train
+3340,train
+3341,train
+3342,train
+3343,train
+3344,train
+3345,train
+3346,train
+3347,train
+3348,train
+3349,train
+3350,train
+3351,train
+3352,train
+3353,train
+3354,train
+3355,train
+3356,train
+3357,train
+3358,train
+3359,train
+3360,train
+3361,train
+3362,train
+3363,train
+3364,train
+3365,train
+3366,train
+3367,train
+3368,train
+3369,train
+3370,train
+3371,train
+3372,train
+3373,train
+3374,train
+3375,train
+3376,train
+3377,train
+3378,train
+3379,train
+3380,train
+3381,train
+3382,train
+3383,train
+3384,train
+3385,train
+3386,train
+3387,train
+3388,train
+3389,train
+3390,train
+3391,train
+3392,train
+3393,train
+3394,train
+3395,train
+3396,train
+3397,train
+3398,train
+3399,train
+3400,train
+3401,train
+3402,train
+3403,train
+3404,train
+3405,train
+3406,train
+3407,train
+3408,train
+3409,train
+3410,train
+3411,train
+3412,train
+3413,train
+3414,train
+3415,train
+3416,train
+3417,train
+3418,train
+3419,train
+3420,train
+3421,train
+3422,train
+3423,train
+3424,train
+3425,train
+3426,train
+3427,train
+3428,train
+3429,train
+3430,train
+3431,train
+3432,train
+3433,train
+3434,train
+3435,train
+3436,train
+3437,train
+3438,train
+3439,train
+3440,train
+3441,train
+3442,train
+3443,train
+3444,train
+3445,train
+3446,train
+3447,train
+3448,train
+3449,train
+3450,train
+3451,train
+3452,train
+3453,train
+3454,train
+3455,train
+3456,train
+3457,train
+3458,train
+3459,train
+3460,train
+3461,train
+3462,train
+3463,train
+3464,train
+3465,train
+3466,train
+3467,train
+3468,train
+3469,train
+3470,train
+3471,train
+3472,train
+3473,train
+3474,train
+3475,train
+3476,train
+3477,train
+3478,train
+3479,train
+3480,train
+3481,train
+3482,train
+3483,train
+3484,train
+3485,train
+3486,train
+3487,train
+3488,train
+3489,train
+3490,train
+3491,train
+3492,train
+3493,train
+3494,train
+3495,train
+3496,train
+3497,train
+3498,train
+3499,train
+3500,train
+3501,train
+3502,train
+3503,train
+3504,train
+3505,train
+3506,train
+3507,train
+3508,train
+3509,train
+3510,train
+3511,train
+3512,train
+3513,train
+3514,train
+3515,train
+3516,train
+3517,train
+3518,train
+3519,train
+3520,train
+3521,train
+3522,train
+3523,train
+3524,train
+3525,train
+3526,train
+3527,train
+3528,train
+3529,train
+3530,train
+3531,train
+3532,train
+3533,train
+3534,train
+3535,train
+3536,train
+3537,train
+3538,train
+3539,train
+3540,train
+3541,train
+3542,train
+3543,train
+3544,train
+3545,train
+3546,train
+3547,train
+3548,train
+3549,train
+3550,train
+3551,train
+3552,train
+3553,train
+3554,train
+3555,train
+3556,train
+3557,train
+3558,train
+3559,train
+3560,train
+3561,train
+3562,train
+3563,train
+3564,train
+3565,train
+3566,train
+3567,train
+3568,train
+3569,train
+3570,train
+3571,train
+3572,train
+3573,train
+3574,train
+3575,train
+3576,train
+3577,train
+3578,train
+3579,train
+3580,train
+3581,train
+3582,train
+3583,train
+3584,train
+3585,train
+3586,train
+3587,train
+3588,train
+3589,train
+3590,train
+3591,train
+3592,train
+3593,train
+3594,train
+3595,train
+3596,train
+3597,train
+3598,train
+3599,train
+3600,train
+3601,train
+3602,train
+3603,train
+3604,train
+3605,train
+3606,train
+3607,train
+3608,train
+3609,train
+3610,train
+3611,train
+3612,train
+3613,train
+3614,train
+3615,train
+3616,train
+3617,train
+3618,train
+3619,train
+3620,train
+3621,train
+3622,train
+3623,train
+3624,train
+3625,train
+3626,train
+3627,train
+3628,train
+3629,train
+3630,train
+3631,train
+3632,train
+3633,train
+3634,train
+3635,train
+3636,train
+3637,train
+3638,train
+3639,train
+3640,train
+3641,train
+3642,train
+3643,train
+3644,train
+3645,train
+3646,train
+3647,train
+3648,train
+3649,train
+3650,train
+3651,train
+3652,train
+3653,train
+3654,train
+3655,train
+3656,train
+3657,train
+3658,train
+3659,train
+3660,train
+3661,train
+3662,train
+3663,train
+3664,train
+3665,train
+3666,train
+3667,train
+3668,train
+3669,train
+3670,train
+3671,train
+3672,train
+3673,train
+3674,train
+3675,train
+3676,train
+3677,train
+3678,train
+3679,train
+3680,train
+3681,train
+3682,train
+3683,train
+3684,train
+3685,train
+3686,train
+3687,train
+3688,train
+3689,train
+3690,train
+3691,train
+3692,train
+3693,train
+3694,train
+3695,train
+3696,train
+3697,train
+3698,train
+3699,train
+3700,train
+3701,train
+3702,train
+3703,train
+3704,train
+3705,train
+3706,train
+3707,train
+3708,train
+3709,train
+3710,train
+3711,train
+3712,train
+3713,train
+3714,train
+3715,train
+3716,train
+3717,train
+3718,train
+3719,train
+3720,train
+3721,train
+3722,train
+3723,train
+3724,train
+3725,train
+3726,train
+3727,train
+3728,train
+3729,train
+3730,train
+3731,train
+3732,train
+3733,train
+3734,train
+3735,train
+3736,train
+3737,train
+3738,train
+3739,train
+3740,train
+3741,train
+3742,train
+3743,train
+3744,train
+3745,train
+3746,train
+3747,train
+3748,train
+3749,train
+3750,train
+3751,train
+3752,train
+3753,train
+3754,train
+3755,train
+3756,train
+3757,train
+3758,train
+3759,train
+3760,train
+3761,train
+3762,train
+3763,train
+3764,train
+3765,train
+3766,train
+3767,train
+3768,train
+3769,train
+3770,train
+3771,train
+3772,train
+3773,train
+3774,train
+3775,train
+3776,train
+3777,train
+3778,train
+3779,train
+3780,train
+3781,train
+3782,train
+3783,train
+3784,train
+3785,train
+3786,train
+3787,train
+3788,train
+3789,train
+3790,train
+3791,train
+3792,train
+3793,train
+3794,train
+3795,train
+3796,train
+3797,train
+3798,train
+3799,train
+3800,not selected
+3801,not selected
+3802,not selected
+3803,not selected
+3804,not selected
+3805,not selected
+3806,not selected
+3807,not selected
+3808,not selected
+3809,not selected
+3810,not selected
+3811,not selected
+3812,not selected
+3813,not selected
+3814,not selected
+3815,not selected
+3816,not selected
+3817,not selected
+3818,not selected
+3819,not selected
+3820,not selected
+3821,not selected
+3822,not selected
+3823,not selected
+3824,not selected
+3825,not selected
+3826,not selected
+3827,not selected
+3828,not selected
+3829,not selected
+3830,not selected
+3831,not selected
+3832,not selected
+3833,not selected
+3834,not selected
+3835,not selected
+3836,not selected
+3837,not selected
+3838,not selected
+3839,not selected
+3840,not selected
+3841,not selected
+3842,not selected
+3843,not selected
+3844,not selected
+3845,not selected
+3846,not selected
+3847,not selected
+3848,not selected
+3849,not selected
+3850,not selected
+3851,not selected
+3852,not selected
+3853,not selected
+3854,not selected
+3855,not selected
+3856,not selected
+3857,not selected
+3858,not selected
+3859,not selected
+3860,not selected
+3861,not selected
+3862,not selected
+3863,not selected
+3864,not selected
+3865,not selected
+3866,not selected
+3867,not selected
+3868,not selected
+3869,not selected
+3870,not selected
+3871,not selected
+3872,not selected
+3873,not selected
+3874,not selected
+3875,not selected
+3876,not selected
+3877,not selected
+3878,not selected
+3879,not selected
+3880,not selected
+3881,not selected
+3882,not selected
+3883,not selected
+3884,not selected
+3885,not selected
+3886,not selected
+3887,not selected
+3888,not selected
+3889,not selected
+3890,not selected
+3891,not selected
+3892,not selected
+3893,not selected
+3894,not selected
+3895,not selected
+3896,not selected
+3897,not selected
+3898,not selected
+3899,not selected
+3900,train
+3901,train
+3902,train
+3903,train
+3904,train
+3905,train
+3906,train
+3907,train
+3908,train
+3909,train
+3910,train
+3911,train
+3912,train
+3913,train
+3914,train
+3915,train
+3916,train
+3917,train
+3918,train
+3919,train
+3920,train
+3921,train
+3922,train
+3923,train
+3924,train
+3925,train
+3926,train
+3927,train
+3928,train
+3929,train
+3930,train
+3931,train
+3932,train
+3933,train
+3934,train
+3935,train
+3936,train
+3937,train
+3938,train
+3939,train
+3940,train
+3941,train
+3942,train
+3943,train
+3944,train
+3945,train
+3946,train
+3947,train
+3948,train
+3949,train
+3950,train
+3951,train
+3952,train
+3953,train
+3954,train
+3955,train
+3956,train
+3957,train
+3958,train
+3959,train
+3960,train
+3961,train
+3962,train
+3963,train
+3964,train
+3965,train
+3966,train
+3967,train
+3968,train
+3969,train
+3970,train
+3971,train
+3972,train
+3973,train
+3974,train
+3975,train
+3976,train
+3977,train
+3978,train
+3979,train
+3980,train
+3981,train
+3982,train
+3983,train
+3984,train
+3985,train
+3986,train
+3987,train
+3988,train
+3989,train
+3990,train
+3991,train
+3992,train
+3993,train
+3994,train
+3995,train
+3996,train
+3997,train
+3998,train
+3999,train

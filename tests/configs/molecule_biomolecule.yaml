@@ -1,6 +1,6 @@
 # Davis Drug-Target Interaction — molecule (drug) + biomolecule (protein)
-input_file: "/homes/rzhu/PALM/tests/data/davis/interactions.csv"
-output_dir: "/homes/rzhu/PALM/tests/output/davis"
+input_file: "/nfs/lambda_stor_01/homes/rzhu/PALM/tests/data/davis/interactions.csv"
+output_dir: "/nfs/lambda_stor_01/homes/rzhu/PALM/tests/output/davis"
 dataset_name: "davis"
 
 e:

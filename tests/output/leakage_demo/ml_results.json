@@ -1,0 +1,56 @@
+{
+  "esol": {
+    "R": {
+      "train_size": 902,
+      "test_size": 226,
+      "train_r2": 0.9017,
+      "test_r2": 0.6666,
+      "test_rmse": 1.2256,
+      "test_mae": 0.9064
+    },
+    "C1e": {
+      "train_size": 925,
+      "test_size": 203,
+      "train_r2": 0.902,
+      "test_r2": 0.3326,
+      "test_rmse": 1.5623,
+      "test_mae": 1.2842
+    }
+  },
+  "lipophilicity": {
+    "R": {
+      "train_size": 800,
+      "test_size": 200,
+      "train_r2": 0.8758,
+      "test_r2": 0.3616,
+      "test_rmse": 0.9281,
+      "test_mae": 0.7178
+    },
+    "C1e": {
+      "train_size": 820,
+      "test_size": 180,
+      "train_r2": 0.8849,
+      "test_r2": 0.1314,
+      "test_rmse": 1.115,
+      "test_mae": 0.8684
+    }
+  },
+  "mp_regression": {
+    "R": {
+      "train_size": 400,
+      "test_size": 100,
+      "train_r2": 0.9754,
+      "test_r2": 0.9226,
+      "test_rmse": 0.2718,
+      "test_mae": 0.2069
+    },
+    "C1e": {
+      "train_size": 410,
+      "test_size": 90,
+      "train_r2": 0.9854,
+      "test_r2": 0.4117,
+      "test_rmse": 0.5697,
+      "test_mae": 0.425
+    }
+  }
+}

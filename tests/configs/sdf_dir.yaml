@@ -1,0 +1,19 @@
+# Directory of SDF files — 1D molecule splitting
+input_file: "/nfs/lambda_stor_01/homes/rzhu/PALM/tests/data/sdf_dir"
+output_dir: "/nfs/lambda_stor_01/homes/rzhu/PALM/tests/output/sdf_dir"
+dataset_name: "sdf_dir"
+
+e1:
+  name: "compound"
+  type: "molecule"
+  extract:
+    column: "smiles"
+  feature_sets:
+    - rdkit_descriptors
+
+splitting:
+  techniques: [R, C1e]
+  splits: [8, 2]
+  names: ["train", "test"]
+  max_sec: 120
+  solver: "SCIP"

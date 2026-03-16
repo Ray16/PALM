@@ -1,6 +1,6 @@
 # Adsorbate-Surface — molecule (adsorbate) + material (surface)
-input_file: "/homes/rzhu/PALM/tests/data/adsorbate_surface/interactions.csv"
-output_dir: "/homes/rzhu/PALM/tests/output/adsorbate_surface"
+input_file: "/nfs/lambda_stor_01/homes/rzhu/PALM/tests/data/adsorbate_surface/interactions.csv"
+output_dir: "/nfs/lambda_stor_01/homes/rzhu/PALM/tests/output/adsorbate_surface"
 dataset_name: "adsorbate_surface"
 
 e:

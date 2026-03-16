@@ -1,0 +1,29 @@
+{
+  "split_counts": {
+    "train": 1681,
+    "test": 369
+  },
+  "split_fractions": {
+    "train": 0.82,
+    "test": 0.18
+  },
+  "coverage": 1.0,
+  "entity_overlap": {
+    "e1_overlap": 0,
+    "e1_total": 2050
+  },
+  "nn_leakage": {
+    "metric": "euclidean",
+    "mean_nn_dist": 54.781901,
+    "median_nn_dist": 19.483548,
+    "min_nn_dist": 7.071134,
+    "max_nn_dist": 1565.257695,
+    "zero_dist_count": 0,
+    "zero_dist_frac": 0.0
+  },
+  "distribution_shift": {
+    "mean_normalized_shift": 0.112,
+    "max_normalized_shift": 1.1785,
+    "num_features": 2068
+  }
+}

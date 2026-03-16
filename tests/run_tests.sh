@@ -20,8 +20,12 @@ echo "  Python   : $PYBIN"
 echo ""
 
 # ── Step 1: prepare datasets and configs ───────────────────────────────────
-echo "[1/2] Preparing datasets and configs..."
+echo "[1/3] Preparing datasets and configs..."
 $PYBIN "$TESTS_DIR/prepare_data.py"
+
+echo "[2/3] Generating multi-format test data..."
+cd "$PARENT_DIR"
+$PYBIN -m PALM.tests.generate_test_data
 
 if [[ "$1" == "--data" ]]; then
     echo "Data preparation complete. Exiting (--data flag set)."
@@ -30,7 +34,7 @@ fi
 
 # ── Step 2: run the pipeline for each config ──────────────────────────────
 echo ""
-echo "[2/2] Running pipelines..."
+echo "[3/3] Running pipelines..."
 
 PASS=0
 FAIL=0
@@ -57,6 +61,11 @@ cd "$PARENT_DIR"
 run_case "molecule + biomolecule (Davis DTI)"          "$TESTS_DIR/configs/molecule_biomolecule.yaml"
 run_case "molecule + material (adsorbate-surface)"     "$TESTS_DIR/configs/molecule_material.yaml"
 run_case "gene + molecule (gene-drug)"                 "$TESTS_DIR/configs/gene_molecule.yaml"
+run_case "SDF file (multi-molecule)"                   "$TESTS_DIR/configs/sdf_molecules.yaml"
+run_case "SDF directory"                               "$TESTS_DIR/configs/sdf_dir.yaml"
+run_case "CIF directory (materials)"                   "$TESTS_DIR/configs/cif_dir.yaml"
+run_case "FASTA file (protein sequences)"              "$TESTS_DIR/configs/fasta_sequences.yaml"
+run_case "SMILES file"                                 "$TESTS_DIR/configs/smiles_molecules.yaml"
 
 # ── Summary ────────────────────────────────────────────────────────────────
 echo ""

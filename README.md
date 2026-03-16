@@ -34,7 +34,7 @@ mamba install -c bioconda mmseqs2 cd-hit diamond foldseek tmalign mash -y
 cd <path_to_PALM>
 
 # Option A
-uvicorn PALM.webapp.app:app --host 0.0.0.0 --port 8080 --reload
+uvicorn webapp.app:app --host 0.0.0.0 --port 8080
 
 # Option B
 bash PALM/webapp/run.sh [port]
@@ -102,8 +102,6 @@ splitting:
   splits: [8, 2]
   names: ["train", "test"]
 ```
-
-> **Note:** The old `e`/`f` config keys are still accepted for backwards compatibility.
 
 ## Input Data (Supported)
 

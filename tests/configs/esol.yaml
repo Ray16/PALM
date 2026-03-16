@@ -1,0 +1,19 @@
+# ESOL aqueous solubility — 1128 molecules, 1D splitting
+input_file: "PALM/tests/data/esol/esol.csv"
+output_dir: "PALM/tests/output/esol"
+dataset_name: "esol"
+
+e:
+  name: "compound"
+  type: "molecule"
+  extract:
+    column: "smiles"
+  feature_sets:
+    - morgan_fingerprint
+
+splitting:
+  techniques: [R, C1e]
+  splits: [8, 2]
+  names: ["train", "test"]
+  max_sec: 600
+  solver: "SCIP"

@@ -1,0 +1,19 @@
+# Materials Project CIF files — 1D material splitting
+input_file: "/nfs/lambda_stor_01/homes/rzhu/PALM/tests/data/mp_cifs"
+output_dir: "/nfs/lambda_stor_01/homes/rzhu/PALM/tests/output/mp_cifs"
+dataset_name: "mp_cifs"
+
+e1:
+  name: "material"
+  type: "material"
+  extract:
+    column: "formula"
+  feature_sets:
+    - magpie_properties
+
+splitting:
+  techniques: [R, C1e]
+  splits: [8, 2]
+  names: ["train", "test"]
+  max_sec: 120
+  solver: "SCIP"

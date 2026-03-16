@@ -1,6 +1,6 @@
 # Gene-Drug pharmacogenomics — gene (CDS) + molecule (drug)
-input_file: "/homes/rzhu/PALM/tests/data/gene_drug/interactions.csv"
-output_dir: "/homes/rzhu/PALM/tests/output/gene_drug"
+input_file: "/nfs/lambda_stor_01/homes/rzhu/PALM/tests/data/gene_drug/interactions.csv"
+output_dir: "/nfs/lambda_stor_01/homes/rzhu/PALM/tests/output/gene_drug"
 dataset_name: "gene_drug"
 
 e:

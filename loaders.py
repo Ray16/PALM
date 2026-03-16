@@ -1,4 +1,4 @@
-"""Multi-format data loading (CSV, JSON, ASE .db, CIF, XYZ, SMILES, PDB, mmCIF, SDF, MOL, MOL2)."""
+"""Multi-format data loading (CSV, TSV, Parquet, JSON, ASE .db, CIF, XYZ, SMILES, PDB, mmCIF, SDF, MOL, MOL2)."""
 
 import logging
 import os
@@ -10,18 +10,56 @@ import pandas as pd
 logger = logging.getLogger(__name__)
 
 
+def _is_material_cif(filepath):
+    """Check whether a single CIF file is a material (crystal) structure
+    rather than a macromolecular (protein) mmCIF file.
+
+    Peeks at the file header and looks for distinguishing keywords.
+    """
+    try:
+        with open(filepath) as fh:
+            head = fh.read(8192)
+    except Exception:
+        return False
+    # Protein mmCIF files contain PDB-style atom records
+    if "_atom_site.group_PDB" in head or "_entity_poly" in head:
+        return False
+    # Material CIF files use fractional coordinates / cell parameters
+    if "_cell_length_a" in head or "_atom_site_fract_x" in head:
+        return True
+    return False
+
+
+def _is_material_cif_dir(path):
+    """Check whether a directory of CIF files contains material (crystal)
+    structures rather than macromolecular (protein) mmCIF files.
+
+    Peeks at the first CIF file and looks for distinguishing keywords.
+    """
+    for fname in sorted(os.listdir(path)):
+        if not fname.endswith((".cif", ".mmcif")):
+            continue
+        fpath = os.path.join(path, fname)
+        result = _is_material_cif(fpath)
+        if result is not None:
+            return result
+    # Default to material (more common for plain .cif directories)
+    return True
+
+
 def _detect_format(path):
-    """Auto-detect file format from extension."""
+    """Auto-detect file format from extension or directory contents."""
     ext = os.path.splitext(path)[1].lower()
     format_map = {
         ".csv": "csv",
+        ".tsv": "tsv",
         ".json": "json",
+        ".parquet": "parquet",
         ".db": "ase_db",
         ".xyz": "xyz",
         ".smi": "smiles",
         ".smiles": "smiles",
         ".pdb": "pdb",
-        ".cif": "mmcif",
         ".mmcif": "mmcif",
         ".fasta": "fasta",
         ".fa": "fasta",
@@ -31,13 +69,42 @@ def _detect_format(path):
         ".mol2": "mol2",
     }
     if os.path.isdir(path):
-        files = os.listdir(path)
-        if any(f.endswith(".pdb") for f in files):
+        # Collect all files, including one level of subdirectories
+        all_files = []
+        for entry in os.listdir(path):
+            full = os.path.join(path, entry)
+            if os.path.isfile(full):
+                all_files.append(entry.lower())
+            elif os.path.isdir(full) and not entry.startswith((".", "_")):
+                # Check one level deeper (e.g. ZIP with subfolder)
+                for sub in os.listdir(full):
+                    all_files.append(sub.lower())
+
+        if any(f.endswith(".pdb") for f in all_files):
             return "pdb_dir"
-        if any(f.endswith((".cif", ".mmcif")) for f in files):
+        if any(f.endswith((".cif", ".mmcif")) for f in all_files):
+            if _is_material_cif_dir(path):
+                return "cif_dir"
             return "mmcif_dir"
-        if any(f.endswith(".xyz") for f in files):
+        if any(f.endswith(".sdf") for f in all_files):
+            return "sdf_dir"
+        if any(f.endswith(".xyz") for f in all_files):
             return "xyz_dir"
+        # If it's a directory with a single recognizable file, use that file's format
+        real_files = [f for f in os.listdir(path)
+                      if os.path.isfile(os.path.join(path, f))
+                      and not f.startswith((".", "_"))]
+        if len(real_files) == 1:
+            return _detect_format(os.path.join(path, real_files[0]))
+        raise ValueError(
+            f"Cannot detect format for directory: {path}. "
+            f"Contents: {os.listdir(path)[:20]}"
+        )
+    # Special handling for .cif: could be material CIF or protein mmCIF
+    if ext == ".cif":
+        if _is_material_cif(path):
+            return "cif"
+        return "mmcif"
     return format_map.get(ext, "csv")
 
 
@@ -83,6 +150,17 @@ def load_ase_db(path):
         rec.update(row.key_value_pairs)
         records.append(rec)
     return pd.DataFrame(records)
+
+
+def load_cif(path):
+    """Load a single material CIF file (requires ase)."""
+    from ase.io import read as ase_read
+    atoms = ase_read(path)
+    stem = os.path.splitext(os.path.basename(path))[0]
+    return pd.DataFrame([{
+        "_row_id": stem,
+        "formula": atoms.get_chemical_formula(),
+    }])
 
 
 def load_cif_dir(path):
@@ -260,6 +338,9 @@ def _parse_mmcif_structure(path):
 
     except ImportError:
         # Fallback: parse _atom_site records manually
+        return _parse_mmcif_manual(path)
+    except (KeyError, ValueError, Exception):
+        # BioPython can fail on non-standard mmCIF files; try manual parser
         return _parse_mmcif_manual(path)
 
 
@@ -474,6 +555,59 @@ def load_sdf(path):
     return pd.DataFrame(records)
 
 
+def _find_sdf_files(path):
+    """Find all .sdf files in a directory, searching one level of subdirectories."""
+    sdf_files = []
+    for entry in sorted(os.listdir(path)):
+        full = os.path.join(path, entry)
+        if os.path.isfile(full) and entry.lower().endswith(".sdf"):
+            sdf_files.append((entry, full))
+        elif os.path.isdir(full) and not entry.startswith((".", "_")):
+            for sub in sorted(os.listdir(full)):
+                subfull = os.path.join(full, sub)
+                if os.path.isfile(subfull) and sub.lower().endswith(".sdf"):
+                    sdf_files.append((sub, subfull))
+    return sdf_files
+
+
+def load_sdf_dir(path):
+    """Load SDF files from a directory (requires rdkit).
+
+    Each file may contain one or more molecules. The _row_id is the filename
+    stem for single-molecule files, or ``{stem}_{i}`` for multi-molecule files.
+    Searches one level of subdirectories if no SDF files found at top level.
+    """
+    from rdkit import Chem
+    from rdkit.Chem import rdMolDescriptors
+
+    sdf_files = _find_sdf_files(path)
+    if not sdf_files:
+        raise ValueError(f"No .sdf files found in {path}")
+
+    records = []
+    for fname, fpath in sdf_files:
+        stem = os.path.splitext(fname)[0]
+        suppl = Chem.SDMolSupplier(fpath, removeHs=False)
+        mols = [m for m in suppl if m is not None]
+        for i, mol in enumerate(mols):
+            if len(mols) == 1:
+                row_id = stem
+            else:
+                row_id = f"{stem}_{i}"
+            smiles = Chem.MolToSmiles(Chem.RemoveHs(mol))
+            formula = rdMolDescriptors.CalcMolFormula(mol)
+            rec = {
+                "_row_id": row_id,
+                "_source_file": fname,
+                "smiles": smiles,
+                "formula": formula,
+            }
+            props = mol.GetPropsAsDict()
+            rec.update({k: v for k, v in props.items() if k != "_Name"})
+            records.append(rec)
+    return pd.DataFrame(records)
+
+
 def load_mol(path):
     """Load a single MOL file (requires rdkit)."""
     from rdkit import Chem
@@ -512,10 +646,36 @@ def load_mol2(path):
     }])
 
 
+def load_tsv(path):
+    """Load TSV (tab-separated values) file."""
+    df = pd.read_csv(path, sep='\t')
+    df["_row_id"] = df.index.astype(str)
+    return df
+
+
+def load_parquet(path):
+    """Load Parquet file."""
+    df = pd.read_parquet(path)
+    df["_row_id"] = df.index.astype(str)
+    return df
+
+
+def load_xyz(path):
+    """Load a single XYZ file (requires ase)."""
+    from ase.io import read as ase_read
+    atoms = ase_read(path)
+    stem = os.path.splitext(os.path.basename(path))[0]
+    return pd.DataFrame([{
+        "_row_id": stem,
+        "formula": atoms.get_chemical_formula(),
+    }])
+
+
 LOADERS = {
     "csv": load_csv,
     "json": load_json,
     "ase_db": load_ase_db,
+    "cif": load_cif,
     "cif_dir": load_cif_dir,
     "xyz_dir": load_xyz_dir,
     "smiles": load_smiles,
@@ -525,8 +685,12 @@ LOADERS = {
     "mmcif_dir": load_mmcif_dir,
     "fasta": load_fasta,
     "sdf": load_sdf,
+    "sdf_dir": load_sdf_dir,
     "mol": load_mol,
     "mol2": load_mol2,
+    "tsv": load_tsv,
+    "parquet": load_parquet,
+    "xyz": load_xyz,
 }
 
 
@@ -575,8 +739,11 @@ FORMAT_TYPE_DEFAULTS = {
     "mmcif":     {"type": "biomolecule", "column": "sequence"},
     "mmcif_dir": {"type": "biomolecule", "column": "sequence"},
     "ase_db":    {"type": "material",    "column": "formula"},
+    "cif":       {"type": "material",    "column": "formula"},
     "cif_dir":   {"type": "material",    "column": "formula"},
+    "xyz":       {"type": "material",    "column": "formula"},
     "xyz_dir":   {"type": "material",    "column": "formula"},
+    "sdf_dir":   {"type": "molecule",    "column": "smiles"},
 }
 
 TYPE_DEFAULT_NAMES = {
@@ -587,7 +754,7 @@ TYPE_DEFAULT_NAMES = {
 }
 
 FEAT_DEFAULTS = {
-    "molecule":    ["rdkit_descriptors", "physicochemical"],
+    "molecule":    ["rdkit_descriptors", "physicochemical", "morgan_fingerprint"],
     "material":    ["magpie_properties", "stoichiometry", "electronic"],
     "biomolecule": ["sequence_properties"],
     "gene":        ["nucleotide_composition", "kmer_frequencies"],
@@ -615,13 +782,18 @@ def _is_smiles(val):
 
 
 def _is_formula(val):
-    """Check if a string looks like a chemical formula with at least one digit."""
+    """Check if a string looks like a chemical formula (e.g. Fe2O3, TiO2, Fe, Cu)."""
     if len(val) < 2 or len(val) > 100:
         return False
     if not _FORMULA_RE.match(val):
         return False
-    # Require at least one digit to distinguish from short AA sequences or element symbols
-    return any(c.isdigit() for c in val)
+    # Accept if it has digits (e.g. Fe2O3) OR is a short element-like string
+    # that wouldn't be confused with amino acid / nucleotide sequences
+    if any(c.isdigit() for c in val):
+        return True
+    # Short strings (<=4 chars) matching element patterns are likely formulas
+    # e.g. Fe, Cu, NaCl, CaO — but not long strings like ACGT which are sequences
+    return len(val) <= 4
 
 
 def _is_amino_acid_sequence(val):
@@ -779,8 +951,9 @@ def build_upload_hints(df, fmt):
                     "feature_sets": FEAT_DEFAULTS["molecule"],
                 }
 
-        # If no second entity yet, pick best column of a different type
-        if suggested_f is None and typed_cols:
+        # For tabular formats (CSV/JSON), pick a second entity from inferred types.
+        # For structure formats (SDF, FASTA, CIF, etc.), skip — they're inherently 1D.
+        if suggested_f is None and fmt in ("csv", "json") and typed_cols:
             for col, ctype, conf in typed_cols:
                 if suggested_e and col == suggested_e["column"]:
                     continue
