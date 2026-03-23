@@ -9,9 +9,12 @@ Feature sets:
   - precomputed_embedding: load embeddings from CSV / .npy / .npz / .pt file
 """
 
+import logging
 import numpy as np
 import pandas as pd
 from itertools import product
+
+logger = logging.getLogger(__name__)
 
 
 # ── Nucleotide composition ────────────────────────────────────────────────
@@ -160,7 +163,7 @@ class NucleotideTransformerEmbedder:
         import torch
         from transformers import AutoModel, AutoTokenizer
 
-        print(f"  Loading DNA model: {self.hub_name}...")
+        logger.info(f"  Loading DNA model: {self.hub_name}...")
         self._tokenizer = AutoTokenizer.from_pretrained(
             self.hub_name, trust_remote_code=True
         )
@@ -170,9 +173,9 @@ class NucleotideTransformerEmbedder:
 
         if torch.cuda.is_available():
             self._model = self._model.cuda()
-            print(f"  Using GPU: {torch.cuda.get_device_name()}")
+            logger.info(f"  Using GPU: {torch.cuda.get_device_name()}")
         else:
-            print("  Using CPU (no GPU detected)")
+            logger.info("  Using CPU (no GPU detected)")
 
         self._model.eval()
 
@@ -314,13 +317,13 @@ def compute_gene_features(
     if "nt_embedding" in feature_sets:
         embedder = _get_nt_embedder(model_name=nt_model, batch_size=nt_batch_size)
         sequences = [entities[eid] for eid in entity_ids]
-        print(f"  Computing NT embeddings ({nt_model}) for {len(sequences)} sequences...")
+        logger.info(f"  Computing NT embeddings ({nt_model}) for {len(sequences)} sequences...")
         emb_matrix = embedder.embed_sequences(sequences)
         emb_cols = [f"nt_{i}" for i in range(emb_matrix.shape[1])]
         emb_df = pd.DataFrame(emb_matrix, index=entity_ids, columns=emb_cols)
         emb_df.index.name = "entity_id"
         df = pd.concat([df, emb_df], axis=1)
-        print(f"  NT embeddings: {emb_matrix.shape[1]} dimensions")
+        logger.info(f"  NT embeddings: {emb_matrix.shape[1]} dimensions")
 
     # Pre-computed embeddings from file
     if "precomputed_embedding" in feature_sets:
@@ -328,7 +331,7 @@ def compute_gene_features(
             raise ValueError(
                 "embedding_file must be specified when using 'precomputed_embedding'"
             )
-        print(f"  Loading pre-computed embeddings from {embedding_file}")
+        logger.info(f"  Loading pre-computed embeddings from {embedding_file}")
 
         from .utils import load_precomputed_embeddings
         emb_aligned = load_precomputed_embeddings(embedding_file, entity_ids)
@@ -336,6 +339,6 @@ def compute_gene_features(
         emb_df = pd.DataFrame(emb_aligned, index=entity_ids, columns=emb_cols)
         emb_df.index.name = "entity_id"
         df = pd.concat([df, emb_df], axis=1)
-        print(f"  Pre-computed embeddings: {emb_aligned.shape[1]} dimensions")
+        logger.info(f"  Pre-computed embeddings: {emb_aligned.shape[1]} dimensions")
 
     return df

@@ -87,7 +87,7 @@ def run_technique(technique, common_kwargs):
     try:
         e_s, f_s, i_s = datasail(techniques=[technique], **common_kwargs)
         return technique, i_s[technique], time.time() - t0, None
-    except Exception as exc:
+    except (RuntimeError, ValueError, TypeError) as exc:
         return technique, None, time.time() - t0, str(exc)
 
 
@@ -217,13 +217,14 @@ def run_splitting(e1_data, e2_data, interactions, config):
 # ── 1D splitting (single entity, no interactions) ────────────────────────
 
 # Techniques that work for 1D (no e2-entity / no interactions)
-TECHNIQUES_1D = {"R", "I1e", "C1e"}
+TECHNIQUES_1D = {"R", "I1e", "C1e", "scaffold"}
 
 # Map 2D techniques to 1D equivalents
 TECHNIQUE_MAP_1D = {
     "R": "R", "I1e": "I1e", "C1e": "C1e",
     "I1f": "I1e", "I2": "I1e",
     "C1f": "C1e", "C2": "C1e",
+    "scaffold": "scaffold",
 }
 
 
@@ -239,7 +240,7 @@ def run_technique_1d(technique, common_kwargs, use_self_inter):
             # C1e / I1e: extract from e_splits
             result = e_s[technique][0]
         return technique, result, time.time() - t0, None
-    except Exception as exc:
+    except (RuntimeError, ValueError, TypeError) as exc:
         return technique, None, time.time() - t0, str(exc)
 
 
@@ -332,3 +333,63 @@ def run_splitting_1d(e_data, config):
         raise RuntimeError("All splitting techniques failed. Check logs for details.")
 
     return results
+
+
+def run_scaffold_splitting(entities, config):
+    """Split molecules by Bemis-Murcko scaffold.
+
+    Groups molecules by their generic scaffold, then assigns scaffold groups
+    to splits proportionally. Ensures no scaffold appears in multiple splits.
+
+    Args:
+        entities: dict {entity_id: SMILES_string}
+        config: SplittingConfig object
+
+    Returns:
+        dict mapping entity_id -> split_name
+    """
+    try:
+        from rdkit import Chem
+        from rdkit.Chem.Scaffolds import MurckoScaffold
+    except ImportError:
+        raise ImportError("Scaffold splitting requires RDKit. Install with: pip install rdkit")
+
+    # Extract scaffolds
+    scaffold_to_entities = {}  # scaffold_smiles -> [entity_ids]
+    for eid, smiles in entities.items():
+        mol = Chem.MolFromSmiles(str(smiles))
+        if mol is None:
+            scaffold_key = "_no_scaffold"
+        else:
+            try:
+                core = MurckoScaffold.GetScaffoldForMol(mol)
+                generic = MurckoScaffold.MakeScaffoldGeneric(core)
+                scaffold_key = Chem.MolToSmiles(generic)
+            except Exception:
+                scaffold_key = "_no_scaffold"
+        scaffold_to_entities.setdefault(scaffold_key, []).append(eid)
+
+    logger.info(f"  Found {len(scaffold_to_entities)} unique scaffolds for {len(entities)} molecules")
+
+    # Sort scaffolds by size (largest first) for greedy bin-packing
+    sorted_scaffolds = sorted(scaffold_to_entities.items(), key=lambda x: len(x[1]), reverse=True)
+
+    # Compute target sizes
+    total = sum(len(eids) for _, eids in sorted_scaffolds)
+    split_sum = sum(config.splits)
+    targets = {name: total * s / split_sum for name, s in zip(config.names, config.splits)}
+    current = {name: 0 for name in config.names}
+
+    # Greedy assignment: assign each scaffold group to the split that is most under-target
+    assignments = {}  # entity_id -> split_name
+    for scaffold, eids in sorted_scaffolds:
+        # Find the split with the largest remaining capacity
+        best_split = max(config.names, key=lambda n: targets[n] - current[n])
+        for eid in eids:
+            assignments[eid] = best_split
+        current[best_split] += len(eids)
+
+    for name in config.names:
+        logger.info(f"    {name}: {current[name]} entities ({100*current[name]/total:.1f}%)")
+
+    return assignments

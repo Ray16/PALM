@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Data Splitting Agent</title>
+<title>PALM — Physics-Aware Leakage Mitigation</title>
 <style>
 :root {
   --bg:       #f0f4f8;
@@ -199,6 +199,30 @@ select:focus,input[type=text]:focus{border-color:var(--primary);
 .plot-gallery .comparison-plot{grid-column:1 / -1;}
 .plot-gallery img{width:100%;border-radius:8px;box-shadow:var(--shadow);}
 
+/* ── Tooltips ── */
+.tooltip-icon{display:inline-flex;align-items:center;justify-content:center;
+  width:16px;height:16px;border-radius:50%;background:var(--border);color:var(--muted);
+  font-size:.65rem;font-weight:700;cursor:help;position:relative;flex-shrink:0;
+  margin-left:.3rem;vertical-align:middle;}
+.tooltip-icon:hover{background:var(--primary);color:#fff;}
+.tooltip-icon .tooltip-text{visibility:hidden;opacity:0;position:absolute;z-index:10;
+  bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  background:#1e293b;color:#e2e8f0;padding:.6rem .8rem;border-radius:8px;
+  font-size:.78rem;font-weight:400;line-height:1.5;white-space:normal;
+  width:280px;box-shadow:0 4px 12px rgba(0,0,0,.2);pointer-events:none;
+  transition:opacity .15s;}
+.tooltip-icon:hover .tooltip-text{visibility:visible;opacity:1;}
+
+/* ── Recommendation badge ── */
+.rec-badge{display:inline-flex;align-items:center;gap:.25rem;padding:.15rem .5rem;
+  border-radius:999px;font-size:.65rem;font-weight:700;background:#f0fdf4;
+  color:#16a34a;border:1px solid #bbf7d0;margin-left:.35rem;vertical-align:middle;}
+
+/* ── Help callout ── */
+.help-callout{background:var(--pri-light);border:1px solid #bfdbfe;border-radius:8px;
+  padding:.75rem 1rem;margin-bottom:1rem;font-size:.82rem;color:#1e40af;line-height:1.5;}
+.help-callout strong{color:var(--primary);}
+
 /* ── Panel visibility ── */
 .panel{display:none;}
 .panel.active{display:block;}
@@ -209,8 +233,8 @@ select:focus,input[type=text]:focus{border-color:var(--primary);
 
   <!-- Logo -->
   <div class="logo">
-    <h1>⚗️ Data Splitting Agent</h1>
-    <p>Scientifically rigorous train/test splitting powered by DataSAIL</p>
+    <h1>PALM</h1>
+    <p>Physics-Aware Leakage Mitigation for molecules, materials, and genes</p>
   </div>
 
   <!-- Step indicator -->
@@ -224,7 +248,7 @@ select:focus,input[type=text]:focus{border-color:var(--primary);
   <!-- ── Panel 1: Upload ── -->
   <div class="panel active" id="p1">
     <div class="card">
-      <div class="card-title">📂 Upload your dataset</div>
+      <div class="card-title">Upload your dataset</div>
       <div id="error-upload" class="alert alert-error" style="display:none;"></div>
       <div class="dropzone" id="dropzone" onclick="document.getElementById('file-input').click()">
         <div class="dropzone-icon">📄</div>
@@ -261,11 +285,24 @@ select:focus,input[type=text]:focus{border-color:var(--primary);
   <!-- ── Panel 2: Configure ── -->
   <div class="panel" id="p2">
     <div class="card">
-      <div class="card-title">⚙️ Configure entities</div>
+      <div class="card-title">Configure entities</div>
+
+      <div class="help-callout" id="config-help">
+        <strong>How it works:</strong> PALM splits your data so that similar entities end up in the same
+        split, preventing data leakage. Choose your entity type and features below.
+        For interaction data (e.g., drug-target), use 2D mode. For single-entity data (e.g., molecule properties), use 1D mode.
+      </div>
 
       <!-- Mode toggle -->
       <div class="form-group" style="margin-bottom:1.25rem;">
-        <label>Splitting mode</label>
+        <label>Splitting mode
+          <span class="tooltip-icon">?<span class="tooltip-text">
+            <strong>1D mode:</strong> Split a single entity (molecules, proteins, genes, or materials) by similarity.
+            Best for property prediction tasks.<br><br>
+            <strong>2D mode:</strong> Split interaction data (e.g., drug-target pairs) ensuring no entity leaks across splits.
+            Best for interaction prediction tasks.
+          </span></span>
+        </label>
         <div style="display:flex;gap:.5rem;margin-top:.3rem;">
           <label class="feat-pill" style="padding:.4rem .9rem;font-size:.85rem;">
             <input type="radio" name="split-mode" value="1d" onchange="toggleMode()"> Single entity (1D)
@@ -333,7 +370,7 @@ select:focus,input[type=text]:focus{border-color:var(--primary);
     </div>
 
     <div class="card">
-      <div class="card-title">🔀 Splitting configuration</div>
+      <div class="card-title">Splitting configuration</div>
       <div class="grid-2">
         <div class="form-group">
           <label>Split ratio</label>
@@ -351,9 +388,16 @@ select:focus,input[type=text]:focus{border-color:var(--primary);
         </div>
       </div>
       <div class="form-group" style="margin-top:.5rem;">
-        <label>Splitting techniques</label>
+        <label>Splitting techniques
+          <span class="tooltip-icon">?<span class="tooltip-text">
+            <strong>Random (R):</strong> Baseline — no leakage control.<br>
+            <strong>Identity (I*):</strong> Ensures no entity appears in both train and test.<br>
+            <strong>Cluster (C*):</strong> Groups similar entities together — strongest leakage prevention. Recommended for rigorous evaluation.
+          </span></span>
+        </label>
         <p style="font-size:.78rem;color:var(--muted);margin-bottom:.6rem;">
           Cluster techniques (C*) give the most rigorous splits but require more time.
+          We recommend running Random + Cluster to compare leakage levels.
         </p>
         <div class="technique-grid" id="technique-grid"></div>
       </div>
@@ -368,7 +412,7 @@ select:focus,input[type=text]:focus{border-color:var(--primary);
   <div class="panel" id="p3">
     <div class="card">
       <div class="card-title">
-        ⏳ Running pipeline
+        Running pipeline
         <span class="status-badge running" id="status-badge">Running</span>
       </div>
       <div class="progress-wrap">
@@ -390,7 +434,7 @@ select:focus,input[type=text]:focus{border-color:var(--primary);
   <!-- ── Panel 4: Done ── -->
   <div class="panel" id="p4">
     <div class="card">
-      <div class="done-icon" id="done-icon">✅</div>
+      <div class="done-icon" id="done-icon"></div>
       <h2 style="text-align:center;font-size:1.3rem;margin-bottom:.4rem;" id="done-title">
         Splitting complete!
       </h2>
@@ -420,33 +464,33 @@ let evtSrc   = null;
 // ── Feature sets metadata ─────────────────────────────────────────────────
 const FEATURES = {
   molecule:    [
-    {id:'rdkit_descriptors', label:'RDKit Descriptors',    desc:'MW, HBD, HBA, TPSA, LogP (9 feat)'},
-    {id:'physicochemical',   label:'Physicochemical',      desc:'Atom counts, rings, aromaticity (11 feat)'},
-    {id:'composition',       label:'Composition',          desc:'Elemental counts + weighted properties'},
-    {id:'morgan_fingerprint', label:'Morgan Fingerprint',   desc:'ECFP4 circular fingerprint (2048 bits, uses Tanimoto distance)'},
+    {id:'rdkit_descriptors', label:'RDKit Descriptors',    desc:'Molecular weight, H-bond donors/acceptors, TPSA, LogP (9 features). Fast, good for general similarity.'},
+    {id:'physicochemical',   label:'Physicochemical',      desc:'Atom counts, rings, aromaticity, sp3 fraction (11 features). Captures structural complexity.'},
+    {id:'composition',       label:'Composition',          desc:'Elemental counts + weighted property averages. Captures bulk composition similarity.'},
+    {id:'morgan_fingerprint', label:'Morgan Fingerprint',   desc:'ECFP4 circular fingerprint (2048 bits). Best for substructure similarity — uses Tanimoto distance automatically.'},
   ],
   material:    [
-    {id:'magpie_properties', label:'MAGPIE Properties',    desc:'Statistical elemental descriptors (~130 feat)'},
-    {id:'stoichiometry',     label:'Stoichiometry',        desc:'L-norm stoichiometric features'},
-    {id:'electronic',        label:'Electronic',           desc:'Electronegativity, ionization energy'},
-    {id:'bonding',           label:'Bonding',              desc:'Atomic/covalent radius stats'},
-    {id:'thermodynamic',     label:'Thermodynamic',        desc:'Melting point, cohesive energy'},
-    {id:'classification',    label:'Classification',       desc:'Metal/nonmetal/block fractions'},
-    {id:'matminer_elementproperty', label:'Matminer MAGPIE', desc:'MAGPIE via matminer (requires matminer)'},
-    {id:'mat2vec_embedding',  label:'Mat2Vec Embedding',    desc:'Composition-weighted mat2vec (200 feat)'},
-    {id:'crystalnn_fingerprint', label:'CrystalNN Fingerprint', desc:'Site fingerprints (requires structure)'},
-    {id:'soap_descriptor',    label:'SOAP Descriptor',      desc:'SOAP descriptors (requires structure)'},
+    {id:'magpie_properties', label:'MAGPIE Properties',    desc:'Statistical elemental descriptors (~130 features). Standard for materials informatics.'},
+    {id:'stoichiometry',     label:'Stoichiometry',        desc:'Element count, total atoms, entropy, L-p norms (8 features). Captures composition complexity.'},
+    {id:'electronic',        label:'Electronic',           desc:'d-electron, valence electron, oxidation state, work function statistics (12 features).'},
+    {id:'bonding',           label:'Bonding',              desc:'Electronegativity differences, ionic radii, polarizability, tolerance factor (9 features).'},
+    {id:'thermodynamic',     label:'Thermodynamic',        desc:'Melting points, oxide formation enthalpies, reducibility (8 features).'},
+    {id:'classification',    label:'Classification',       desc:'Transition metal, noble metal, rare earth flags and fractions (8 features).'},
+    {id:'matminer_elementproperty', label:'Matminer MAGPIE', desc:'MAGPIE via matminer library. More comprehensive but requires matminer package.'},
+    {id:'mat2vec_embedding',  label:'Mat2Vec Embedding',    desc:'Composition-weighted mat2vec element embeddings (200 features). Captures learned material similarity.'},
+    {id:'crystalnn_fingerprint', label:'CrystalNN Fingerprint', desc:'Crystal structure site fingerprints. Requires structure files (CIF/XYZ).'},
+    {id:'soap_descriptor',    label:'SOAP Descriptor',      desc:'Smooth Overlap of Atomic Positions. 3D structure descriptor, requires dscribe + structure files.'},
   ],
   biomolecule: [
-    {id:'sequence_properties',   label:'Sequence Properties', desc:'Length, MW, hydrophobicity, charge (16 feat)'},
-    {id:'esm_embedding',         label:'ESM2 Embedding',      desc:'Protein language model (requires torch)'},
-    {id:'precomputed_embedding', label:'Precomputed',         desc:'Load from .csv/.npy/.npz/.pt'},
+    {id:'sequence_properties',   label:'Sequence Properties', desc:'Length, MW, hydrophobicity, charge, amino acid fractions (16 features). Fast, no dependencies.'},
+    {id:'esm_embedding',         label:'ESM2 Embedding',      desc:'Protein language model embeddings (1280 dims). Captures evolutionary and structural similarity. Requires torch + GPU recommended.'},
+    {id:'precomputed_embedding', label:'Precomputed',         desc:'Load embeddings from a pre-computed file (.csv/.npy/.npz/.pt). Use when you have custom embeddings.'},
   ],
   gene:        [
-    {id:'nucleotide_composition', label:'Nucleotide Composition', desc:'GC%, skew, CpG O/E, Tm (11 feat)'},
-    {id:'kmer_frequencies',       label:'K-mer Frequencies',      desc:'Di+trinucleotide freqs (80 feat)'},
-    {id:'nt_embedding',           label:'NT Embedding',           desc:'Nucleotide Transformer (requires torch)'},
-    {id:'precomputed_embedding',  label:'Precomputed',            desc:'Load from .csv/.npy/.npz/.pt'},
+    {id:'nucleotide_composition', label:'Nucleotide Composition', desc:'GC content, nucleotide frequencies, CpG O/E ratio, melting temp (11 features). Fast.'},
+    {id:'kmer_frequencies',       label:'K-mer Frequencies',      desc:'Dinucleotide + trinucleotide frequencies (80 features). Captures local composition bias.'},
+    {id:'nt_embedding',           label:'NT Embedding',           desc:'Nucleotide Transformer embeddings (1024 dims). Deep learning DNA/RNA representations. Requires torch + GPU recommended.'},
+    {id:'precomputed_embedding',  label:'Precomputed',            desc:'Load embeddings from a pre-computed file (.csv/.npy/.npz/.pt). Use when you have custom embeddings.'},
   ],
 };
 
@@ -459,19 +503,20 @@ const FEAT_DEFAULTS = {
 };
 
 const TECHNIQUES_2D = [
-  {id:'R',   name:'Random',          desc:'Baseline random split'},
-  {id:'I1e', name:'Identity (1)',    desc:'No entity 1 shared across sets'},
-  {id:'I1f', name:'Identity (2)',    desc:'No entity 2 shared across sets'},
-  {id:'I2',  name:'Identity (both)', desc:'No shared entities on either axis'},
-  {id:'C1e', name:'Cluster (1)',     desc:'Cluster entity 1 by features'},
-  {id:'C1f', name:'Cluster (2)',     desc:'Cluster entity 2 by features'},
-  {id:'C2',  name:'Cluster (both)', desc:'Cluster both axes (most rigorous)'},
+  {id:'R',   name:'Random',          desc:'Baseline random split (fast, no leakage control)', rec: false},
+  {id:'I1e', name:'Identity (1)',    desc:'No entity 1 shared across splits', rec: false},
+  {id:'I1f', name:'Identity (2)',    desc:'No entity 2 shared across splits', rec: false},
+  {id:'I2',  name:'Identity (both)', desc:'No shared entities on either axis — prevents entity leakage', rec: true},
+  {id:'C1e', name:'Cluster (1)',     desc:'Cluster entity 1 by similarity — prevents similar entity leakage', rec: false},
+  {id:'C1f', name:'Cluster (2)',     desc:'Cluster entity 2 by similarity', rec: false},
+  {id:'C2',  name:'Cluster (both)', desc:'Cluster both axes — strongest leakage prevention (slower)', rec: true},
 ];
 
 const TECHNIQUES_1D = [
-  {id:'R',   name:'Random',    desc:'Baseline random split'},
-  {id:'I1e', name:'Identity',  desc:'No shared entities across sets'},
-  {id:'C1e', name:'Cluster',   desc:'Cluster entities by features (most rigorous)'},
+  {id:'R',   name:'Random',    desc:'Baseline random split (fast, no leakage control)', rec: false},
+  {id:'I1e', name:'Identity',  desc:'No shared entities across splits — prevents exact duplicates', rec: false},
+  {id:'C1e', name:'Cluster',   desc:'Cluster entities by similarity — strongest leakage prevention', rec: true},
+  {id:'scaffold', name:'Scaffold', desc:'Group molecules by Bemis-Murcko scaffold — chemistry-aware splitting (molecules only)', rec: true},
 ];
 
 // ── Initialise ────────────────────────────────────────────────────────────
@@ -792,7 +837,7 @@ function buildTechniqueGrid() {
       <input type="checkbox" name="technique" value="${t.id}"
         ${defaults.includes(t.id) ? 'checked' : ''}>
       <div>
-        <div class="technique-name">${t.name} <code style="font-size:.7rem;opacity:.7">${t.id}</code></div>
+        <div class="technique-name">${t.name} <code style="font-size:.7rem;opacity:.7">${t.id}</code>${t.rec ? '<span class="rec-badge">Recommended</span>' : ''}</div>
         <div class="technique-desc">${t.desc}</div>
       </div>
     </label>`).join('');

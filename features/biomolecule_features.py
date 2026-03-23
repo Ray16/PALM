@@ -6,8 +6,11 @@ Supports featurization from amino acid sequences using:
   - Pre-computed embeddings from file (requires numpy)
 """
 
+import logging
 import numpy as np
 import pandas as pd
+
+logger = logging.getLogger(__name__)
 
 # Amino acid properties: MW, pI, hydrophobicity (Kyte-Doolittle), charge at pH 7,
 #                         volume (A^3), surface_area (A^2), flexibility
@@ -165,15 +168,15 @@ class ESM2Embedder:
         import torch
         from transformers import AutoModel, AutoTokenizer
 
-        print(f"  Loading ESM2 model: {self.hub_name}...")
+        logger.info(f"  Loading ESM2 model: {self.hub_name}...")
         self._tokenizer = AutoTokenizer.from_pretrained(self.hub_name)
         self._model = AutoModel.from_pretrained(self.hub_name)
 
         if torch.cuda.is_available():
             self._model = self._model.cuda()
-            print(f"  Using GPU: {torch.cuda.get_device_name()}")
+            logger.info(f"  Using GPU: {torch.cuda.get_device_name()}")
         else:
-            print("  Using CPU (no GPU detected)")
+            logger.info("  Using CPU (no GPU detected)")
 
         self._model.eval()
 
@@ -326,14 +329,14 @@ def compute_biomolecule_features(
     if "esm_embedding" in feature_sets:
         embedder = _get_esm2_embedder(model_name=esm_model, batch_size=esm_batch_size)
         sequences = [entities[eid] for eid in entity_ids]
-        print(f"  Computing ESM2 embeddings ({esm_model}) for {len(sequences)} sequences...")
+        logger.info(f"  Computing ESM2 embeddings ({esm_model}) for {len(sequences)} sequences...")
         emb_matrix = embedder.embed_sequences(sequences)
 
         emb_cols = [f"esm_{i}" for i in range(emb_matrix.shape[1])]
         emb_df = pd.DataFrame(emb_matrix, index=entity_ids, columns=emb_cols)
         emb_df.index.name = "entity_id"
         df = pd.concat([df, emb_df], axis=1)
-        print(f"  ESM2 embeddings: {emb_matrix.shape[1]} dimensions")
+        logger.info(f"  ESM2 embeddings: {emb_matrix.shape[1]} dimensions")
 
     # Pre-computed embeddings from file
     if "precomputed_embedding" in feature_sets:
@@ -341,7 +344,7 @@ def compute_biomolecule_features(
             raise ValueError(
                 "embedding_file must be specified when using 'precomputed_embedding' feature set"
             )
-        print(f"  Loading pre-computed embeddings from {embedding_file}")
+        logger.info(f"  Loading pre-computed embeddings from {embedding_file}")
 
         from .utils import load_precomputed_embeddings
         emb_aligned = load_precomputed_embeddings(embedding_file, entity_ids)
@@ -349,6 +352,6 @@ def compute_biomolecule_features(
         emb_df = pd.DataFrame(emb_aligned, index=entity_ids, columns=emb_cols)
         emb_df.index.name = "entity_id"
         df = pd.concat([df, emb_df], axis=1)
-        print(f"  Pre-computed embeddings: {emb_aligned.shape[1]} dimensions")
+        logger.info(f"  Pre-computed embeddings: {emb_aligned.shape[1]} dimensions")
 
     return df

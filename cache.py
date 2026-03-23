@@ -10,12 +10,22 @@ import pandas as pd
 
 logger = logging.getLogger(__name__)
 
+# Increment this version whenever feature computation logic changes to
+# invalidate all existing caches.  This ensures stale cached values are
+# never reused after the underlying code has been updated.
+CACHE_VERSION = "2"
+
 CACHE_DIR = os.environ.get("PALM_CACHE_DIR", os.path.join(os.path.expanduser("~"), ".palm_cache"))
 
 
 def _cache_key(entities, entity_type, feature_sets):
-    """Generate a deterministic hash key from entity data and feature config."""
+    """Generate a deterministic hash key from entity data and feature config.
+
+    The key incorporates ``CACHE_VERSION`` so that bumping the version
+    automatically invalidates every previously cached result.
+    """
     h = hashlib.sha256()
+    h.update(f"v{CACHE_VERSION}".encode())
     h.update(entity_type.encode())
     h.update(json.dumps(sorted(feature_sets) if feature_sets else [], sort_keys=True).encode())
     for eid in sorted(entities.keys()):

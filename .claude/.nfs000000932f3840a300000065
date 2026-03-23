@@ -61,7 +61,9 @@
       "Read(//homes/rzhu/**)",
       "Bash(find:*)",
       "Bash(rm:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Read(//nfs/lambda_stor_01/homes/rzhu/**)",
+      "Bash(/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/bin/python -c \":*)"
     ]
   }
 }

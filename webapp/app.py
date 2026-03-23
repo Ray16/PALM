@@ -1,4 +1,4 @@
-"""FastAPI web server for the Data Splitting Agent.
+"""FastAPI web server for the PALM Data Splitting Agent.
 
 Endpoints:
   GET  /                       → serve the single-page UI
@@ -16,14 +16,17 @@ Run:
 
 import asyncio
 import json
+import logging
 import os
+import shutil
 import threading
+import time
 import uuid
 import zipfile
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi import FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse, StreamingResponse
 from pydantic import BaseModel
@@ -37,19 +40,87 @@ from ..config import (
 )
 from ..pipeline import run_pipeline
 
+logger = logging.getLogger(__name__)
+
 # ── App setup ─────────────────────────────────────────────────────────────
-app = FastAPI(title="Data Splitting Agent")
+app = FastAPI(title="PALM Data Splitting Agent")
+
+# CORS: configurable via env var, defaults to permissive for local dev
+_allowed_origins = os.environ.get("PALM_CORS_ORIGINS", "*").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], allow_methods=["*"], allow_headers=["*"],
+    allow_origins=_allowed_origins, allow_methods=["*"], allow_headers=["*"],
 )
 
 JOBS_DIR = Path(os.environ.get("DATASAIL_JOBS_DIR", "/tmp/datasail_webapp"))
 JOBS_DIR.mkdir(parents=True, exist_ok=True)
 
+# Upload size limit (default 500 MB)
+MAX_UPLOAD_BYTES = int(os.environ.get("PALM_MAX_UPLOAD_MB", "500")) * 1024 * 1024
+
+# Job cleanup: delete jobs older than this many hours (default 24)
+JOB_MAX_AGE_HOURS = int(os.environ.get("PALM_JOB_MAX_AGE_HOURS", "24"))
+
+# Simple per-IP rate limiting
+_rate_lock = threading.Lock()
+_rate_map: Dict[str, list] = {}  # ip -> list of timestamps
+RATE_LIMIT_WINDOW = 60   # seconds
+RATE_LIMIT_MAX = int(os.environ.get("PALM_RATE_LIMIT", "30"))  # max requests per window
+
 # Thread-safe job registry
 _lock: threading.Lock = threading.Lock()
 _jobs: Dict[str, dict] = {}
+
+
+# ── Rate limiting ────────────────────────────────────────────────────────
+
+def _check_rate_limit(client_ip: str):
+    """Raise HTTPException if client exceeds rate limit."""
+    now = time.time()
+    with _rate_lock:
+        timestamps = _rate_map.get(client_ip, [])
+        timestamps = [t for t in timestamps if now - t < RATE_LIMIT_WINDOW]
+        if len(timestamps) >= RATE_LIMIT_MAX:
+            raise HTTPException(429, "Rate limit exceeded. Please try again later.")
+        timestamps.append(now)
+        _rate_map[client_ip] = timestamps
+
+
+# ── Job cleanup ──────────────────────────────────────────────────────────
+
+def _cleanup_old_jobs():
+    """Delete job directories older than JOB_MAX_AGE_HOURS."""
+    if not JOBS_DIR.is_dir():
+        return
+    cutoff = time.time() - JOB_MAX_AGE_HOURS * 3600
+    cleaned = 0
+    for entry in JOBS_DIR.iterdir():
+        if not entry.is_dir():
+            continue
+        try:
+            mtime = entry.stat().st_mtime
+            if mtime < cutoff:
+                shutil.rmtree(entry, ignore_errors=True)
+                with _lock:
+                    _jobs.pop(entry.name, None)
+                cleaned += 1
+        except OSError:
+            pass
+    if cleaned:
+        logger.info(f"Cleaned up {cleaned} old job(s)")
+
+
+@app.on_event("startup")
+async def _startup_cleanup():
+    """Run cleanup on startup and schedule periodic cleanup."""
+    _cleanup_old_jobs()
+
+    async def _periodic_cleanup():
+        while True:
+            await asyncio.sleep(3600)  # every hour
+            _cleanup_old_jobs()
+
+    asyncio.create_task(_periodic_cleanup())
 
 
 # ── Job helpers ───────────────────────────────────────────────────────────
@@ -93,13 +164,29 @@ async def index():
 
 
 @app.post("/api/upload")
-async def upload(file: UploadFile = File(...)):
+async def upload(file: UploadFile = File(...), request: Request = None):
     """Accept a data file (or ZIP archive of a directory), return job_id + detected column names."""
+    # Rate limit
+    client_ip = request.client.host if request and request.client else "unknown"
+    _check_rate_limit(client_ip)
+
     job_id   = str(uuid.uuid4())
     job_dir  = JOBS_DIR / job_id
     job_dir.mkdir(parents=True)
 
     data      = await file.read()
+
+    # Enforce upload size limit
+    if len(data) > MAX_UPLOAD_BYTES:
+        shutil.rmtree(job_dir, ignore_errors=True)
+        max_mb = MAX_UPLOAD_BYTES // (1024 * 1024)
+        raise HTTPException(
+            413,
+            f"File too large ({len(data) / 1024 / 1024:.1f} MB). "
+            f"Maximum upload size is {max_mb} MB. "
+            f"Try reducing your dataset or compressing it."
+        )
+
     # Sanitize filename to prevent path traversal
     safe_name = Path(file.filename).name
     if not safe_name:
@@ -169,12 +256,20 @@ async def upload(file: UploadFile = File(...)):
                             "type": info["type"],
                         }
                 stats["columns"] = col_stats
-        except Exception as exc:
-            print(f"[upload] Preview error: {exc}")
+        except (ValueError, KeyError, TypeError) as exc:
+            logger.debug(f"Preview error: {exc}")
+    except FileNotFoundError as exc:
+        load_error = f"File not found: {exc}. Please check the uploaded file."
+    except ValueError as exc:
+        load_error = f"Could not parse the file: {exc}. Please check the format."
+    except ImportError as exc:
+        load_error = (
+            f"Missing dependency for this file format: {exc}. "
+            f"Please check that required packages (rdkit, ase, biopython) are installed."
+        )
     except Exception as exc:
-        import traceback
-        print(f"[upload] Load error: {exc}\n{traceback.format_exc()}")
-        load_error = str(exc)
+        logger.warning(f"Upload load error: {exc}", exc_info=True)
+        load_error = f"Unexpected error loading file: {exc}"
 
     _init_job(job_id, file_path=str(file_path), file_name=safe_name)
     resp = {"job_id": job_id, "filename": file.filename,
@@ -207,8 +302,12 @@ class RunRequest(BaseModel):
 
 
 @app.post("/api/run/{job_id}")
-async def run_job(job_id: str, req: RunRequest):
+async def run_job(job_id: str, req: RunRequest, request: Request = None):
     """Start the splitting pipeline as a background thread."""
+    # Rate limit
+    client_ip = request.client.host if request and request.client else "unknown"
+    _check_rate_limit(client_ip)
+
     snap = _snapshot(job_id)
     if snap["status"] == "running":
         raise HTTPException(400, "Job is already running")
@@ -268,11 +367,29 @@ def _run_task(job_id: str, req: RunRequest):
         _update(job_id, status="completed", progress=100)
         _append_log(job_id, "✓ Done! Results are ready for download.", progress=100)
 
+    except KeyError as exc:
+        logger.warning(f"Job {job_id} failed: missing column {exc}", exc_info=True)
+        msg = f"Column {exc} not found in your data. Please check your entity column configuration."
+        _update(job_id, status="failed", error=msg)
+        _append_log(job_id, f"✗ {msg}")
+    except ValueError as exc:
+        logger.warning(f"Job {job_id} failed: {exc}", exc_info=True)
+        _update(job_id, status="failed", error=str(exc))
+        _append_log(job_id, f"✗ Configuration error: {exc}")
+    except ImportError as exc:
+        logger.warning(f"Job {job_id} failed: missing dependency {exc}", exc_info=True)
+        msg = f"Missing package: {exc}. Please install the required dependencies."
+        _update(job_id, status="failed", error=msg)
+        _append_log(job_id, f"✗ {msg}")
+    except RuntimeError as exc:
+        logger.warning(f"Job {job_id} failed: {exc}", exc_info=True)
+        _update(job_id, status="failed", error=str(exc))
+        _append_log(job_id, f"✗ Splitting failed: {exc}")
     except Exception as exc:
         tb = _tb.format_exc()
-        print(f"[job {job_id}] Pipeline error:\n{tb}")
+        logger.error(f"Job {job_id} pipeline error:\n{tb}")
         _update(job_id, status="failed", error=str(exc))
-        _append_log(job_id, f"✗ Error: {exc}")
+        _append_log(job_id, f"✗ Unexpected error: {exc}")
 
 
 # ── SSE progress stream ───────────────────────────────────────────────────
@@ -410,11 +527,22 @@ async def download_technique(job_id: str, technique: str):
     if snap["status"] != "completed":
         raise HTTPException(400, "Job not yet completed")
 
-    technique_dir = JOBS_DIR / job_id / "output" / "split_result" / technique
-    if not technique_dir.is_dir():
-        raise HTTPException(404, f"Technique folder not found: {technique}")
+    # Sanitize technique name to prevent path traversal
+    safe_technique = Path(technique).name
+    if not safe_technique or safe_technique != technique:
+        raise HTTPException(400, f"Invalid technique name: {technique}")
 
-    zip_path = JOBS_DIR / job_id / f"{technique}.zip"
+    technique_dir = JOBS_DIR / job_id / "output" / "split_result" / safe_technique
+    # Verify the resolved path is under JOBS_DIR
+    try:
+        technique_dir.resolve().relative_to(JOBS_DIR.resolve())
+    except ValueError:
+        raise HTTPException(400, "Invalid technique path")
+
+    if not technique_dir.is_dir():
+        raise HTTPException(404, f"Technique folder not found: {safe_technique}")
+
+    zip_path = JOBS_DIR / job_id / f"{safe_technique}.zip"
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
         for f in sorted(technique_dir.rglob("*")):
             if f.is_file():
@@ -422,6 +550,6 @@ async def download_technique(job_id: str, technique: str):
 
     return FileResponse(
         zip_path,
-        filename=f"{technique}.zip",
+        filename=f"{safe_technique}.zip",
         media_type="application/zip",
     )

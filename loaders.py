@@ -19,7 +19,7 @@ def _is_material_cif(filepath):
     try:
         with open(filepath) as fh:
             head = fh.read(8192)
-    except Exception:
+    except ImportError:
         return False
     # Protein mmCIF files contain PDB-style atom records
     if "_atom_site.group_PDB" in head or "_entity_poly" in head:
@@ -777,7 +777,7 @@ def _is_smiles(val):
             return False
         mol = Chem.MolFromSmiles(val)
         return mol is not None
-    except Exception:
+    except (ImportError, RuntimeError):
         return False
 
 
@@ -906,7 +906,7 @@ def build_upload_hints(df, fmt):
     """
     try:
         col_types = infer_column_types(df)
-    except Exception:
+    except (ValueError, KeyError, TypeError):
         logger.debug("Column type inference failed", exc_info=True)
         col_types = {}
 

@@ -48,6 +48,10 @@ class EntityConfig:
                 )
 
 
+VALID_TECHNIQUES_2D = {"R", "I1e", "I1f", "I2", "C1e", "C1f", "C2"}
+VALID_TECHNIQUES_1D = {"R", "I1e", "C1e", "scaffold"}
+
+
 @dataclass
 class SplittingConfig:
     techniques: list = field(default_factory=lambda: ["R", "I1e", "I1f", "I2", "C1e", "C1f", "C2"])
@@ -56,6 +60,27 @@ class SplittingConfig:
     e2_clusters: int = 30
     max_sec: int = 300
     solver: str = "SCIP"
+
+    def __post_init__(self):
+        if not isinstance(self.splits, list) or len(self.splits) not in (2, 3):
+            raise ValueError(
+                f"'splits' must be a list of 2 or 3 elements, got {self.splits}"
+            )
+        if not isinstance(self.names, list) or len(self.names) != len(self.splits):
+            raise ValueError(
+                f"'names' list length ({len(self.names)}) must match "
+                f"'splits' list length ({len(self.splits)})"
+            )
+        if not isinstance(self.techniques, list) or not self.techniques:
+            raise ValueError("'techniques' must be a non-empty list of strings")
+        all_valid = VALID_TECHNIQUES_2D | VALID_TECHNIQUES_1D
+        for t in self.techniques:
+            if t not in all_valid:
+                raise ValueError(
+                    f"Invalid splitting technique '{t}'. "
+                    f"Valid 2D techniques: {sorted(VALID_TECHNIQUES_2D)}. "
+                    f"Valid 1D techniques: {sorted(VALID_TECHNIQUES_1D)}."
+                )
 
 
 @dataclass
@@ -98,13 +123,67 @@ def load_config(path):
     with open(path) as fh:
         raw = yaml.safe_load(fh)
 
-    # Parse entities (support both old "e"/"f" and new "e1"/"e2" keys)
+    # --- Validate required top-level keys ---
+    required_top_level = ["input_file", "output_dir", "dataset_name"]
+    missing = [k for k in required_top_level if k not in raw]
+    if missing:
+        raise ValueError(
+            f"Config is missing required top-level keys: {missing}"
+        )
+
+    # At least one entity key must be present
+    has_e1 = "e1" in raw or "e" in raw
+    if not has_e1:
+        raise ValueError(
+            "Config must contain at least one entity key ('e1' or 'e')"
+        )
+
+    # --- Validate entity config blocks ---
     e1_key = "e1" if "e1" in raw else "e"
     e2_key = "e2" if "e2" in raw else "f"
-    e1_cfg = _parse_entity(raw[e1_key])
-    e2_cfg = _parse_entity(raw[e2_key]) if e2_key in raw else None
 
-    # Parse filters
+    def _validate_entity_block(block, key_name):
+        """Validate that an entity block has required sub-keys."""
+        if not isinstance(block, dict):
+            raise ValueError(
+                f"Entity '{key_name}' must be a mapping, got {type(block).__name__}"
+            )
+        if "name" not in block:
+            raise ValueError(
+                f"Entity '{key_name}' is missing required key 'name'"
+            )
+        if "type" not in block:
+            raise ValueError(
+                f"Entity '{key_name}' is missing required key 'type'"
+            )
+        if "extract" not in block or not isinstance(block.get("extract"), dict):
+            raise ValueError(
+                f"Entity '{key_name}' is missing required key 'extract' "
+                f"(must be a mapping with a 'column' sub-key)"
+            )
+        if "column" not in block["extract"]:
+            raise ValueError(
+                f"Entity '{key_name}.extract' is missing required key 'column'"
+            )
+
+    _validate_entity_block(raw[e1_key], e1_key)
+    e1_cfg = _parse_entity(raw[e1_key])
+
+    e2_cfg = None
+    if e2_key in raw:
+        _validate_entity_block(raw[e2_key], e2_key)
+        e2_cfg = _parse_entity(raw[e2_key])
+
+    # --- Validate structure_dir paths exist if specified ---
+    for entity_key, entity_cfg in [(e1_key, e1_cfg), (e2_key, e2_cfg)]:
+        if entity_cfg is not None and entity_cfg.structure_dir is not None:
+            if not os.path.isdir(entity_cfg.structure_dir):
+                raise FileNotFoundError(
+                    f"structure_dir for entity '{entity_key}' does not exist: "
+                    f"{entity_cfg.structure_dir}"
+                )
+
+    # --- Parse filters ---
     filters = []
     for filt in raw.get("filters", []):
         filters.append(FilterConfig(
@@ -113,17 +192,27 @@ def load_config(path):
             not_empty=filt.get("not_empty", False),
         ))
 
-    # Parse splitting
+    # --- Parse splitting (SplittingConfig.__post_init__ handles validation) ---
     split_raw = raw.get("splitting", {})
-    _defaults = SplittingConfig()
+    _defaults = SplittingConfig.__dataclass_fields__
     splitting = SplittingConfig(
-        techniques=split_raw.get("techniques", _defaults.techniques),
-        splits=split_raw.get("splits", _defaults.splits),
-        names=split_raw.get("names", _defaults.names),
+        techniques=split_raw.get("techniques", _defaults["techniques"].default_factory()),
+        splits=split_raw.get("splits", _defaults["splits"].default_factory()),
+        names=split_raw.get("names", _defaults["names"].default_factory()),
         e2_clusters=split_raw.get("e2_clusters", split_raw.get("f_clusters", 30)),
         max_sec=split_raw.get("max_sec", 300),
         solver=split_raw.get("solver", "SCIP"),
     )
+
+    # Cross-validate techniques against dimensionality (1D vs 2D)
+    is_1d = e2_cfg is None
+    if is_1d:
+        invalid = [t for t in splitting.techniques if t not in VALID_TECHNIQUES_1D]
+        if invalid:
+            raise ValueError(
+                f"Techniques {invalid} are not valid for 1D (single-entity) datasets. "
+                f"Valid 1D techniques: {sorted(VALID_TECHNIQUES_1D)}"
+            )
 
     cfg = PipelineConfig(
         input_file=raw["input_file"],

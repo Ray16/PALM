@@ -308,7 +308,7 @@ def matminer_elementproperty(formula):
         vals = _matminer_ep_featurizer.featurize(comp)
         labels = _matminer_ep_featurizer.feature_labels()
         return dict(zip(labels, vals))
-    except Exception:
+    except (ValueError, TypeError, KeyError):
         labels = _matminer_ep_featurizer.feature_labels()
         return {l: 0.0 for l in labels}
 
@@ -365,7 +365,7 @@ def _build_structure_map(structure_dir):
             atoms = ase_read(fpath)
             formula = atoms.get_chemical_formula(mode="hill")
             structure_map[formula] = fpath
-        except Exception:
+        except (ValueError, TypeError, KeyError):
             # Also index by filename stem as fallback
             stem = os.path.splitext(fname)[0]
             structure_map[stem] = fpath
@@ -396,7 +396,7 @@ def _compute_crystalnn(entities, structure_dir):
             vals = ssf.featurize(struct)
             labels = ssf.feature_labels()
             rows[entity_id] = dict(zip(labels, vals))
-        except Exception:
+        except (ValueError, TypeError, KeyError):
             pass
 
     if not rows:
@@ -429,7 +429,7 @@ def _compute_soap(entities, structure_dir):
             atoms = ase_read(fpath)
             all_species.update(atoms.get_chemical_symbols())
             valid[entity_id] = (fpath, atoms)
-        except Exception:
+        except (ValueError, TypeError, KeyError):
             pass
 
     if not valid:
@@ -451,7 +451,7 @@ def _compute_soap(entities, structure_dir):
             desc = soap.create(atoms)
             desc = np.array(desc).flatten()
             rows[entity_id] = {f"soap_{i}": float(v) for i, v in enumerate(desc)}
-        except Exception:
+        except (ValueError, TypeError, KeyError):
             pass
 
     if not rows:

@@ -1,10 +1,13 @@
 """Orchestrator: load -> featurize -> split -> save."""
 
 import json
+import logging
 import os
 import shutil
 import numpy as np
 import pandas as pd
+
+logger = logging.getLogger(__name__)
 
 from .config import PipelineConfig
 from .loaders import load_data, _detect_format
@@ -14,7 +17,7 @@ from .features.biomolecule_features import compute_biomolecule_features
 from .features.gene_features import compute_gene_features
 from .cache import get_cached_features, save_cached_features
 from .metrics import compute_split_metrics, save_metrics
-from .splitting import run_splitting, run_splitting_1d
+from .splitting import run_splitting, run_splitting_1d, run_scaffold_splitting
 from .visualization import generate_split_plots, generate_comparison_chart, _reduce
 
 
@@ -261,11 +264,81 @@ def _save_split_data(df, out_df, split_dir, technique, dataset_name, input_file,
                 for row in src_db.select():
                     if str(row.id - 1) in row_ids or row.get("formula", "") in row_ids:
                         dst_db.write(row.toatoms(), key_value_pairs=row.key_value_pairs)
-        except Exception:
+        except (ImportError, OSError) as exc:
             # Fallback to CSV if ASE write fails
             for name in split_names:
                 subset = merged[merged["split"] == name].drop(columns=["split", "_row_id"])
                 subset.to_csv(os.path.join(technique_dir, f"{name}.csv"), index=False)
+
+
+def _save_ml_exports(df, out_df, output_dir, dataset_name, split_names):
+    """Save ML-framework-friendly export files.
+
+    Creates:
+    - indices.json: split indices for PyTorch/sklearn
+    - fold_column.csv: original data with a 'split' column added
+    """
+    export_dir = os.path.join(output_dir, "ml_exports")
+    os.makedirs(export_dir, exist_ok=True)
+
+    merged = df.merge(out_df[["_row_id", "split"]], on="_row_id", how="left")
+
+    # 1. Split indices (for PyTorch Dataset / sklearn)
+    indices = {}
+    for name in split_names:
+        mask = merged["split"] == name
+        indices[name] = sorted(merged.index[mask].tolist())
+
+    indices_path = os.path.join(export_dir, f"{dataset_name}_indices.json")
+    with open(indices_path, "w") as f:
+        json.dump(indices, f, indent=2)
+
+    # 2. Fold column CSV (original data + split assignment)
+    display_cols = [c for c in merged.columns if not c.startswith("_")]
+    fold_df = merged[display_cols]
+    fold_path = os.path.join(export_dir, f"{dataset_name}_with_splits.csv")
+    fold_df.to_csv(fold_path, index=False)
+
+    return export_dir
+
+
+def _build_comparison_summary(all_metrics, split_names):
+    """Build a comparison summary across all techniques.
+
+    Returns dict with per-technique scores and a recommendation.
+    """
+    summary = {"techniques": {}, "recommendation": None}
+    scores = {}
+
+    for technique, metrics in all_metrics.items():
+        coverage = metrics.get("coverage", 0)
+        nn = metrics.get("nn_leakage", {})
+        nn_sep = nn.get("mean_nn_dist", 0) if nn else 0
+        ds = metrics.get("distribution_shift", {})
+        dist_shift = ds.get("mean_normalized_shift", 0) if ds else 0
+        eo = metrics.get("entity_overlap", {})
+        e1_overlap = eo.get("e1_overlap", 0) if eo else 0
+
+        summary["techniques"][technique] = {
+            "coverage": round(coverage, 4),
+            "nn_separation": round(nn_sep, 6) if nn_sep else None,
+            "dist_shift": round(dist_shift, 4) if dist_shift else None,
+            "entity_overlap": e1_overlap,
+        }
+
+        # Score: higher NN separation + lower overlap + lower dist shift + high coverage
+        # Normalize: NN sep is good (higher=better), overlap is bad (lower=better),
+        # dist shift is bad (lower=better), coverage is good (higher=better)
+        score = nn_sep * 100 - e1_overlap * 10 - dist_shift * 5 + coverage * 10
+        scores[technique] = score
+
+    if scores:
+        best = max(scores, key=scores.get)
+        summary["recommendation"] = (
+            f"{best} (best overall balance of leakage prevention and coverage)"
+        )
+
+    return summary
 
 
 def run_pipeline(config: PipelineConfig, progress_callback=None):
@@ -316,9 +389,10 @@ def run_pipeline(config: PipelineConfig, progress_callback=None):
 
     # 3. Generate features
     _report(30, f"\n[3/5] Generating features")
-    _report(32, f"  Featurizing {config.e1.name}...")
+    _report(32, f"  Featurizing {config.e1.name} ({len(e1_entities)} entities)...")
+    _report(33, f"  Feature sets: {', '.join(config.e1.feature_sets or ['default'])}")
     e1_feat_df = _featurize(e1_entities, config.e1)
-    _report(50, f"  {config.e1.name} features: {e1_feat_df.shape}")
+    _report(50, f"  {config.e1.name} features: {e1_feat_df.shape[0]} entities × {e1_feat_df.shape[1]} features")
 
     # Save e1 features
     feat_dir = os.path.join(config.output_dir, "features", config.dataset_name)
@@ -328,9 +402,10 @@ def run_pipeline(config: PipelineConfig, progress_callback=None):
     _report(55, f"  Saved: {e1_feat_path}")
 
     if not is_1d:
-        _report(57, f"  Featurizing {config.e2.name}...")
+        _report(57, f"  Featurizing {config.e2.name} ({len(e2_entities)} entities)...")
+        _report(58, f"  Feature sets: {', '.join(config.e2.feature_sets or ['default'])}")
         e2_feat_df = _featurize(e2_entities, config.e2)
-        _report(65, f"  {config.e2.name} features: {e2_feat_df.shape}")
+        _report(65, f"  {config.e2.name} features: {e2_feat_df.shape[0]} entities × {e2_feat_df.shape[1]} features")
 
         os.makedirs(os.path.join(feat_dir, config.e2.name), exist_ok=True)
         e2_feat_path = os.path.join(feat_dir, config.e2.name, "features.csv")
@@ -352,7 +427,26 @@ def run_pipeline(config: PipelineConfig, progress_callback=None):
         row_to_entity = dict(zip(row_ids, e1_ids))
 
         _report(75, f"  Entities: {len(e1_data)} unique")
-        split_results = run_splitting_1d(e1_data, config.splitting)
+
+        # Separate scaffold technique from DataSAIL techniques
+        datasail_techniques = [t for t in config.splitting.techniques if t != "scaffold"]
+        has_scaffold = "scaffold" in config.splitting.techniques
+
+        split_results = {}
+        if datasail_techniques:
+            from copy import copy
+            ds_config = copy(config.splitting)
+            ds_config.techniques = datasail_techniques
+            split_results = run_splitting_1d(e1_data, ds_config)
+
+        if has_scaffold and config.e1.type == "molecule":
+            try:
+                scaffold_result = run_scaffold_splitting(e1_entities, config.splitting)
+                split_results["scaffold"] = scaffold_result
+                _report(78, "  Scaffold splitting complete")
+            except Exception as exc:
+                logger.warning(f"Scaffold splitting failed: {exc}")
+                _report(78, f"  Warning: scaffold splitting failed: {exc}")
     else:
         # 2D mode: split by interactions
         e2_col = config.e2.extract_column
@@ -388,7 +482,7 @@ def run_pipeline(config: PipelineConfig, progress_callback=None):
             _reduced = _reduce(_X_viz, "tsne")
             if _reduced is not None:
                 _viz_coords = (_sorted_names, _reduced)
-    except Exception:
+    except (ValueError, ImportError):
         pass
 
     for technique in sorted(split_results.keys()):
@@ -457,7 +551,18 @@ def run_pipeline(config: PipelineConfig, progress_callback=None):
             data_dir = os.path.join(split_dir, f"{technique}_{config.dataset_name}")
             summary.append(f"    Split data saved to {data_dir}/")
         except Exception as exc:
+            logger.warning(f"Could not save split data files: {exc}")
             summary.append(f"    Warning: could not save split data files: {exc}")
+
+        # Save ML-friendly exports (indices + fold column)
+        try:
+            ml_dir = _save_ml_exports(df, out_df, config.output_dir,
+                                      f"{technique}_{config.dataset_name}",
+                                      config.splitting.names)
+            summary.append(f"    ML exports saved to {ml_dir}/")
+        except Exception as exc:
+            logger.warning(f"ML export failed: {exc}")
+            summary.append(f"    Warning: ML export failed: {exc}")
 
         # Build entity-level split assignments for metrics & visualization
         if is_1d:
@@ -492,6 +597,7 @@ def run_pipeline(config: PipelineConfig, progress_callback=None):
             cov = split_metrics.get("coverage", 0)
             summary.append(f"    Coverage: {cov * 100:.1f}%")
         except Exception as exc:
+            logger.warning(f"Metrics computation failed: {exc}")
             summary.append(f"    Warning: metrics computation failed: {exc}")
 
         # Generate visualization
@@ -505,6 +611,7 @@ def run_pipeline(config: PipelineConfig, progress_callback=None):
             if plot_path:
                 summary.append(f"    Plot: {plot_path}")
         except Exception as exc:
+            logger.warning(f"Visualization failed: {exc}")
             summary.append(f"    Warning: visualization failed: {exc}")
 
         for line in summary:
@@ -519,6 +626,35 @@ def run_pipeline(config: PipelineConfig, progress_callback=None):
             if chart_path:
                 _report(98, f"  Comparison chart: {chart_path}")
         except Exception as exc:
+            logger.warning(f"Comparison chart failed: {exc}")
             _report(98, f"  Warning: comparison chart failed: {exc}")
+
+    # Generate benchmark comparison summary
+    if all_technique_metrics and len(all_technique_metrics) > 1:
+        try:
+            summary_data = _build_comparison_summary(all_technique_metrics, config.splitting.names)
+            summary_dir = os.path.join(config.output_dir, "metrics")
+            os.makedirs(summary_dir, exist_ok=True)
+
+            # Save as JSON
+            summary_path = os.path.join(summary_dir, f"comparison_{config.dataset_name}.json")
+            with open(summary_path, "w") as f:
+                json.dump(summary_data, f, indent=2)
+
+            # Print summary table
+            _report(99, "\n  === Technique Comparison ===")
+            _report(99, f"  {'Technique':<12} {'Coverage':>10} {'NN Sep':>10} {'Dist Shift':>12} {'Overlap':>10}")
+            _report(99, f"  {'\u2500'*12} {'\u2500'*10} {'\u2500'*10} {'\u2500'*12} {'\u2500'*10}")
+            for t_name, t_data in summary_data["techniques"].items():
+                cov = f"{t_data['coverage']*100:.1f}%"
+                nn = f"{t_data['nn_separation']:.4f}" if t_data['nn_separation'] else "N/A"
+                ds = f"{t_data['dist_shift']:.4f}" if t_data['dist_shift'] else "N/A"
+                ov = str(t_data.get('entity_overlap', 'N/A'))
+                _report(99, f"  {t_name:<12} {cov:>10} {nn:>10} {ds:>12} {ov:>10}")
+
+            if summary_data.get("recommendation"):
+                _report(99, f"\n  Recommended: {summary_data['recommendation']}")
+        except Exception as exc:
+            logger.warning(f"Comparison summary failed: {exc}")
 
     _report(100, f"\nDone! Results saved to {config.output_dir}/")
