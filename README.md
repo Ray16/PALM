@@ -1,6 +1,6 @@
 # PALM — Physics-Aware Leakage Minimizer
 
-PALM creates train/test splits for scientific ML datasets with reduced data leakage using [DataSAIL](https://github.com/kalininalab/DataSAIL). It supports **molecules, biomolecules, materials, and genes** through a single configuration interface.
+PALM creates train/test splits for scientific ML datasets with reduced data leakage using [DataSAIL](https://github.com/kalininalab/DataSAIL). It supports **molecules, biomolecules, materials, and genes** through a single configuration interface and an easy-to-use web app.
 
 ## Why PALM?
 
@@ -46,6 +46,18 @@ uvicorn PALM.webapp.app:app --host 0.0.0.0 --port 8080
 ```
 
 Open `http://localhost:8080` → Upload dataset → Configure entities → Run splitting → Download results.
+
+The web app includes guided tooltips, technique recommendations, data preview, real-time progress streaming, interactive metrics dashboards, and t-SNE visualizations.
+
+#### Web App Configuration (Environment Variables)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DATASAIL_JOBS_DIR` | `/tmp/datasail_webapp` | Directory for job storage |
+| `PALM_CORS_ORIGINS` | `*` | Comma-separated allowed CORS origins |
+| `PALM_MAX_UPLOAD_MB` | `500` | Maximum upload file size in MB |
+| `PALM_RATE_LIMIT` | `30` | Max requests per IP per 60-second window |
+| `PALM_JOB_MAX_AGE_HOURS` | `24` | Auto-delete jobs older than this |
 
 ## Configuration
 
@@ -119,8 +131,11 @@ PALM auto-detects format from file extension or directory contents:
 | `I2` | No identity overlap on either axis | Strict deduplication for 2D data |
 | `C1e` / `C1f` | Cluster-based split on one axis | Prevent near-duplicate leakage |
 | `C2` | Cluster-based split on both axes | Most stringent (2D data) |
+| `scaffold` | Bemis-Murcko scaffold grouping | Chemistry-aware splitting (molecules only) |
 
-For 1D datasets, only `R`, `I1e`, and `C1e` apply. 2D techniques are automatically mapped to their 1D equivalents.
+For 1D datasets, `R`, `I1e`, `C1e`, and `scaffold` apply. 2D techniques are automatically mapped to their 1D equivalents. Scaffold splitting groups molecules by their generic ring/linker framework and ensures no scaffold appears in multiple splits.
+
+**Benchmark mode**: When multiple techniques are run, PALM automatically generates a comparison summary with per-technique metrics and a recommendation for the best technique.
 
 ## Feature Sets
 
@@ -142,6 +157,10 @@ For 1D datasets, only `R`, `I1e`, and `C1e` apply. 2D techniques are automatical
 - `bonding` — electronegativity, ionic radii, polarizability (9 features)
 - `thermodynamic` — melting points, enthalpies, reducibility (8 features)
 - `classification` — metal type flags, d-band filling (8 features)
+- `matminer_elementproperty` — MAGPIE via matminer (requires `matminer`)
+- `mat2vec_embedding` — composition-weighted mat2vec embeddings (200 features)
+- `crystalnn_fingerprint` — CrystalNN site fingerprints (requires structure files + `matminer`)
+- `soap_descriptor` — SOAP 3D descriptors (requires structure files + `dscribe`)
 
 ### Gene
 - `nucleotide_composition` — GC%, AT skew, CpG O/E, melting temp (11 features)
@@ -170,8 +189,12 @@ output/
 │   └── <technique>_<dataset>/
 │       ├── train.<format>
 │       └── test.<format>
+├── ml_exports/
+│   ├── <technique>_<dataset>_indices.json      # split indices for PyTorch/sklearn
+│   └── <technique>_<dataset>_with_splits.csv   # original data + split column
 ├── metrics/
-│   └── <technique>_<dataset>.json
+│   ├── <technique>_<dataset>.json
+│   └── comparison_<dataset>.json               # cross-technique comparison + recommendation
 └── plots/
     ├── <technique>_<entity>_tsne.png
     └── comparison_<dataset>.png
@@ -185,11 +208,31 @@ Each `metrics/*.json` file contains:
 - **Distribution shift** — per-feature mean/max normalized shift between splits
 - **Entity overlap** — count of shared entities across splits (2D datasets)
 
+### ML Export Formats
+
+Each technique generates ML-framework-friendly exports in `ml_exports/`:
+
+- **`_indices.json`** — Split indices keyed by split name (`train`, `test`, `val`). Use directly with PyTorch `Subset` or sklearn indexing.
+- **`_with_splits.csv`** — Original data with a `split` column appended. Drop-in for pandas/sklearn workflows.
+
+### Comparison Summary
+
+When multiple techniques are run, `metrics/comparison_<dataset>.json` contains:
+- Per-technique coverage, NN separation, distribution shift, and entity overlap
+- A weighted recommendation for the best technique
+
+## Caching
+
+Feature vectors and distance matrices are cached in `~/.palm_cache` (configurable via `PALM_CACHE_DIR`). Cache keys include a version number — when feature computation code changes, increment `CACHE_VERSION` in `cache.py` to invalidate stale caches.
+
 ## Running Tests
 
 ```bash
 # Prepare data + run all integration tests
 bash PALM/tests/run_tests.sh
+
+# Improvement tests (config validation, cache, security, edge cases)
+python PALM/tests/test_improvements.py
 
 # ML leakage demonstration (ESOL, Lipophilicity, MP formation energy)
 python PALM/tests/run_ml_experiment.py
