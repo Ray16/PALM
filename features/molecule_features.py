@@ -111,21 +111,38 @@ def physicochemical(smiles_or_mol):
     }
 
 
+# Cache of bit-column names per n_bits so the 2048 f-strings are built once,
+# not once per molecule.
+_MORGAN_KEYS = {}
+
+
+def _morgan_keys(n_bits):
+    keys = _MORGAN_KEYS.get(n_bits)
+    if keys is None:
+        keys = [f"morgan_{i}" for i in range(n_bits)]
+        _MORGAN_KEYS[n_bits] = keys
+    return keys
+
+
 def morgan_fingerprint(smiles_or_mol, radius=2, n_bits=2048):
     """Morgan (ECFP) circular fingerprint as a bit vector.
 
     Produces a 2048-bit fingerprint that captures molecular substructure
     topology. Best used with Tanimoto distance for clustering.
     """
-    from rdkit import Chem
+    from rdkit import Chem, DataStructs
     from rdkit.Chem import AllChem
 
+    keys = _morgan_keys(n_bits)
     mol = smiles_or_mol if hasattr(smiles_or_mol, 'GetNumAtoms') else Chem.MolFromSmiles(smiles_or_mol)
     if mol is None:
-        return {f"morgan_{i}": 0 for i in range(n_bits)}
+        return {k: 0 for k in keys}
 
     fp = AllChem.GetMorganFingerprintAsBitVect(mol, radius, nBits=n_bits)
-    return {f"morgan_{i}": int(fp[i]) for i in range(n_bits)}
+    # Extract all bits in one C++ call instead of n_bits Python-level fp[i] reads.
+    arr = np.zeros((n_bits,), dtype=np.int8)
+    DataStructs.ConvertToNumpyArray(fp, arr)
+    return dict(zip(keys, arr.tolist()))
 
 
 # Registry of all molecule feature sets

@@ -418,7 +418,9 @@ def run_pipeline(config: PipelineConfig, progress_callback=None):
 
     # Replace NaN/Inf with 0 to prevent downstream clustering errors
     e1_feat_df = e1_feat_df.replace([np.inf, -np.inf], np.nan).fillna(0)
-    e1_data = {name: e1_feat_df.loc[name].values.astype(float) for name in e1_feat_df.index}
+    # Convert the whole frame once instead of a per-row .loc lookup.
+    _e1_matrix = e1_feat_df.to_numpy(dtype=float)
+    e1_data = {name: row for name, row in zip(e1_feat_df.index, _e1_matrix)}
 
     if is_1d:
         # 1D mode: split by entity only
@@ -459,7 +461,8 @@ def run_pipeline(config: PipelineConfig, progress_callback=None):
         _report(75, f"  Interactions: {len(interactions)} (unique pairs: {len(set(interactions))})")
 
         e2_feat_df = e2_feat_df.replace([np.inf, -np.inf], np.nan).fillna(0)
-        e2_data = {name: e2_feat_df.loc[name].values.astype(float) for name in e2_feat_df.index}
+        _e2_matrix = e2_feat_df.to_numpy(dtype=float)
+        e2_data = {name: row for name, row in zip(e2_feat_df.index, _e2_matrix)}
 
         split_results = run_splitting(e1_data, e2_data, interactions, config.splitting)
 

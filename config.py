@@ -60,6 +60,15 @@ class SplittingConfig:
     e2_clusters: int = 30
     max_sec: int = 300
     solver: str = "SCIP"
+    # Reproducibility: seeds numpy/random before splitting so the R baseline,
+    # t-SNE/UMAP layouts and any sampling are deterministic across runs.
+    seed: int = 42
+    # Number of threads handed to DataSAIL's clustering/solver step.
+    threads: int = 1
+    # Run multiple techniques concurrently via a thread pool. Off by default:
+    # the SCIP solver can spawn child processes that don't always shut down
+    # cleanly, so sequential is the safe default. Set >1 to overlap techniques.
+    n_jobs: int = 1
 
     def __post_init__(self):
         if not isinstance(self.splits, list) or len(self.splits) not in (2, 3):
@@ -202,6 +211,9 @@ def load_config(path):
         e2_clusters=split_raw.get("e2_clusters", split_raw.get("f_clusters", 30)),
         max_sec=split_raw.get("max_sec", 300),
         solver=split_raw.get("solver", "SCIP"),
+        seed=split_raw.get("seed", 42),
+        threads=split_raw.get("threads", 1),
+        n_jobs=split_raw.get("n_jobs", 1),
     )
 
     # Cross-validate techniques against dimensionality (1D vs 2D)
