@@ -30,8 +30,12 @@ class EntityConfig:
     esm_batch_size: int = 8
     nt_model: str = "nt_500m_human_ref"
     nt_batch_size: int = 8
+    chemberta_model: str = "chemberta_zinc"
+    chemberta_batch_size: int = 16
     embedding_file: Optional[str] = None
     structure_dir: Optional[str] = None
+    # Parallel workers for per-entity featurization (1 = serial).
+    feature_n_jobs: int = 1
 
     def __post_init__(self):
         if self.type not in ENTITY_FEATURE_SETS:
@@ -122,8 +126,11 @@ def _parse_entity(raw: dict) -> EntityConfig:
         esm_batch_size=raw.get("esm_batch_size", 8),
         nt_model=raw.get("nt_model", "nt_500m_human_ref"),
         nt_batch_size=raw.get("nt_batch_size", 8),
+        chemberta_model=raw.get("chemberta_model", "chemberta_zinc"),
+        chemberta_batch_size=raw.get("chemberta_batch_size", 16),
         embedding_file=raw.get("embedding_file"),
         structure_dir=raw.get("structure_dir"),
+        feature_n_jobs=raw.get("feature_n_jobs", 1),
     )
 
 

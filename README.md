@@ -141,9 +141,12 @@ For 1D datasets, `R`, `I1e`, `C1e`, and `scaffold` apply. 2D techniques are auto
 
 ### Molecule
 - `rdkit_descriptors` — MW, HBond donors/acceptors, TPSA, LogP, etc. (9 features)
+- `rdkit_descriptors_full` — the full RDKit 2D descriptor set (~200 features, `rdkitfull_` prefix)
 - `physicochemical` — atom counts, rotatable bonds, ring counts, sp3 fraction (11 features)
 - `composition` — element counts + weighted elemental properties
 - `morgan_fingerprint` — 2048-bit ECFP4 circular fingerprint
+- `maccs_keys` — 167-bit MACCS structural-key fingerprint
+- `chemberta_embedding` — ChemBERTa molecular language-model embedding (384–768 dim, requires `torch`/`transformers`)
 
 ### Biomolecule
 - `sequence_properties` — length, MW, hydrophobicity, charge, pI, GRAVY (16 features)
@@ -165,6 +168,7 @@ For 1D datasets, `R`, `I1e`, `C1e`, and `scaffold` apply. 2D techniques are auto
 ### Gene
 - `nucleotide_composition` — GC%, AT skew, CpG O/E, melting temp (11 features)
 - `kmer_frequencies` — dinucleotide + trinucleotide frequencies (80 features)
+- `canonical_kmer_frequencies` — strand-canonical (reverse-complement collapsed) di/trinucleotide frequencies (42 features)
 - `nt_embedding` — Nucleotide Transformer or DNABERT-2 embeddings
 - `precomputed_embedding` — load from file
 

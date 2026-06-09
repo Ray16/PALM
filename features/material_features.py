@@ -8,10 +8,13 @@
 """
 
 import json
+import logging
 import math
 import os
 import numpy as np
 import pandas as pd
+
+logger = logging.getLogger(__name__)
 
 from .elemental_data import (
     ELEM_PROPS, PROP_NAMES,
@@ -313,6 +316,10 @@ def matminer_elementproperty(formula):
         return {l: 0.0 for l in labels}
 
 
+_MAT2VEC_DIM = 200
+_MAT2VEC_KEYS = [f"mat2vec_{i}" for i in range(_MAT2VEC_DIM)]
+
+
 def mat2vec_embedding(formula):
     """Composition-weighted mean of 200-dim mat2vec element embeddings."""
     global _mat2vec_embeddings
@@ -324,16 +331,15 @@ def mat2vec_embedding(formula):
             _mat2vec_embeddings = {k: np.array(v) for k, v in json.load(f).items()}
 
     comp = parse_formula(formula)
-    dim = 200
     total = sum(comp.values())
     if total == 0:
-        return {f"mat2vec_{i}": 0.0 for i in range(dim)}
+        return {k: 0.0 for k in _MAT2VEC_KEYS}
 
-    weighted = np.zeros(dim)
+    weighted = np.zeros(_MAT2VEC_DIM)
     for elem, cnt in comp.items():
         if elem in _mat2vec_embeddings:
             weighted += (cnt / total) * _mat2vec_embeddings[elem]
-    return {f"mat2vec_{i}": float(weighted[i]) for i in range(dim)}
+    return dict(zip(_MAT2VEC_KEYS, weighted.tolist()))
 
 
 def crystalnn_fingerprint(formula):
@@ -446,11 +452,13 @@ def _compute_soap(entities, structure_dir):
     )
 
     rows = {}
+    soap_keys = None  # built once from the first descriptor (fixed length per run)
     for entity_id, (fpath, atoms) in valid.items():
         try:
-            desc = soap.create(atoms)
-            desc = np.array(desc).flatten()
-            rows[entity_id] = {f"soap_{i}": float(v) for i, v in enumerate(desc)}
+            desc = np.array(soap.create(atoms)).flatten()
+            if soap_keys is None or len(soap_keys) != desc.shape[0]:
+                soap_keys = [f"soap_{i}" for i in range(desc.shape[0])]
+            rows[entity_id] = dict(zip(soap_keys, desc.tolist()))
         except (ValueError, TypeError, KeyError):
             pass
 
@@ -502,6 +510,21 @@ def compute_material_features(entities, feature_sets=None, structure_dir=None):
             f"Structure-based features {struct_sets} require structure_dir. "
             f"Set structure_dir in entity config or use cif_dir/xyz_dir input format."
         )
+
+    # Surface elements that are missing from the built-in property tables —
+    # they silently contribute 0 and would otherwise distort the features.
+    if formula_sets:
+        unknown = set()
+        for formula in entities.values():
+            for elem in parse_formula(formula):
+                if elem not in ELEM_PROPS:
+                    unknown.add(elem)
+        if unknown:
+            logger.warning(
+                "  %d element(s) missing from built-in property tables "
+                "(contribute 0 to formula-based features): %s",
+                len(unknown), sorted(unknown),
+            )
 
     # Compute formula-based features
     rows = {}

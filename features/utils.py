@@ -1,14 +1,26 @@
 """Utility functions for feature computation."""
 
+import logging
 import re
 import math
+from functools import lru_cache
+
 import numpy as np
 
 from .elemental_data import ELEM_PROPS, PROP_NAMES
 
+logger = logging.getLogger(__name__)
 
+
+@lru_cache(maxsize=None)
 def parse_formula(formula):
-    """Parse formula like 'Ta8O20' -> {'Ta': 8, 'O': 20}."""
+    """Parse formula like 'Ta8O20' -> {'Ta': 8, 'O': 20}.
+
+    Memoized: each material feature set re-parses the same formula, so caching
+    avoids redundant regex work (the same string is parsed once per unique
+    formula, not once per feature set per entity). The returned dict is shared
+    across callers and MUST be treated as read-only.
+    """
     pairs = re.findall(r"([A-Z][a-z]?)(\d*)", formula)
     comp = {}
     for elem, count in pairs:
@@ -93,12 +105,19 @@ def load_precomputed_embeddings(embedding_file, entity_ids):
     # Align embeddings to entity_ids
     id_to_idx = {str(eid): i for i, eid in enumerate(emb_ids)}
     aligned_embs = []
+    missing = []
     for eid in entity_ids:
         if str(eid) in id_to_idx:
             aligned_embs.append(emb_matrix[id_to_idx[str(eid)]])
         else:
-            print(f"    WARNING: No embedding found for entity '{eid}', using zeros")
+            missing.append(eid)
             aligned_embs.append(np.zeros(emb_matrix.shape[1]))
+
+    if missing:
+        logger.warning(
+            "  No precomputed embedding for %d of %d entities (zero-filled): e.g. %s",
+            len(missing), len(entity_ids), missing[:5],
+        )
 
     return np.stack(aligned_embs)
 
@@ -108,3 +127,22 @@ def p_norm(vec, p):
     if not vec:
         return 0.0
     return sum(abs(x) ** p for x in vec) ** (1.0 / p)
+
+
+def parallel_map(fn, items, n_jobs=1):
+    """Map ``fn`` over ``items``, optionally across processes.
+
+    With ``n_jobs == 1`` (the default) this is an ordinary serial list
+    comprehension — identical results and order to a plain loop. With
+    ``n_jobs != 1`` it uses joblib if available, falling back to serial when
+    joblib is missing. ``fn`` and every item must be picklable.
+    """
+    items = list(items)
+    if n_jobs == 1 or len(items) < 2:
+        return [fn(x) for x in items]
+    try:
+        from joblib import Parallel, delayed
+    except ImportError:
+        logger.info("  joblib not available — featurizing serially")
+        return [fn(x) for x in items]
+    return Parallel(n_jobs=n_jobs)(delayed(fn)(x) for x in items)

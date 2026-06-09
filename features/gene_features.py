@@ -124,6 +124,63 @@ def kmer_frequencies(sequence):
     return feats
 
 
+# ── Strand-canonical k-mer frequencies ────────────────────────────────────
+
+_COMPLEMENT = {"A": "T", "T": "A", "G": "C", "C": "G"}
+_NT_SET = set("ATGC")
+
+
+def _revcomp(kmer):
+    return "".join(_COMPLEMENT[b] for b in reversed(kmer))
+
+
+def _canonical_kmer_list(kmers):
+    """Collapse each k-mer with its reverse complement, keeping the lexical min."""
+    seen, out = set(), []
+    for km in kmers:
+        canon = min(km, _revcomp(km))
+        if canon not in seen:
+            seen.add(canon)
+            out.append(canon)
+    return out
+
+
+_CANON_KMERS_2 = _canonical_kmer_list(_KMERS_2)   # 16 -> 10
+_CANON_KMERS_3 = _canonical_kmer_list(_KMERS_3)   # 64 -> 32
+
+
+def canonical_kmer_frequencies(sequence):
+    """Strand-canonical di/trinucleotide frequencies (reverse-complement collapsed).
+
+    For data where strand orientation is arbitrary, a k-mer and its reverse
+    complement should count as the same feature. This yields 10 + 32 = 42
+    orientation-invariant features (vs. 80 strand-specific ones).
+    """
+    seq = sequence.upper().replace("U", "T")
+    n = len(seq)
+    feats = {}
+
+    di = dict.fromkeys(_CANON_KMERS_2, 0)
+    n_di = max(n - 1, 1)
+    for i in range(n - 1):
+        km = seq[i:i + 2]
+        if set(km) <= _NT_SET:
+            di[min(km, _revcomp(km))] += 1
+    for km in _CANON_KMERS_2:
+        feats[f"cdi_{km}"] = di[km] / n_di
+
+    tri = dict.fromkeys(_CANON_KMERS_3, 0)
+    n_tri = max(n - 2, 1)
+    for i in range(n - 2):
+        km = seq[i:i + 3]
+        if set(km) <= _NT_SET:
+            tri[min(km, _revcomp(km))] += 1
+    for km in _CANON_KMERS_3:
+        feats[f"ctri_{km}"] = tri[km] / n_tri
+
+    return feats
+
+
 # ── DNA language model embeddings ─────────────────────────────────────────
 
 # Model registry: name -> (HuggingFace hub path, embedding dim)
@@ -255,6 +312,7 @@ def precomputed_embedding(sequence):
 GENE_FEATURE_SETS = {
     "nucleotide_composition": nucleotide_composition,
     "kmer_frequencies": kmer_frequencies,
+    "canonical_kmer_frequencies": canonical_kmer_frequencies,
     "nt_embedding": nt_embedding,
     "precomputed_embedding": precomputed_embedding,
 }
@@ -299,6 +357,19 @@ def compute_gene_features(
     entity_ids = list(entities.keys())
     simple_sets = [fs for fs in feature_sets
                    if fs not in ("nt_embedding", "precomputed_embedding")]
+
+    # Surface sequences with characters outside the nucleotide alphabet (A/T/G/C/U/N)
+    # — they are not counted toward composition / k-mer features.
+    if simple_sets:
+        _valid_nt = set("ATGCUN")
+        nonstd = [eid for eid in entity_ids
+                  if set(str(entities[eid]).upper()) - _valid_nt]
+        if nonstd:
+            logger.warning(
+                "  %d of %d sequences contain non-nucleotide characters that are "
+                "ignored during featurization: e.g. %s",
+                len(nonstd), len(entity_ids), nonstd[:5],
+            )
 
     # Per-sequence features
     rows = {}

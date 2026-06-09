@@ -3,11 +3,17 @@
 Generalized from OC22 adsorbate featurization — works with any SMILES string.
 """
 
+import logging
+
 import numpy as np
 import pandas as pd
 
+from functools import partial
+
 from .elemental_data import ELEM_PROPS, PROP_NAMES
-from .utils import parse_formula
+from .utils import parse_formula, parallel_map
+
+logger = logging.getLogger(__name__)
 
 
 def rdkit_descriptors(smiles_or_mol):
@@ -145,52 +151,252 @@ def morgan_fingerprint(smiles_or_mol, radius=2, n_bits=2048):
     return dict(zip(keys, arr.tolist()))
 
 
-# Registry of all molecule feature sets
-MOLECULE_FEATURE_SETS = {
-    "rdkit_descriptors": rdkit_descriptors,
-    "composition": composition,
-    "physicochemical": physicochemical,
-    "morgan_fingerprint": morgan_fingerprint,
+def maccs_keys(smiles_or_mol):
+    """MACCS structural keys — 167-bit substructure fingerprint."""
+    from rdkit import Chem, DataStructs
+    from rdkit.Chem import MACCSkeys
+
+    keys = _maccs_key_names()
+    mol = smiles_or_mol if hasattr(smiles_or_mol, 'GetNumAtoms') else Chem.MolFromSmiles(smiles_or_mol)
+    if mol is None:
+        return {k: 0 for k in keys}
+    fp = MACCSkeys.GenMACCSKeys(mol)
+    arr = np.zeros((len(keys),), dtype=np.int8)
+    DataStructs.ConvertToNumpyArray(fp, arr)
+    return dict(zip(keys, arr.tolist()))
+
+
+_MACCS_KEYS = None
+
+
+def _maccs_key_names():
+    global _MACCS_KEYS
+    if _MACCS_KEYS is None:
+        # GenMACCSKeys returns a 167-bit vector (index 0 is unused but present).
+        _MACCS_KEYS = [f"maccs_{i}" for i in range(167)]
+    return _MACCS_KEYS
+
+
+_RDKIT_FULL_NAMES = None
+
+
+def _rdkit_full_names():
+    global _RDKIT_FULL_NAMES
+    if _RDKIT_FULL_NAMES is None:
+        from rdkit.Chem import Descriptors
+        _RDKIT_FULL_NAMES = [name for name, _ in Descriptors.descList]
+    return _RDKIT_FULL_NAMES
+
+
+def rdkit_descriptors_full(smiles_or_mol):
+    """The full RDKit 2D descriptor set (~200 descriptors).
+
+    Columns are prefixed ``rdkitfull_`` so they never collide with the curated
+    ``rdkit_descriptors`` set when both are requested.
+    """
+    from rdkit import Chem
+    from rdkit.Chem import Descriptors
+
+    names = _rdkit_full_names()
+    mol = smiles_or_mol if hasattr(smiles_or_mol, 'GetNumAtoms') else Chem.MolFromSmiles(smiles_or_mol)
+    if mol is None:
+        return {f"rdkitfull_{n}": 0.0 for n in names}
+    vals = Descriptors.CalcMolDescriptors(mol)
+    out = {}
+    for n in names:
+        v = vals.get(n, 0.0)
+        out[f"rdkitfull_{n}"] = float(v) if v is not None else 0.0
+    return out
+
+
+# ── ChemBERTa molecular language-model embeddings ──────────────────────────
+
+# Model registry: name -> (HuggingFace hub path, embedding dim)
+CHEMBERTA_MODELS = {
+    "chemberta_zinc":  ("seyonec/ChemBERTa-zinc-base-v1", 768),
+    "chemberta_77m":   ("DeepChem/ChemBERTa-77M-MLM", 384),
+    "chemberta_10m":   ("DeepChem/ChemBERTa-10M-MLM", 384),
 }
 
 
-def compute_molecule_features(entities, feature_sets=None, smiles_map=None):
+class ChemBERTaEmbedder:
+    """Lazy-loaded ChemBERTa model producing mean-pooled SMILES embeddings."""
+
+    def __init__(self, model_name="chemberta_zinc", batch_size=16, max_length=512):
+        if model_name not in CHEMBERTA_MODELS:
+            raise ValueError(
+                f"Unknown ChemBERTa model '{model_name}'. "
+                f"Available: {list(CHEMBERTA_MODELS.keys())}"
+            )
+        self.hub_name, self.embed_dim = CHEMBERTA_MODELS[model_name]
+        self.model_name = model_name
+        self.batch_size = batch_size
+        self.max_length = max_length
+        self._model = None
+        self._tokenizer = None
+
+    def _load_model(self):
+        if self._model is not None:
+            return
+        import torch
+        from transformers import AutoModel, AutoTokenizer
+
+        logger.info(f"  Loading ChemBERTa model: {self.hub_name}...")
+        self._tokenizer = AutoTokenizer.from_pretrained(self.hub_name)
+        self._model = AutoModel.from_pretrained(self.hub_name)
+        if torch.cuda.is_available():
+            self._model = self._model.cuda()
+            logger.info(f"  Using GPU: {torch.cuda.get_device_name()}")
+        else:
+            logger.info("  Using CPU (no GPU detected)")
+        self._model.eval()
+
+    def embed_smiles(self, smiles_list):
+        """Mean-pooled embeddings for a list of SMILES (np.ndarray)."""
+        import torch
+
+        self._load_model()
+        device = next(self._model.parameters()).device
+
+        all_embeddings = []
+        for i in range(0, len(smiles_list), self.batch_size):
+            batch = smiles_list[i:i + self.batch_size]
+            inputs = self._tokenizer(
+                batch, return_tensors="pt", padding=True,
+                truncation=True, max_length=self.max_length,
+            ).to(device)
+            with torch.no_grad():
+                outputs = self._model(**inputs)
+            hidden = outputs.last_hidden_state          # (B, L, D)
+            mask = inputs["attention_mask"].unsqueeze(-1).float()
+            summed = (hidden * mask).sum(dim=1)
+            counts = mask.sum(dim=1).clamp(min=1)
+            all_embeddings.append((summed / counts).cpu().numpy())
+        return np.concatenate(all_embeddings, axis=0)
+
+
+_chemberta_embedder = None
+
+
+def _get_chemberta_embedder(model_name="chemberta_zinc", batch_size=16):
+    global _chemberta_embedder
+    if _chemberta_embedder is None or _chemberta_embedder.model_name != model_name:
+        _chemberta_embedder = ChemBERTaEmbedder(model_name=model_name, batch_size=batch_size)
+    return _chemberta_embedder
+
+
+def chemberta_embedding(smiles):
+    """Sentinel — ChemBERTa embeddings are computed in batch by compute_molecule_features."""
+    raise RuntimeError(
+        "chemberta_embedding should not be called directly. "
+        "It is computed in batch by compute_molecule_features."
+    )
+
+
+# Registry of all molecule feature sets
+MOLECULE_FEATURE_SETS = {
+    "rdkit_descriptors": rdkit_descriptors,
+    "rdkit_descriptors_full": rdkit_descriptors_full,
+    "composition": composition,
+    "physicochemical": physicochemical,
+    "morgan_fingerprint": morgan_fingerprint,
+    "maccs_keys": maccs_keys,
+    "chemberta_embedding": chemberta_embedding,
+}
+
+
+# Embedding sets are computed in batch (model inference), not per-entity.
+_MOLECULE_EMBEDDING_SETS = {"chemberta_embedding"}
+
+# Default when no feature_sets are specified: the dependency-light curated sets
+# (excludes the full descriptor list and the language-model embedding).
+_MOLECULE_DEFAULT_SETS = [
+    "rdkit_descriptors", "composition", "physicochemical", "morgan_fingerprint",
+]
+
+
+def _featurize_one_molecule(item, simple_sets, smiles_map):
+    """Featurize a single (entity_id, identifier). Module-level so it is
+    picklable for parallel execution. Returns (entity_id, feats, failed)."""
+    from rdkit import Chem
+
+    entity_id, identifier = item
+    smiles = smiles_map.get(identifier, identifier) if smiles_map else identifier
+    mol = Chem.MolFromSmiles(smiles)
+    feats = {}
+    for fs_name in simple_sets:
+        fn = MOLECULE_FEATURE_SETS[fs_name]
+        if fs_name == "composition":
+            # Composition uses molecular formula, derive from SMILES
+            if mol is not None:
+                formula = Chem.rdMolDescriptors.CalcMolFormula(Chem.AddHs(mol))
+            else:
+                formula = identifier
+            feats.update(fn(formula))
+        else:
+            feats.update(fn(mol if mol is not None else smiles))
+    return entity_id, feats, mol is None
+
+
+def compute_molecule_features(entities, feature_sets=None, smiles_map=None,
+                              chemberta_model="chemberta_zinc",
+                              chemberta_batch_size=16, n_jobs=1):
     """Compute molecule features for a dict of {entity_id: identifier}.
 
     Args:
         entities: dict mapping entity ID to identifier (SMILES or name)
-        feature_sets: list of feature set names, or None for all
+        feature_sets: list of feature set names, or None for the default sets
         smiles_map: optional dict mapping identifier to SMILES string.
                     If None, identifiers are treated as SMILES directly.
+        chemberta_model: ChemBERTa variant for the "chemberta_embedding" set.
+        chemberta_batch_size: batch size for ChemBERTa inference.
+        n_jobs: parallel workers for per-molecule featurization (1 = serial).
 
     Returns:
         DataFrame with entity_id as index, feature columns
     """
     if feature_sets is None:
-        feature_sets = list(MOLECULE_FEATURE_SETS.keys())
+        feature_sets = list(_MOLECULE_DEFAULT_SETS)
 
-    from rdkit import Chem
+    simple_sets = [fs for fs in feature_sets if fs not in _MOLECULE_EMBEDDING_SETS]
+
+    worker = partial(_featurize_one_molecule, simple_sets=simple_sets, smiles_map=smiles_map)
+    results = parallel_map(worker, entities.items(), n_jobs=n_jobs)
 
     rows = {}
-    for entity_id, identifier in entities.items():
-        smiles = smiles_map.get(identifier, identifier) if smiles_map else identifier
-        mol = Chem.MolFromSmiles(smiles)
-        feats = {}
-        for fs_name in feature_sets:
-            fn = MOLECULE_FEATURE_SETS[fs_name]
-            if fs_name == "composition":
-                # Composition uses molecular formula, derive from SMILES
-                if mol is not None:
-                    formula = Chem.rdMolDescriptors.CalcMolFormula(Chem.AddHs(mol))
-                else:
-                    formula = identifier
-                feats.update(fn(formula))
-            else:
-                feats.update(fn(mol if mol is not None else smiles))
+    failed = []
+    for entity_id, feats, is_failed in results:
         rows[entity_id] = feats
+        if is_failed:
+            failed.append(entity_id)
+
+    if failed:
+        logger.warning(
+            "  %d of %d molecules failed to parse and were zero-filled "
+            "(they will look identical in feature space): e.g. %s",
+            len(failed), len(entities), failed[:5],
+        )
 
     df = pd.DataFrame.from_dict(rows, orient="index")
     df.index.name = "entity_id"
     # Fill NaN from composition columns (different molecules have different elements)
     df = df.fillna(0)
+
+    # ChemBERTa embedding (batch model inference)
+    if "chemberta_embedding" in feature_sets:
+        entity_ids = list(entities.keys())
+        smiles_list = [
+            (smiles_map.get(entities[eid], entities[eid]) if smiles_map else entities[eid])
+            for eid in entity_ids
+        ]
+        embedder = _get_chemberta_embedder(model_name=chemberta_model,
+                                           batch_size=chemberta_batch_size)
+        logger.info(f"  Computing ChemBERTa embeddings ({chemberta_model}) for {len(smiles_list)} molecules...")
+        emb_matrix = embedder.embed_smiles(smiles_list)
+        emb_cols = [f"chemberta_{i}" for i in range(emb_matrix.shape[1])]
+        emb_df = pd.DataFrame(emb_matrix, index=entity_ids, columns=emb_cols)
+        emb_df.index.name = "entity_id"
+        df = pd.concat([df, emb_df], axis=1)
+        logger.info(f"  ChemBERTa embeddings: {emb_matrix.shape[1]} dimensions")
+
     return df

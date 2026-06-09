@@ -64,6 +64,9 @@ def _featurize_uncached(entities, entity_config):
             entities,
             feature_sets=feature_sets,
             smiles_map=entity_config.smiles_map,
+            chemberta_model=entity_config.chemberta_model,
+            chemberta_batch_size=entity_config.chemberta_batch_size,
+            n_jobs=entity_config.feature_n_jobs,
         )
     elif entity_config.type == "biomolecule":
         return compute_biomolecule_features(

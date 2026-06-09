@@ -59,6 +59,36 @@ ESM2_MODELS = {
 }
 
 
+# pKa values (EMBOSS set) for ionizable groups, used for pI / net-charge.
+_PKA_POS = {"Nterm": 8.6, "K": 10.8, "R": 12.5, "H": 6.5}   # protonated = positive
+_PKA_NEG = {"Cterm": 3.6, "D": 3.9, "E": 4.1, "C": 8.5, "Y": 10.1}  # deprotonated = negative
+
+
+def _net_charge(pH, counts):
+    """Net charge of a peptide at a given pH (Henderson-Hasselbalch)."""
+    pos = 1.0 / (1.0 + 10 ** (pH - _PKA_POS["Nterm"]))   # N-terminus
+    for aa in ("K", "R", "H"):
+        if counts.get(aa):
+            pos += counts[aa] / (1.0 + 10 ** (pH - _PKA_POS[aa]))
+    neg = 1.0 / (1.0 + 10 ** (_PKA_NEG["Cterm"] - pH))   # C-terminus
+    for aa in ("D", "E", "C", "Y"):
+        if counts.get(aa):
+            neg += counts[aa] / (1.0 + 10 ** (_PKA_NEG[aa] - pH))
+    return pos - neg
+
+
+def _isoelectric_point(counts):
+    """pH at which net charge is zero, via bisection (net charge is monotonic in pH)."""
+    lo, hi = 0.0, 14.0
+    for _ in range(100):
+        mid = 0.5 * (lo + hi)
+        if _net_charge(mid, counts) > 0:
+            lo = mid
+        else:
+            hi = mid
+    return 0.5 * (lo + hi)
+
+
 def sequence_properties(sequence):
     """Global physicochemical properties computed from sequence."""
     seq = sequence.upper()
@@ -74,11 +104,9 @@ def sequence_properties(sequence):
 
     mw_total = 0.0
     hydro_sum = 0.0
-    charge_sum = 0
     flex_sum = 0.0
     vol_sum = 0.0
     sa_sum = 0.0
-    pi_sum = 0.0
 
     n_hydrophobic = 0
     n_polar = 0
@@ -87,15 +115,16 @@ def sequence_properties(sequence):
     n_aromatic = 0
     n_tiny = 0
     n_small = 0
+    ion_counts = {"D": 0, "E": 0, "C": 0, "Y": 0, "H": 0, "K": 0, "R": 0}
 
     for aa in seq:
         if aa not in AA_PROPERTIES:
             continue
+        if aa in ion_counts:
+            ion_counts[aa] += 1
         props = AA_PROPERTIES[aa]
         mw_total += props[0]
-        pi_sum += props[1]
         hydro_sum += props[2]
-        charge_sum += props[3]
         vol_sum += props[4]
         sa_sum += props[5]
         flex_sum += props[6]
@@ -122,8 +151,11 @@ def sequence_properties(sequence):
         "length": total,
         "molecular_weight": mw_total,
         "avg_hydrophobicity": hydro_sum / total,
-        "charge_pH7": charge_sum,
-        "isoelectric_point_approx": pi_sum / total,
+        # pKa-based net charge at pH 7 (accounts for termini and His), not a
+        # crude formal-charge count.
+        "charge_pH7": _net_charge(7.0, ion_counts),
+        # Proper isoelectric point via Henderson-Hasselbalch bisection.
+        "isoelectric_point_approx": _isoelectric_point(ion_counts),
         "fraction_hydrophobic": n_hydrophobic / total,
         "fraction_polar": n_polar / total,
         "fraction_charged_pos": n_pos / total,
@@ -312,6 +344,20 @@ def compute_biomolecule_features(
     # Compute per-sequence features (non-batch)
     simple_sets = [fs for fs in feature_sets
                    if fs not in ("esm_embedding", "precomputed_embedding")]
+
+    # Surface sequences containing residues outside the standard 20 amino acids
+    # — those residues are skipped, so such sequences are featurized only partially.
+    if simple_sets:
+        _standard = set(AA_PROPERTIES)
+        nonstd = [eid for eid in entity_ids
+                  if set(str(entities[eid]).upper()) - _standard]
+        if nonstd:
+            logger.warning(
+                "  %d of %d sequences contain non-standard residues that are "
+                "skipped during featurization: e.g. %s",
+                len(nonstd), len(entity_ids), nonstd[:5],
+            )
+
     rows = {}
     for entity_id in entity_ids:
         sequence = entities[entity_id]
