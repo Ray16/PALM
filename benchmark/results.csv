@@ -1,0 +1,12 @@
+dataset,n,hg_leakage,ds_leakage,random_leakage,paper_datasail_s1,hg_time_s,ds_time_s
+freesolv,642,0.1463,0.1424,0.3146,0.141,3.72,8.23
+esol,1128,0.1731,0.1668,0.3113,0.1808,0.1,16.15
+clintox,1484,N/A (AttributeError),FAILED (AttributeError),N/A (AttributeError),0.2303,0.12,22.62
+sider,1427,0.2271,0.236,0.3175,0.2345,0.11,6.6
+bace,1513,0.3054,0.2387,0.3182,0.3036,0.1,306.47
+bbbp,2050,N/A (AttributeError),FAILED (AttributeError),N/A (AttributeError),0.2866,0.16,70.48
+lipophilicity,4200,0.2548,0.2718,0.3186,0.3027,0.31,322.66
+tox21,7831,N/A (AttributeError),FAILED (AttributeError),N/A (AttributeError),0.2224,0.65,67.68
+qm8,21766,0.1817,0.2077,0.29,0.2918,1.83,741.9
+hiv,41127,N/A (AttributeError),FAILED (TimeoutError),N/A (AttributeError),0.3071,2.73,600.77
+muv,93087,N/A (TimeoutError),FAILED (TimeoutError),N/A (TimeoutError),0.3143,10.85,600.0
