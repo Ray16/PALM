@@ -1,22 +1,24 @@
 """Benchmark the PALM hypergraph backend against DataSAIL on the prepared
 1D molecule datasets (data/DataSAIL_data/1D/moleculenet).
 
-For each dataset we compute, on the SAME molecules and the SAME leakage metric
-(DataSAIL's eval_split with ECFP/Tanimoto):
-  - hypergraph (GPU kNN + Mt-KaHyPar)   leakage + wall-clock
-  - DataSAIL C1e (cluster-based 1D)      leakage + wall-clock
-  - random 80/20                         leakage (baseline)
-and list the addendum's reported "DataSAIL S1" value for reference.
+Single source of truth for the numbers in ``final_results.csv`` and the chart.
+For each dataset, on the SAME molecules and the SAME leakage metric, we report:
+  - hypergraph (GPU kNN + Mt-KaHyPar)   scaled L(pi) + wall-clock
+  - DataSAIL C1e (cluster-based 1D)      scaled L(pi) + wall-clock (None on timeout)
+  - random 80/20                         scaled L(pi) (baseline)
+  - paper "DataSAIL S1"                  reference value from the addendum
 
-Notes / honesty:
-  - eval_split and DataSAIL both build an O(n^2) similarity matrix, so they
-    are only feasible up to ~20-30k entities; for HIV (41k) / MUV (93k) those
-    steps may OOM/timeout and are reported as N/A — the hypergraph (sparse kNN)
-    still runs, which is itself the scalability point.
+Leakage is scored with ``leakage.scaled_lpi`` — a GPU, chunked reimplementation
+of DataSAIL's ``eval_split`` scaled L(pi) (ECFP/Tanimoto). It is numerically
+equal to ``eval_split`` (see ``--validate``) but, unlike eval_split (which builds
+the full O(n^2) matrix on CPU and OOMs / raises AttributeError past ~20-40k),
+it scales to 100k+ entities. That is why every method can be scored on every
+dataset, including HIV (41k) and MUV (93k) where eval_split cannot.
 
 Run (from the PALM parent dir, palm env):
-    python -m PALM.benchmark.benchmark
-Results stream to benchmark/results.csv.
+    python -m PALM.benchmark.benchmark            # full run -> final_results.csv
+    python -m PALM.benchmark.benchmark --validate # check scaled_lpi == eval_split
+Then ``python -m PALM.benchmark.make_chart`` plots final_results.csv.
 """
 
 import csv
@@ -36,12 +38,11 @@ import logging
 logging.disable(logging.CRITICAL)
 
 from ..hypergraph import run_hypergraph_split
-from datasail.sail import datasail
-from datasail.eval import eval_split
+from .leakage import scaled_lpi, validate_against_eval_split
 
 HERE = os.path.dirname(__file__)
 DATA = os.path.join(HERE, "..", "data", "DataSAIL_data", "1D", "moleculenet")
-OUT = os.path.join(HERE, "results.csv")
+OUT = os.path.join(HERE, "final_results.csv")
 
 # addendum Table 1 "DataSAIL S1" scaled L(pi), for reference
 PAPER_S1 = {
@@ -55,7 +56,9 @@ DATASETS = ["freesolv", "esol", "clintox", "sider", "bace", "bbbp",
             "lipophilicity", "tox21", "qm8", "hiv", "muv"]
 
 DATASAIL_TIMEOUT = 600   # seconds per dataset for the DataSAIL call
-EVAL_TIMEOUT = 600       # seconds for an eval_split call
+
+COLS = ["dataset", "n", "hypergraph", "hg_time", "datasail", "ds_time",
+        "random", "paper_s1"]
 
 
 class _Timeout:
@@ -77,71 +80,85 @@ def morgan_matrix(smiles, n_bits=2048, radius=2):
     return X
 
 
-def leakage(data, split):
-    with _Timeout(EVAL_TIMEOUT):
-        ratio, _, _ = eval_split("M", data, None, "ecfp", None, None, split)
-    return ratio
-
-
-def run_dataset(ds):
+def load_smiles(ds):
     col = SMILES_COL.get(ds, "smiles")
     df = pd.read_csv(os.path.join(DATA, f"{ds}.csv"))
     df = df.dropna(subset=[col]).drop_duplicates(subset=col).reset_index(drop=True)
-    smiles = [s for s in df[col].astype(str) if s and s != "nan"]
+    return [s for s in df[col].astype(str) if s and s != "nan"]
+
+
+def _score(smiles, split):
+    """scaled L(pi); None if it cannot be computed."""
+    try:
+        return round(scaled_lpi(list(smiles), split)[0], 4)
+    except Exception:
+        return None
+
+
+def run_dataset(ds):
+    smiles = load_smiles(ds)
     n = len(smiles)
     data = {s: s for s in smiles}
-    row = {"dataset": ds, "n": n, "paper_datasail_s1": PAPER_S1.get(ds)}
+    row = {"dataset": ds, "n": n, "paper_s1": PAPER_S1.get(ds)}
 
     # ---- hypergraph (GPU kNN + Mt-KaHyPar) ----
     X = morgan_matrix(smiles)
     feature_data = {smiles[i]: X[i] for i in range(n)}
     t0 = time.time()
     hg = run_hypergraph_split(feature_data, [8, 2], ["train", "test"], k=15, preset="quality")
-    row["hg_time_s"] = round(time.time() - t0, 2)
-    try:
-        row["hg_leakage"] = round(leakage(data, hg), 4)
-    except Exception as e:
-        row["hg_leakage"] = f"N/A ({type(e).__name__})"
+    row["hg_time"] = round(time.time() - t0, 2)
+    row["hypergraph"] = _score(smiles, hg)
 
-    # ---- DataSAIL C1e ----
+    # ---- DataSAIL C1e (None if it times out) ----
+    from datasail.sail import datasail
     t0 = time.time()
     try:
         with _Timeout(DATASAIL_TIMEOUT):
             e_s, _, _ = datasail(techniques=["C1e"], splits=[8, 2], names=["train", "test"],
                                  e_type="M", e_data=data, max_sec=DATASAIL_TIMEOUT // 2)
         ds_split = e_s["C1e"][0]
-        row["ds_time_s"] = round(time.time() - t0, 2)
-        row["ds_leakage"] = round(leakage(data, ds_split), 4)
-    except Exception as e:
-        row["ds_time_s"] = round(time.time() - t0, 2)
-        row["ds_leakage"] = f"FAILED ({type(e).__name__})"
+        row["ds_time"] = round(time.time() - t0, 2)
+        row["datasail"] = _score(smiles, ds_split)
+    except Exception:
+        row["ds_time"] = None
+        row["datasail"] = None
 
     # ---- random baseline ----
     random.seed(42)
     ids = list(data); random.shuffle(ids)
     cut = int(0.8 * n)
     rand = {**{i: "train" for i in ids[:cut]}, **{i: "test" for i in ids[cut:]}}
-    try:
-        row["random_leakage"] = round(leakage(data, rand), 4)
-    except Exception as e:
-        row["random_leakage"] = f"N/A ({type(e).__name__})"
+    row["random"] = _score(smiles, rand)
 
     return row
 
 
+def validate():
+    """Confirm scaled_lpi == eval_split on the smallest datasets."""
+    for ds in ["freesolv", "esol"]:
+        smiles = load_smiles(ds)
+        random.seed(0); ids = list(smiles); random.shuffle(ids)
+        cut = int(0.8 * len(ids))
+        split = {**{i: "train" for i in ids[:cut]}, **{i: "test" for i in ids[cut:]}}
+        ours, theirs, diff, ok = validate_against_eval_split(smiles, split)
+        print(f"[{ds}] scaled_lpi={ours:.5f} eval_split={theirs:.5f} "
+              f"diff={diff:.2e} {'OK' if ok else 'MISMATCH'}", flush=True)
+
+
 def main():
-    cols = ["dataset", "n", "hg_leakage", "ds_leakage", "random_leakage",
-            "paper_datasail_s1", "hg_time_s", "ds_time_s"]
+    if "--validate" in sys.argv:
+        validate()
+        return
     with open(OUT, "w", newline="") as fh:
-        csv.DictWriter(fh, fieldnames=cols).writeheader()
+        csv.DictWriter(fh, fieldnames=COLS).writeheader()
     for ds in DATASETS:
         print(f"[{ds}] ...", flush=True)
         try:
             row = run_dataset(ds)
         except Exception as e:
-            row = {"dataset": ds, "hg_leakage": f"ERROR ({type(e).__name__}: {str(e)[:50]})"}
+            row = {"dataset": ds, "hypergraph": f"ERROR ({type(e).__name__}: {str(e)[:50]})"}
         with open(OUT, "a", newline="") as fh:
-            csv.DictWriter(fh, fieldnames=cols, extrasaction="ignore").writerow(row)
+            csv.DictWriter(fh, fieldnames=COLS, extrasaction="ignore").writerow(row)
         print(f"[{ds}] {row}", flush=True)
     print("\nDONE ->", OUT, flush=True)
 

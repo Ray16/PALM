@@ -167,10 +167,18 @@ def partition_hypergraph(n_nodes, hyperedges, edge_weights, splits, seed=42,
         "large_k": mtk.PresetType.LARGE_K,
     }
     ctx = init.context_from_preset(preset_map.get(preset, mtk.PresetType.DEFAULT))
+    # set_partitioning_parameters fixes k and the KM1 objective; its epsilon is
+    # the balance tolerance for *uniform* target block weights. We immediately
+    # override the targets below with explicit per-block caps derived from the
+    # requested (non-uniform) split ratios, so those caps — not epsilon — define
+    # the actual balance constraint. epsilon is still passed for k and as the
+    # tolerance Mt-KaHyPar reports `imbalance()` against.
     ctx.set_partitioning_parameters(k, epsilon, mtk.Objective.KM1)
     ctx.logging = False
 
-    # Target block max-weights from the split ratios (unit node weights).
+    # Per-block max-weights from the split ratios (unit node weights), with an
+    # (1+epsilon) slack so the partitioner has room to honour the ratios while
+    # minimizing the cut. The +1 avoids an infeasible cap from integer rounding.
     total = sum(splits)
     block_caps = [int(np.ceil(n_nodes * s / total * (1 + epsilon))) + 1 for s in splits]
     ctx.set_individual_target_block_weights(block_caps)
@@ -197,7 +205,10 @@ def run_hypergraph_split(feature_data, splits, names, k=15, metric=None,
         dict {entity_id: split_name}
     """
     ids = sorted(feature_data.keys())
-    X = np.asarray([feature_data[i] for i in ids], dtype=float)
+    # float32 throughout: the GPU k-NN casts to float32 anyway, so this halves
+    # peak host memory (e.g. ~0.7 GB vs 1.5 GB for 93k x 2048) with no change
+    # to the computed neighbours.
+    X = np.asarray([feature_data[i] for i in ids], dtype=np.float32)
     X = np.nan_to_num(X, nan=0.0, posinf=0.0, neginf=0.0)
     n = len(ids)
     if n < len(splits):
@@ -212,11 +223,15 @@ def run_hypergraph_split(feature_data, splits, names, k=15, metric=None,
     )
     logger.info("  Partition: KM1=%d imbalance=%.3f", km1, imbalance)
 
-    # Map block index -> split name. Largest block -> first split name (train),
-    # so block ordering follows the requested split sizes.
+    # Map block index -> split name by descending block size: the largest block
+    # becomes the largest-ratio split (e.g. train). Ties are broken by block
+    # index for determinism. NOTE: this assumes the requested split ratios are
+    # distinct (e.g. [8, 2]); for (near-)equal ratios the size->name assignment
+    # is arbitrary among the tied splits, which is harmless since they are
+    # interchangeable by construction.
     from collections import Counter
     sizes = Counter(block_of)
-    blocks_by_size = [b for b, _ in sizes.most_common()]
+    blocks_by_size = sorted(sizes, key=lambda b: (-sizes[b], b))
     order_by_split = sorted(range(len(splits)), key=lambda i: splits[i], reverse=True)
     block_to_name = {}
     for rank, block in enumerate(blocks_by_size):
@@ -286,8 +301,10 @@ def run_hypergraph_split_nd(records, axis_feature_maps, splits, names,
         axis_feature_maps: {axis_name: {value: feature_vector or None}}.
             None / all-zero features -> identity hyperedges only (categorical).
         splits, names: e.g. [8, 2], ["train", "test"]
-        sim_threshold: min similarity to merge component values into a cluster
-            (1.0 = pure identity; <1.0 enables similarity-aware grouping).
+        sim_threshold: min similarity to merge component values into a cluster.
+            Default 1.0 = pure identity grouping (no merging); set <1.0 to enable
+            similarity-aware grouping, which is the n-D generalization's main
+            advantage over identity-only leakage control.
         axis_weights: optional {axis_name: float} relative leakage weight.
     Returns:
         (assignment: list[str] per record, info: dict)
@@ -303,6 +320,12 @@ def run_hypergraph_split_nd(records, axis_feature_maps, splits, names,
     for axis in axes:
         values = sorted({str(r[axis]) for r in records})
         axis_clusters[axis] = _cluster_axis(values, axis_feature_maps[axis], sim_threshold)
+        # Report how many unique values had no usable feature and therefore fell
+        # back to identity-only hyperedges (no similarity grouping on those).
+        n_identity = sum(1 for lab in axis_clusters[axis].values() if lab.startswith("id::"))
+        if n_identity:
+            logger.info("  Axis %r: %d/%d values fall back to identity (no features)",
+                        axis, n_identity, len(values))
 
     # 2. one hyperedge per (axis, cluster): records sharing that clustered value
     hyperedges, weights = [], []
@@ -328,10 +351,10 @@ def run_hypergraph_split_nd(records, axis_feature_maps, splits, names,
         epsilon=epsilon, preset=preset,
     )
 
-    # 4. map block -> split name by size
+    # 4. map block -> split name by descending size (ties broken by block index)
     from collections import Counter
     sizes = Counter(block_of)
-    blocks_by_size = [b for b, _ in sizes.most_common()]
+    blocks_by_size = sorted(sizes, key=lambda b: (-sizes[b], b))
     order_by_split = sorted(range(len(splits)), key=lambda i: splits[i], reverse=True)
     block_to_name = {}
     for rank, block in enumerate(blocks_by_size):

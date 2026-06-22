@@ -62,3 +62,20 @@ def scaled_lpi(smiles, split, block=4096):
         cross = (lab[s:e][:, None] != lab[None, :]).float()
         leak += (sim * cross).sum()
     return float((leak / total).item()), n
+
+
+def validate_against_eval_split(smiles, split, tol=1e-3):
+    """Sanity-check that scaled_lpi matches DataSAIL's eval_split on this split.
+
+    Both quantities are the scaled L(pi) over ECFP/Tanimoto pairs; scaled_lpi is
+    just the GPU, chunked reimplementation. Returns (ours, theirs, abs_diff,
+    ok). Only feasible on small datasets, since eval_split builds the full n x n
+    matrix on CPU. Raises if DataSAIL is unavailable.
+    """
+    from datasail.eval import eval_split
+
+    data = {s: s for s in smiles}
+    theirs, _, _ = eval_split("M", data, None, "ecfp", None, None, split)
+    ours, _ = scaled_lpi(list(smiles), split)
+    diff = abs(ours - theirs)
+    return ours, theirs, diff, diff <= tol
