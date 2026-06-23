@@ -1,7 +1,7 @@
 """Benchmark the PALM hypergraph backend against DataSAIL on the prepared
 1D molecule datasets (data/DataSAIL_data/1D/moleculenet).
 
-Single source of truth for the numbers in ``final_results.csv`` and the chart.
+Single source of truth for the numbers in ``moleculenet1d_results.csv`` and the chart.
 For each dataset, on the SAME molecules and the SAME leakage metric, we report:
   - hypergraph (GPU kNN + Mt-KaHyPar)   scaled L(pi) + wall-clock
   - DataSAIL C1e (cluster-based 1D)      scaled L(pi) + wall-clock (None on timeout)
@@ -16,9 +16,9 @@ it scales to 100k+ entities. That is why every method can be scored on every
 dataset, including HIV (41k) and MUV (93k) where eval_split cannot.
 
 Run (from the PALM parent dir, palm env):
-    python -m PALM.benchmark.benchmark            # full run -> final_results.csv
-    python -m PALM.benchmark.benchmark --validate # check scaled_lpi == eval_split
-Then ``python -m PALM.benchmark.make_chart`` plots final_results.csv.
+    python -m PALM.benchmark.benchmark_moleculenet1d            # full run -> moleculenet1d_results.csv
+    python -m PALM.benchmark.benchmark_moleculenet1d --validate # check scaled_lpi == eval_split
+Then ``python -m PALM.benchmark.make_chart`` plots moleculenet1d_results.csv.
 """
 
 import csv
@@ -42,7 +42,7 @@ from .leakage import scaled_lpi, validate_against_eval_split
 
 HERE = os.path.dirname(__file__)
 DATA = os.path.join(HERE, "..", "data", "DataSAIL_data", "1D", "moleculenet")
-OUT = os.path.join(HERE, "final_results.csv")
+OUT = os.path.join(HERE, "moleculenet1d_results.csv")
 
 # addendum Table 1 "DataSAIL S1" scaled L(pi), for reference
 PAPER_S1 = {

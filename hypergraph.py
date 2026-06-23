@@ -374,3 +374,69 @@ def run_hypergraph_split_nd(records, axis_feature_maps, splits, names,
     info = {"km1": km1, "imbalance": round(imbalance, 4),
             "n_hyperedges": len(hyperedges), "axis_overlap": overlap}
     return assignment, info
+
+
+def run_hypergraph_split_nd_knn(records, axis_feature_maps, splits, names,
+                                k=25, seed=42, threads=8, epsilon=0.05,
+                                preset="quality"):
+    """Multi-component split via per-axis *k-NN* hyperedges (record-level).
+
+    Unlike :func:`run_hypergraph_split_nd`, which groups each axis's component
+    values by identity/similarity *clusters*, this builds, for every axis, one
+    similarity hyperedge per record covering that record and its ``k`` nearest
+    neighbours *on that axis* (Tanimoto/cosine over the component feature),
+    weighted by mean similarity — exactly the 1D construction of
+    :func:`run_hypergraph_split`, applied per axis and unioned. Minimizing KM1
+    then minimizes the full pairwise similarity that straddles the split on
+    every axis at once, which tracks the scaled ``L(pi)`` metric far better than
+    the cluster construction on high-cardinality, near-unique axes (e.g. diverse
+    reaction reactants), where few exact/near-exact value groups exist.
+
+    Records whose component lacks a feature on an axis are excluded from that
+    axis's k-NN graph (they contribute no similarity edge there).
+    """
+    from collections import Counter
+
+    n = len(records)
+    axes = list(axis_feature_maps.keys())
+    all_edges, all_w = [], []
+    for axis in axes:
+        vals = [str(r[axis]) for r in records]
+        feat_map = axis_feature_maps[axis]
+        # per-record feature matrix on this axis; keep only records with a feature
+        dim = 0
+        for v in vals:
+            f = feat_map.get(v)
+            if f is not None and np.any(f):
+                dim = len(np.asarray(f).ravel()); break
+        if not dim:
+            continue
+        idx_keep, rows = [], []
+        for i, v in enumerate(vals):
+            f = feat_map.get(v)
+            if f is not None and np.any(f):
+                idx_keep.append(i); rows.append(np.asarray(f, dtype=np.float32).ravel())
+        if len(idx_keep) < 3:
+            continue
+        X = np.vstack(rows)
+        edges, w, _ = build_knn_hyperedges(X, k=min(k, len(idx_keep) - 1),
+                                           metric=None, use_gpu=True)
+        remap = np.asarray(idx_keep)
+        for e, ww in zip(edges, w):
+            all_edges.append([int(remap[j]) for j in e]); all_w.append(ww)
+    if not all_edges:
+        raise ValueError("No k-NN hyperedges built (no axis had usable features)")
+
+    block_of, km1, imbalance = partition_hypergraph(
+        n, all_edges, all_w, splits, seed=seed, threads=threads,
+        epsilon=epsilon, preset=preset)
+
+    sizes = Counter(block_of)
+    blocks_by_size = sorted(sizes, key=lambda b: (-sizes[b], b))
+    order_by_split = sorted(range(len(splits)), key=lambda i: splits[i], reverse=True)
+    block_to_name = {}
+    for rank, block in enumerate(blocks_by_size):
+        block_to_name[block] = names[order_by_split[min(rank, len(order_by_split) - 1)]]
+    assignment = [block_to_name.get(block_of[i], names[-1]) for i in range(n)]
+    info = {"km1": km1, "imbalance": round(imbalance, 4), "n_hyperedges": len(all_edges)}
+    return assignment, info

@@ -1,8 +1,8 @@
-"""Grouped bar chart from final_results.csv: hypergraph vs DataSAIL vs random
+"""Grouped bar chart from moleculenet1d_results.csv: hypergraph vs DataSAIL vs random
 vs paper DataSAIL-S1, all scored with the GPU scaled L(pi) (== eval_split).
 
-Pure plotter: all numbers come from ``final_results.csv`` (produced by
-``python -m PALM.benchmark.benchmark``). Re-run the benchmark to refresh them.
+Pure plotter: all numbers come from ``moleculenet1d_results.csv`` (produced by
+``python -m PALM.benchmark.benchmark_moleculenet1d``). Re-run the benchmark to refresh them.
 
     python -m PALM.benchmark.make_chart        # -> benchmark_chart.png
 """
@@ -16,15 +16,17 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 HERE = os.path.dirname(__file__)
-CSV = os.path.join(HERE, "final_results.csv")
+CSV = os.path.join(HERE, "moleculenet1d_results.csv")
 
 
 def plot(df):
     labels = [f"{r.dataset}\n(n={int(r.n):,})" for r in df.itertuples()]
     x = np.arange(len(df)); w = 0.2
     fig, ax = plt.subplots(figsize=(15, 6))
-    series = [("hypergraph", "#2563eb"), ("datasail", "#dc2626"),
-              ("paper_s1", "#d97706"), ("random", "#94a3b8")]
+    # palette shared with make_mcr_chart.py (Fig. 2): random=grey, PALM=blue,
+    # DataSAIL family=orange (fresh = light, paper-S1 = dark).
+    series = [("hypergraph", "#3b6fb6"), ("datasail", "#f4a36c"),
+              ("paper_s1", "#b5651d"), ("random", "#9aa0a6")]
     names = {"hypergraph": "Hypergraph (ours)", "datasail": "DataSAIL (fresh)",
              "random": "Random", "paper_s1": "Paper DataSAIL-S1"}
 
@@ -46,12 +48,15 @@ def plot(df):
                             rotation=90, ha="center", va="bottom", fontsize=7,
                             color=c, fontweight="bold")
                 elif col == "datasail":
-                    ax.text(x[i] + (j - 1.5) * w, 0.012, "timeout", rotation=90,
-                            ha="center", va="bottom", fontsize=7, color="#dc2626", fontweight="bold")
+                    ax.text(x[i] + (j - 1.5) * w, 0.012, "needs >220 GB", rotation=90,
+                            ha="center", va="bottom", fontsize=7, color="#b5651d", fontweight="bold")
     ax.set_ylabel("scaled L(π)  (lower = less leakage)", fontsize=12)
     ax.set_title("Train/test leakage: Hypergraph vs DataSAIL  (80/20, MoleculeNet)", fontsize=13, fontweight="bold")
     ax.set_xticks(x); ax.set_xticklabels(labels, fontsize=9)
-    ax.legend(fontsize=10, framealpha=0.9); ax.grid(axis="y", alpha=0.3)
+    # legend outside the axes (upper right) so it never overlaps bars/annotations
+    ax.legend(fontsize=10, framealpha=0.95, loc="upper left", bbox_to_anchor=(1.005, 1.0))
+    ax.grid(axis="y", alpha=0.3)
+    ax.margins(y=0.12)            # headroom so the tallest bars + rotated time labels clear the top
     fig.tight_layout()
     out = os.path.join(HERE, "benchmark_chart.png")
     fig.savefig(out, dpi=150, bbox_inches="tight")

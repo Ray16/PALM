@@ -1,0 +1,4 @@
+method,n,n_axes,axes,macro_lpi,macro_id_leak,time_s
+random,4300,3,rA;rB;rC,0.3214,0.1799,-
+hypergraph_identity,4300,3,rA;rB;rC,0.3001,0.0,0.3
+hypergraph_knn_k25,4300,3,rA;rB;rC,0.2576,0.0597,3.4

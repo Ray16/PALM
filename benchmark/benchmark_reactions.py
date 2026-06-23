@@ -22,7 +22,7 @@ average across axes:
 Run (palm env, from the PALM parent dir):
     python -m PALM.benchmark.benchmark_reactions               # sim_threshold=1.0
     python -m PALM.benchmark.benchmark_reactions 0.8           # similarity-aware
-Writes benchmark/reactions_results.csv and prints a per-axis breakdown.
+Writes benchmark/hte_reactions_results.csv and prints a per-axis breakdown.
 
 Dependencies: numpy, pandas, openpyxl, rdkit, scikit-learn/scipy, mtkahypar
 (no torch needed — the n-D path does not use GPU k-NN). The Suzuki base axis
@@ -41,7 +41,7 @@ from .. import reactions as R
 from ..hypergraph import run_hypergraph_split_nd
 
 HERE = os.path.dirname(__file__)
-OUT = os.path.join(HERE, "reactions_results.csv")
+OUT = os.path.join(HERE, "hte_reactions_results.csv")
 
 
 # ── n-D leakage metric ─────────────────────────────────────────────────────

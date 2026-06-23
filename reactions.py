@@ -33,8 +33,9 @@ def _morgan(smiles, n_bits=2048, radius=2):
     m = Chem.MolFromSmiles(str(smiles))
     if m is None:
         return None
+    fp = AllChem.GetMorganFingerprintAsBitVect(m, radius, nBits=n_bits)
     a = np.zeros(n_bits, dtype=np.int8)
-    DataStructs.ConvertToNumpyArray(AllChem.GetMorganFingerprintAsBitVect(m, radius, nBits=n_bits), a)
+    a[list(fp.GetOnBits())] = 1          # avoids ConvertToNumpyArray (numpy-2.x ABI issue)
     return a
 
 
@@ -169,3 +170,25 @@ def load_suzuki_miyaura(sheet="Sheet1"):
     }
     yield_col = "Product_Yield_PCT_Area_UV"
     return records, axis_feature_maps, df[yield_col].values
+
+
+def load_uspto_mcr():
+    """USPTO 3-reactant reactions: a genuine 3D, near-unique, structured case.
+
+    Each record is rA + rB + rC -> product, three *independent* reactant axes
+    (only the product is derived, and it is not used as a split axis). After
+    dropping common reagents (global freq > 5) and tiny fragments, ~96% of
+    reactant molecules are unique -- so identity grouping forms no useful groups
+    (identity split ~ random) and only SIMILARITY-aware grouping (scaffold
+    clustering, sim_threshold < 1) can reduce scaled L(pi). This is the n-D
+    analogue of the 1D molecular scaffold split, and the regime where the
+    hypergraph beats both random and a trivial identity group-split.
+
+    Files in 3D+/uspto_mcr/records.csv; needs no TDC at runtime.
+    """
+    base = os.path.join(_DATA, "uspto_mcr")
+    df = pd.read_csv(os.path.join(base, "records.csv"))
+    axes = ["rA", "rB", "rC"]
+    records = [{a: str(getattr(r, a)) for a in axes} for r in df.itertuples()]
+    axis_feature_maps = {a: morgan_map(sorted({rec[a] for rec in records})) for a in axes}
+    return records, axis_feature_maps, df["product"].values

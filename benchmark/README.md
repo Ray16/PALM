@@ -9,14 +9,14 @@ to 100k+ entities, so every method can be scored on every dataset. Splits are 80
 
 Run:
 ```bash
-python -m PALM.benchmark.benchmark            # full run -> final_results.csv
-python -m PALM.benchmark.benchmark --validate # check scaled_lpi == eval_split
-python -m PALM.benchmark.make_chart           # final_results.csv -> benchmark_chart.png
+python -m PALM.benchmark.benchmark_moleculenet1d            # full run -> moleculenet1d_results.csv
+python -m PALM.benchmark.benchmark_moleculenet1d --validate # check scaled_lpi == eval_split
+python -m PALM.benchmark.make_chart           # moleculenet1d_results.csv -> benchmark_chart.png
 ```
 
 ## Results (scaled L(π), lower is better)
 
-Numbers are read from `final_results.csv`; the chart is `benchmark_chart.png`.
+Numbers are read from `moleculenet1d_results.csv`; the chart is `benchmark_chart.png`.
 
 | dataset | n | **hypergraph** | DataSAIL (fresh, v1.3.0) | random | paper S1 | hg time | DataSAIL time |
 |---|---:|---:|---:|---:|---:|---:|---:|
@@ -60,7 +60,7 @@ Numbers are read from `final_results.csv`; the chart is `benchmark_chart.png`.
 ## Notes
 
 - **Metric parity.** `scaled_lpi` is validated against DataSAIL's `eval_split`
-  (`python -m PALM.benchmark.benchmark --validate`); they agree to <1e-3 on the
+  (`python -m PALM.benchmark.benchmark_moleculenet1d --validate`); they agree to <1e-3 on the
   small datasets where eval_split is feasible. eval_split itself is O(n²) on CPU
   and raises/timeouts past ~20–40k, which is why it is not used directly here.
 - **Determinism.** Mt-KaHyPar is initialized once per process
