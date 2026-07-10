@@ -12,6 +12,17 @@
     "e1_overlap": 0,
     "e1_total": 20
   },
+  "nn_leakage_pairs": {
+    "train->test": {
+      "metric": "euclidean",
+      "mean_nn_dist": 145.276192,
+      "median_nn_dist": 82.197536,
+      "min_nn_dist": 74.813177,
+      "max_nn_dist": 341.89652,
+      "zero_dist_count": 0,
+      "zero_dist_frac": 0.0
+    }
+  },
   "nn_leakage": {
     "metric": "euclidean",
     "mean_nn_dist": 145.276192,
@@ -20,6 +31,13 @@
     "max_nn_dist": 341.89652,
     "zero_dist_count": 0,
     "zero_dist_frac": 0.0
+  },
+  "distribution_shift_pairs": {
+    "train->test": {
+      "mean_normalized_shift": 0.526,
+      "max_normalized_shift": 1.168,
+      "num_features": 30
+    }
   },
   "distribution_shift": {
     "mean_normalized_shift": 0.526,

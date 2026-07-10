@@ -1,0 +1,17 @@
+{
+  "techniques": {
+    "I2": {
+      "coverage": 0.6,
+      "nn_separation": 180.146902,
+      "dist_shift": 0.4632,
+      "entity_overlap": 0
+    },
+    "R": {
+      "coverage": 1.0,
+      "nn_separation": 0.731736,
+      "dist_shift": 1.2459,
+      "entity_overlap": 5
+    }
+  },
+  "recommendation": "I2 (best overall balance of leakage prevention and coverage)"
+}

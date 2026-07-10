@@ -1,0 +1,17 @@
+{
+  "techniques": {
+    "C1e": {
+      "coverage": 1.0,
+      "nn_separation": 174.476596,
+      "dist_shift": 1.2063,
+      "entity_overlap": 0
+    },
+    "R": {
+      "coverage": 1.0,
+      "nn_separation": 145.276192,
+      "dist_shift": 0.526,
+      "entity_overlap": 0
+    }
+  },
+  "recommendation": "C1e (best overall balance of leakage prevention and coverage)"
+}

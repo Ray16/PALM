@@ -1,0 +1,6 @@
+dataset,n,lowrank_s,datasail_s,speedup
+esol,1128,0.17,16.2,97
+tox21,7831,0.29,65.4,222
+qm8,21766,0.68,742.0,1094
+hiv,41127,1.34,2742.7,2054
+muv,93087,2.67,,timeout

@@ -1,5 +1,7 @@
 \documentclass[final]{beamer}
-\usepackage[orientation=landscape,size=custom,width=121.92,height=91.44,scale=1.25]{beamerposter}
+\usepackage[orientation=landscape,size=custom,width=121.92,height=91.44,scale=1.15]{beamerposter}
+\usetheme{I6pd2}
+
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
@@ -7,223 +9,139 @@
 \usepackage{graphicx}
 \usepackage{array}
 \usepackage{booktabs}
-\usepackage{multicol}
 \usepackage{tikz}
-\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, backgrounds}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc}
 \usepackage{xcolor}
 \usepackage{enumitem}
-\setlist[itemize]{leftmargin=1.5em, itemsep=0.3ex}
+\setlist[itemize]{leftmargin=1.2em, itemsep=0.4ex, topsep=0.3ex}
 
-% ── Theme ──────────────────────────────────────────────────────────────
-\usetheme{default}
-\setbeamertemplate{navigation symbols}{}
-\setbeamertemplate{headline}{}
-\setbeamertemplate{footline}{}
-
-% Colors
-\definecolor{palmblue}{HTML}{2563EB}
-\definecolor{palmdark}{HTML}{1E3A5F}
+% ── Custom colors ─────────────────────────────────────────────────────
+\definecolor{palmblue}{HTML}{1D4ED8}
+\definecolor{palmdark}{HTML}{0F172A}
 \definecolor{palmlight}{HTML}{EFF6FF}
 \definecolor{palmgreen}{HTML}{16A34A}
 \definecolor{palmred}{HTML}{DC2626}
 \definecolor{palmorange}{HTML}{D97706}
-\definecolor{palmgray}{HTML}{64748B}
-\definecolor{bgcream}{HTML}{F8FAFC}
-\definecolor{blockbg}{HTML}{FFFFFF}
+\definecolor{palmgray}{HTML}{475569}
 
+% Override theme colors to PALM brand
+\setbeamercolor{headline}{fg=white,bg=palmdark}
+\setbeamercolor{title in headline}{fg=white}
+\setbeamercolor{author in headline}{fg=white}
+\setbeamercolor{institute in headline}{fg=white}
+\setbeamercolor{separation line}{bg=palmblue}
 \setbeamercolor{block title}{fg=white,bg=palmblue}
-\setbeamercolor{block body}{fg=palmdark,bg=blockbg}
-\setbeamercolor{normal text}{fg=palmdark}
+\setbeamercolor{block body}{fg=palmdark,bg=white}
 
-% ── Custom block environment ──────────────────────────────────────────
-\setbeamertemplate{block begin}{
-  \vskip0.6ex
-  \begin{beamercolorbox}[ht=2.8ex,dp=0.7ex,leftskip=1.2ex,colsep*=.6ex]{block title}
-    \usebeamerfont{block title}\large\insertblocktitle
-  \end{beamercolorbox}
-  {\ifbeamercolorempty[bg]{block body}{}{\nointerlineskip\vskip-0.5pt}}
-  \begin{beamercolorbox}[colsep*=.6ex,sep=0.8ex,vmode]{block body}
-    \usebeamerfont{block body}
-}
-\setbeamertemplate{block end}{
-  \end{beamercolorbox}\vskip0.6ex
-}
+\title{PALM: Physics-Aware Leakage Minimizer}
+\author{}  % Add authors here
+\institute{}  % Add institution here
 
 \begin{document}
 \begin{frame}[t]
 
-% ══════════════════════════════════════════════════════════════════════
-% TITLE BAR
-% ══════════════════════════════════════════════════════════════════════
-\begin{beamercolorbox}[wd=\textwidth,ht=6.5ex,dp=1.2ex,center]{title}
-  {\fontsize{58}{70}\selectfont\bfseries\color{palmblue}
-    PALM: Physics-Aware Leakage Minimizer}\\[0.4ex]
-  {\fontsize{26}{32}\selectfont\color{palmdark}
-    Reducing Data Leakage in Train/Test Splits for Scientific Machine Learning}\\[0.3ex]
-  {\fontsize{22}{28}\selectfont\color{palmgray}
-    % Add author names / affiliations here
-    }
-\end{beamercolorbox}
-
-\vspace{0.5ex}
-
-% ══════════════════════════════════════════════════════════════════════
-% BODY — four columns
-% ══════════════════════════════════════════════════════════════════════
 \begin{columns}[T]
 
 % ────────────────────── COLUMN 1 ──────────────────────
-\begin{column}{0.235\textwidth}
+\begin{column}{0.32\textwidth}
 
-% ── MOTIVATION ──
 \begin{block}{Motivation}
-ML models in drug discovery, materials science, and bioinformatics are often evaluated with \textbf{randomly split} datasets. This introduces \textbf{data leakage}:
+ML models in drug discovery, materials science, and bioinformatics are routinely evaluated with \textbf{random train/test splits}. This introduces \textbf{data leakage}: structurally similar entities appear in both sets.
+
+\vspace{0.5ex}
+\begin{center}
+\begin{tikzpicture}[
+    box/.style={draw, rounded corners=4pt, minimum width=5cm, minimum height=1.5cm, align=center, line width=1.2pt, font=\normalsize},
+]
+  \node[box, fill=palmlight, draw=palmblue] (train) {\textbf{Train Set}\\[1pt]{\small Drug A, A$'$, B}};
+  \node[box, fill=red!6, draw=palmred, right=2cm of train] (test) {\textbf{Test Set}\\[1pt]{\small Drug A$''$, C}};
+  \draw[-{Stealth[length=4mm]}, line width=2pt, palmred, dashed]
+    (train.east) -- node[above, font=\large\bfseries, palmred] {Leakage!} (test.west);
+  \node[below=0.4cm of $(train)!0.5!(test)$, font=\small\color{palmgray}, align=center]
+    {A, A$'$, A$''$: $>$90\% structural similarity};
+\end{tikzpicture}
+\end{center}
 
 \vspace{0.5ex}
 \begin{itemize}
-  \item Structurally similar entities appear in \textbf{both} train and test sets
-  \item Models memorize patterns rather than learning generalizable representations
+  \item Models memorize patterns instead of learning generalizable features
   \item Reported metrics \textbf{overestimate} real-world performance
+  \item Random splitting inflates test R$^2$ by \textbf{0.23--0.33} on molecular benchmarks
 \end{itemize}
 
-\vspace{0.8ex}
-\begin{center}
-\begin{tikzpicture}[
-    every node/.style={font=\normalsize},
-    box/.style={draw, rounded corners=3pt, minimum width=4.2cm, minimum height=1.4cm, align=center, line width=1.2pt},
-]
-  \node[box, fill=palmlight, draw=palmblue] (train) {Train Set\\{\scriptsize Drug A, Drug A$'$, Drug B}};
-  \node[box, fill=red!8, draw=palmred, right=1.5cm of train] (test) {Test Set\\{\scriptsize Drug A$''$, Drug C}};
-  \draw[-{Stealth[length=4mm]}, line width=1.5pt, palmred, dashed]
-    (train.east) -- node[above, font=\large\bfseries, palmred] {Leakage!} (test.west);
-  \node[below=0.4cm of $(train)!0.5!(test)$, font=\small\color{palmgray}, align=center]
-    {A, A$'$, A$''$ share $>$90\% structural similarity};
-\end{tikzpicture}
-\end{center}
-
-\vspace{0.6ex}
-Our experiments show random splitting inflates test R$^2$ by \textbf{0.23--0.33} on molecular property prediction, revealing that apparent performance is largely driven by leakage.
-
-\vspace{0.6ex}
-\textbf{Goal:} A unified, automated tool for \textbf{leakage-minimized splitting} across molecules, materials, biomolecules, and genes.
+\vspace{0.5ex}
+\textbf{PALM} provides automated, leakage-minimized splitting across molecules, materials, biomolecules, and genes --- via both CLI and web application.
 \end{block}
 
-% ── BACKGROUND ──
-\begin{block}{Splitting Techniques}
+\begin{block}{Splitting Strategies: Entity-Based \& Cluster-Based}
 
-From least to most stringent:
+DataSAIL provides two complementary approaches:
 
 \vspace{0.3ex}
-\begin{center}
-\begin{tikzpicture}[
-    level/.style={font=\normalsize, rounded corners=3pt, draw, minimum width=7cm, minimum height=1.2cm, align=center, line width=1pt},
-]
-  \node[level, fill=red!8, draw=palmred] (R) at (0,0) {\textbf{R} --- Random (baseline)};
-  \node[level, fill=orange!8, draw=palmorange] (I) at (0,-1.8) {\textbf{I1/I2} --- Identity (no entity overlap)};
-  \node[level, fill=blue!6, draw=palmblue] (SC) at (0,-3.6) {\textbf{Scaffold} --- Bemis-Murcko (molecules)};
-  \node[level, fill=green!6, draw=palmgreen!80!black] (C1) at (0,-5.4) {\textbf{C1} --- Cluster-based (one axis)};
-  \node[level, fill=green!12, draw=palmgreen] (C2) at (0,-7.2) {\textbf{C2} --- Cluster-based (both axes)};
-  \draw[-{Stealth[length=3mm]}, line width=1.5pt, palmgray] (R.south) -- (I.north);
-  \draw[-{Stealth[length=3mm]}, line width=1.5pt, palmgray] (I.south) -- (SC.north);
-  \draw[-{Stealth[length=3mm]}, line width=1.5pt, palmgray] (SC.south) -- (C1.north);
-  \draw[-{Stealth[length=3mm]}, line width=1.5pt, palmgray] (C1.south) -- (C2.north);
-  \node[right=0.6cm of C2, font=\normalsize\color{palmgreen}, align=left] {$\leftarrow$ Increasing\\rigor};
-\end{tikzpicture}
-\end{center}
-
-\vspace{0.6ex}
-\textbf{DataSAIL} formulates splitting as a constrained optimization problem. \textbf{PALM} extends it with:
-\begin{itemize}
-  \item Domain-specific \textbf{feature extraction} for 4 entity types
-  \item \textbf{Adaptive distance metrics} (Euclidean, cosine, Tanimoto)
-  \item \textbf{Scaffold splitting} for chemistry-aware molecule grouping
-  \item \textbf{17+ input formats} with automatic detection
-  \item Built-in \textbf{quality metrics}, \textbf{visualizations}, and \textbf{ML exports}
-  \item Interactive \textbf{web application} with guided tooltips
-\end{itemize}
-\end{block}
-
-\end{column}
-
-% ────────────────────── COLUMN 2 ──────────────────────
-\begin{column}{0.235\textwidth}
-
-\begin{block}{System Architecture}
-
-\begin{center}
-\begin{tikzpicture}[
-    node distance=0.9cm and 0.5cm,
-    every node/.style={font=\normalsize},
-    stage/.style={draw, rounded corners=3pt, minimum width=8.5cm, minimum height=1.3cm, align=center, line width=1pt, font=\normalsize\bfseries},
-    detail/.style={font=\small\color{palmgray}, align=center},
-    arr/.style={-{Stealth[length=3mm]}, line width=1.5pt, palmblue},
-]
-  \node[stage, fill=palmlight, draw=palmblue] (load) {1. Load Data};
-  \node[detail, below=0.15cm of load] (load-d) {CSV, JSON, SDF, FASTA, PDB, CIF, SMILES, \ldots};
-
-  \node[stage, fill=palmlight, draw=palmblue, below=0.7cm of load-d] (feat) {2. Featurize Entities};
-  \node[detail, below=0.15cm of feat] (feat-d) {Domain-specific features (with caching)};
-
-  \node[stage, fill=palmlight, draw=palmblue, below=0.7cm of feat-d] (dist) {3. Compute Distances};
-  \node[detail, below=0.15cm of dist] (dist-d) {Adaptive: Euclidean / cosine / Tanimoto};
-
-  \node[stage, fill=palmlight, draw=palmblue, below=0.7cm of dist-d] (split) {4. Split};
-  \node[detail, below=0.15cm of split] (split-d) {DataSAIL (R, I*, C*) + Scaffold};
-
-  \node[stage, fill=palmlight, draw=palmblue, below=0.7cm of split-d] (eval) {5. Evaluate \& Compare};
-  \node[detail, below=0.15cm of eval] (eval-d) {Metrics + t-SNE plots + benchmark ranking};
-
-  \node[stage, fill=green!8, draw=palmgreen, below=0.7cm of eval-d] (save) {6. Save Results};
-  \node[detail, below=0.15cm of save] (save-d) {Format-preserving + ML exports (indices, fold CSV)};
-
-  \draw[arr] (load.south) -- (feat.north);
-  \draw[arr] (feat.south) -- (dist.north);
-  \draw[arr] (dist.south) -- (split.north);
-  \draw[arr] (split.south) -- (eval.north);
-  \draw[arr] (eval.south) -- (save.north);
-\end{tikzpicture}
-\end{center}
-\end{block}
-
-\begin{block}{Entity Types \& Features}
-\vspace{0.3ex}
-\renewcommand{\arraystretch}{1.3}
 {\small
-\begin{tabular}{@{} >{\bfseries\color{palmblue}}l p{9.5cm} @{}}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{} >{\bfseries}l p{3.5cm} p{5.5cm} @{}}
 \toprule
-Type & Feature Sets \\
+ & \textbf{Strategy} & \textbf{What it prevents} \\
 \midrule
-Molecule &
-  RDKit descriptors, physicochemical, composition, Morgan fingerprint (2048-bit ECFP4) \\
-Biomolecule &
-  Sequence properties (16 feat), ESM2 embeddings (320--5120 dim), precomputed \\
-Material &
-  MAGPIE, stoichiometry, electronic, bonding, thermodynamic, classification, mat2vec, SOAP \\
-Gene &
-  Nucleotide composition (11 feat), $k$-mer frequencies (80 feat), NT embeddings, precomputed \\
+\color{palmred}R & Random & Nothing (baseline) \\
+\color{palmorange}I1e/I1f & Entity-based (1D) & Same entity in both splits \\
+\color{palmorange}I2 & Entity-based (2D) & Shared entities on either axis \\
+\color{palmblue}Scaffold & Scaffold-based & Same molecular scaffold across splits \\
+\color{palmgreen}C1e/C1f & Cluster-based (1D) & \textit{Similar} entities across splits \\
+\color{palmgreen}C2 & Cluster-based (2D) & \textit{Similar} on both axes \\
 \bottomrule
 \end{tabular}
 }
 
 \vspace{0.6ex}
-\textbf{Adaptive distance:} Tanimoto for binary fingerprints, cosine for sparse embeddings ($>$50\% zeros), PCA + Euclidean for very sparse ($>$90\% zeros).
+{\color{palmorange}\textbf{Identity (I*)}} removes \textit{exact duplicates} --- fast, no feature computation needed.
+
+\vspace{0.3ex}
+{\color{palmgreen}\textbf{Cluster (C*)}} groups \textit{similar} entities --- prevents subtle near-duplicate leakage via feature-based distance.
+
+\vspace{0.3ex}
+{\color{palmblue}\textbf{Scaffold}} groups molecules by Bemis-Murcko core ring framework --- chemistry-aware, no pairwise distance needed.
+
+\vspace{0.3ex}
+Both are essential: \textbf{I*} catches obvious leaks, \textbf{C*} catches structural analogues.
+\end{block}
+
+\begin{block}{Entity Types \& Features}
+\vspace{0.2ex}
+{\small
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{} >{\bfseries\color{palmblue}}l p{9.5cm} @{}}
+\toprule
+Type & Feature Sets \\
+\midrule
+Molecule & RDKit descriptors (9), physicochemical (11), composition, Morgan FP (2048-bit ECFP4) \\
+Biomolecule & Sequence properties (16), ESM2 embeddings (320--5120 dim), precomputed \\
+Material & MAGPIE (120+), stoichiometry, electronic, bonding, thermodynamic, classification, mat2vec (200), CrystalNN, SOAP \\
+Gene & Nucleotide composition (11), $k$-mer frequencies (80), NT embeddings (1024--2560), precomputed \\
+\bottomrule
+\end{tabular}
+}
+
+\vspace{0.5ex}
+\textbf{Adaptive distance:} Tanimoto for fingerprints, cosine for sparse ($>$50\% zeros), PCA + Euclidean for very sparse ($>$90\%).
 \end{block}
 
 \end{column}
 
-% ────────────────────── COLUMN 3 ──────────────────────
-\begin{column}{0.235\textwidth}
+% ────────────────────── COLUMN 2 ──────────────────────
+\begin{column}{0.32\textwidth}
 
-\begin{block}{Results --- Leakage Reduction}
+\begin{block}{Results --- 1D Splitting}
 
 \textbf{BBBP} (2,050 molecules, Morgan FP + Tanimoto):
 
 \vspace{0.3ex}
-\renewcommand{\arraystretch}{1.3}
 {\small
+\renewcommand{\arraystretch}{1.4}
 \begin{tabular}{@{} l r r r @{}}
 \toprule
-\textbf{Technique} & \textbf{Mean NN Dist} & \textbf{Zero-Dist} & \textbf{Shift} \\
+\textbf{Technique} & \textbf{Mean NN} & \textbf{Zero-Dist} & \textbf{Shift} \\
 \midrule
 \color{palmred}Random (R) & 12.3 & 14 & 0.042 \\
 \color{palmorange}Identity (I1e) & 11.6 & 8 & 0.075 \\
@@ -233,7 +151,7 @@ Gene &
 }
 
 \vspace{0.5ex}
-Cluster splitting: \textbf{4.5$\times$} more separation, \textbf{zero} identical pairs.
+Identity reduces duplicate pairs (14$\to$8) but barely changes separation. Cluster: \textbf{4.5$\times$} more separation, \textbf{zero} identical pairs.
 
 \vspace{1ex}
 \textbf{Materials Project} (500 crystals, MAGPIE):
@@ -251,27 +169,30 @@ Cluster splitting: \textbf{4.5$\times$} more separation, \textbf{zero} identical
 }
 
 \vspace{0.5ex}
-Mean separation: \textbf{1.7$\times$}, worst-case: \textbf{2.9$\times$}.
+Cluster: \textbf{1.7$\times$} mean, \textbf{2.9$\times$} worst-case separation.
+\end{block}
 
-\vspace{1ex}
+\begin{block}{Results --- 2D Splitting (Drug--Target)}
+
 \textbf{Davis DTI} (4,000 interactions, 40 drugs $\times$ 100 targets):
 
 \vspace{0.3ex}
 {\small
+\renewcommand{\arraystretch}{1.4}
 \begin{tabular}{@{} l r r r @{}}
 \toprule
 \textbf{Technique} & \textbf{Drug Ovlp} & \textbf{Target Ovlp} & \textbf{Cov.} \\
 \midrule
-\color{palmred}Random & 40/40 & 84/84 & 100\% \\
-\color{palmorange}I2 & 0/40 & 0/84 & 45\% \\
-\color{palmgreen}\textbf{C1e} & \textbf{0/40} & 84/84 & \textbf{100\%} \\
-\color{palmgreen}C2 & 0/40 & 0/84 & 80\% \\
+\color{palmred}Random (R) & 40/40 (100\%) & 84/84 (100\%) & 100\% \\
+\color{palmorange}Identity (I2) & 0/40 (0\%) & 0/84 (0\%) & 45\% \\
+\color{palmgreen}Cluster (C1e) & 0/40 (0\%) & 84/84 (100\%) & 100\% \\
+\color{palmgreen}\textbf{Cluster (C2)} & \textbf{0/40 (0\%)} & \textbf{0/84 (0\%)} & 80\% \\
 \bottomrule
 \end{tabular}
 }
 
 \vspace{0.5ex}
-Random leaks \textbf{100\%} of entities. C1e: zero drug overlap, full coverage.
+Random leaks \textbf{100\%} of entities. \textbf{I2} eliminates all overlap but loses 55\% coverage. \textbf{C1e}: zero drug overlap, full coverage. \textbf{C2}: zero overlap on both axes, 80\% coverage.
 \end{block}
 
 \begin{block}{Impact on Model Performance}
@@ -279,15 +200,15 @@ Random leaks \textbf{100\%} of entities. C1e: zero drug overlap, full coverage.
 Random Forest (Morgan FP, 500 trees):
 
 \vspace{0.3ex}
-\renewcommand{\arraystretch}{1.3}
 {\small
+\renewcommand{\arraystretch}{1.4}
 \begin{tabular}{@{} l l r r r @{}}
 \toprule
 \textbf{Dataset} & \textbf{Split} & \textbf{R$^2$} & \textbf{RMSE} & \textbf{MAE} \\
 \midrule
 ESOL & \color{palmred}Random & 0.667 & 1.226 & 0.906 \\
 (1,128 mol) & \color{palmgreen}Cluster & \textbf{0.333} & 1.562 & 1.284 \\
-& \color{palmgray}\textit{Inflation} & \textit{+0.334} & & \\[0.3ex]
+& \color{palmgray}\textit{Inflation} & \textit{+0.334} & & \\[0.2ex]
 Lipophilicity & \color{palmred}Random & 0.362 & 0.928 & 0.718 \\
 (1,000 mol) & \color{palmgreen}Cluster & \textbf{0.131} & 1.115 & 0.868 \\
 & \color{palmgray}\textit{Inflation} & \textit{+0.230} & & \\
@@ -296,70 +217,79 @@ Lipophilicity & \color{palmred}Random & 0.362 & 0.928 & 0.718 \\
 }
 
 \vspace{0.5ex}
-Random splitting inflates R$^2$ by \textbf{0.23--0.33} due to structural leakage.
+Random splitting inflates R$^2$ by \textbf{+0.23 to +0.33}. Cluster splitting with Tanimoto distance ensures test molecules are structurally novel, producing metrics that reflect genuine generalization.
 \end{block}
 
 \end{column}
 
-% ────────────────────── COLUMN 4 ──────────────────────
-\begin{column}{0.235\textwidth}
+% ────────────────────── COLUMN 3 ──────────────────────
+\begin{column}{0.32\textwidth}
 
-\begin{block}{Web Application}
-
-Interactive 4-step wizard (FastAPI + vanilla JS):
-
-\vspace{0.3ex}
+\begin{block}{System Architecture}
 \begin{center}
 \begin{tikzpicture}[
     every node/.style={font=\normalsize},
-    wizstep/.style={draw=palmblue, rounded corners=3pt, minimum width=7.5cm, minimum height=1.1cm, align=center, fill=palmlight, line width=0.8pt},
+    stage/.style={draw=palmblue, rounded corners=4pt, minimum width=10.5cm, minimum height=1.4cm, align=center, line width=1pt, fill=palmlight, font=\normalsize\bfseries},
+    detail/.style={font=\small\color{palmgray}, align=center},
+    arr/.style={-{Stealth[length=3mm]}, line width=1.5pt, palmblue!60},
 ]
-  \node[wizstep] (s1) at (0, 0) {\textbf{1.} Upload (drag-and-drop, ZIP, folders)};
-  \node[wizstep] (s2) at (0, -1.7) {\textbf{2.} Configure (auto-detected, guided)};
-  \node[wizstep] (s3) at (0, -3.4) {\textbf{3.} Run (real-time SSE progress)};
-  \node[wizstep, draw=palmgreen, fill=green!5] (s4) at (0, -5.1) {\textbf{4.} Download + metrics + plots};
-
-  \draw[-{Stealth[length=2.5mm]}, line width=1.2pt, palmblue] (s1) -- (s2);
-  \draw[-{Stealth[length=2.5mm]}, line width=1.2pt, palmblue] (s2) -- (s3);
-  \draw[-{Stealth[length=2.5mm]}, line width=1.2pt, palmblue] (s3) -- (s4);
+  \node[stage] (load) {1. Load Data};
+  \node[detail, below=0.1cm of load] (ld) {17+ formats: CSV, SDF, FASTA, PDB, CIF, \ldots};
+  \node[stage, below=0.5cm of ld] (feat) {2. Featurize Entities};
+  \node[detail, below=0.1cm of feat] (fd) {4 entity types, 4--10 feature sets each (cached)};
+  \node[stage, below=0.5cm of fd] (dist) {3. Compute Distances};
+  \node[detail, below=0.1cm of dist] (dd) {Adaptive: Tanimoto / cosine / PCA+Euclidean};
+  \node[stage, below=0.5cm of dd] (split) {4. Split (DataSAIL + Scaffold)};
+  \node[detail, below=0.1cm of split] (sd) {R, I1e, I1f, I2, C1e, C1f, C2, Scaffold};
+  \node[stage, below=0.5cm of sd] (eval) {5. Evaluate \& Compare};
+  \node[detail, below=0.1cm of eval] (ed) {Metrics, t-SNE plots, benchmark ranking};
+  \node[stage, below=0.5cm of ed, draw=palmgreen, fill=green!5] (save) {6. Save Results};
+  \node[detail, below=0.1cm of save] (svd) {Format-preserving + ML exports};
+  \draw[arr] (load) -- (feat); \draw[arr] (feat) -- (dist);
+  \draw[arr] (dist) -- (split); \draw[arr] (split) -- (eval); \draw[arr] (eval) -- (save);
 \end{tikzpicture}
 \end{center}
+\end{block}
+
+\begin{block}{Web Application}
+Interactive 4-step wizard (FastAPI + JavaScript):
 
 \vspace{0.3ex}
 \begin{itemize}
-  \item Auto-detection of entity types with guided tooltips and recommendations
-  \item Interactive metrics dashboard with technique comparison
-  \item Rate limiting, upload size limits, automatic job cleanup
+  \item \textbf{Upload}: drag-and-drop, ZIP, folder upload with data preview
+  \item \textbf{Configure}: auto-detection of entity types, guided tooltips, technique recommendations
+  \item \textbf{Run}: real-time progress via Server-Sent Events
+  \item \textbf{Results}: interactive metrics dashboard, t-SNE plots, per-technique download
 \end{itemize}
+
+\vspace{0.3ex}
+Built-in rate limiting, upload size limits, and automatic job cleanup for production deployment.
 \end{block}
 
 \begin{block}{Key Contributions}
 \begin{itemize}
-  \item \textbf{Unified framework} for leakage-aware splitting across molecules, biomolecules, materials, and genes
-  \item \textbf{Scaffold splitting} groups molecules by Bemis-Murcko core structure --- no scaffold leaks across splits
-  \item \textbf{Adaptive distance selection:} Tanimoto for fingerprints, cosine for sparse embeddings, PCA for very high-dimensional data
-  \item \textbf{Format preservation:} SDF$\to$SDF, FASTA$\to$FASTA, CIF$\to$CIF --- direct integration into ML pipelines
-  \item \textbf{ML exports:} split indices (PyTorch/sklearn) and fold-column CSV per technique
-  \item \textbf{Benchmark mode:} automatic comparison across all techniques with recommended best split
-  \item \textbf{Quality metrics:} NN leakage, distribution shift, coverage, entity overlap
+  \item \textbf{Unified framework} for leakage-aware splitting across molecules, biomolecules, materials, and genes with both entity-based (I*) and cluster-based (C*) strategies
+  \item \textbf{Scaffold splitting} for chemistry-aware molecule grouping by Bemis-Murcko core
+  \item \textbf{Adaptive distance selection} based on feature sparsity and type
+  \item \textbf{Format-preserving output} (SDF, FASTA, CIF, \ldots) with ML-ready exports (PyTorch indices, sklearn fold column)
+  \item \textbf{Benchmark mode}: automatic comparison across all techniques with recommended best split
+  \item \textbf{Built-in quality metrics}: NN leakage, distribution shift, coverage, entity overlap
 \end{itemize}
 \end{block}
 
 \begin{block}{Limitations \& Future Work}
 \begin{itemize}
-  \item C2 on very sparse features may yield low coverage --- adaptive relaxation helps but does not eliminate the issue
-  \item Scaffold splitting is molecule-specific; analogues for proteins (fold-based) and materials (structure-type) are future work
-  \item Scaling to $>$100K entities needs approximate distance methods
-  \item Future: cross-validation folds, temporal splits, batch processing
+  \item C2 on very sparse features may reduce coverage; adaptive relaxation partially mitigates this
+  \item Scaffold splitting is molecule-specific; fold-based (proteins) and crystal-system (materials) splitting are future work
+  \item Scaling to $>$100K entities requires approximate distance methods
+  \item Planned: cross-validation folds, temporal splits, batch processing
 \end{itemize}
 \end{block}
 
 \begin{block}{Availability}
 \begin{center}
-\vspace{0.2ex}
-{\Large\textbf{Open source} \quad$\bullet$\quad Python 3.12+ \quad$\bullet$\quad pip installable}\\[0.6ex]
-{\normalsize CLI: \texttt{python -m PALM config.yaml} \quad$\bullet$\quad Web: \texttt{uvicorn PALM.webapp.app:app}}
-\vspace{0.2ex}
+{\Large\bfseries Open source \enspace$\bullet$\enspace Python 3.12+ \enspace$\bullet$\enspace pip installable}\\[0.5ex]
+CLI: \texttt{python -m PALM config.yaml} \qquad Web: \texttt{uvicorn PALM.webapp.app:app}
 \end{center}
 \end{block}
 

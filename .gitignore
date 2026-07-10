@@ -208,3 +208,23 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# raw TDC dataset cache (regenerable; large) - keep prepared records.csv only
+data/DataSAIL_data/3D+/tdc_cache/
+
+# large / regenerable split outputs and caches (keep code + small results only)
+data/DataSAIL_data/1D/omol25/
+data/DataSAIL_data/3D+/uspto_mcr/records_large.csv
+lowrank_split/omol25/results/omol25_splits.parquet
+lowrank_split/omol25/_cache_uma/
+**/__pycache__/
+
+# external reference PDFs (not our results)
+paper/
+
+# LaTeX build artifacts
+report/*.log
+report/*.aux
+report/*.out
+report/*.blg
+report/*.bbl

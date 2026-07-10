@@ -1,0 +1,58 @@
+\documentclass[11pt,oneside]{article}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\bibliographystyle{abbrv}
+\usepackage[hidelinks]{hyperref}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\titlespacing*{\section}{0pt}{5pt}{2pt}
+\setlength{\parskip}{2pt}
+\setlength{\parindent}{0pt}
+
+\title{\vspace{-2em}NRT Team Project Interim Report \\[0.3em] \Large PALM: Physics-Aware Leakage Minimizer\vspace{-0.5em}}
+\author{Rodrigo Pires Ferreira, Ray Zhu}
+\date{Apr 30, 2026}
+
+\begin{document}
+\maketitle
+\vspace{-1em}
+
+\section*{Project Overview}
+
+PALM (Physics-Aware Leakage Minimizer) creates train/test splits for scientific ML datasets with reduced data leakage. When structurally similar entities appear in both sets, reported metrics overestimate generalization. PALM builds on DataSAIL~\cite{joeres2025datasail} and extends it with domain-specific featurization, adaptive distance metrics, a wide range of format support, quality metrics, and a web application for molecules, biomolecules, materials, and genes. A parallel effort investigates hypergraph-based partitioning as data splitting engine.
+
+
+\section*{Objectives}
+
+\begin{enumerate}[nosep,leftmargin=1.5em]
+    \item Develop a unified data splitting framework for diverse scientific data types and input formats.
+    \item Explore hypergraph-based method as data splitting engine, and enable 3D data splitting.
+    \item Implement domain-specific feature extraction, including fingerprints, physicochemical descriptors, composition features, and language-model embeddings.
+    \item Deliver both a command line interface and an interactive web application for accessibility.
+\end{enumerate}
+
+\section*{Progress to Date}
+
+\textbf{Core pipeline (complete).} The end-to-end pipeline---data loading, feature extraction, adaptive distance computation, and splitting---is implemented using DataSAIL as the data splitting engine.
+
+\textbf{Featurization (complete).} Feature pipelines cover all four entity types with multiple feature sets each. Results are cached.
+
+\textbf{Quality metrics and web application (complete).} Each run produces nearest-neighbor separation, distribution shift, coverage, and entity overlap metrics with t-SNE visualization. A FastAPI-based web interface provides guided upload, automatic entity-type detection, real-time progress, and interactive dashboards.
+
+\textbf{Validation (complete).} Experiments on molecular and materials benchmarks~\cite{delaney2004esol,wu2018moleculenet,jain2013materialsproject} confirm that cluster-based splitting produces measurably higher test--train separation than random splitting.
+
+\textbf{Hypergraph splitting (in progress).}
+
+\section*{Next Steps and Timeline}
+
+\begin{itemize}[nosep,leftmargin=1.5em]
+    \item \textbf{May--Jun:} Integrate hypergraph backend; demonstrate scalability of the framework. 
+    \item \textbf{Jun--Jul:} $k$-fold cross-validation; domain-specific splitting (protein fold, crystal system).
+    \item \textbf{Jul--Aug:} Systematic benchmarking across all entity types; documentation, and manuscript preparation
+\end{itemize}
+
+\newpage
+\bibliography{citation}
+
+\end{document}

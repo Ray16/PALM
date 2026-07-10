@@ -1,4 +1,4 @@
-"""Figure: n-D hypergraph split on USPTO MCR -- per-axis & macro scaled L(pi)
+"""Figure: multi-axis hypergraph split on USPTO MCR -- per-axis & macro scaled L(pi)
 for random vs identity/cluster vs k-NN constructions. Saves to the manuscript
 Figs/ directory. Run in boltz-2 env from the PALM parent dir."""
 
@@ -44,16 +44,14 @@ def main():
     x = np.arange(len(groups)); w = 0.26
     fig, ax = plt.subplots(figsize=(7.2, 4.0))
     b1 = ax.bar(x - w, rnd, w, label="Random", color="#9aa0a6")
-    b2 = ax.bar(x,     idn, w, label="Hypergraph (identity/cluster edges)", color="#f4a36c")
-    b3 = ax.bar(x + w, knn, w, label=f"Hypergraph (k-NN edges, k={K})", color="#3b6fb6")
+    b2 = ax.bar(x,     idn, w, label="PALM (identity/cluster edges)", color="#f4a36c")
+    b3 = ax.bar(x + w, knn, w, label=f"PALM (k-NN edges, k={K})", color="#3b6fb6")
     for bars in (b1, b2, b3):
         ax.bar_label(bars, fmt="%.3f", fontsize=7, padding=1)
 
     ax.set_xticks(x); ax.set_xticklabels(["reactant A", "reactant B", "reactant C", "macro avg"])
-    ax.set_ylabel(r"scaled $L(\pi)$ leakage  (lower is better)")
+    ax.set_ylabel(r"$L(\pi)$  (lower is better)")
     ax.set_ylim(0, max(rnd) * 1.18)
-    ax.set_title(f"USPTO multicomponent reactions (n={n}, 3 reactant axes)\n"
-                 "n-D hypergraph split: k-NN edges beat random and identity grouping")
     # legend outside the axes (upper right) so it never overlaps the bars/labels
     ax.legend(fontsize=8, loc="upper left", bbox_to_anchor=(1.02, 1.0), framealpha=0.95)
     ax.spines[["top", "right"]].set_visible(False)
