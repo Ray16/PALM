@@ -244,3 +244,6 @@ benchmarks/omol25/_cache/
 benchmarks/omol25/results/*.parquet
 benchmarks/**/*.npy
 benchmarks/**/*.npz
+
+# nested Overleaf manuscript repo (managed separately; not a submodule)
+presentation/palm_manuscript/
