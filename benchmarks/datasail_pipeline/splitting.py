@@ -10,6 +10,11 @@ from sklearn.preprocessing import StandardScaler
 
 from .cache import get_cached_dist, save_cached_dist
 
+# grakel (a DataSAIL dep) still does `from numpy import ComplexWarning`, removed
+# in numpy>=1.25; restore the alias so the import succeeds.
+if not hasattr(np, "ComplexWarning"):
+    np.ComplexWarning = np.exceptions.ComplexWarning
+
 # Suppress DataSAIL's "tool not found" shell messages during import.
 # DataSAIL's settings.py runs os.system("cd-hit -h > /dev/null") etc. at import
 # time, producing shell "not found" messages on fd 2 of child processes.

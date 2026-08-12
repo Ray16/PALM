@@ -1,5 +1,5 @@
 # OC22 Dataset Splitting Configuration
-# Usage: python -m PALM configs/oc22_example.yaml
+# Usage: python -m PALM.benchmarks.datasail_pipeline configs/oc22_example.yaml
 
 input_file: "data/oc22/is2re-total/metadata.json"
 output_dir: "output"

@@ -11,10 +11,10 @@ logger = logging.getLogger(__name__)
 
 from .config import PipelineConfig
 from .loaders import load_data, _detect_format
-from .features.material_features import compute_material_features
-from .features.molecule_features import compute_molecule_features
-from .features.biomolecule_features import compute_biomolecule_features
-from .features.gene_features import compute_gene_features
+from PALM.features.material_features import compute_material_features
+from PALM.features.molecule_features import compute_molecule_features
+from PALM.features.biomolecule_features import compute_biomolecule_features
+from PALM.features.gene_features import compute_gene_features
 from .cache import get_cached_features, save_cached_features
 from .metrics import compute_split_metrics, save_metrics
 from .splitting import run_splitting, run_splitting_1d, run_scaffold_splitting

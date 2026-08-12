@@ -6,10 +6,10 @@ from typing import List, Optional
 
 import yaml
 
-from .features.material_features import MATERIAL_FEATURE_SETS
-from .features.molecule_features import MOLECULE_FEATURE_SETS
-from .features.biomolecule_features import BIOMOLECULE_FEATURE_SETS
-from .features.gene_features import GENE_FEATURE_SETS
+from PALM.features.material_features import MATERIAL_FEATURE_SETS
+from PALM.features.molecule_features import MOLECULE_FEATURE_SETS
+from PALM.features.biomolecule_features import BIOMOLECULE_FEATURE_SETS
+from PALM.features.gene_features import GENE_FEATURE_SETS
 
 ENTITY_FEATURE_SETS = {
     "molecule": MOLECULE_FEATURE_SETS,

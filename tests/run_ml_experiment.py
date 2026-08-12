@@ -125,7 +125,7 @@ def run_mp_experiment():
     """Run RF regression on MP formation energy with MAGPIE features."""
     import sys
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-    from PALM.loaders import load_cif_dir
+    from PALM.benchmarks.datasail_pipeline.loaders import load_cif_dir
 
     DATA_DIR = os.path.join(TESTS_DIR, "data", "mp_cifs_regression")
     MP_OUTPUT = os.path.join(OUTPUT_DIR, "mp_regression")

@@ -1,4 +1,4 @@
-"""Entry point: python -m PALM config.yaml"""
+"""Entry point: python -m PALM.benchmarks.datasail_pipeline config.yaml"""
 
 import logging
 import sys
@@ -14,7 +14,7 @@ def main():
     )
 
     if len(sys.argv) < 2:
-        print("Usage: python -m PALM <config.yaml>")
+        print("Usage: python -m PALM.benchmarks.datasail_pipeline <config.yaml>")
         sys.exit(1)
 
     config_path = sys.argv[1]

@@ -11,9 +11,9 @@ import shutil
 # Ensure PALM package is importable
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
-from PALM.loaders import _detect_format, load_data, build_upload_hints
-from PALM.config import EntityConfig, SplittingConfig, PipelineConfig
-from PALM.pipeline import run_pipeline
+from PALM.benchmarks.datasail_pipeline.loaders import _detect_format, load_data, build_upload_hints
+from PALM.benchmarks.datasail_pipeline.config import EntityConfig, SplittingConfig, PipelineConfig
+from PALM.benchmarks.datasail_pipeline.pipeline import run_pipeline
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 

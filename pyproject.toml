@@ -63,7 +63,7 @@ dev = [
 ]
 
 [project.scripts]
-palm = "PALM.__main__:main"
+palm-datasail = "PALM.benchmarks.datasail_pipeline.__main__:main"
 
 [tool.setuptools.packages.find]
 include = ["PALM*"]

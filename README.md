@@ -36,7 +36,7 @@ pip install torch transformers
 ### CLI Usage
 
 ```bash
-python -m PALM config.yaml
+python -m PALM.benchmarks.datasail_pipeline config.yaml
 ```
 
 ### Web App

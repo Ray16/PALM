@@ -34,7 +34,7 @@ def check(label, condition, detail=""):
 def test_config_validation():
     """Test config validation catches invalid inputs."""
     print("\n=== Config Validation ===")
-    from PALM.config import EntityConfig, SplittingConfig, PipelineConfig, load_config
+    from PALM.benchmarks.datasail_pipeline.config import EntityConfig, SplittingConfig, PipelineConfig, load_config
 
     # Invalid entity type
     try:
@@ -96,7 +96,7 @@ def test_config_validation():
 def test_cache_versioning():
     """Test that cache keys include version for invalidation."""
     print("\n=== Cache Versioning ===")
-    from PALM.cache import _cache_key, CACHE_VERSION
+    from PALM.benchmarks.datasail_pipeline.cache import _cache_key, CACHE_VERSION
 
     entities = {"a": "CCO", "b": "CC"}
 
@@ -126,7 +126,7 @@ def test_cache_versioning():
 def test_loader_edge_cases():
     """Test loaders handle edge cases gracefully."""
     print("\n=== Loader Edge Cases ===")
-    from PALM.loaders import _detect_format, load_data, _is_smiles, _is_formula
+    from PALM.benchmarks.datasail_pipeline.loaders import _detect_format, load_data, _is_smiles, _is_formula
 
     # SMILES validation
     check("Valid SMILES detected", _is_smiles("CCO"))
@@ -173,7 +173,7 @@ def test_metrics_edge_cases():
     """Test metrics computation with edge cases."""
     print("\n=== Metrics Edge Cases ===")
     import numpy as np
-    from PALM.metrics import compute_split_metrics
+    from PALM.benchmarks.datasail_pipeline.metrics import compute_split_metrics
 
     # Normal case
     feature_data = {
@@ -305,7 +305,7 @@ def test_ml_exports():
     import pandas as pd
 
     try:
-        from PALM.pipeline import _save_ml_exports
+        from PALM.benchmarks.datasail_pipeline.pipeline import _save_ml_exports
     except ImportError:
         check("ML exports function exists", False, "Function not found")
         return
