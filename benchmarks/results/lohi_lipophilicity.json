@@ -1,0 +1,13 @@
+{
+  "dataset": "lipophilicity",
+  "n": 4200,
+  "n_retained": 4196,
+  "discard_frac": 0.001,
+  "hi_lpi": 0.2129,
+  "hi_time_s": 80.57,
+  "hi_test_frac": 0.1251,
+  "lowrank_lpi": 0.1715,
+  "lowrank_time_s": 0.322,
+  "lowrank_test_frac": 0.1299,
+  "threshold": 0.4
+}

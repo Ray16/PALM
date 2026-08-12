@@ -1,0 +1,32 @@
+dataset,category,method,n,status,leakage,imbalance,test_fraction,runtime_s,extra,reason
+tdc_Lipophilicity_AstraZeneca,organic,-,0,dataset_unavailable,,,,,,TDC data not downloaded (Harvard Dataverse was under maintenance); run `python -m PALM.data.prepare_tdc` when the host is back
+tdc_Solubility_AqSolDB,organic,-,0,dataset_unavailable,,,,,,TDC data not downloaded (Harvard Dataverse was under maintenance); run `python -m PALM.data.prepare_tdc` when the host is back
+tdc_BBB_Martins,organic,-,0,dataset_unavailable,,,,,,TDC data not downloaded (Harvard Dataverse was under maintenance); run `python -m PALM.data.prepare_tdc` when the host is back
+moleculenet_bace,organic,hypergraph,1513,ok,0.289877,0.0008,0.1996,3.113,km1=5942;n_hyperedges=1513,
+moleculenet_bace,organic,graph,1513,ok,0.283468,0.0099,0.1897,0.4712,cut=13939;fm_moves=20,
+moleculenet_bace,organic,lowrank,1513,ok,0.231675,,0.1897,1.6557,rank=256;fm_moves=16,
+moleculenet_bace,organic,datasail,1513,ok,0.231809,,0.1798,132.2371,technique=C1e,
+moleculenet_bace,organic,scaffold,1513,ok,,,0.2003,1.3637,n_scaffolds=377,
+moleculenet_bbbp,organic,hypergraph,1990,ok,0.216968,0.0509,0.1593,0.1926,km1=38277;n_hyperedges=1990,
+moleculenet_bbbp,organic,graph,1990,ok,0.249962,0.0446,0.1643,0.1055,cut=72224;fm_moves=0,
+moleculenet_bbbp,organic,lowrank,1990,ok,0.214162,,0.1899,0.7598,rank=256;fm_moves=20,
+moleculenet_bbbp,organic,datasail,1990,ok,0.24884,,0.1799,139.1705,technique=C1e,
+moleculenet_bbbp,organic,scaffold,1990,ok,,,0.2,1.2501,n_scaffolds=681,
+moleculenet_esol,organic,hypergraph,1128,ok,0.187588,0.0521,0.1587,0.1283,km1=34368;n_hyperedges=1128,
+moleculenet_esol,organic,graph,1128,ok,0.164375,0.0078,0.1897,0.1323,cut=87660;fm_moves=5,
+moleculenet_esol,organic,lowrank,1128,ok,0.15977,,0.1897,0.9281,rank=256;fm_moves=12,
+moleculenet_esol,organic,datasail,1128,ok,0.173783,,0.18,16.6238,technique=C1e,
+moleculenet_esol,organic,scaffold,1128,ok,,,0.2004,0.387,n_scaffolds=167,
+qmof,inorganic,hypergraph,2000,ok,0.245712,0.0081,0.1935,0.1554,km1=25038;n_hyperedges=2000,
+qmof,inorganic,graph,2000,ok,0.238764,0.015,0.19,0.2762,cut=64608;fm_moves=27,
+qmof,inorganic,lowrank,2000,ok,0.239612,,0.19,0.9949,rank=256;fm_moves=20,
+qmof,inorganic,datasail,2000,ok,0.22133,,0.18,132.5659,technique=C1e,
+qmof,inorganic,scaffold,2000,ok,,,0.0,0.1946,n_scaffolds=1,
+omol25,inorganic,hypergraph,2000,ok,0.27065,0.0488,0.161,0.1668,km1=83083;n_hyperedges=2000,
+omol25,inorganic,graph,2000,ok,0.295858,0.0244,0.1805,0.0868,cut=237237;fm_moves=0,
+omol25,inorganic,lowrank,2000,ok,0.26098,,0.19,1.0001,rank=256;fm_moves=20,
+omol25,inorganic,datasail,2000,ok,0.249845,,0.18,132.3017,technique=C1e,
+materials_project,inorganic,-,0,dataset_unavailable,,,,,,"MP_API_KEY not set — get a free key at https://materialsproject.org/api and export MP_API_KEY, then this loader pulls <=2000 summaries"
+uspto_mcr,reaction,hypergraph_nd,2000,ok,0.310334,0.0188,0.185,32.3294,km1=0;n_hyperedges=735,
+uspto_mcr,reaction,hypergraph_nd_knn,2000,ok,0.246709,0.0506,0.1595,0.9712,km1=1013091;n_hyperedges=6000,
+openpolymer26,polymer,-,0,dataset_unavailable,,,,,,"OPoly26 not downloaded — CC-BY-4.0 on HuggingFace (facebook/OMol25 ecosystem, arXiv:2512.23117); 6.57M calcs, needs huggingface_hub + a subsampling download into data/openpolymer26/records.csv (id,smiles,y)"

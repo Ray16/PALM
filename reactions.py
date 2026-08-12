@@ -9,8 +9,8 @@ solvent, ...). Different axes need different featurizers:
   - solvent   : curated physicochemical descriptor vector
   - drop      : constant axis (no information) — removed
 
-The output ({records}, {axis_feature_maps}) plugs directly into
-``hypergraph.run_hypergraph_split_nd``.
+The output ({records}, {axis_feature_maps}) plugs directly into the n-D splitter:
+``PALM.splitters.split("hypergraph_nd", (records, axis_feature_maps), spec)``.
 """
 
 import logging

@@ -1,0 +1,13 @@
+{
+  "dataset": "freesolv",
+  "n": 642,
+  "n_retained": 636,
+  "discard_frac": 0.0093,
+  "hi_lpi": 0.1731,
+  "hi_time_s": 3.27,
+  "hi_test_frac": 0.1258,
+  "lowrank_lpi": 0.0692,
+  "lowrank_time_s": 0.575,
+  "lowrank_test_frac": 0.1289,
+  "threshold": 0.4
+}

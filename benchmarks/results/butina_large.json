@@ -1,0 +1,12 @@
+{
+  "hiv": {
+    "time_s": 13.388,
+    "test_frac": 0.2,
+    "lpi_mean": 0.2929
+  },
+  "muv": {
+    "time_s": 9.902,
+    "test_frac": 0.2,
+    "lpi_mean": 0.2901
+  }
+}

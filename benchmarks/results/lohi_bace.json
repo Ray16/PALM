@@ -1,0 +1,13 @@
+{
+  "dataset": "bace",
+  "n": 1513,
+  "n_retained": 1483,
+  "discard_frac": 0.0198,
+  "hi_lpi": 0.2168,
+  "hi_time_s": 41.25,
+  "hi_test_frac": 0.1322,
+  "lowrank_lpi": 0.1635,
+  "lowrank_time_s": 0.378,
+  "lowrank_test_frac": 0.1295,
+  "threshold": 0.4
+}

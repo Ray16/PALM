@@ -1,0 +1,14 @@
+{
+  "dataset": "clintox",
+  "n_raw": 1484,
+  "n": 1480,
+  "n_retained": 1478,
+  "discard_frac": 0.0014,
+  "hi_lpi": 0.2029,
+  "hi_time_s": 1.9,
+  "hi_test_frac": 0.1252,
+  "lowrank_lpi": 0.1285,
+  "lowrank_time_s": 0.499,
+  "lowrank_test_frac": 0.1299,
+  "threshold": 0.4
+}

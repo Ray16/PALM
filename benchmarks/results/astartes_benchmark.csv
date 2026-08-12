@@ -1,0 +1,88 @@
+dataset,n,method,lpi_mean,lpi_std,time_s,test_frac,deterministic,note
+freesolv,642,kennard_stone,0.2707,0.0,0.1115,0.2009,True,
+freesolv,642,lowrank@0.20,0.1358,0.0,27.18,0.1994,True,
+freesolv,642,lowrank@kennard_stone,0.1358,0.0,0.1305,0.1994,True,matched to kennard_stone frac
+freesolv,642,lowrank@optisim,0.1066,0.0,0.1346,0.1698,True,matched to optisim frac
+freesolv,642,lowrank@sphere_exclusion,0.1358,0.0,0.1471,0.1994,True,matched to sphere_exclusion frac
+freesolv,642,lowrank@spxy,0.1358,0.0,0.144,0.1994,True,matched to spxy frac
+freesolv,642,optisim,0.2745,0.0242,0.1241,0.169,False,
+freesolv,642,sphere_exclusion,0.3169,0.0093,0.1181,0.1994,False,
+freesolv,642,spxy,0.2744,0.0,0.1111,0.2009,True,
+esol,1128,kennard_stone,0.2725,0.0,0.3612,0.2004,True,
+esol,1128,lowrank@0.20,0.1629,0.0,27.0975,0.1995,True,
+esol,1128,lowrank@kennard_stone,0.1629,0.0,0.1711,0.1995,True,matched to kennard_stone frac
+esol,1128,lowrank@optisim,0.1407,0.0,0.1592,0.1693,True,matched to optisim frac
+esol,1128,lowrank@sphere_exclusion,0.1629,0.0,0.1641,0.1995,True,matched to sphere_exclusion frac
+esol,1128,lowrank@spxy,0.1629,0.0,0.1867,0.1995,True,matched to spxy frac
+esol,1128,optisim,0.2857,0.0303,0.3501,0.1744,False,
+esol,1128,sphere_exclusion,0.3152,0.0051,0.3519,0.1995,False,
+esol,1128,spxy,0.2726,0.0,0.3416,0.2004,True,
+sider,1427,kennard_stone,0.2678,0.0,0.6006,0.2004,True,
+sider,1427,lowrank@0.20,0.1951,0.0,26.8514,0.1997,True,
+sider,1427,lowrank@kennard_stone,0.1951,0.0,0.1758,0.1997,True,matched to kennard_stone frac
+sider,1427,lowrank@optisim,0.1696,0.0,0.1579,0.1794,True,matched to optisim frac
+sider,1427,lowrank@sphere_exclusion,0.1951,0.0,0.1632,0.1997,True,matched to sphere_exclusion frac
+sider,1427,lowrank@spxy,0.1951,0.0,0.2044,0.1997,True,matched to spxy frac
+sider,1427,optisim,0.2864,0.0418,0.5549,0.1754,False,
+sider,1427,sphere_exclusion,0.3256,0.002,0.5468,0.1997,False,
+sider,1427,spxy,0.2602,0.0,0.5242,0.2004,True,
+clintox,1484,kennard_stone,0.2936,0.0,0.6231,0.2001,True,
+clintox,1484,lowrank@0.20,0.2122,0.0,26.84,0.1995,True,
+clintox,1484,lowrank@kennard_stone,0.2122,0.0,0.1509,0.1995,True,matched to kennard_stone frac
+clintox,1484,lowrank@optisim,0.176,0.0,0.1437,0.1698,True,matched to optisim frac
+clintox,1484,lowrank@sphere_exclusion,0.2122,0.0,0.1537,0.1995,True,matched to sphere_exclusion frac
+clintox,1484,lowrank@spxy,0.2122,0.0,0.1543,0.1995,True,matched to spxy frac
+clintox,1484,optisim,0.2833,0.045,0.6209,0.1742,False,
+clintox,1484,sphere_exclusion,0.3089,0.0142,0.6373,0.1995,False,
+clintox,1484,spxy,0.2932,0.0,0.6282,0.2001,True,
+bace,1513,kennard_stone,0.3291,0.0,0.5837,0.2003,True,
+bace,1513,lowrank@0.20,0.2405,0.0,26.5988,0.1996,True,
+bace,1513,lowrank@kennard_stone,0.2405,0.0,0.1536,0.1996,True,matched to kennard_stone frac
+bace,1513,lowrank@optisim,0.2099,0.0,0.1436,0.1699,True,matched to optisim frac
+bace,1513,lowrank@sphere_exclusion,0.2405,0.0,0.1669,0.1996,True,matched to sphere_exclusion frac
+bace,1513,lowrank@spxy,0.2405,0.0,0.1514,0.1996,True,matched to spxy frac
+bace,1513,optisim,0.275,0.0384,0.6019,0.1664,False,
+bace,1513,sphere_exclusion,0.3183,0.0008,0.6047,0.1996,False,
+bace,1513,spxy,0.3293,0.0,0.6003,0.2003,True,
+bbbp,2050,kennard_stone,0.3067,0.0,1.2731,0.2,True,
+bbbp,2050,lowrank@0.20,0.2208,0.0,26.7153,0.2,True,
+bbbp,2050,lowrank@kennard_stone,0.2208,0.0,0.1802,0.2,True,matched to kennard_stone frac
+bbbp,2050,lowrank@optisim,0.2082,0.0,0.1802,0.1898,True,matched to optisim frac
+bbbp,2050,lowrank@sphere_exclusion,0.2208,0.0,0.1764,0.2,True,matched to sphere_exclusion frac
+bbbp,2050,lowrank@spxy,0.2208,0.0,0.1809,0.2,True,matched to spxy frac
+bbbp,2050,optisim,0.3113,0.007,1.1475,0.1934,False,
+bbbp,2050,sphere_exclusion,0.3211,0.0037,1.2283,0.2,False,
+bbbp,2050,spxy,0.3002,0.0,1.232,0.2,True,
+lipophilicity,4200,kennard_stone,0.3255,0.0,6.5917,0.2,True,
+lipophilicity,4200,lowrank@0.20,0.2564,0.0,26.0697,0.2,True,
+lipophilicity,4200,lowrank@kennard_stone,0.2564,0.0,0.2383,0.2,True,matched to kennard_stone frac
+lipophilicity,4200,lowrank@optisim,0.2449,0.0,0.2216,0.19,True,matched to optisim frac
+lipophilicity,4200,lowrank@sphere_exclusion,0.2564,0.0,0.2165,0.2,True,matched to sphere_exclusion frac
+lipophilicity,4200,lowrank@spxy,0.2564,0.0,0.2366,0.2,True,matched to spxy frac
+lipophilicity,4200,optisim,0.3067,0.0079,5.5568,0.1902,False,
+lipophilicity,4200,sphere_exclusion,0.3204,0.0007,5.6416,0.2,False,
+lipophilicity,4200,spxy,0.3261,0.0,6.3398,0.2,True,
+tox21,7831,kennard_stone,0.2817,0.0,24.5343,0.2001,True,
+tox21,7831,lowrank@0.20,0.184,0.0,25.8324,0.2,True,
+tox21,7831,lowrank@kennard_stone,0.184,0.0,0.3035,0.2,True,matched to kennard_stone frac
+tox21,7831,lowrank@optisim,0.131,0.0,0.2809,0.1499,True,matched to optisim frac
+tox21,7831,lowrank@sphere_exclusion,0.184,0.0,0.2831,0.2,True,matched to sphere_exclusion frac
+tox21,7831,lowrank@spxy,0.184,0.0,0.2994,0.2,True,matched to spxy frac
+tox21,7831,optisim,0.2568,0.0477,20.7405,0.1537,False,
+tox21,7831,sphere_exclusion,0.3133,0.0097,21.1014,0.2,False,
+tox21,7831,spxy,0.2816,0.0,24.124,0.2001,True,
+qm8,21766,kennard_stone,,,,,True,skipped n>15000
+qm8,21766,lowrank@0.20,0.1953,0.0,0.7093,0.2,True,
+qm8,21766,optisim,,,,,False,skipped n>15000
+qm8,21766,sphere_exclusion,,,,,False,skipped n>15000
+qm8,21766,spxy,,,,,True,skipped n>15000
+hiv,41127,kennard_stone,,,,,True,skipped n>15000
+hiv,41127,lowrank@0.20,0.2246,0.0,1.2627,0.2,True,
+hiv,41127,optisim,,,,,False,skipped n>15000
+hiv,41127,sphere_exclusion,,,,,False,skipped n>15000
+hiv,41127,spxy,,,,,True,skipped n>15000
+muv,93087,kennard_stone,,,,,True,skipped n>15000
+muv,93087,lowrank@0.20,0.2574,0.0,2.8263,0.2,True,
+muv,93087,optisim,,,,,False,skipped n>15000
+muv,93087,sphere_exclusion,,,,,False,skipped n>15000
+muv,93087,spxy,,,,,True,skipped n>15000

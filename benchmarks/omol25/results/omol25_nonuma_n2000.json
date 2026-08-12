@@ -1,0 +1,12 @@
+{
+  "n": 2000,
+  "matched_to_uma_n2000": true,
+  "lpi_random": 0.3192744932625342,
+  "lpi_lowrank": 0.27018838507427223,
+  "lowrank_test_frac": 0.2,
+  "datasail": {
+    "lpi": 0.1946565416512258,
+    "time_s": 6.8,
+    "test_frac": 0.142
+  }
+}

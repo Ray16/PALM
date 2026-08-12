@@ -37,8 +37,25 @@ embeddings = [
     "torch",
     "transformers",
 ]
+# The self-contained leakage-minimizing splitters (PALM.splitters): torch +
+# Mt-KaHyPar back the hypergraph/graph/low-rank methods; rdkit is only needed for
+# the scaffold splitter and ECFP leakage scoring.
+splitters = [
+    "torch",
+    "mtkahypar",
+    "rdkit",
+    "scikit-learn",
+    "scipy",
+    "numpy<2",
+]
+# Dataset loaders (PALM.data): optional per-source clients.
+datasets = [
+    "PyTDC",      # Therapeutics Data Commons
+    "mp-api",     # Materials Project (needs MP_API_KEY)
+    "ase",        # OMol25 / QMOF structure parsing
+]
 all = [
-    "palm[web,molecules,materials,bio,embeddings]",
+    "palm[web,molecules,materials,bio,embeddings,splitters]",
 ]
 dev = [
     "palm[all]",

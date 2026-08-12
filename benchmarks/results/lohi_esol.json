@@ -1,0 +1,13 @@
+{
+  "dataset": "esol",
+  "n": 1128,
+  "n_retained": 1116,
+  "discard_frac": 0.0106,
+  "hi_lpi": 0.2027,
+  "hi_time_s": 6.61,
+  "hi_test_frac": 0.1254,
+  "lowrank_lpi": 0.0986,
+  "lowrank_time_s": 0.527,
+  "lowrank_test_frac": 0.1299,
+  "threshold": 0.4
+}

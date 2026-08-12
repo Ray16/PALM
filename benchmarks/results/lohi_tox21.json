@@ -1,0 +1,14 @@
+{
+  "dataset": "tox21",
+  "n_raw": 7831,
+  "n": 7823,
+  "n_retained": 7570,
+  "discard_frac": 0.0323,
+  "hi_lpi": 0.2245,
+  "hi_time_s": 900.29,
+  "hi_test_frac": 0.1778,
+  "lowrank_lpi": 0.1632,
+  "lowrank_time_s": 0.721,
+  "lowrank_test_frac": 0.1799,
+  "threshold": 0.4
+}
