@@ -30,7 +30,9 @@ OUT = os.path.join(HERE, "split_results")
 ASG = os.path.join(OUT, "assignments")
 
 # 1-D methods and the fixed params that make them reproducible / bounded.
+# "random" is the baseline every method should beat.
 METHODS_1D = [
+    ("random", dict()),
     ("hypergraph", dict(preset="deterministic")),
     ("graph", dict(preset="deterministic")),
     ("lowrank", dict()),
@@ -38,6 +40,7 @@ METHODS_1D = [
     ("scaffold", dict()),                       # only when SMILES are available
 ]
 METHODS_ND = [
+    ("random", dict()),
     ("hypergraph_nd", dict(preset="deterministic", sim_threshold=0.6)),
     ("hypergraph_nd_knn", dict(preset="deterministic", k=25)),
 ]

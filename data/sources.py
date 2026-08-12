@@ -151,11 +151,14 @@ def load_materials_project(limit=DEFAULT_LIMIT):
     except Exception:
         return _unavailable("materials_project", "inorganic", "1d",
                             "mp-api not installed (`pip install mp-api`)")
+    import math
+    want = limit or DEFAULT_LIMIT
+    per = 1000                                   # MP caps chunk_size at 1000
     with MPRester(key) as mpr:
         docs = mpr.materials.summary.search(
-            fields=["material_id", "formula_pretty"], num_chunks=1,
-            chunk_size=min(limit or DEFAULT_LIMIT, 10_000))
-    formulas = {str(d.material_id): str(d.formula_pretty) for d in docs[:(limit or DEFAULT_LIMIT)]}
+            fields=["material_id", "formula_pretty"],
+            num_chunks=max(1, math.ceil(want / per)), chunk_size=per)
+    formulas = {str(d.material_id): str(d.formula_pretty) for d in docs[:want]}
     ids, X = composition_matrix(formulas)
     feature_data = {mid: X[j] for j, mid in enumerate(ids)}
     return DatasetBundle("materials_project", "inorganic", "1d", True,
@@ -180,15 +183,28 @@ def load_uspto_mcr(limit=DEFAULT_LIMIT):
 # ── polymers ────────────────────────────────────────────────────────────────
 
 def load_openpolymer26(limit=DEFAULT_LIMIT):
-    """Open Polymers 2026 (OPoly26) — huge (6.57M DFT calcs), HuggingFace-hosted."""
+    """Open Polymers 2026 (OPoly26): 10k polymer-cluster subsample (train split).
+
+    Atomistic records (no SMILES) featurized by ``formula`` -> MAGPIE composition.
+    Prepared by ``python -m PALM.data.prepare_openpolymer26`` (streams 10k rows
+    from the colabfit/OPoly26-train parquet shard).
+    """
     path = os.path.join(HERE, "openpolymer26", "records.csv")
-    if os.path.exists(path):
+    if not os.path.exists(path):
+        return _unavailable(
+            "openpolymer26", "polymer", "1d",
+            "OPoly26 not prepared — run `python -m PALM.data.prepare_openpolymer26` "
+            "(streams from colabfit/OPoly26-train; arXiv:2512.23117)")
+    df = pd.read_csv(path)
+    if "smiles" in df.columns:
         return _smiles_csv_bundle("openpolymer26", "polymer", path, "smiles", limit)
-    return _unavailable(
-        "openpolymer26", "polymer", "1d",
-        "OPoly26 not downloaded — CC-BY-4.0 on HuggingFace (facebook/OMol25 "
-        "ecosystem, arXiv:2512.23117); 6.57M calcs, needs huggingface_hub + a "
-        "subsampling download into data/openpolymer26/records.csv (id,smiles,y)")
+    df = df.dropna(subset=["formula"]).reset_index(drop=True)
+    idx = _subsample_indices(len(df), limit)
+    formulas = {str(df["id"].iloc[i]): str(df["formula"].iloc[i]) for i in idx}
+    ids, X = composition_matrix(formulas)
+    feature_data = {pid: X[j] for j, pid in enumerate(ids)}
+    return DatasetBundle("openpolymer26", "polymer", "1d", True,
+                         feature_data=feature_data, meta={"n": len(ids)})
 
 
 # ── registry ────────────────────────────────────────────────────────────────
