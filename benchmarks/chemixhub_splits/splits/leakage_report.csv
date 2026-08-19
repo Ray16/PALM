@@ -1,0 +1,61 @@
+dataset,property,n_samples,n_unique_mixtures,k_bar,engine,mixture_identity_leakage,Lpi_unique_mixture,sample_fractions,n_clusters,runtime_s,mixture_count_fractions,imbalance
+ionic-liquids,Electrical conductivity,40904,717,57.049,random_sample,0.998533,,,,,,
+ionic-liquids,Electrical conductivity,40904,717,57.049,random_group,0.0,0.450729,"{'train': 0.7315, 'val': 0.1771, 'test': 0.0914}",,,,
+ionic-liquids,Electrical conductivity,40904,717,57.049,butina,0.0,0.257444,"{'train': 0.7, 'val': 0.2, 'test': 0.1}",128.0,0.232,,
+ionic-liquids,Electrical conductivity,40904,717,57.049,hypergraph,0.0,0.129978,"{'train': 0.7778, 'val': 0.217, 'test': 0.0051}",,1.072,"{'train': 0.7727, 'val': 0.2218, 'test': 0.0056}",0.1058
+ionic-liquids,Electrical conductivity,40904,717,57.049,lowrank,0.0,0.102193,"{'train': 0.7369, 'val': 0.1761, 'test': 0.087}",,0.508,"{'train': 0.7308, 'val': 0.1799, 'test': 0.0893}",
+ionic-liquids,Viscosity,75992,1358,55.959,random_sample,0.999474,,,,,,
+ionic-liquids,Viscosity,75992,1358,55.959,random_group,0.0,0.463932,"{'train': 0.7044, 'val': 0.2019, 'test': 0.0938}",,,,
+ionic-liquids,Viscosity,75992,1358,55.959,butina,0.0,0.312894,"{'train': 0.7, 'val': 0.2, 'test': 0.1}",210.0,0.032,,
+ionic-liquids,Viscosity,75992,1358,55.959,hypergraph,0.0,0.060136,"{'train': 0.72, 'val': 0.2044, 'test': 0.0757}",,0.07,"{'train': 0.7577, 'val': 0.1863, 'test': 0.056}",0.0832
+ionic-liquids,Viscosity,75992,1358,55.959,lowrank,0.0,0.175821,"{'train': 0.729, 'val': 0.1688, 'test': 0.1022}",,0.211,"{'train': 0.7305, 'val': 0.1797, 'test': 0.0898}",
+miscible-solvent,Density,30061,19157,1.569,random_sample,0.467066,,,,,,
+miscible-solvent,Density,30061,19157,1.569,random_group,0.0,0.460247,"{'train': 0.7013, 'val': 0.1975, 'test': 0.1012}",,,,
+miscible-solvent,Density,30061,19157,1.569,butina,0.0,0.277368,"{'train': 0.7, 'val': 0.2, 'test': 0.1}",692.0,1.634,,
+miscible-solvent,Density,30061,19157,1.569,hypergraph,0.0,0.348471,"{'train': 0.803, 'val': 0.1792, 'test': 0.0178}",,0.826,"{'train': 0.7673, 'val': 0.2111, 'test': 0.0216}",0.0962
+miscible-solvent,Density,30061,19157,1.569,lowrank,0.0,0.200518,"{'train': 0.6779, 'val': 0.1611, 'test': 0.161}",,0.851,"{'train': 0.73, 'val': 0.18, 'test': 0.09}",
+miscible-solvent,Heat of vaporization,30061,19157,1.569,random_sample,0.467066,,,,,,
+miscible-solvent,Heat of vaporization,30061,19157,1.569,random_group,0.0,0.460247,"{'train': 0.7013, 'val': 0.1975, 'test': 0.1012}",,,,
+miscible-solvent,Heat of vaporization,30061,19157,1.569,butina,0.0,0.277368,"{'train': 0.7, 'val': 0.2, 'test': 0.1}",692.0,1.543,,
+miscible-solvent,Heat of vaporization,30061,19157,1.569,hypergraph,0.0,0.270042,"{'train': 0.7811, 'val': 0.1725, 'test': 0.0463}",,0.75,"{'train': 0.7522, 'val': 0.1944, 'test': 0.0534}",0.0746
+miscible-solvent,Heat of vaporization,30061,19157,1.569,lowrank,0.0,0.200518,"{'train': 0.6779, 'val': 0.1611, 'test': 0.161}",,0.838,"{'train': 0.73, 'val': 0.18, 'test': 0.09}",
+miscible-solvent,Enthalpy of mixing,30061,19157,1.569,random_sample,0.467066,,,,,,
+miscible-solvent,Enthalpy of mixing,30061,19157,1.569,random_group,0.0,0.460247,"{'train': 0.7013, 'val': 0.1975, 'test': 0.1012}",,,,
+miscible-solvent,Enthalpy of mixing,30061,19157,1.569,butina,0.0,0.277368,"{'train': 0.7, 'val': 0.2, 'test': 0.1}",692.0,2.251,,
+miscible-solvent,Enthalpy of mixing,30061,19157,1.569,hypergraph,0.0,0.353271,"{'train': 0.7637, 'val': 0.1932, 'test': 0.043}",,0.807,"{'train': 0.7271, 'val': 0.2201, 'test': 0.0528}",0.1002
+miscible-solvent,Enthalpy of mixing,30061,19157,1.569,lowrank,0.0,0.200518,"{'train': 0.6779, 'val': 0.1611, 'test': 0.161}",,0.913,"{'train': 0.73, 'val': 0.18, 'test': 0.09}",
+drug-solubility,Log solubility,27166,665,40.851,random_sample,1.0,,,,,,
+drug-solubility,Log solubility,27166,665,40.851,random_group,0.0,0.464867,"{'train': 0.6887, 'val': 0.2156, 'test': 0.0957}",,,,
+drug-solubility,Log solubility,27166,665,40.851,butina,0.0,0.490671,"{'train': 0.6999, 'val': 0.2001, 'test': 0.0999}",123.0,0.015,,
+drug-solubility,Log solubility,27166,665,40.851,hypergraph,0.0,0.209929,"{'train': 0.7427, 'val': 0.2345, 'test': 0.0228}",,0.041,"{'train': 0.7654, 'val': 0.2165, 'test': 0.018}",0.097
+drug-solubility,Log solubility,27166,665,40.851,lowrank,0.0,0.234957,"{'train': 0.692, 'val': 0.1714, 'test': 0.1366}",,0.196,"{'train': 0.7323, 'val': 0.1789, 'test': 0.0887}",
+polymer-electrolyte,log Conductivity,11350,372,30.511,random_sample,0.999119,,,,,,
+polymer-electrolyte,log Conductivity,11350,372,30.511,random_group,0.0,0.454601,"{'train': 0.7574, 'val': 0.1492, 'test': 0.0935}",,,,
+polymer-electrolyte,log Conductivity,11350,372,30.511,butina,0.0,0.430002,"{'train': 0.7, 'val': 0.2, 'test': 0.1}",125.0,0.012,,
+polymer-electrolyte,log Conductivity,11350,372,30.511,hypergraph,0.0,0.249406,"{'train': 0.6094, 'val': 0.3337, 'test': 0.0568}",,0.029,"{'train': 0.7688, 'val': 0.1613, 'test': 0.0699}",0.1
+polymer-electrolyte,log Conductivity,11350,372,30.511,lowrank,0.0,0.088899,"{'train': 0.8148, 'val': 0.1176, 'test': 0.0676}",,0.176,"{'train': 0.7339, 'val': 0.1774, 'test': 0.0887}",
+olfactory-similarity,Mixture similarity,865,854,1.013,random_sample,0.0,,,,,,
+olfactory-similarity,Mixture similarity,865,854,1.013,random_group,0.0,0.463322,"{'train': 0.6994, 'val': 0.2, 'test': 0.1006}",,,,
+olfactory-similarity,Mixture similarity,865,854,1.013,butina,0.0,0.338406,"{'train': 0.7006, 'val': 0.2, 'test': 0.0994}",78.0,0.021,,
+olfactory-similarity,Mixture similarity,865,854,1.013,hypergraph,0.0,0.380441,"{'train': 0.763, 'val': 0.1746, 'test': 0.0624}",,0.045,"{'train': 0.7635, 'val': 0.1733, 'test': 0.0632}",0.0921
+olfactory-similarity,Mixture similarity,865,854,1.013,lowrank,0.0,0.233128,"{'train': 0.7341, 'val': 0.178, 'test': 0.0879}",,0.201,"{'train': 0.7319, 'val': 0.1792, 'test': 0.089}",
+logV,Log viscosity,34374,4778,7.194,random_sample,0.956066,,,,,,
+logV,Log viscosity,34374,4778,7.194,random_group,0.0,0.462211,"{'train': 0.6967, 'val': 0.2061, 'test': 0.0972}",,,,
+logV,Log viscosity,34374,4778,7.194,butina,0.0,0.453868,"{'train': 0.7, 'val': 0.2, 'test': 0.1}",836.0,0.056,,
+logV,Log viscosity,34374,4778,7.194,hypergraph,0.0,0.320689,"{'train': 0.693, 'val': 0.161, 'test': 0.146}",,0.175,"{'train': 0.7424, 'val': 0.1553, 'test': 0.1023}",0.0607
+logV,Log viscosity,34374,4778,7.194,lowrank,0.0,0.101979,"{'train': 0.6805, 'val': 0.2089, 'test': 0.1106}",,0.274,"{'train': 0.73, 'val': 0.18, 'test': 0.09}",
+nist-logV,Log viscosity,239200,6974,34.299,random_sample,0.99862,,,,,,
+nist-logV,Log viscosity,239200,6974,34.299,random_group,0.0,0.462594,"{'train': 0.6942, 'val': 0.2099, 'test': 0.096}",,,,
+nist-logV,Log viscosity,239200,6974,34.299,butina,0.0,0.402021,"{'train': 0.7, 'val': 0.2, 'test': 0.1}",658.0,0.136,,
+nist-logV,Log viscosity,239200,6974,34.299,hypergraph,0.0,0.311831,"{'train': 0.6479, 'val': 0.1829, 'test': 0.1692}",,0.225,"{'train': 0.744, 'val': 0.1617, 'test': 0.0942}",0.0633
+nist-logV,Log viscosity,239200,6974,34.299,lowrank,0.0,0.121797,"{'train': 0.7615, 'val': 0.1612, 'test': 0.0773}",,0.348,"{'train': 0.7301, 'val': 0.18, 'test': 0.0899}",
+MON,Motor octane number,684,397,1.723,random_sample,0.5,,,,,,
+MON,Motor octane number,684,397,1.723,random_group,0.0,0.459331,"{'train': 0.6579, 'val': 0.2515, 'test': 0.0906}",,,,
+MON,Motor octane number,684,397,1.723,butina,0.0,0.551722,"{'train': 0.7003, 'val': 0.2003, 'test': 0.0994}",240.0,0.008,,
+MON,Motor octane number,684,397,1.723,hypergraph,0.0,0.274119,"{'train': 0.7573, 'val': 0.1477, 'test': 0.095}",,0.035,"{'train': 0.6625, 'val': 0.2242, 'test': 0.1134}",0.0988
+MON,Motor octane number,684,397,1.723,lowrank,0.0,0.182491,"{'train': 0.7982, 'val': 0.1213, 'test': 0.0804}",,0.188,"{'train': 0.733, 'val': 0.1788, 'test': 0.0882}",
+medicine-formulations,solubility,251,15,16.733,random_sample,1.0,,,,,,
+medicine-formulations,solubility,251,15,16.733,random_group,0.0,0.533333,"{'train': 0.7689, 'val': 0.2191, 'test': 0.012}",,,,
+medicine-formulations,solubility,251,15,16.733,butina,0.0,0.0,"{'train': 1.0, 'val': 0.0, 'test': 0.0}",1.0,0.006,,
+medicine-formulations,solubility,251,15,16.733,hypergraph,0.0,0.67619,"{'train': 0.7729, 'val': 0.1076, 'test': 0.1195}",,0.012,"{'train': 0.4667, 'val': 0.3333, 'test': 0.2}",0.25
+medicine-formulations,solubility,251,15,16.733,lowrank,0.0,0.361905,"{'train': 0.9283, 'val': 0.0677, 'test': 0.004}",,0.095,"{'train': 0.8, 'val': 0.1333, 'test': 0.0667}",

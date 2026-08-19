@@ -1,0 +1,1022 @@
+[
+  {
+    "dataset": "ionic-liquids",
+    "property": "Electrical conductivity",
+    "n_samples": 40904,
+    "n_unique_mixtures": 717,
+    "k_bar": 57.049,
+    "engine": "random_sample",
+    "mixture_identity_leakage": 0.998533
+  },
+  {
+    "dataset": "ionic-liquids",
+    "property": "Electrical conductivity",
+    "n_samples": 40904,
+    "n_unique_mixtures": 717,
+    "k_bar": 57.049,
+    "engine": "random_group",
+    "Lpi_unique_mixture": 0.450729,
+    "mixture_identity_leakage": 0.0,
+    "sample_fractions": {
+      "train": 0.7315,
+      "val": 0.1771,
+      "test": 0.0914
+    }
+  },
+  {
+    "dataset": "ionic-liquids",
+    "property": "Electrical conductivity",
+    "n_samples": 40904,
+    "n_unique_mixtures": 717,
+    "k_bar": 57.049,
+    "engine": "butina",
+    "Lpi_unique_mixture": 0.257444,
+    "mixture_identity_leakage": 0.0,
+    "n_clusters": 128,
+    "sample_fractions": {
+      "train": 0.7,
+      "val": 0.2,
+      "test": 0.1
+    },
+    "runtime_s": 0.232
+  },
+  {
+    "dataset": "ionic-liquids",
+    "property": "Electrical conductivity",
+    "n_samples": 40904,
+    "n_unique_mixtures": 717,
+    "k_bar": 57.049,
+    "engine": "hypergraph",
+    "Lpi_unique_mixture": 0.129978,
+    "mixture_identity_leakage": 0.0,
+    "mixture_count_fractions": {
+      "train": 0.7727,
+      "val": 0.2218,
+      "test": 0.0056
+    },
+    "sample_fractions": {
+      "train": 0.7778,
+      "val": 0.217,
+      "test": 0.0051
+    },
+    "imbalance": 0.1058,
+    "runtime_s": 1.072
+  },
+  {
+    "dataset": "ionic-liquids",
+    "property": "Electrical conductivity",
+    "n_samples": 40904,
+    "n_unique_mixtures": 717,
+    "k_bar": 57.049,
+    "engine": "lowrank",
+    "Lpi_unique_mixture": 0.102193,
+    "mixture_identity_leakage": 0.0,
+    "mixture_count_fractions": {
+      "train": 0.7308,
+      "val": 0.1799,
+      "test": 0.0893
+    },
+    "sample_fractions": {
+      "train": 0.7369,
+      "val": 0.1761,
+      "test": 0.087
+    },
+    "imbalance": null,
+    "runtime_s": 0.508
+  },
+  {
+    "dataset": "ionic-liquids",
+    "property": "Viscosity",
+    "n_samples": 75992,
+    "n_unique_mixtures": 1358,
+    "k_bar": 55.959,
+    "engine": "random_sample",
+    "mixture_identity_leakage": 0.999474
+  },
+  {
+    "dataset": "ionic-liquids",
+    "property": "Viscosity",
+    "n_samples": 75992,
+    "n_unique_mixtures": 1358,
+    "k_bar": 55.959,
+    "engine": "random_group",
+    "Lpi_unique_mixture": 0.463932,
+    "mixture_identity_leakage": 0.0,
+    "sample_fractions": {
+      "train": 0.7044,
+      "val": 0.2019,
+      "test": 0.0938
+    }
+  },
+  {
+    "dataset": "ionic-liquids",
+    "property": "Viscosity",
+    "n_samples": 75992,
+    "n_unique_mixtures": 1358,
+    "k_bar": 55.959,
+    "engine": "butina",
+    "Lpi_unique_mixture": 0.312894,
+    "mixture_identity_leakage": 0.0,
+    "n_clusters": 210,
+    "sample_fractions": {
+      "train": 0.7,
+      "val": 0.2,
+      "test": 0.1
+    },
+    "runtime_s": 0.032
+  },
+  {
+    "dataset": "ionic-liquids",
+    "property": "Viscosity",
+    "n_samples": 75992,
+    "n_unique_mixtures": 1358,
+    "k_bar": 55.959,
+    "engine": "hypergraph",
+    "Lpi_unique_mixture": 0.060136,
+    "mixture_identity_leakage": 0.0,
+    "mixture_count_fractions": {
+      "train": 0.7577,
+      "val": 0.1863,
+      "test": 0.056
+    },
+    "sample_fractions": {
+      "train": 0.72,
+      "val": 0.2044,
+      "test": 0.0757
+    },
+    "imbalance": 0.0832,
+    "runtime_s": 0.07
+  },
+  {
+    "dataset": "ionic-liquids",
+    "property": "Viscosity",
+    "n_samples": 75992,
+    "n_unique_mixtures": 1358,
+    "k_bar": 55.959,
+    "engine": "lowrank",
+    "Lpi_unique_mixture": 0.175821,
+    "mixture_identity_leakage": 0.0,
+    "mixture_count_fractions": {
+      "train": 0.7305,
+      "val": 0.1797,
+      "test": 0.0898
+    },
+    "sample_fractions": {
+      "train": 0.729,
+      "val": 0.1688,
+      "test": 0.1022
+    },
+    "imbalance": null,
+    "runtime_s": 0.211
+  },
+  {
+    "dataset": "miscible-solvent",
+    "property": "Density",
+    "n_samples": 30061,
+    "n_unique_mixtures": 19157,
+    "k_bar": 1.569,
+    "engine": "random_sample",
+    "mixture_identity_leakage": 0.467066
+  },
+  {
+    "dataset": "miscible-solvent",
+    "property": "Density",
+    "n_samples": 30061,
+    "n_unique_mixtures": 19157,
+    "k_bar": 1.569,
+    "engine": "random_group",
+    "Lpi_unique_mixture": 0.460247,
+    "mixture_identity_leakage": 0.0,
+    "sample_fractions": {
+      "train": 0.7013,
+      "val": 0.1975,
+      "test": 0.1012
+    }
+  },
+  {
+    "dataset": "miscible-solvent",
+    "property": "Density",
+    "n_samples": 30061,
+    "n_unique_mixtures": 19157,
+    "k_bar": 1.569,
+    "engine": "butina",
+    "Lpi_unique_mixture": 0.277368,
+    "mixture_identity_leakage": 0.0,
+    "n_clusters": 692,
+    "sample_fractions": {
+      "train": 0.7,
+      "val": 0.2,
+      "test": 0.1
+    },
+    "runtime_s": 1.634
+  },
+  {
+    "dataset": "miscible-solvent",
+    "property": "Density",
+    "n_samples": 30061,
+    "n_unique_mixtures": 19157,
+    "k_bar": 1.569,
+    "engine": "hypergraph",
+    "Lpi_unique_mixture": 0.348471,
+    "mixture_identity_leakage": 0.0,
+    "mixture_count_fractions": {
+      "train": 0.7673,
+      "val": 0.2111,
+      "test": 0.0216
+    },
+    "sample_fractions": {
+      "train": 0.803,
+      "val": 0.1792,
+      "test": 0.0178
+    },
+    "imbalance": 0.0962,
+    "runtime_s": 0.826
+  },
+  {
+    "dataset": "miscible-solvent",
+    "property": "Density",
+    "n_samples": 30061,
+    "n_unique_mixtures": 19157,
+    "k_bar": 1.569,
+    "engine": "lowrank",
+    "Lpi_unique_mixture": 0.200518,
+    "mixture_identity_leakage": 0.0,
+    "mixture_count_fractions": {
+      "train": 0.73,
+      "val": 0.18,
+      "test": 0.09
+    },
+    "sample_fractions": {
+      "train": 0.6779,
+      "val": 0.1611,
+      "test": 0.161
+    },
+    "imbalance": null,
+    "runtime_s": 0.851
+  },
+  {
+    "dataset": "miscible-solvent",
+    "property": "Heat of vaporization",
+    "n_samples": 30061,
+    "n_unique_mixtures": 19157,
+    "k_bar": 1.569,
+    "engine": "random_sample",
+    "mixture_identity_leakage": 0.467066
+  },
+  {
+    "dataset": "miscible-solvent",
+    "property": "Heat of vaporization",
+    "n_samples": 30061,
+    "n_unique_mixtures": 19157,
+    "k_bar": 1.569,
+    "engine": "random_group",
+    "Lpi_unique_mixture": 0.460247,
+    "mixture_identity_leakage": 0.0,
+    "sample_fractions": {
+      "train": 0.7013,
+      "val": 0.1975,
+      "test": 0.1012
+    }
+  },
+  {
+    "dataset": "miscible-solvent",
+    "property": "Heat of vaporization",
+    "n_samples": 30061,
+    "n_unique_mixtures": 19157,
+    "k_bar": 1.569,
+    "engine": "butina",
+    "Lpi_unique_mixture": 0.277368,
+    "mixture_identity_leakage": 0.0,
+    "n_clusters": 692,
+    "sample_fractions": {
+      "train": 0.7,
+      "val": 0.2,
+      "test": 0.1
+    },
+    "runtime_s": 1.543
+  },
+  {
+    "dataset": "miscible-solvent",
+    "property": "Heat of vaporization",
+    "n_samples": 30061,
+    "n_unique_mixtures": 19157,
+    "k_bar": 1.569,
+    "engine": "hypergraph",
+    "Lpi_unique_mixture": 0.270042,
+    "mixture_identity_leakage": 0.0,
+    "mixture_count_fractions": {
+      "train": 0.7522,
+      "val": 0.1944,
+      "test": 0.0534
+    },
+    "sample_fractions": {
+      "train": 0.7811,
+      "val": 0.1725,
+      "test": 0.0463
+    },
+    "imbalance": 0.0746,
+    "runtime_s": 0.75
+  },
+  {
+    "dataset": "miscible-solvent",
+    "property": "Heat of vaporization",
+    "n_samples": 30061,
+    "n_unique_mixtures": 19157,
+    "k_bar": 1.569,
+    "engine": "lowrank",
+    "Lpi_unique_mixture": 0.200518,
+    "mixture_identity_leakage": 0.0,
+    "mixture_count_fractions": {
+      "train": 0.73,
+      "val": 0.18,
+      "test": 0.09
+    },
+    "sample_fractions": {
+      "train": 0.6779,
+      "val": 0.1611,
+      "test": 0.161
+    },
+    "imbalance": null,
+    "runtime_s": 0.838
+  },
+  {
+    "dataset": "miscible-solvent",
+    "property": "Enthalpy of mixing",
+    "n_samples": 30061,
+    "n_unique_mixtures": 19157,
+    "k_bar": 1.569,
+    "engine": "random_sample",
+    "mixture_identity_leakage": 0.467066
+  },
+  {
+    "dataset": "miscible-solvent",
+    "property": "Enthalpy of mixing",
+    "n_samples": 30061,
+    "n_unique_mixtures": 19157,
+    "k_bar": 1.569,
+    "engine": "random_group",
+    "Lpi_unique_mixture": 0.460247,
+    "mixture_identity_leakage": 0.0,
+    "sample_fractions": {
+      "train": 0.7013,
+      "val": 0.1975,
+      "test": 0.1012
+    }
+  },
+  {
+    "dataset": "miscible-solvent",
+    "property": "Enthalpy of mixing",
+    "n_samples": 30061,
+    "n_unique_mixtures": 19157,
+    "k_bar": 1.569,
+    "engine": "butina",
+    "Lpi_unique_mixture": 0.277368,
+    "mixture_identity_leakage": 0.0,
+    "n_clusters": 692,
+    "sample_fractions": {
+      "train": 0.7,
+      "val": 0.2,
+      "test": 0.1
+    },
+    "runtime_s": 2.251
+  },
+  {
+    "dataset": "miscible-solvent",
+    "property": "Enthalpy of mixing",
+    "n_samples": 30061,
+    "n_unique_mixtures": 19157,
+    "k_bar": 1.569,
+    "engine": "hypergraph",
+    "Lpi_unique_mixture": 0.353271,
+    "mixture_identity_leakage": 0.0,
+    "mixture_count_fractions": {
+      "train": 0.7271,
+      "val": 0.2201,
+      "test": 0.0528
+    },
+    "sample_fractions": {
+      "train": 0.7637,
+      "val": 0.1932,
+      "test": 0.043
+    },
+    "imbalance": 0.1002,
+    "runtime_s": 0.807
+  },
+  {
+    "dataset": "miscible-solvent",
+    "property": "Enthalpy of mixing",
+    "n_samples": 30061,
+    "n_unique_mixtures": 19157,
+    "k_bar": 1.569,
+    "engine": "lowrank",
+    "Lpi_unique_mixture": 0.200518,
+    "mixture_identity_leakage": 0.0,
+    "mixture_count_fractions": {
+      "train": 0.73,
+      "val": 0.18,
+      "test": 0.09
+    },
+    "sample_fractions": {
+      "train": 0.6779,
+      "val": 0.1611,
+      "test": 0.161
+    },
+    "imbalance": null,
+    "runtime_s": 0.913
+  },
+  {
+    "dataset": "drug-solubility",
+    "property": "Log solubility",
+    "n_samples": 27166,
+    "n_unique_mixtures": 665,
+    "k_bar": 40.851,
+    "engine": "random_sample",
+    "mixture_identity_leakage": 1.0
+  },
+  {
+    "dataset": "drug-solubility",
+    "property": "Log solubility",
+    "n_samples": 27166,
+    "n_unique_mixtures": 665,
+    "k_bar": 40.851,
+    "engine": "random_group",
+    "Lpi_unique_mixture": 0.464867,
+    "mixture_identity_leakage": 0.0,
+    "sample_fractions": {
+      "train": 0.6887,
+      "val": 0.2156,
+      "test": 0.0957
+    }
+  },
+  {
+    "dataset": "drug-solubility",
+    "property": "Log solubility",
+    "n_samples": 27166,
+    "n_unique_mixtures": 665,
+    "k_bar": 40.851,
+    "engine": "butina",
+    "Lpi_unique_mixture": 0.490671,
+    "mixture_identity_leakage": 0.0,
+    "n_clusters": 123,
+    "sample_fractions": {
+      "train": 0.6999,
+      "val": 0.2001,
+      "test": 0.0999
+    },
+    "runtime_s": 0.015
+  },
+  {
+    "dataset": "drug-solubility",
+    "property": "Log solubility",
+    "n_samples": 27166,
+    "n_unique_mixtures": 665,
+    "k_bar": 40.851,
+    "engine": "hypergraph",
+    "Lpi_unique_mixture": 0.209929,
+    "mixture_identity_leakage": 0.0,
+    "mixture_count_fractions": {
+      "train": 0.7654,
+      "val": 0.2165,
+      "test": 0.018
+    },
+    "sample_fractions": {
+      "train": 0.7427,
+      "val": 0.2345,
+      "test": 0.0228
+    },
+    "imbalance": 0.097,
+    "runtime_s": 0.041
+  },
+  {
+    "dataset": "drug-solubility",
+    "property": "Log solubility",
+    "n_samples": 27166,
+    "n_unique_mixtures": 665,
+    "k_bar": 40.851,
+    "engine": "lowrank",
+    "Lpi_unique_mixture": 0.234957,
+    "mixture_identity_leakage": 0.0,
+    "mixture_count_fractions": {
+      "train": 0.7323,
+      "val": 0.1789,
+      "test": 0.0887
+    },
+    "sample_fractions": {
+      "train": 0.692,
+      "val": 0.1714,
+      "test": 0.1366
+    },
+    "imbalance": null,
+    "runtime_s": 0.196
+  },
+  {
+    "dataset": "polymer-electrolyte",
+    "property": "log Conductivity",
+    "n_samples": 11350,
+    "n_unique_mixtures": 372,
+    "k_bar": 30.511,
+    "engine": "random_sample",
+    "mixture_identity_leakage": 0.999119
+  },
+  {
+    "dataset": "polymer-electrolyte",
+    "property": "log Conductivity",
+    "n_samples": 11350,
+    "n_unique_mixtures": 372,
+    "k_bar": 30.511,
+    "engine": "random_group",
+    "Lpi_unique_mixture": 0.454601,
+    "mixture_identity_leakage": 0.0,
+    "sample_fractions": {
+      "train": 0.7574,
+      "val": 0.1492,
+      "test": 0.0935
+    }
+  },
+  {
+    "dataset": "polymer-electrolyte",
+    "property": "log Conductivity",
+    "n_samples": 11350,
+    "n_unique_mixtures": 372,
+    "k_bar": 30.511,
+    "engine": "butina",
+    "Lpi_unique_mixture": 0.430002,
+    "mixture_identity_leakage": 0.0,
+    "n_clusters": 125,
+    "sample_fractions": {
+      "train": 0.7,
+      "val": 0.2,
+      "test": 0.1
+    },
+    "runtime_s": 0.012
+  },
+  {
+    "dataset": "polymer-electrolyte",
+    "property": "log Conductivity",
+    "n_samples": 11350,
+    "n_unique_mixtures": 372,
+    "k_bar": 30.511,
+    "engine": "hypergraph",
+    "Lpi_unique_mixture": 0.249406,
+    "mixture_identity_leakage": 0.0,
+    "mixture_count_fractions": {
+      "train": 0.7688,
+      "val": 0.1613,
+      "test": 0.0699
+    },
+    "sample_fractions": {
+      "train": 0.6094,
+      "val": 0.3337,
+      "test": 0.0568
+    },
+    "imbalance": 0.1,
+    "runtime_s": 0.029
+  },
+  {
+    "dataset": "polymer-electrolyte",
+    "property": "log Conductivity",
+    "n_samples": 11350,
+    "n_unique_mixtures": 372,
+    "k_bar": 30.511,
+    "engine": "lowrank",
+    "Lpi_unique_mixture": 0.088899,
+    "mixture_identity_leakage": 0.0,
+    "mixture_count_fractions": {
+      "train": 0.7339,
+      "val": 0.1774,
+      "test": 0.0887
+    },
+    "sample_fractions": {
+      "train": 0.8148,
+      "val": 0.1176,
+      "test": 0.0676
+    },
+    "imbalance": null,
+    "runtime_s": 0.176
+  },
+  {
+    "dataset": "olfactory-similarity",
+    "property": "Mixture similarity",
+    "n_samples": 865,
+    "n_unique_mixtures": 854,
+    "k_bar": 1.013,
+    "engine": "random_sample",
+    "mixture_identity_leakage": 0.0
+  },
+  {
+    "dataset": "olfactory-similarity",
+    "property": "Mixture similarity",
+    "n_samples": 865,
+    "n_unique_mixtures": 854,
+    "k_bar": 1.013,
+    "engine": "random_group",
+    "Lpi_unique_mixture": 0.463322,
+    "mixture_identity_leakage": 0.0,
+    "sample_fractions": {
+      "train": 0.6994,
+      "val": 0.2,
+      "test": 0.1006
+    }
+  },
+  {
+    "dataset": "olfactory-similarity",
+    "property": "Mixture similarity",
+    "n_samples": 865,
+    "n_unique_mixtures": 854,
+    "k_bar": 1.013,
+    "engine": "butina",
+    "Lpi_unique_mixture": 0.338406,
+    "mixture_identity_leakage": 0.0,
+    "n_clusters": 78,
+    "sample_fractions": {
+      "train": 0.7006,
+      "val": 0.2,
+      "test": 0.0994
+    },
+    "runtime_s": 0.021
+  },
+  {
+    "dataset": "olfactory-similarity",
+    "property": "Mixture similarity",
+    "n_samples": 865,
+    "n_unique_mixtures": 854,
+    "k_bar": 1.013,
+    "engine": "hypergraph",
+    "Lpi_unique_mixture": 0.380441,
+    "mixture_identity_leakage": 0.0,
+    "mixture_count_fractions": {
+      "train": 0.7635,
+      "val": 0.1733,
+      "test": 0.0632
+    },
+    "sample_fractions": {
+      "train": 0.763,
+      "val": 0.1746,
+      "test": 0.0624
+    },
+    "imbalance": 0.0921,
+    "runtime_s": 0.045
+  },
+  {
+    "dataset": "olfactory-similarity",
+    "property": "Mixture similarity",
+    "n_samples": 865,
+    "n_unique_mixtures": 854,
+    "k_bar": 1.013,
+    "engine": "lowrank",
+    "Lpi_unique_mixture": 0.233128,
+    "mixture_identity_leakage": 0.0,
+    "mixture_count_fractions": {
+      "train": 0.7319,
+      "val": 0.1792,
+      "test": 0.089
+    },
+    "sample_fractions": {
+      "train": 0.7341,
+      "val": 0.178,
+      "test": 0.0879
+    },
+    "imbalance": null,
+    "runtime_s": 0.201
+  },
+  {
+    "dataset": "logV",
+    "property": "Log viscosity",
+    "n_samples": 34374,
+    "n_unique_mixtures": 4778,
+    "k_bar": 7.194,
+    "engine": "random_sample",
+    "mixture_identity_leakage": 0.956066
+  },
+  {
+    "dataset": "logV",
+    "property": "Log viscosity",
+    "n_samples": 34374,
+    "n_unique_mixtures": 4778,
+    "k_bar": 7.194,
+    "engine": "random_group",
+    "Lpi_unique_mixture": 0.462211,
+    "mixture_identity_leakage": 0.0,
+    "sample_fractions": {
+      "train": 0.6967,
+      "val": 0.2061,
+      "test": 0.0972
+    }
+  },
+  {
+    "dataset": "logV",
+    "property": "Log viscosity",
+    "n_samples": 34374,
+    "n_unique_mixtures": 4778,
+    "k_bar": 7.194,
+    "engine": "butina",
+    "Lpi_unique_mixture": 0.453868,
+    "mixture_identity_leakage": 0.0,
+    "n_clusters": 836,
+    "sample_fractions": {
+      "train": 0.7,
+      "val": 0.2,
+      "test": 0.1
+    },
+    "runtime_s": 0.056
+  },
+  {
+    "dataset": "logV",
+    "property": "Log viscosity",
+    "n_samples": 34374,
+    "n_unique_mixtures": 4778,
+    "k_bar": 7.194,
+    "engine": "hypergraph",
+    "Lpi_unique_mixture": 0.320689,
+    "mixture_identity_leakage": 0.0,
+    "mixture_count_fractions": {
+      "train": 0.7424,
+      "val": 0.1553,
+      "test": 0.1023
+    },
+    "sample_fractions": {
+      "train": 0.693,
+      "val": 0.161,
+      "test": 0.146
+    },
+    "imbalance": 0.0607,
+    "runtime_s": 0.175
+  },
+  {
+    "dataset": "logV",
+    "property": "Log viscosity",
+    "n_samples": 34374,
+    "n_unique_mixtures": 4778,
+    "k_bar": 7.194,
+    "engine": "lowrank",
+    "Lpi_unique_mixture": 0.101979,
+    "mixture_identity_leakage": 0.0,
+    "mixture_count_fractions": {
+      "train": 0.73,
+      "val": 0.18,
+      "test": 0.09
+    },
+    "sample_fractions": {
+      "train": 0.6805,
+      "val": 0.2089,
+      "test": 0.1106
+    },
+    "imbalance": null,
+    "runtime_s": 0.274
+  },
+  {
+    "dataset": "nist-logV",
+    "property": "Log viscosity",
+    "n_samples": 239200,
+    "n_unique_mixtures": 6974,
+    "k_bar": 34.299,
+    "engine": "random_sample",
+    "mixture_identity_leakage": 0.99862
+  },
+  {
+    "dataset": "nist-logV",
+    "property": "Log viscosity",
+    "n_samples": 239200,
+    "n_unique_mixtures": 6974,
+    "k_bar": 34.299,
+    "engine": "random_group",
+    "Lpi_unique_mixture": 0.462594,
+    "mixture_identity_leakage": 0.0,
+    "sample_fractions": {
+      "train": 0.6942,
+      "val": 0.2099,
+      "test": 0.096
+    }
+  },
+  {
+    "dataset": "nist-logV",
+    "property": "Log viscosity",
+    "n_samples": 239200,
+    "n_unique_mixtures": 6974,
+    "k_bar": 34.299,
+    "engine": "butina",
+    "Lpi_unique_mixture": 0.402021,
+    "mixture_identity_leakage": 0.0,
+    "n_clusters": 658,
+    "sample_fractions": {
+      "train": 0.7,
+      "val": 0.2,
+      "test": 0.1
+    },
+    "runtime_s": 0.136
+  },
+  {
+    "dataset": "nist-logV",
+    "property": "Log viscosity",
+    "n_samples": 239200,
+    "n_unique_mixtures": 6974,
+    "k_bar": 34.299,
+    "engine": "hypergraph",
+    "Lpi_unique_mixture": 0.311831,
+    "mixture_identity_leakage": 0.0,
+    "mixture_count_fractions": {
+      "train": 0.744,
+      "val": 0.1617,
+      "test": 0.0942
+    },
+    "sample_fractions": {
+      "train": 0.6479,
+      "val": 0.1829,
+      "test": 0.1692
+    },
+    "imbalance": 0.0633,
+    "runtime_s": 0.225
+  },
+  {
+    "dataset": "nist-logV",
+    "property": "Log viscosity",
+    "n_samples": 239200,
+    "n_unique_mixtures": 6974,
+    "k_bar": 34.299,
+    "engine": "lowrank",
+    "Lpi_unique_mixture": 0.121797,
+    "mixture_identity_leakage": 0.0,
+    "mixture_count_fractions": {
+      "train": 0.7301,
+      "val": 0.18,
+      "test": 0.0899
+    },
+    "sample_fractions": {
+      "train": 0.7615,
+      "val": 0.1612,
+      "test": 0.0773
+    },
+    "imbalance": null,
+    "runtime_s": 0.348
+  },
+  {
+    "dataset": "MON",
+    "property": "Motor octane number",
+    "n_samples": 684,
+    "n_unique_mixtures": 397,
+    "k_bar": 1.723,
+    "engine": "random_sample",
+    "mixture_identity_leakage": 0.5
+  },
+  {
+    "dataset": "MON",
+    "property": "Motor octane number",
+    "n_samples": 684,
+    "n_unique_mixtures": 397,
+    "k_bar": 1.723,
+    "engine": "random_group",
+    "Lpi_unique_mixture": 0.459331,
+    "mixture_identity_leakage": 0.0,
+    "sample_fractions": {
+      "train": 0.6579,
+      "val": 0.2515,
+      "test": 0.0906
+    }
+  },
+  {
+    "dataset": "MON",
+    "property": "Motor octane number",
+    "n_samples": 684,
+    "n_unique_mixtures": 397,
+    "k_bar": 1.723,
+    "engine": "butina",
+    "Lpi_unique_mixture": 0.551722,
+    "mixture_identity_leakage": 0.0,
+    "n_clusters": 240,
+    "sample_fractions": {
+      "train": 0.7003,
+      "val": 0.2003,
+      "test": 0.0994
+    },
+    "runtime_s": 0.008
+  },
+  {
+    "dataset": "MON",
+    "property": "Motor octane number",
+    "n_samples": 684,
+    "n_unique_mixtures": 397,
+    "k_bar": 1.723,
+    "engine": "hypergraph",
+    "Lpi_unique_mixture": 0.274119,
+    "mixture_identity_leakage": 0.0,
+    "mixture_count_fractions": {
+      "train": 0.6625,
+      "val": 0.2242,
+      "test": 0.1134
+    },
+    "sample_fractions": {
+      "train": 0.7573,
+      "val": 0.1477,
+      "test": 0.095
+    },
+    "imbalance": 0.0988,
+    "runtime_s": 0.035
+  },
+  {
+    "dataset": "MON",
+    "property": "Motor octane number",
+    "n_samples": 684,
+    "n_unique_mixtures": 397,
+    "k_bar": 1.723,
+    "engine": "lowrank",
+    "Lpi_unique_mixture": 0.182491,
+    "mixture_identity_leakage": 0.0,
+    "mixture_count_fractions": {
+      "train": 0.733,
+      "val": 0.1788,
+      "test": 0.0882
+    },
+    "sample_fractions": {
+      "train": 0.7982,
+      "val": 0.1213,
+      "test": 0.0804
+    },
+    "imbalance": null,
+    "runtime_s": 0.188
+  },
+  {
+    "dataset": "medicine-formulations",
+    "property": "solubility",
+    "n_samples": 251,
+    "n_unique_mixtures": 15,
+    "k_bar": 16.733,
+    "engine": "random_sample",
+    "mixture_identity_leakage": 1.0
+  },
+  {
+    "dataset": "medicine-formulations",
+    "property": "solubility",
+    "n_samples": 251,
+    "n_unique_mixtures": 15,
+    "k_bar": 16.733,
+    "engine": "random_group",
+    "Lpi_unique_mixture": 0.533333,
+    "mixture_identity_leakage": 0.0,
+    "sample_fractions": {
+      "train": 0.7689,
+      "val": 0.2191,
+      "test": 0.012
+    }
+  },
+  {
+    "dataset": "medicine-formulations",
+    "property": "solubility",
+    "n_samples": 251,
+    "n_unique_mixtures": 15,
+    "k_bar": 16.733,
+    "engine": "butina",
+    "Lpi_unique_mixture": 0.0,
+    "mixture_identity_leakage": 0.0,
+    "n_clusters": 1,
+    "sample_fractions": {
+      "train": 1.0,
+      "val": 0.0,
+      "test": 0.0
+    },
+    "runtime_s": 0.006
+  },
+  {
+    "dataset": "medicine-formulations",
+    "property": "solubility",
+    "n_samples": 251,
+    "n_unique_mixtures": 15,
+    "k_bar": 16.733,
+    "engine": "hypergraph",
+    "Lpi_unique_mixture": 0.67619,
+    "mixture_identity_leakage": 0.0,
+    "mixture_count_fractions": {
+      "train": 0.4667,
+      "val": 0.3333,
+      "test": 0.2
+    },
+    "sample_fractions": {
+      "train": 0.7729,
+      "val": 0.1076,
+      "test": 0.1195
+    },
+    "imbalance": 0.25,
+    "runtime_s": 0.012
+  },
+  {
+    "dataset": "medicine-formulations",
+    "property": "solubility",
+    "n_samples": 251,
+    "n_unique_mixtures": 15,
+    "k_bar": 16.733,
+    "engine": "lowrank",
+    "Lpi_unique_mixture": 0.361905,
+    "mixture_identity_leakage": 0.0,
+    "mixture_count_fractions": {
+      "train": 0.8,
+      "val": 0.1333,
+      "test": 0.0667
+    },
+    "sample_fractions": {
+      "train": 0.9283,
+      "val": 0.0677,
+      "test": 0.004
+    },
+    "imbalance": null,
+    "runtime_s": 0.095
+  }
+]
