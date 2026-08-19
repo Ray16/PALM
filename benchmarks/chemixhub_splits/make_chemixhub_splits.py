@@ -143,6 +143,28 @@ def mixture_fingerprint_and_key(row, id_cols, fp_map, is_salt):
     return binv, key
 
 
+def build_unique_mixtures(sub, id_cols, fp_map, is_salt):
+    """Collapse a property-filtered dataframe to unique mixtures.
+
+    Returns ``(key_of_sample, samples_of_key, feature_data)`` where
+    ``feature_data`` maps ``str(key) -> binarized weighted-mean fingerprint``.
+    """
+    n = len(sub)
+    key_of_sample = [None] * n
+    samples_of_key = defaultdict(list)
+    fp_of_key = {}
+    for i in range(n):
+        binv, key = mixture_fingerprint_and_key(sub.iloc[i], id_cols, fp_map, is_salt)
+        if key is None:
+            key = (("__unpar?%d" % i,), ())          # keep row; isolated identity
+            binv = np.zeros(FP_BITS, dtype=np.float32)
+        key_of_sample[i] = key
+        samples_of_key[key].append(i)
+        fp_of_key.setdefault(key, binv)
+    feature_data = {str(k): fp_of_key[k] for k in samples_of_key}
+    return key_of_sample, samples_of_key, feature_data
+
+
 def butina_clusters(X, tau=BUTINA_TAU, block=2048):
     """Exact Butina sphere-exclusion clustering on binarized-fingerprint Tanimoto.
 
@@ -262,24 +284,11 @@ def process(dataset_dir, csv_name, id_cols, out_root, records):
         sub = df[df["property"] == prop].reset_index(drop=True) if "property" in df.columns else df
         n = len(sub)
 
-        # collapse to unique mixtures
-        key_of_sample = [None] * n
-        samples_of_key = defaultdict(list)
-        fp_of_key = {}
-        for i in range(n):
-            binv, key = mixture_fingerprint_and_key(sub.iloc[i], id_cols, fp_map, is_salt)
-            if key is None:
-                key = (("__unpar?%d" % i,), ())      # keep row; isolated identity
-                binv = np.zeros(FP_BITS, dtype=np.float32)
-            key_of_sample[i] = key
-            samples_of_key[key].append(i)
-            fp_of_key.setdefault(key, binv)
-
+        key_of_sample, samples_of_key, feature_data = build_unique_mixtures(
+            sub, id_cols, fp_map, is_salt)
         keys = list(samples_of_key.keys())
         m = len(keys)
         kbar = n / m
-        feature_data = {str(k): fp_of_key[k] for k in keys}
-        # X aligned to sorted(feature_data) order used inside the engines
         sorted_keys = sorted(feature_data.keys())
         X = np.vstack([feature_data[k] for k in sorted_keys])
 

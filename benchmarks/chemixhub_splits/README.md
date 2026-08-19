@@ -91,6 +91,57 @@ imbalance, runtime) are in [`splits/leakage_report.csv`](splits/leakage_report.c
 and [`splits/leakage_report.json`](splits/leakage_report.json); regenerate the
 figures with `make_comparison_chart.py`.
 
+## Relation to the paper's split (provenance)
+
+The MixUni paper **documents the chem-OOD recipe in full** (Appendix A.4 +
+Table 4 — reproduced here) but **does not ship the split indices**: "code,
+configurations, and trained checkpoints will be released upon acceptance," and the
+indices are "generated once and reused." So there is no public artifact to diff
+against yet — this directory reconstructs the split from the documented recipe.
+
+Two differences from the paper's exact setup, by design:
+- **Scope.** The paper builds **one** chem-OOD split over the *unified 5-property*
+  dataset (IL cond, IL visc, PE cond, NIST-logV, MS density) with per-component
+  fingerprints shared across all five (~121k/35k/17k). We instead split **each of
+  the 9 datasets / 12 tasks independently** (what the colleague asked for), so
+  every task gets its own drop-in split.
+- **Partitioner.** Butina+bin-packing → PALM's engines (the whole point).
+
+The CheMixHub benchmark repo itself ships only `kfold`, `lso`, `num_components`,
+and `temperature` splits (`SPLIT_MAPPING`) — **no Butina/chem-OOD split**; that
+protocol is MixUni's own contribution. Our `butina_*` files are a faithful
+re-implementation of it for a head-to-head baseline. If you want the paper's exact
+*unified-5* split (shared fingerprints, single split) rather than per-dataset, it
+is a small change to `make_chemixhub_splits.py` — say the word.
+
+## Timing
+
+Partition-time only (the shared featurization is excluded; warm, best-of-3 —
+`benchmark_split_timing.py`, `timing_report.csv`):
+
+![timing bars](figures/chemixhub_timing_bars.png)
+![timing scaling](figures/chemixhub_timing_scaling.png)
+
+At CheMixHub scales (≤ 19k unique mixtures) **all three partition in under 1.5 s**,
+and the differences are milliseconds — dwarfed by the shared featurization, which
+dominates wall-clock. The interesting part is the **scaling**:
+
+- **Butina is O(n²)** in the number of unique mixtures (full Tanimoto matrix):
+  cheapest at small n (< 5 ms below ~1k mixtures) but the steepest curve — it
+  **crosses above both PALM engines around ~10k mixtures** and is the *slowest*
+  at n = 19k (MS density: Butina 1.39 s vs hypergraph 0.67 s vs low-rank 0.80 s).
+- **Low-rank is ~O(n·r)** and essentially **flat** (~0.1–0.8 s from n = 15 to
+  19 157): it pays the highest fixed cost — Nyström factorization + 4 balanced-Lloyd
+  restarts + FM polish — so on tiny problems it is the slowest in absolute ms, but
+  that overhead is constant and it barely moves as n grows. This is the same
+  O(n·r) behaviour that lets it scale to millions of rows elsewhere in PALM.
+- **Hypergraph** sits between the two — low overhead, moderate (sub-quadratic)
+  slope.
+
+So the leakage win in the previous section comes with **no time penalty at scale**:
+past ~10k mixtures the PALM engines are both lower-leakage *and* faster than the
+paper's Butina split; below that, everything is sub-second anyway.
+
 ## Where the splits are
 
 ```
