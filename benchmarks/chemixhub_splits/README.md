@@ -114,33 +114,48 @@ re-implementation of it for a head-to-head baseline. If you want the paper's exa
 *unified-5* split (shared fingerprints, single split) rather than per-dataset, it
 is a small change to `make_chemixhub_splits.py` — say the word.
 
-## Timing
+## Timing (partition step only; featurization is shared and excluded)
 
-Partition-time only (the shared featurization is excluded; warm, best-of-3 —
-`benchmark_split_timing.py`, `timing_report.csv`):
+`benchmark_split_timing.py`, `timing_report.csv`; warm, best-of-3.
 
 ![timing bars](figures/chemixhub_timing_bars.png)
 ![timing scaling](figures/chemixhub_timing_scaling.png)
 
-At CheMixHub scales (≤ 19k unique mixtures) **all three partition in under 1.5 s**,
-and the differences are milliseconds — dwarfed by the shared featurization, which
-dominates wall-clock. The interesting part is the **scaling**:
+**Equal footing means full-vs-full.** Hypergraph is a *single* Mt-KaHyPar cut with
+no separable polish stage — its multilevel coarsening/FM refinement is internal to
+that one call. So the only fair comparison is each method's **complete production
+splitter**. On that basis, at CheMixHub's ≤ 19k unique mixtures:
 
-- **Butina is O(n²)** in the number of unique mixtures (full Tanimoto matrix):
-  cheapest at small n (< 5 ms below ~1k mixtures) but the steepest curve — it
-  **crosses above both PALM engines around ~10k mixtures** and is the *slowest*
-  at n = 19k (MS density: Butina 1.39 s vs hypergraph 0.67 s vs low-rank 0.80 s).
-- **Low-rank is ~O(n·r)** and essentially **flat** (~0.1–0.8 s from n = 15 to
-  19 157): it pays the highest fixed cost — Nyström factorization + 4 balanced-Lloyd
-  restarts + FM polish — so on tiny problems it is the slowest in absolute ms, but
-  that overhead is constant and it barely moves as n grows. This is the same
-  O(n·r) behaviour that lets it scale to millions of rows elsewhere in PALM.
-- **Hypergraph** sits between the two — low overhead, moderate (sub-quadratic)
-  slope.
+| n_unique | Butina | Hypergraph (full) | Low-rank (full) | — Low-rank core¹ |
+|--:|--:|--:|--:|--:|
+| 372 (PE cond) | 2 ms | **29 ms** | 168 ms | 12 ms |
+| 4,778 (logV) | 28 ms | **176 ms** | 284 ms | 30 ms |
+| 6,974 (NIST) | 51 ms | **222 ms** | 374 ms | 26 ms |
+| 19,157 (MS) | 1,900 ms | **768 ms** | 806 ms | 57 ms |
 
-So the leakage win in the previous section comes with **no time penalty at scale**:
-past ~10k mixtures the PALM engines are both lower-leakage *and* faster than the
-paper's Butina split; below that, everything is sub-second anyway.
+- **Hypergraph is the fastest full splitter at every CheMixHub size**, because
+  full low-rank pays a fixed overhead — kmeans++ landmark selection (a ~256-step
+  sequential-GPU loop at rank 256) + 4 balanced-Lloyd restarts + FM polish — that
+  dominates when n is small. The two converge by n ≈ 19k.
+- **Butina is O(n²)** (full Tanimoto matrix): cheapest below ~1k but the steepest
+  curve; by n = 19k it is the slowest (≈ 1.9 s).
+- ¹ **Low-rank *core*** (Nyström factor + one balanced assignment, 12–57 ms) is the
+  fastest thing here — but it is **not equal footing** with the single-shot
+  hypergraph, because it drops all of low-rank's polish. It is shown only to
+  locate the overhead: ~90% of full low-rank's small-n cost is the optional polish,
+  not the O(n·r) core.
+
+**So is low-rank "slower"? At this scale, yes** — the full splitter is slower than
+hypergraph below ~20k mixtures. Low-rank's advantage is a **large-n** one: its core
+is O(n·r) while hypergraph's k-NN is O(n²). On OMol25 (`benchmarks/omol25`)
+hypergraph's k-NN becomes infeasible past ~10⁵ (4.9 s at 10⁵, then it cannot run),
+whereas low-rank splits the full **9.55 M** set in ~27 s. Note the OMol25 scaling
+figure timed low-rank-*core* vs hypergraph-*full* (not equal footing), which
+overstates low-rank's small-n lead; the honest cross-over story is: **hypergraph
+wins on speed until its O(n²) k-NN runs out of memory/time (~10⁵), past which
+low-rank is the only engine that runs at all.** For CheMixHub (≤ 19k) either is
+sub-second; pick hypergraph for speed, low-rank when you also want exact split
+fractions / determinism.
 
 ## Where the splits are
 

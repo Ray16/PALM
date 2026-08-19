@@ -28,6 +28,7 @@ import matplotlib.pyplot as plt
 
 import make_chemixhub_splits as M
 from PALM.splitters import split, SplitSpec
+from PALM.splitters.methods.lowrank import nystrom_features, balanced_lloyd
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 FIGS = os.path.join(HERE, "figures")
@@ -49,6 +50,15 @@ def best_of(fn, k=REPEATS):
 
 
 def time_task(feature_data, X, sample_count_of_key, sorted_keys):
+    """All timings are the COMPLETE production splitter (equal footing).
+
+    ``lowrank_core`` is the bare Nyström-factor + one balanced assignment — the
+    same primitive the OMol25 scaling plot timed. It is NOT equal footing with the
+    single-shot hypergraph (which has no separable polish stage: Mt-KaHyPar's
+    multilevel refinement is internal to its one call), so it is reported only as a
+    reference for how much of low-rank's cost is the optional kmeans++/restart/FM
+    polish rather than the core factorization.
+    """
     spec = SplitSpec(splits=M.SPLITS, names=M.NAMES, seed=M.SEED, epsilon=0.10)
 
     def run_butina():
@@ -56,11 +66,17 @@ def time_task(feature_data, X, sample_count_of_key, sorted_keys):
         cok = {sorted_keys[i]: int(clus[i]) for i in range(len(sorted_keys))}
         M.lpt_bin_pack(cok, sample_count_of_key, sorted_keys)
 
+    def run_lowrank_core():
+        B, _ = nystrom_features(X, rank=min(256, X.shape[0]), metric="tanimoto",
+                                landmark="uniform", seed=M.SEED)
+        balanced_lloyd(B, M.SPLITS, epsilon=0.10, n_iter=20, seed=M.SEED)
+
     return {
         "butina": best_of(run_butina),
         "hypergraph": best_of(lambda: split("hypergraph", feature_data, spec,
                                             metric="tanimoto", preset="quality")),
         "lowrank": best_of(lambda: split("lowrank", feature_data, spec, metric="tanimoto")),
+        "lowrank_core": best_of(run_lowrank_core),
     }
 
 
@@ -96,8 +112,9 @@ def main():
             rows.append({"dataset": dset, "property": prop, "n_samples": len(sub),
                          "n_unique": len(sorted_keys), **t})
             print(f"{dset:22s} {prop:24s} n_uniq={len(sorted_keys):6d}  "
-                  f"butina={t['butina']*1e3:7.1f}ms  hyper={t['hypergraph']*1e3:7.1f}ms  "
-                  f"lowrank={t['lowrank']*1e3:7.1f}ms", flush=True)
+                  f"butina={t['butina']*1e3:7.1f}  hyper(full)={t['hypergraph']*1e3:7.1f}  "
+                  f"lowrank(full)={t['lowrank']*1e3:7.1f}  lowrank(core)={t['lowrank_core']*1e3:6.1f} ms",
+                  flush=True)
 
     df = pd.DataFrame(rows)
     df.to_csv(os.path.join(HERE, "timing_report.csv"), index=False)
@@ -112,11 +129,14 @@ def plot(df):
 
     fig, ax = plt.subplots(figsize=(15, 6))
     ax.bar(x - w, df["butina"] * 1e3, w, label="Butina — paper chem-OOD", color=C_BUTINA)
-    ax.bar(x, df["hypergraph"] * 1e3, w, label="Hypergraph (PALM)", color=C_HYPER)
-    ax.bar(x + w, df["lowrank"] * 1e3, w, label="Low-rank (PALM)", color=C_LOWRANK)
+    ax.bar(x, df["hypergraph"] * 1e3, w, label="Hypergraph (full — single Mt-KaHyPar cut)", color=C_HYPER)
+    ax.bar(x + w, df["lowrank"] * 1e3, w, label="Low-rank (full — +kmeans++/4×restart/FM)", color=C_LOWRANK)
+    # core primitive as a reference tick inside the low-rank bar (not equal footing)
+    ax.bar(x + w, df["lowrank_core"] * 1e3, w, color="#2b6b3f", alpha=0.9,
+           label="Low-rank core only (Nyström+1 assign; OMol25-style, ref)")
     ax.set_yscale("log")
     ax.set_ylabel("partition time (ms, log scale) — lower is better", fontsize=12)
-    ax.set_title("CheMixHub chem-OOD: partition time by method "
+    ax.set_title("CheMixHub chem-OOD partition time — equal footing is full vs full "
                  "(featurization shared/excluded; best of 3, warm)", fontsize=12)
     ax.set_xticks(x); ax.set_xticklabels(labels, fontsize=9)
     ax.legend(fontsize=10, loc="upper left")
@@ -128,14 +148,15 @@ def plot(df):
     # scaling: runtime vs #unique mixtures
     fig, ax = plt.subplots(figsize=(8, 6))
     o = df.sort_values("n_unique")
-    for col, c, lab in ((("butina"), C_BUTINA, "Butina"),
-                        ("hypergraph", C_HYPER, "Hypergraph"),
-                        ("lowrank", C_LOWRANK, "Low-rank")):
-        ax.plot(o["n_unique"], o[col] * 1e3, "o-", color=c, label=lab, ms=5, lw=1.2)
+    for col, c, lab, style in (("butina", C_BUTINA, "Butina (full)", "o-"),
+                               ("hypergraph", C_HYPER, "Hypergraph (full)", "o-"),
+                               ("lowrank", C_LOWRANK, "Low-rank (full)", "o-"),
+                               ("lowrank_core", "#2b6b3f", "Low-rank core (ref, not equal footing)", "o--")):
+        ax.plot(o["n_unique"], o[col] * 1e3, style, color=c, label=lab, ms=5, lw=1.2)
     ax.set_xscale("log"); ax.set_yscale("log")
     ax.set_xlabel("# unique mixtures (partition size)", fontsize=12)
     ax.set_ylabel("partition time (ms, log)", fontsize=12)
-    ax.set_title("Partition-time scaling", fontsize=12)
+    ax.set_title("Partition-time scaling (equal footing = the three solid 'full' curves)", fontsize=11)
     ax.legend(fontsize=10); ax.grid(which="both", alpha=0.3)
     fig.tight_layout()
     out = os.path.join(FIGS, "chemixhub_timing_scaling.png")
