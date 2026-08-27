@@ -37,6 +37,11 @@ class DatasetBundle:
     smiles: Optional[dict] = None                # 1d optional: {id: SMILES} (scaffold)
     records: Optional[list] = None               # nd
     axis_feature_maps: Optional[dict] = None     # nd
+    targets: Optional[dict] = None               # {id: y} for the generalization-gap layer
+    task_type: Optional[str] = None              # "regression" | "classification" | None
+    target_name: Optional[str] = None            # source column of the target
+    identifiers: Optional[dict] = None           # {id: raw str} — SMILES/formula for re-featurization + routing
+    identifier_kind: Optional[str] = None        # "smiles" | "formula" | None
     meta: dict = field(default_factory=dict)
 
 
@@ -52,7 +57,8 @@ def _subsample_indices(n, limit, seed=0):
 
 # ── organic small molecules (SMILES -> ECFP) ───────────────────────────────
 
-def _smiles_csv_bundle(name, category, path, smiles_col, limit):
+def _smiles_csv_bundle(name, category, path, smiles_col, limit,
+                       target_col=None, task_type=None):
     if not os.path.exists(path):
         return _unavailable(name, category, "1d", f"file not found: {path}")
     df = pd.read_csv(path)
@@ -68,13 +74,43 @@ def _smiles_csv_bundle(name, category, path, smiles_col, limit):
     ids = [int(idx[k]) for k in kept]
     feature_data = {i: X[j] for j, i in enumerate(ids)}
     smiles = {i: smi[kept[j]] for j, i in enumerate(ids)}
+    # optional target for the generalization-gap layer; NaN-coerced (missing
+    # labels are kept as NaN and masked out by the model step, not dropped here,
+    # so the split still sees every entity).
+    targets = None
+    if target_col and target_col in df.columns:
+        yv = pd.to_numeric(df[target_col], errors="coerce")
+        targets = {i: float(yv.iloc[i]) for i in ids}
     return DatasetBundle(name, category, "1d", True, feature_data=feature_data,
-                         smiles=smiles, meta={"n": len(ids), "source_rows": len(df)})
+                         smiles=smiles, identifiers=dict(smiles), identifier_kind="smiles",
+                         targets=targets,
+                         task_type=task_type if targets else None,
+                         target_name=target_col if targets else None,
+                         meta={"n": len(ids), "source_rows": len(df)})
+
+
+# canonical (target column, task type) per MoleculeNet set; multitask sets
+# (tox21/sider/muv/qm8) use one representative column so the suite stays 1-target.
+_MNET_TARGETS = {
+    "bace":          ("Class", "classification"),
+    "bbbp":          ("p_np", "classification"),
+    "esol":          ("measured log solubility in mols per litre", "regression"),
+    "freesolv":      ("expt", "regression"),
+    "lipophilicity": ("exp", "regression"),
+    "clintox":       ("CT_TOX", "classification"),
+    "hiv":           ("HIV_active", "classification"),
+    "tox21":         ("NR-AR", "classification"),
+    "sider":         ("Hepatobiliary disorders", "classification"),
+    "muv":           ("MUV-466", "classification"),
+    "qm8":           ("E1-CC2", "regression"),
+}
 
 
 def load_moleculenet(sub, limit=DEFAULT_LIMIT):
     path = os.path.join(DSAIL, "1D", "moleculenet", f"{sub}.csv")
-    return _smiles_csv_bundle(f"moleculenet_{sub}", "organic", path, "smiles", limit)
+    tcol, ttype = _MNET_TARGETS.get(sub, (None, None))
+    return _smiles_csv_bundle(f"moleculenet_{sub}", "organic", path, "smiles", limit,
+                              target_col=tcol, task_type=ttype)
 
 
 def load_tdc(sub, limit=DEFAULT_LIMIT):
@@ -100,8 +136,15 @@ def load_qmof(limit=None):
     df = df.dropna(subset=[fcol]).reset_index(drop=True)
     idx = _subsample_indices(len(df), limit)
     formulas = {str(df[idcol].iloc[i]): str(df[fcol].iloc[i]) for i in idx}
+    row_of_id = {str(df[idcol].iloc[i]): i for i in idx}
     ids, X = composition_matrix(formulas)
     feature_data = {qid: X[j] for j, qid in enumerate(ids)}
+    # PBE band gap -> regression target for the generalization-gap layer
+    targets = None
+    tcol = "outputs.pbe.bandgap"
+    if tcol in df.columns:
+        yv = pd.to_numeric(df[tcol], errors="coerce")
+        targets = {qid: float(yv.iloc[row_of_id[qid]]) for qid in ids}
     # linker SMILES (if present) enable the scaffold splitter on MOF organic linkers
     smiles = None
     scol = "info.mofid.smiles_linkers"
@@ -111,7 +154,11 @@ def load_qmof(limit=None):
                   if isinstance(by_id.get(qid), str) and by_id[qid]}
         smiles = smiles or None
     return DatasetBundle("qmof", "inorganic", "1d", True, feature_data=feature_data,
-                         smiles=smiles, meta={"n": len(ids), "formula_col": fcol})
+                         smiles=smiles, targets=targets,
+                         identifiers={qid: formulas[qid] for qid in ids}, identifier_kind="formula",
+                         task_type="regression" if targets else None,
+                         target_name=tcol if targets else None,
+                         meta={"n": len(ids), "formula_col": fcol})
 
 
 def load_omol25(limit=DEFAULT_LIMIT):
@@ -156,13 +203,22 @@ def load_materials_project(limit=DEFAULT_LIMIT):
     per = 1000                                   # MP caps chunk_size at 1000
     with MPRester(key) as mpr:
         docs = mpr.materials.summary.search(
-            fields=["material_id", "formula_pretty"],
+            fields=["material_id", "formula_pretty", "formation_energy_per_atom"],
             num_chunks=max(1, math.ceil(want / per)), chunk_size=per)
-    formulas = {str(d.material_id): str(d.formula_pretty) for d in docs[:want]}
+    docs = docs[:want]
+    formulas = {str(d.material_id): str(d.formula_pretty) for d in docs}
+    energy = {str(d.material_id): getattr(d, "formation_energy_per_atom", None) for d in docs}
     ids, X = composition_matrix(formulas)
     feature_data = {mid: X[j] for j, mid in enumerate(ids)}
+    # formation energy per atom -> regression target
+    targets = {mid: float(energy[mid]) for mid in ids if energy.get(mid) is not None}
+    targets = targets or None
     return DatasetBundle("materials_project", "inorganic", "1d", True,
-                         feature_data=feature_data, meta={"n": len(ids)})
+                         feature_data=feature_data, targets=targets,
+                         identifiers={mid: formulas[mid] for mid in ids}, identifier_kind="formula",
+                         task_type="regression" if targets else None,
+                         target_name="formation_energy_per_atom" if targets else None,
+                         meta={"n": len(ids)})
 
 
 # ── reactions (n-D) ─────────────────────────────────────────────────────────
@@ -201,10 +257,20 @@ def load_openpolymer26(limit=DEFAULT_LIMIT):
     df = df.dropna(subset=["formula"]).reset_index(drop=True)
     idx = _subsample_indices(len(df), limit)
     formulas = {str(df["id"].iloc[i]): str(df["formula"].iloc[i]) for i in idx}
+    row_of_id = {str(df["id"].iloc[i]): i for i in idx}
     ids, X = composition_matrix(formulas)
     feature_data = {pid: X[j] for j, pid in enumerate(ids)}
+    # per-cluster DFT energy (records column ``y``) -> regression target
+    targets = None
+    if "y" in df.columns:
+        yv = pd.to_numeric(df["y"], errors="coerce")
+        targets = {pid: float(yv.iloc[row_of_id[pid]]) for pid in ids}
     return DatasetBundle("openpolymer26", "polymer", "1d", True,
-                         feature_data=feature_data, meta={"n": len(ids)})
+                         feature_data=feature_data, targets=targets,
+                         identifiers={pid: formulas[pid] for pid in ids}, identifier_kind="formula",
+                         task_type="regression" if targets else None,
+                         target_name="y" if targets else None,
+                         meta={"n": len(ids)})
 
 
 # ── registry ────────────────────────────────────────────────────────────────
@@ -218,6 +284,14 @@ REGISTRY: Dict[str, Callable] = {
     "moleculenet_bace": lambda limit=DEFAULT_LIMIT: load_moleculenet("bace", limit),
     "moleculenet_bbbp": lambda limit=DEFAULT_LIMIT: load_moleculenet("bbbp", limit),
     "moleculenet_esol": lambda limit=DEFAULT_LIMIT: load_moleculenet("esol", limit),
+    "moleculenet_freesolv": lambda limit=DEFAULT_LIMIT: load_moleculenet("freesolv", limit),
+    "moleculenet_lipophilicity": lambda limit=DEFAULT_LIMIT: load_moleculenet("lipophilicity", limit),
+    "moleculenet_clintox": lambda limit=DEFAULT_LIMIT: load_moleculenet("clintox", limit),
+    "moleculenet_hiv": lambda limit=DEFAULT_LIMIT: load_moleculenet("hiv", limit),
+    "moleculenet_tox21": lambda limit=DEFAULT_LIMIT: load_moleculenet("tox21", limit),
+    "moleculenet_sider": lambda limit=DEFAULT_LIMIT: load_moleculenet("sider", limit),
+    "moleculenet_muv": lambda limit=DEFAULT_LIMIT: load_moleculenet("muv", limit),
+    "moleculenet_qm8": lambda limit=DEFAULT_LIMIT: load_moleculenet("qm8", limit),
     # inorganic crystals / MOFs
     "qmof": lambda limit=None: load_qmof(limit),
     "omol25": lambda limit=DEFAULT_LIMIT: load_omol25(limit),
