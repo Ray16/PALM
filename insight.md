@@ -88,51 +88,85 @@ they look; leakage-minimized splits are a stronger generalization test.
 
 ---
 
-## 5. The feature space is not neutral — routing beats hand-picking
+## 5. The feature space is not neutral — but the honest gain is small and specific
 
-Which representation you featurize with changes how clean a split *can* be. The
-trap: a representation that makes everything mutually dissimilar yields trivially
-low leakage and a useless (un-learnable) split. So the feature sweep
-(`feature_sweep.py`) selects under a **predictive-validity gate** — a
-representation qualifies only if a model on a *random* split clears a floor
-(R² ≥ 0.2 / AUC ≥ 0.55); among survivors, pick lowest OOD leakage.
+*(This section was rewritten after hardening the pipeline — see §5a for what
+changed and why the first-pass numbers were wrong.)*
 
-**Result (450/455 runs, triplicate).** Routing each dataset to its learned-best
-representation cuts OOD leakage **10.6% on average** vs the field-default
-ECFP-1024 / MAGPIE — at equal-or-better predictive validity (the gate guarantees
-it). **The hardcoded default was suboptimal on 11 of 14 datasets.** That is the
-quantitative case for routing over hand-picking.
+The feature sweep (`feature_sweep.py`) featurizes each dataset with every
+candidate representation, then selects with three guards:
 
-| dataset | default | best (routed) | leakage Δ |
-|---|---|---|--:|
-| openpolymer26 | magpie | **mat2vec** | −33% |
-| moleculenet_clintox | ecfp1024 | **rdkit_descriptors** | −20% |
-| moleculenet_bbbp | ecfp1024 | **rdkit_descriptors** | −19% |
-| moleculenet_sider | ecfp1024 | **rdkit_descriptors** | −17% |
-| qmof | magpie | **mat2vec** | −16% |
-| materials_project | magpie | **mat2vec** | −12% |
-| moleculenet_hiv | ecfp1024 | **rdkit_descriptors** | −11% |
-| moleculenet_esol | ecfp1024 | **maccs** | −9% |
-| moleculenet_bace / lipophilicity | ecfp1024 | rdkit / maccs | −4–5% |
-| moleculenet_freesolv / muv / qm8 | ecfp1024 | *ecfp1024 stays best* | 0% |
+1. **Predictive-validity gate** — keep only spaces where a model on a *random*
+   split clears a floor (R² ≥ 0.2 / AUC ≥ 0.55), so a space can't win by being
+   uninformative.
+2. **OOD-prediction guard** — among gated spaces, drop any whose *held-out* metric
+   is materially worse than the best (tol 0.03), so we don't trade real signal for
+   a cleaner-looking split.
+3. **Reference-space leakage + significance margin** — score every split's leakage
+   in one fixed space (ECFP / MAGPIE) so candidates are comparable, and only
+   override the default when the win exceeds `max(5%, pooled-std)`.
 
-Three lessons:
+**Result (450/455 runs, triplicate).** Under fair, noise-aware selection, routing
+beats the ECFP/MAGPIE default on **only 2 of 14 datasets** — and both are real,
+validated by *better* OOD prediction, not just lower leakage:
 
-- **The gate earns its keep.** On esol, `rdkit_descriptors` is the *most*
-  predictive representation (random-split R² 0.88) but also the *leakiest*
-  (0.261) — so it is correctly rejected in favor of `maccs` (0.158). Lowest
-  leakage alone would have picked a worse split; the gate + objective together
-  pick the clean-*and*-meaningful one.
-- **Materials: mat2vec > MAGPIE everywhere** (−12 to −33%). Learned elemental
-  embeddings carve cleaner composition boundaries than hand-built MAGPIE stats.
-- **ECFP-1024 survives only on freesolv, muv, qm8** — the dense / high-redundancy
-  molecule sets. This dovetails with §2: where near-duplicates dominate, the
-  high-resolution bit-vector is exactly the right space, and it's also where
-  *hypergraph* wins the engine choice. Redundancy is the common thread.
+| dataset | default | routed | ref-leakage Δ | OOD metric (default → routed) |
+|---|---|---|--:|---|
+| moleculenet_bace | ecfp1024 | **chemberta** | −6.5% | 0.60 → **0.81** |
+| qmof | magpie | **mat2vec** | −8.5% | 0.33 → **0.35** |
 
-The learned table lives in `data/feature_heuristics.json`; the router
-(`data/routing.py`) consults it (`per_dataset` → `per_entity_type` → default),
-with the per-type fallback being **maccs** (molecule) and **mat2vec** (material).
+Everything else falls back to the default — ECFP is the right choice for **10/11**
+molecule sets, MAGPIE for 2/3 material sets.
+
+**The guard prevented two actively harmful picks** the naive version would have
+made:
+
+- **openpolymer26 → mat2vec** looked like the biggest win (−14% ref-leakage, −33%
+  in the buggy first pass) — but its OOD R² *collapses to −0.28* (worse than
+  predicting the mean). Cleaner split, un-generalizable model. Correctly rejected.
+- **moleculenet_sider → chemberta** (−11% leakage) also lowers OOD performance →
+  rejected; ECFP kept.
+
+Lessons:
+
+- **ECFP-1024 is a genuinely strong default for molecules.** Once leakage is
+  scored fairly and noise is accounted for, the field default is hard to beat —
+  it wins or ties 10 of 11 sets. The interesting exceptions are informative:
+  **bace** rewards a semantic embedding (ChemBERTa), consistent with its being a
+  single-target binding task where substructure bits alone under-describe.
+- **Materials: mat2vec helps on qmof** (cleaner *and* better-predicting) but not
+  universally — the "mat2vec beats MAGPIE everywhere" claim from the first pass
+  was an artifact (see §5a).
+- **A lower leakage number is not a better split** unless the model still
+  generalizes. Two of the biggest raw leakage drops were the *worst* choices.
+
+Table: `data/feature_heuristics.json`; router `data/routing.py`
+(`per_dataset` → `per_entity_type` → default). Per-type fallback (minimax regret):
+**ecfp1024** (molecule), **mat2vec** (material).
+
+## 5a. Why the first-pass feature results were wrong (and what fixed them)
+
+The initial sweep reported routing winning **11/14 datasets at −10.6% mean
+leakage**. That was mostly artifact. Three bugs, three fixes:
+
+- **Circular objective.** Leakage was measured *inside each candidate's own
+  space*, so a 0.16 in maccs-space was compared to a 0.17 in ecfp-space — not the
+  same ruler. *Fix:* score every split's leakage in one fixed **reference space**
+  (`scaled_lpi(X_ref, labels)`). Under a common ruler, maccs's esol split went from
+  looking cleaner (0.156) to actually leakier (0.207).
+- **No significance test + shared rows.** All three "seeds" split the *same* rows,
+  so deterministic methods had zero variance and any tiny difference read as a
+  win. *Fix:* each seed draws a different subsample, and a win must exceed the
+  pooled std.
+- **Leakage-only objective.** It ignored the OOD performance it had already
+  measured, so it happily picked un-generalizable spaces (openpolymer mat2vec).
+  *Fix:* the OOD-prediction guard above.
+
+The corrected pipeline is more conservative and more correct: it makes 2 confident
+recommendations, blocks 2 harmful ones, and otherwise trusts the default. The
+lesson for the router is that **feature routing helps in specific, verifiable
+cases, not as a blanket win** — and the machinery now proves each case rather than
+asserting it.
 
 ---
 
@@ -159,7 +193,11 @@ with the per-type fallback being **maccs** (molecule) and **mat2vec** (material)
 - Weighted balancing (sample-count vs unique-entity) — the one axis where the
   paper's Butina still beats PALM on realized fractions; a `node_weights`
   pass-through would close it.
-- **[answered, §5]** Routing to learned-best features lowers OOD leakage 10.6%
-  mean at equal predictive validity. Next: re-run the *full* master split-sweep
-  with `load_dataset(route=True)` to measure the downstream effect on the
-  generalization gap, not just leakage.
+- **[answered, §5]** Under fair, noise-aware selection, feature routing is a
+  *specific* win, not a blanket one — 2/14 datasets (bace→chemberta, qmof→mat2vec),
+  both validated by better OOD prediction; the default is right elsewhere. Next:
+  re-run the *full* master split-sweep with `load_dataset(route=True)` to confirm
+  the two routed picks also help the downstream generalization gap end-to-end.
+- Does ChemBERTa help beyond bace if given a better pooling / a fine-tuned
+  variant? It never wins elsewhere — is that the representation or the (frozen,
+  mean-pooled) usage?

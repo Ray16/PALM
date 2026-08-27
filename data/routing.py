@@ -43,6 +43,10 @@ FEATURE_CANDIDATES: Dict[str, List[str]] = {
 }
 FEATURE_DEFAULTS = {t: c[0] for t, c in FEATURE_CANDIDATES.items()}
 
+# below this detection confidence, the router flags for agent verification rather
+# than silently trusting the sniffed entity type.
+CONF_THRESHOLD = 0.6
+
 # feature_set name -> the underlying compute_*_features set name (None = special path)
 _MOL_SET = {"maccs": "maccs_keys", "rdkit_descriptors": "rdkit_descriptors",
             "chemberta": "chemberta_embedding", "physicochemical": "physicochemical"}
@@ -181,23 +185,34 @@ def _log_override(name, routing: Routing, override: dict):
 def route(name: Optional[str] = None, identifiers: Optional[Dict] = None,
           entity_type: Optional[str] = None, target_property: Optional[str] = None,
           override: Optional[dict] = None, heuristics: Optional[dict] = None,
-          log: bool = True) -> Routing:
+          log: bool = True, strict: bool = False) -> Routing:
     """Decide (entity_type, feature_set) for a dataset.
 
     Precedence: ``override`` (LLM, logged) → learned heuristics → type default.
     ``entity_type`` may be passed directly (e.g. from a known ``identifier_kind``)
-    to skip detection; otherwise it is sniffed from ``identifiers``.
+    to skip detection; otherwise it is sniffed from ``identifiers``. When detection
+    is low-confidence the returned ``reason`` is flagged for agent verification;
+    ``strict=True`` raises instead of guessing.
     """
+    low_conf = ""
     if entity_type is None:
         if not identifiers:
             raise ValueError("route: need identifiers or an explicit entity_type")
-        entity_type, conf, _ = detect_entity_type(list(identifiers.values()))
+        entity_type, conf, evidence = detect_entity_type(list(identifiers.values()))
+        if entity_type == "unknown" or conf < CONF_THRESHOLD:
+            msg = f"low-confidence detection (type={entity_type}, conf={conf:.2f}, {evidence})"
+            if strict:
+                raise ValueError(f"route: {msg} — pass entity_type explicitly or an override")
+            low_conf = f"[VERIFY: {msg}] "
+            if entity_type == "unknown" and not (override and override.get("feature_set")):
+                # can't pick a featurizer for an unknown type — return flagged, unresolved
+                return Routing("unknown", "", "unresolved", low_conf + "agent must resolve", conf)
     else:
         conf = 1.0
 
     if override and override.get("feature_set"):
         r = Routing(override.get("entity_type", entity_type), override["feature_set"],
-                    "override", override.get("reason", "LLM override"), conf)
+                    "override", low_conf + override.get("reason", "LLM override"), conf)
         if log:
             _log_override(name, r, override)
         return r
@@ -206,12 +221,12 @@ def route(name: Optional[str] = None, identifiers: Optional[Dict] = None,
                  name, entity_type, target_property)
     if fs:
         return Routing(entity_type, fs, "heuristic",
-                       f"learned best for {name or entity_type}", conf)
+                       low_conf + f"learned best for {name or entity_type}", conf)
 
     default = FEATURE_DEFAULTS.get(entity_type)
     if not default:
         raise ValueError(f"route: no default featurizer for entity_type={entity_type!r}")
-    return Routing(entity_type, default, "default", "type default", conf)
+    return Routing(entity_type, default, "default", low_conf + "type default", conf)
 
 
 def describe_router() -> dict:

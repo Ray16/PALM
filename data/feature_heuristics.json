@@ -1,34 +1,40 @@
 {
   "per_dataset": {
-    "materials_project": "mat2vec",
-    "moleculenet_bace": "rdkit_descriptors",
-    "moleculenet_bbbp": "rdkit_descriptors",
-    "moleculenet_clintox": "rdkit_descriptors",
-    "moleculenet_esol": "maccs",
+    "materials_project": "magpie",
+    "moleculenet_bace": "chemberta",
+    "moleculenet_bbbp": "ecfp1024",
+    "moleculenet_clintox": "ecfp1024",
+    "moleculenet_esol": "ecfp1024",
     "moleculenet_freesolv": "ecfp1024",
-    "moleculenet_hiv": "rdkit_descriptors",
-    "moleculenet_lipophilicity": "maccs",
+    "moleculenet_hiv": "ecfp1024",
+    "moleculenet_lipophilicity": "ecfp1024",
     "moleculenet_muv": "ecfp1024",
     "moleculenet_qm8": "ecfp1024",
-    "moleculenet_sider": "rdkit_descriptors",
-    "moleculenet_tox21": "maccs",
-    "openpolymer26": "mat2vec",
+    "moleculenet_sider": "ecfp1024",
+    "moleculenet_tox21": "ecfp1024",
+    "openpolymer26": "magpie",
     "qmof": "mat2vec"
   },
   "per_entity_type": {
     "material": "mat2vec",
-    "molecule": "maccs"
+    "molecule": "ecfp1024"
   },
   "gate_floors": {
     "regression": 0.2,
     "classification": 0.55
   },
-  "provenance": {
-    "sweep": "PALM/benchmarks/results/feature_sweep.csv",
-    "rule": "min OOD leakage among feature spaces passing the random-split predictive gate; tie-break higher gate metric",
+  "selection": {
+    "objective": "min reference-space leakage among gated spaces",
+    "gate": "random-split test >= floor",
+    "ood_tolerance": 0.03,
+    "significance_margin_rel": 0.05,
+    "per_type_rule": "minimax regret",
     "ood_methods": [
       "hypergraph",
       "lowrank"
     ]
+  },
+  "provenance": {
+    "sweep": "PALM/benchmarks/results/feature_sweep.csv"
   }
 }
