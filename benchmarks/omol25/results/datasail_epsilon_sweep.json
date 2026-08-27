@@ -1,0 +1,38 @@
+{
+  "uma_k300_eps0.05": {
+    "time_s": 114.6,
+    "test_frac": 0.24,
+    "lpi": 0.35885291857668233,
+    "status": "ok"
+  },
+  "nonuma_k300_eps0.05": {
+    "time_s": 1011.4,
+    "test_frac": 0.19,
+    "lpi": 0.25951301510828817,
+    "status": "ok"
+  },
+  "uma_k500_eps0.05": {
+    "time_s": 619.5,
+    "test_frac": 0.24,
+    "lpi": 0.37035126100084503,
+    "status": "ok"
+  },
+  "nonuma_k500_eps0.05": {
+    "time_s": 1512.1,
+    "test_frac": 0.19,
+    "lpi": 0.307828051608831,
+    "status": "ok"
+  },
+  "uma_k500_eps0.02": {
+    "time_s": 611.3,
+    "test_frac": 0.216,
+    "lpi": 0.34235280121008493,
+    "status": "ok"
+  },
+  "nonuma_k500_eps0.02": {
+    "time_s": 1489.5,
+    "test_frac": 0.197,
+    "lpi": 0.31663208598863535,
+    "status": "ok"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "n": 2000,
+  "kernel": "cosine (validated)",
+  "lpi_random": 0.3196835365304609,
+  "datasail": {
+    "lpi": 0.21154566665551178,
+    "time_s": 136.8,
+    "test_frac": 0.16
+  },
+  "lowrank": {
+    "lpi": 0.25653621547922933,
+    "test_frac": 0.2
+  }
+}

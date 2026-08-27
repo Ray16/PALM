@@ -1,1 +1,1 @@
-"""PALM: config-driven data splitting pipeline for material/molecule/biomolecule/gene datasets."""
+"""PALM — leakage-minimizing dataset splitters (hypergraph + low-rank). See PALM.splitters; DataSAIL and the config-driven pipeline live in PALM.benchmarks as baselines."""

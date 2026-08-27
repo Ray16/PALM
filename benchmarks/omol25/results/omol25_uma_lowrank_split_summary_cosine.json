@@ -1,0 +1,18 @@
+{
+  "n": 100000,
+  "sigma": null,
+  "kernel": "cosine (validated)",
+  "lpi_random": 0.6560841323869508,
+  "lpi_native": 0.6474152906567787,
+  "lpi_lowrank_3way": 0.6064043797266542,
+  "lr_sizes": [
+    41710,
+    29050,
+    29240
+  ],
+  "native_sizes": [
+    41710,
+    29050,
+    29240
+  ]
+}

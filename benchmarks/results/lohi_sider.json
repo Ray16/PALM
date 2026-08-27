@@ -1,0 +1,13 @@
+{
+  "dataset": "sider",
+  "n": 1427,
+  "n_retained": 1426,
+  "discard_frac": 0.0007,
+  "hi_lpi": 0.2156,
+  "hi_time_s": 2.29,
+  "hi_test_frac": 0.1255,
+  "lowrank_lpi": 0.107,
+  "lowrank_time_s": 0.663,
+  "lowrank_test_frac": 0.1297,
+  "threshold": 0.4
+}

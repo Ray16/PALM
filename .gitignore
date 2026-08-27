@@ -228,3 +228,22 @@ report/*.aux
 report/*.out
 report/*.blg
 report/*.bbl
+
+# ── configured datasets (regenerable; too large / not for git) ──────────────
+data/tdc/
+data/qmof/
+data/materials_project/
+data/openpolymer26/
+# splitter-on-datasets run outputs (assignments can be large); summary.csv is kept
+data/split_results/assignments/
+
+# ── migrated benchmark caches / large results (regenerable) ─────────────────
+benchmarks/**/__pycache__/
+benchmarks/omol25/_cache_uma/
+benchmarks/omol25/_cache/
+benchmarks/omol25/results/*.parquet
+benchmarks/**/*.npy
+benchmarks/**/*.npz
+
+# nested Overleaf manuscript repo (managed separately; not a submodule)
+presentation/palm_manuscript/

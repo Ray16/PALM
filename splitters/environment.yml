@@ -1,0 +1,39 @@
+# Conda environment for the PALM splitters package.
+#
+#   conda env create -f PALM/splitters/environment.yml
+#   conda activate palm-splitters
+#
+# GPU is optional but recommended: the hypergraph / graph / low-rank backends use
+# torch and fall back to CPU (sklearn) automatically when no CUDA device is
+# present. The core splitters run on numpy 1.26 through 2.5 (verified with torch
+# 2.10 + mtkahypar 1.6 + scikit-learn 1.6). The dataset extras (pymatgen/mp-api)
+# pull modern numpy>=2.4 / scipy>=1.15, which the splitters tolerate.
+name: palm-splitters
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.10,<3.13
+  - pip
+  - numpy>=1.26
+  - scipy>=1.13
+  - scikit-learn>=1.6
+  - pandas>=2.0
+  - matplotlib>=3.7
+  - joblib>=1.3
+  - pip:
+      # core: torch (GPU build resolved by pip for your CUDA), Mt-KaHyPar, RDKit
+      - torch>=2.1
+      - mtkahypar>=1.6
+      - rdkit>=2023.9
+      # optional extras used by the adapters / benchmarks / dataset loaders:
+      #   datasail        -> the "datasail" splitter adapter + head-to-head benchmarks
+      #   PyTDC           -> Therapeutics Data Commons loaders (needs LD_LIBRARY_PATH=$CONDA_PREFIX/lib)
+      #   mp-api          -> Materials Project (needs MP_API_KEY); pulls scipy>=1.15
+      #   huggingface_hub + pyarrow -> OMol25 / OpenPolymer26 parquet streaming
+      #   ase             -> OMol25 / QMOF structure parsing
+      # - datasail
+      # - PyTDC
+      # - mp-api
+      # - huggingface_hub
+      # - pyarrow
+      # - ase

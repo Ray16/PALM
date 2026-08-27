@@ -1,0 +1,32 @@
+{
+  "uma_k100": {
+    "time_s": 9.9,
+    "test_frac": 0.1635,
+    "lpi": 0.25
+  },
+  "nonuma_k100": {
+    "time_s": 6.1,
+    "test_frac": 0.142,
+    "lpi": 0.1947
+  },
+  "uma_k300": {
+    "time_s": 109.0,
+    "test_frac": 0.341,
+    "lpi": 0.4461
+  },
+  "nonuma_k300": {
+    "time_s": 1906.6,
+    "test_frac": 0.16,
+    "lpi": 0.2188
+  },
+  "uma_k500": {
+    "time_s": 546.1,
+    "test_frac": 0.36,
+    "lpi": 0.4636
+  },
+  "nonuma_k500": {
+    "time_s": 2359.6,
+    "test_frac": 0.16,
+    "lpi": 0.2534
+  }
+}

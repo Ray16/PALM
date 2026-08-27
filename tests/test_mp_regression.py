@@ -24,8 +24,8 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 # Ensure PALM package is importable (parent of PALM/)
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
-from PALM.config import EntityConfig, SplittingConfig, PipelineConfig
-from PALM.pipeline import run_pipeline
+from PALM.benchmarks.datasail_pipeline.config import EntityConfig, SplittingConfig, PipelineConfig
+from PALM.benchmarks.datasail_pipeline.pipeline import run_pipeline
 
 MP_API_KEY = "7538q37K3CJFCqUWwqYfTiLis7ZzPp2r"
 
@@ -149,7 +149,7 @@ def run_palm_pipeline():
 
 def train_and_compare():
     """Load features + splits + labels, train RF, compare R vs C1e metrics."""
-    from PALM.loaders import load_cif_dir
+    from PALM.benchmarks.datasail_pipeline.loaders import load_cif_dir
 
     # Load features (indexed by ASE formula)
     feat_path = os.path.join(OUTPUT_DIR, "features", "mp_regression", "material", "features.csv")
