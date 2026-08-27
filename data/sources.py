@@ -307,7 +307,31 @@ def list_datasets() -> List[str]:
     return list(REGISTRY)
 
 
-def load_dataset(name: str, limit: Optional[int] = DEFAULT_LIMIT) -> DatasetBundle:
+def load_dataset(name: str, limit: Optional[int] = DEFAULT_LIMIT,
+                 route: bool = False, feature_override: Optional[dict] = None) -> DatasetBundle:
+    """Load a featurized :class:`DatasetBundle`.
+
+    By default the loader's canonical featurizer is used (ECFP for molecules,
+    MAGPIE composition for materials) — this keeps the committed master benchmark
+    reproducible. Set ``route=True`` to instead featurize via the agent router
+    (``PALM.data.routing``): entity type is detected and the feature set is chosen
+    from the learned ``feature_heuristics.json`` (``per_dataset`` → per-type →
+    default). ``feature_override`` (e.g. ``{"feature_set": "maccs", "reason": ...}``)
+    forces a representation and is logged. No-op for n-D / identifier-less bundles.
+    """
     if name not in REGISTRY:
         raise KeyError(f"Unknown dataset '{name}'. Known: {list(REGISTRY)}")
-    return REGISTRY[name](limit)
+    bundle = REGISTRY[name](limit)
+    if (route or feature_override) and bundle.available and bundle.identifiers:
+        from .routing import apply_featurizer, route as route_features
+        r = route_features(name, identifiers=bundle.identifiers,
+                           entity_type={"smiles": "molecule", "formula": "material"}
+                           .get(bundle.identifier_kind),
+                           override=feature_override)
+        Xmap = apply_featurizer(r.entity_type, r.feature_set, bundle.identifiers)
+        bundle.feature_data = Xmap
+        if bundle.targets:
+            bundle.targets = {i: bundle.targets[i] for i in Xmap if i in bundle.targets}
+        bundle.meta.update(feature_set=r.feature_set, feature_source=r.source,
+                           feature_reason=r.reason)
+    return bundle

@@ -80,11 +80,36 @@ test_metric, gen_gap, n_train_lab, n_test_lab, extra, reason`
 Aggregate over `seed` (mean ± std) for headline numbers; `status != "ok"` rows
 carry a `reason`.
 
+## Feature routing (which representation → cleanest splits)
+
+Featurization is no longer hand-picked per loader. `feature_sweep.py` featurizes
+every dataset with each candidate representation (molecules: ecfp1024 / maccs /
+rdkit_descriptors / chemberta; materials: magpie / mat2vec), runs `random` (the
+gate) + `hypergraph` + `lowrank` × triplicate, and `derive_heuristics.py` reduces
+it under a **predictive-validity gate** (keep only representations where a model
+on a random split still learns; among those pick lowest OOD leakage) into
+`data/feature_heuristics.json`.
+
+The agent-ready router `PALM.data.routing` then chooses features
+(`override → learned heuristic → type default`); `describe_router()` exposes it to
+an MCP/agent, and LLM overrides are logged to `data/routing_overrides.jsonl`.
+Opt in per load: `load_dataset(name, route=True)` (or `feature_override={...}`).
+
+```bash
+CUDA_VISIBLE_DEVICES=<gpu> LD_LIBRARY_PATH=/homes/rzhu/miniforge3/envs/palm/lib \
+/homes/rzhu/miniforge3/envs/palm/bin/python -m PALM.benchmarks.master.feature_sweep --seeds 0 1 2
+/homes/rzhu/miniforge3/envs/palm/bin/python -m PALM.benchmarks.master.derive_heuristics
+```
+
+Result: routing to the learned-best representation cut OOD leakage **10.6% mean**
+vs the ECFP/MAGPIE default (suboptimal on 11/14 datasets) — see `../../insight.md` §5.
+
 ## Extending
 
 - **New dataset:** add a loader to `PALM/data/sources.py` returning a
-  `DatasetBundle` (set `targets` + `task_type` to get the gap layer) and register
-  it — the sweep picks it up automatically.
+  `DatasetBundle` (set `targets` + `task_type` to get the gap layer; set
+  `identifiers` + `identifier_kind` to join the feature sweep + router) and
+  register it — the sweep picks it up automatically.
 - **New splitter:** register it in `PALM.splitters`; add its name to
   `METHODS_1D` / `METHODS_ND` in `run_benchmark.py`.
 - **CheMixHub gap layer:** re-clone `chemcognition-lab/chemixhub`, then wire each

@@ -1,0 +1,34 @@
+{
+  "per_dataset": {
+    "materials_project": "mat2vec",
+    "moleculenet_bace": "rdkit_descriptors",
+    "moleculenet_bbbp": "rdkit_descriptors",
+    "moleculenet_clintox": "rdkit_descriptors",
+    "moleculenet_esol": "maccs",
+    "moleculenet_freesolv": "ecfp1024",
+    "moleculenet_hiv": "rdkit_descriptors",
+    "moleculenet_lipophilicity": "maccs",
+    "moleculenet_muv": "ecfp1024",
+    "moleculenet_qm8": "ecfp1024",
+    "moleculenet_sider": "rdkit_descriptors",
+    "moleculenet_tox21": "maccs",
+    "openpolymer26": "mat2vec",
+    "qmof": "mat2vec"
+  },
+  "per_entity_type": {
+    "material": "mat2vec",
+    "molecule": "maccs"
+  },
+  "gate_floors": {
+    "regression": 0.2,
+    "classification": 0.55
+  },
+  "provenance": {
+    "sweep": "PALM/benchmarks/results/feature_sweep.csv",
+    "rule": "min OOD leakage among feature spaces passing the random-split predictive gate; tie-break higher gate metric",
+    "ood_methods": [
+      "hypergraph",
+      "lowrank"
+    ]
+  }
+}
