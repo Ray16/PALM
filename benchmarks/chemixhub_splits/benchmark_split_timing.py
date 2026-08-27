@@ -128,18 +128,24 @@ def plot(df):
     x = np.arange(len(df)); w = 0.26
 
     fig, ax = plt.subplots(figsize=(15, 6))
+    # three non-overlapping grouped bars — the full-vs-full equal-footing
+    # comparison: every engine gets the identical embedding input and runs its
+    # complete production pipeline end-to-end.
     ax.bar(x - w, df["butina"] * 1e3, w, label="Butina — paper chem-OOD", color=C_BUTINA)
     ax.bar(x, df["hypergraph"] * 1e3, w, label="Hypergraph (full — single Mt-KaHyPar cut)", color=C_HYPER)
-    ax.bar(x + w, df["lowrank"] * 1e3, w, label="Low-rank (full — +kmeans++/4×restart/FM)", color=C_LOWRANK)
-    # core primitive as a reference tick inside the low-rank bar (not equal footing)
-    ax.bar(x + w, df["lowrank_core"] * 1e3, w, color="#2b6b3f", alpha=0.9,
-           label="Low-rank core only (Nyström+1 assign; OMol25-style, ref)")
+    ax.bar(x + w, df["lowrank"] * 1e3, w, label="Low-rank (full — Nyström + 4×restart Lloyd + FM)", color=C_LOWRANK)
     ax.set_yscale("log")
+    # headroom above the tallest bar so nothing is clipped and the legend (placed
+    # above the axes) never overlaps a bar
+    top = float(df[["butina", "hypergraph", "lowrank"]].to_numpy().max()) * 1e3
+    ax.set_ylim(0.2, top * 2.5)
     ax.set_ylabel("partition time (ms, log scale) — lower is better", fontsize=12)
-    ax.set_title("CheMixHub chem-OOD partition time — equal footing is full vs full "
-                 "(featurization shared/excluded; best of 3, warm)", fontsize=12)
+    ax.set_title("CheMixHub chem-OOD partition time — full vs full "
+                 "(same embeddings in, each run end-to-end; featurization shared/excluded; best of 3, warm)",
+                 fontsize=12, pad=34)
     ax.set_xticks(x); ax.set_xticklabels(labels, fontsize=9)
-    ax.legend(fontsize=10, loc="upper left")
+    ax.legend(fontsize=9.5, loc="lower center", bbox_to_anchor=(0.5, 1.005),
+              ncol=3, framealpha=0.95, columnspacing=1.8)
     ax.grid(axis="y", which="both", alpha=0.3)
     fig.tight_layout()
     out = os.path.join(FIGS, "chemixhub_timing_bars.png")
@@ -150,13 +156,12 @@ def plot(df):
     o = df.sort_values("n_unique")
     for col, c, lab, style in (("butina", C_BUTINA, "Butina (full)", "o-"),
                                ("hypergraph", C_HYPER, "Hypergraph (full)", "o-"),
-                               ("lowrank", C_LOWRANK, "Low-rank (full)", "o-"),
-                               ("lowrank_core", "#2b6b3f", "Low-rank core (ref, not equal footing)", "o--")):
+                               ("lowrank", C_LOWRANK, "Low-rank (full)", "o-")):
         ax.plot(o["n_unique"], o[col] * 1e3, style, color=c, label=lab, ms=5, lw=1.2)
     ax.set_xscale("log"); ax.set_yscale("log")
     ax.set_xlabel("# unique mixtures (partition size)", fontsize=12)
     ax.set_ylabel("partition time (ms, log)", fontsize=12)
-    ax.set_title("Partition-time scaling (equal footing = the three solid 'full' curves)", fontsize=11)
+    ax.set_title("Partition-time scaling — full vs full (same embeddings in, each run end-to-end)", fontsize=11)
     ax.legend(fontsize=10); ax.grid(which="both", alpha=0.3)
     fig.tight_layout()
     out = os.path.join(FIGS, "chemixhub_timing_scaling.png")

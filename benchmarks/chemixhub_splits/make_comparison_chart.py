@@ -70,12 +70,18 @@ def plot_lpi(tasks, data):
     ax.bar(x + 0.5 * w, col("hypergraph"), w, label="Hypergraph (PALM)", color=C_HYPER)
     ax.bar(x + 1.5 * w, col("lowrank"), w, label="Low-rank (PALM)", color=C_LOWRANK)
 
-    # flag the degenerate Butina cluster (single cluster -> empty val/test)
+    # flag the degenerate Butina cluster (single cluster -> empty val/test).
+    # the Butina bar sits at ~0 here, so its slot is empty; center the label in
+    # that gap with a white background box so it never touches the neighbouring
+    # (tall) grey/blue bars.
     for i, k in enumerate(tasks):
         b = data[k].get("butina", {})
         if b.get("n_clusters", 99) <= 1:
-            ax.text(x[i] - 0.5 * w, 0.01, "degenerate\n(1 cluster)", rotation=90, ha="center",
-                    va="bottom", fontsize=6.5, color="#b5651d", fontweight="bold")
+            ax.text(x[i] - 0.5 * w, 0.30, "Butina degenerate\n(1 cluster)", rotation=90,
+                    ha="center", va="center", fontsize=6.5, color="#b5651d",
+                    fontweight="bold",
+                    bbox=dict(boxstyle="round,pad=0.2", facecolor="white",
+                              edgecolor="#b5651d", linewidth=0.6, alpha=0.9))
 
     ax.set_ylabel(r"$L(\pi)$  — residual chemical leakage (lower is better)", fontsize=12)
     ax.set_title("CheMixHub chem-OOD splits: PALM engines vs the paper's Butina split\n"
