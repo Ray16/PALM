@@ -9,8 +9,8 @@ from __future__ import annotations
 import numpy as np
 
 from PALM.lowrank import (LowRankSplitter, balanced_lloyd, factor_leakage,
-                          fm_polish, lowrank_leakage, nystrom_features,
-                          realized_imbalance)
+                          fm_polish, interpolate_to_random, lowrank_leakage,
+                          nystrom_features, realized_imbalance)
 from PALM.splitters import SplitSpec, split
 
 
@@ -74,6 +74,22 @@ def test_balance_slack_tradeoff():
     assert realized_imbalance(lab_slack, [8, 2]) <= 0.20 + 1e-6
     # more freedom -> leakage no worse (usually strictly lower)
     assert factor_leakage(B, lab_slack, 2) <= factor_leakage(B, lab_exact, 2) + 1e-6
+
+
+def test_hardness_dial_monotone():
+    # leakage should rise monotonically as hardness falls (split -> random),
+    # while block sizes stay exact (permutation preserves them).
+    X = _blobs()
+    B, _ = nystrom_features(X, rank=64, seed=0)
+    hard = balanced_lloyd(B, [8, 2], seed=0)
+    prev = None
+    for alpha in (1.0, 0.75, 0.5, 0.25, 0.0):
+        lab = interpolate_to_random(hard, alpha, seed=0)
+        assert (lab == 1).sum() == (hard == 1).sum()           # sizes preserved exactly
+        L = factor_leakage(B, lab, 2)
+        if prev is not None:
+            assert L >= prev - 1e-6                              # lower alpha -> more leakage
+        prev = L
 
 
 def test_splitter_registered_and_runs():

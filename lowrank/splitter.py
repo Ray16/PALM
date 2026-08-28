@@ -21,7 +21,7 @@ from PALM.splitters.common.split_naming import assign_split_names
 
 from .nystrom import nystrom_features
 from .objective import factor_leakage
-from .optimize import balanced_lloyd, fm_polish
+from .optimize import balanced_lloyd, fm_polish, interpolate_to_random
 
 logger = logging.getLogger(__name__)
 
@@ -48,6 +48,10 @@ class LowRankSplitter(BaseSplitter):
         # back-compatible); >0 opens a (1 ± balance_slack) size corridor that both
         # the Lloyd assignment and the FM polish may exploit to lower leakage.
         balance_slack: float = 0.0
+        # controllable-hardness dial: None = hardest (fully optimized, default);
+        # in [0,1], 1 = hardest, 0 = random (easiest). Interpolates the split toward
+        # random, balance-preserving, so realized OOD difficulty is tunable.
+        hardness: Optional[float] = None
 
     def split(self, feature_data, spec: SplitSpec) -> SplitResult:
         p = self.params
@@ -76,6 +80,10 @@ class LowRankSplitter(BaseSplitter):
             best_labels, moves = fm_polish(B, best_labels, spec.splits, epsilon=fm_eps)
             best_obj = factor_leakage(B, best_labels, len(spec.splits))
             logger.info("  FM polish: %d moves, leakage=%.1f", moves, best_obj)
+
+        if p.hardness is not None:                 # controllable-hardness dial
+            best_labels = interpolate_to_random(best_labels, p.hardness, seed=spec.seed)
+            best_obj = factor_leakage(B, best_labels, len(spec.splits))
 
         assignment = assign_split_names(ids, best_labels, spec.splits, spec.names)
         leak = round(scaled_lpi(X, best_labels, metric=metric), 6) if n <= _LEAKAGE_MAX_N else None

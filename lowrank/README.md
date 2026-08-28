@@ -37,8 +37,15 @@ experiments/  balance_pareto.py — the leakage↔balance frontier
    but is *loose* — the split objective is robust to approximation error. The
    practical win is **adaptive/lower rank as a speed optimization** (drop
    256→64 at ~no leakage cost); the real leverage stays in Steps 1 & 3.
-3. **Controllable OOD-hardness (C)**: calibrate the knob to the measured
-   r(leakage, gap) law → `split(target_hardness=…)`.
+3. **Controllable OOD-hardness (C)** *(done — the flagship, validated)*: a
+   `hardness` dial ∈ [0,1] (1 = leakage-minimized/hardest, 0 = random/easiest)
+   via balance-preserving interpolation toward random (`interpolate_to_random`).
+   `experiments/hardness_control.py` validates it **controls the realized
+   generalization gap**: Spearman(hardness, gap) = **+0.90 to +1.00** within a
+   dataset (esol gap 0.35→0.84, bace 0.11→0.23, freesolv 0.26→0.71) — much cleaner
+   than the noisy cross-dataset r(leakage,gap)=−0.56. Each dataset gets a linear
+   calibration `gap ≈ b + a·α` you invert to request a target difficulty (slopes
+   are dataset-specific, so calibrate per dataset — the honest scope).
 
 ## Use
 ```python

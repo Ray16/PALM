@@ -40,6 +40,26 @@ def corridor_assign(scores, sizes, caps, floors):
     return lab
 
 
+def interpolate_to_random(labels, alpha, seed=0):
+    """Interpolate a split toward a random one, preserving exact block sizes.
+
+    The controllable-hardness dial (Step 3). ``alpha=1`` leaves the split unchanged
+    (hardest / lowest leakage); ``alpha=0`` fully randomizes it (easiest / highest
+    leakage, ~in-distribution). Permutes the labels of a ``(1-alpha)`` fraction of
+    points — a permutation keeps every block's size exact — so leakage rises
+    monotonically toward the random baseline as ``alpha`` falls.
+    """
+    labels = np.asarray(labels).copy()
+    n = len(labels)
+    alpha = float(np.clip(alpha, 0.0, 1.0))
+    n_shuffle = int(round((1.0 - alpha) * n))
+    if n_shuffle >= 2:
+        rng = np.random.default_rng(seed)
+        idx = rng.choice(n, n_shuffle, replace=False)
+        labels[idx] = rng.permutation(labels[idx])
+    return labels
+
+
 def balanced_lloyd(B, splits, epsilon=0.05, n_iter=25, init_labels=None, seed=0,
                    balance_slack=0.0):
     """Balanced-Lloyd minimization of the low-rank leakage in B-space.

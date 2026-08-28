@@ -13,7 +13,8 @@ registering into the shared `PALM.splitters` registry. Importing this package (o
 
 from .nystrom import nystrom_features, _kmeanspp_landmarks
 from .objective import factor_leakage, realized_imbalance
-from .optimize import balanced_lloyd, corridor_assign, fm_polish
+from .optimize import (balanced_lloyd, corridor_assign, fm_polish,
+                       interpolate_to_random)
 from .splitter import LowRankSplitter
 
 # ``lowrank_leakage`` kept as an alias for the factor-space objective (historical
@@ -23,6 +24,6 @@ lowrank_leakage = factor_leakage
 __all__ = [
     "nystrom_features", "_kmeanspp_landmarks",
     "factor_leakage", "lowrank_leakage", "realized_imbalance",
-    "balanced_lloyd", "corridor_assign", "fm_polish",
+    "balanced_lloyd", "corridor_assign", "fm_polish", "interpolate_to_random",
     "LowRankSplitter",
 ]
