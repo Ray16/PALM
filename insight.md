@@ -258,3 +258,41 @@ default wins.**
 - Does ChemBERTa help beyond bace if given a better pooling / a fine-tuned
   variant? It never wins elsewhere — is that the representation or the (frozen,
   mean-pooled) usage?
+
+---
+
+## 8. Systematic method comparison — PALM engines vs DataSAIL vs baselines
+
+The head-to-head across all 20 datasets (6 entity types), each featurized with its
+hand-picked default, triplicate — `benchmarks/master/COMPARISON.md`,
+`figures/compare_*.png`. Methods: PALM (`hypergraph`, `lowrank`, `graph`),
+`datasail`, external baselines (`astartes`, `lohi`, `scaffold`), `random`. DataSAIL
+and lohi are ILP-based and only run at n≤3000; DataSAIL now uses mmseqs2 for
+protein/RNA homology.
+
+| method | mean L(π) | coverage (datasets) | note |
+|---|--:|--:|---|
+| datasail | **0.208** | 7 | lowest — but O(n²)+ILP, **n≤3000 only** |
+| **lowrank** (PALM) | **0.213** | **20** | best among methods that scale; **11/20 wins** |
+| hypergraph (PALM) | 0.226 | 20 | wins high-redundancy sets |
+| graph (PALM) | 0.232 | 20 | |
+| lohi | 0.232 | 7 | molecule-only, ILP |
+| astartes | 0.317 | 20 | kmeans sampler ≈ random |
+| random | 0.320 | 21 | baseline |
+
+**Conclusion.** DataSAIL has marginally lower leakage *but only on the small
+subset its ILP can solve* (7 of 20 datasets). **lowrank is the best all-round
+splitter: it nearly matches DataSAIL's leakage while running on every dataset at
+any scale, and wins the most datasets outright (11/20).** hypergraph takes the
+high-redundancy sets. The external baselines are informative negatives: astartes'
+kmeans sampler barely beats random (it doesn't target cross-split similarity), and
+lohi — while a genuine leakage-minimizer — is molecule-only and ILP-bounded. The
+PALM engines are the only leakage-minimizers here that combine low leakage with
+scale and generality across all six entity types.
+
+### Baseline installation note
+mmseqs2 + cd-hit (`~/.local/bin`) and astartes + lohi (pip, `--no-deps` into the
+`palm` env) were installed despite the chronically-full local root disk by routing
+every conda/pip/HF cache and TMPDIR to NFS. The Nucleotide Transformer (RNA) is the
+one baseline still deferred — its ~2 GB download needs local scratch that isn't
+free.

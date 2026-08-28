@@ -450,10 +450,12 @@ def load_dataset(name: str, limit: Optional[int] = DEFAULT_LIMIT,
     bundle = REGISTRY[name](limit)
     if (route or feature_override) and bundle.available and bundle.identifiers:
         from .routing import apply_featurizer, route as route_features
+        # prefer the loader's explicit entity_type (protein/gene/mof/polymer); fall
+        # back to identifier-kind for molecule/material where it isn't set.
+        etype = bundle.entity_type or {"smiles": "molecule",
+                                       "formula": "material"}.get(bundle.identifier_kind)
         r = route_features(name, identifiers=bundle.identifiers,
-                           entity_type={"smiles": "molecule", "formula": "material"}
-                           .get(bundle.identifier_kind),
-                           override=feature_override)
+                           entity_type=etype, override=feature_override)
         Xmap = apply_featurizer(r.entity_type, r.feature_set, bundle.identifiers)
         bundle.feature_data = Xmap
         if bundle.targets:

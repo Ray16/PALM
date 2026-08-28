@@ -43,8 +43,12 @@ METHODS_1D = [
     ("graph",      dict(preset="deterministic")),
     ("lowrank",    dict()),
     ("datasail",   dict(max_sec=120)),
-    ("scaffold",   dict()),                     # only when SMILES are available
+    ("scaffold",   dict()),                     # SMILES only
+    ("astartes",   dict()),                     # external baseline (feature-based)
+    ("lohi",       dict()),                     # external baseline (SMILES only, ILP)
 ]
+SMILES_METHODS = {"scaffold", "lohi"}           # need bundle.smiles
+ILP_METHODS = {"datasail", "lohi"}              # O(n^2) / ILP -> cap by size
 METHODS_ND = [
     ("random",            dict()),
     ("hypergraph_nd",     dict(preset="deterministic", sim_threshold=0.6)),
@@ -123,17 +127,17 @@ def run(datasets, seeds, limit, split_geom, names, route=False):
         # method-outer so a deterministic split is computed once and reused; the
         # generalization-gap model still re-runs per seed.
         for method, params in methods:
-            if method == "scaffold":
+            if method in SMILES_METHODS:
                 if not bundle.smiles:
                     continue
                 data_m = bundle.smiles
-            elif method == "datasail" and n > DATASAIL_MAX_N:
-                rows.append(_row(dataset=name, category=cat, task_type=tt, kind=bundle.kind,
-                                 n=n, method=method, seed=seeds[0], status="skipped",
-                                 reason=f"n={n} > DATASAIL_MAX_N={DATASAIL_MAX_N}"))
-                continue
             else:
                 data_m = data
+            if method in ILP_METHODS and n > DATASAIL_MAX_N:
+                rows.append(_row(dataset=name, category=cat, task_type=tt, kind=bundle.kind,
+                                 n=n, method=method, seed=seeds[0], status="skipped",
+                                 reason=f"n={n} > DATASAIL_MAX_N={DATASAIL_MAX_N} (ILP too slow)"))
+                continue
 
             cached = None                       # (assignment, diagnostics) for deterministic reuse
             for seed in seeds:

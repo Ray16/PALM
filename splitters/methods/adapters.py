@@ -129,3 +129,80 @@ class ScaffoldSplitter(BaseSplitter):
 
         return self._result(assignment, spec, time.time() - t0,
                             n_scaffolds=len(scaffold_to_entities))
+
+
+@register("astartes")
+class AstartesSplitter(BaseSplitter):
+    description = "astartes clustering cold-split (KMeans sampler) — external leakage-min baseline"
+    arity = "1d"
+
+    @dataclass
+    class Params:
+        sampler: str = "kmeans"
+        metric: Optional[str] = None
+
+    def split(self, feature_data, spec: SplitSpec) -> SplitResult:
+        p = self.params
+        t0 = time.time()
+        ids, X = feature_matrix_from_dict(feature_data, min_rows=len(spec.splits))
+        n = len(ids)
+        metric = p.metric or choose_metric(X)
+        train_frac = spec.splits[0] / sum(spec.splits)
+        import astartes                                   # lazy optional dependency
+        out = astartes.train_test_split(np.asarray(X, dtype=float), train_size=train_frac,
+                                        sampler=p.sampler, random_state=spec.seed,
+                                        return_indices=True)
+        tr, te = out[-2], out[-1]                         # (..., idx_train, idx_test)
+        name_tr, name_te = spec.names[0], spec.names[-1]
+        assignment = {ids[int(i)]: name_tr for i in tr}
+        assignment.update({ids[int(i)]: name_te for i in te})
+        labels = [assignment[i] for i in ids]
+        leak = round(scaled_lpi(X, labels, metric=metric), 6) if n <= _LEAKAGE_MAX_N else None
+        return self._result(assignment, spec, time.time() - t0, metric=metric,
+                            sampler=p.sampler, leakage=leak)
+
+
+@register("lohi")
+class LohiSplitter(BaseSplitter):
+    description = "Lo-Hi 'Hi' split (no cross-split neighbours above a Tanimoto threshold)"
+    arity = "1d"
+
+    @dataclass
+    class Params:
+        similarity_threshold: float = 0.4
+
+    def split(self, entities, spec: SplitSpec) -> SplitResult:
+        """``entities``: ``{entity_id: SMILES}`` (molecule-only baseline)."""
+        p = self.params
+        t0 = time.time()
+        ids = list(entities)
+        smiles = [str(entities[i]) for i in ids]
+        tot = sum(spec.splits)
+        import lohi_splitter as lohi                      # lazy optional dependency
+        parts = lohi.hi_train_test_split(
+            smiles, similarity_threshold=p.similarity_threshold,
+            train_min_frac=0.9 * spec.splits[0] / tot,
+            test_min_frac=0.5 * spec.splits[-1] / tot, verbose=False)
+        train_idx, test_idx = parts[0], parts[1]
+        name_tr, name_te = spec.names[0], spec.names[-1]
+        assignment = {ids[int(i)]: name_tr for i in train_idx}
+        assignment.update({ids[int(i)]: name_te for i in test_idx})
+        # leakage on molecule-native ECFP-1024 / Tanimoto over the assigned entities
+        leak = None
+        assigned = [i for i in ids if i in assignment]
+        if 0 < len(assigned) <= _LEAKAGE_MAX_N:
+            from rdkit import Chem, RDLogger
+            from rdkit.Chem import AllChem
+            RDLogger.DisableLog("rdApp.*")
+            rows, labs = [], []
+            for i in assigned:
+                m = Chem.MolFromSmiles(str(entities[i]))
+                if m is None:
+                    continue
+                a = np.zeros(1024, dtype=np.float32)
+                a[list(AllChem.GetMorganFingerprintAsBitVect(m, 2, nBits=1024).GetOnBits())] = 1.0
+                rows.append(a); labs.append(assignment[i])
+            if rows:
+                leak = round(scaled_lpi(np.asarray(rows), labs, metric="tanimoto"), 6)
+        return self._result(assignment, spec, time.time() - t0,
+                            similarity_threshold=p.similarity_threshold, leakage=leak)
