@@ -80,29 +80,53 @@ test_metric, gen_gap, n_train_lab, n_test_lab, extra, reason`
 Aggregate over `seed` (mean ± std) for headline numbers; `status != "ok"` rows
 carry a `reason`.
 
-## Feature routing (which representation → cleanest splits)
+## Default featurizers per entity type  ← the canonical table
 
-Featurization is no longer hand-picked per loader. `feature_sweep.py` featurizes
-every dataset with each candidate representation (molecules: ecfp1024 / maccs /
-rdkit_descriptors / chemberta; materials: magpie / mat2vec), runs `random` (the
-gate) + `hypergraph` + `lowrank` × triplicate, and `derive_heuristics.py` reduces
-it under a **predictive-validity gate** (keep only representations where a model
-on a random split still learns; among those pick lowest OOD leakage) into
-`data/feature_heuristics.json`.
+Each entity type has one **hand-picked default featurizer**, chosen from the
+feature sweep (`feature_sweep.py` → `derive_heuristics.py`) under a
+**predictive-validity gate** (a representation qualifies only if a model on a
+*random* split still learns; among those, pick lowest reference-space leakage that
+doesn't hurt held-out prediction). Full evidence + tradeoff figures:
+`../../insight.md` §5/§5b, `figures/feature_tradeoff_*.png`.
 
-The agent-ready router `PALM.data.routing` then chooses features
-(`override → learned heuristic → type default`); `describe_router()` exposes it to
-an MCP/agent, and LLM overrides are logged to `data/routing_overrides.jsonl`.
-Opt in per load: `load_dataset(name, route=True)` (or `feature_override={...}`).
+| entity type | **default featurizer** | candidates considered | validated per-dataset exception |
+|---|---|---|---|
+| **molecule** | **ECFP-1024** (Morgan r2, Tanimoto) | ecfp1024, maccs, rdkit_descriptors, chemberta | `moleculenet_bace` → chemberta |
+| **material** | **MAGPIE** composition | magpie, mat2vec | — |
+| **mof** | **MAGPIE** composition | magpie, mat2vec, linker_ecfp | `qmof` → mat2vec |
+| **polymer** | **MAGPIE** composition | magpie, mat2vec | — |
+| **protein** | **ESM2** (esm2_t30, 150M) | esm2, sequence_properties | — |
+| **gene / RNA** | **canonical k-mer** frequencies | canonical_kmer, kmer, nucleotide_composition (, nt*) | — |
+
+\* Nucleotide Transformer (`nt`) is a candidate but currently deferred (its ~2 GB
+download needs local scratch the full local disk lacks).
+
+The machine-readable version is **`data/feature_heuristics.json`**
+(`per_entity_type` = the defaults above; `per_dataset` = the exceptions). Recurring
+lesson: the leakage-cheaper embedding is repeatedly the *OOD-unsafe trap* (mat2vec
+on polymer, seq-props on protein, linker_ecfp on MOF, chemberta off-bace), so the
+robust default wins — a lower leakage number is not a better split unless the model
+still generalizes.
+
+### Using / regenerating the defaults
+
+```python
+from PALM.data.sources import load_dataset
+b = load_dataset("moleculenet_bace", route=True)   # -> chemberta (its exception)
+b.meta["feature_set"]                               # the featurizer actually used
+```
+
+The agent-ready router `PALM.data.routing` chooses features by
+`override → per_dataset exception → per_entity_type default`; `describe_router()`
+exposes the table to an MCP/agent, and LLM overrides are logged to
+`data/routing_overrides.jsonl`. To regenerate from scratch:
 
 ```bash
 CUDA_VISIBLE_DEVICES=<gpu> LD_LIBRARY_PATH=/homes/rzhu/miniforge3/envs/palm/lib \
 /homes/rzhu/miniforge3/envs/palm/bin/python -m PALM.benchmarks.master.feature_sweep --seeds 0 1 2
 /homes/rzhu/miniforge3/envs/palm/bin/python -m PALM.benchmarks.master.derive_heuristics
+/homes/rzhu/miniforge3/envs/palm/bin/python -m PALM.benchmarks.master.demonstrate_features
 ```
-
-Result: routing to the learned-best representation cut OOD leakage **10.6% mean**
-vs the ECFP/MAGPIE default (suboptimal on 11/14 datasets) — see `../../insight.md` §5.
 
 ## Extending
 

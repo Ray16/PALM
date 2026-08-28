@@ -34,7 +34,13 @@ HERE = os.path.dirname(__file__)
 HEURISTICS_PATH = os.path.join(HERE, "feature_heuristics.json")
 OVERRIDE_LOG = os.path.join(HERE, "routing_overrides.jsonl")
 
-# Candidate representations per entity type. First entry is the type default.
+# Candidate representations per entity type. FIRST ENTRY IS THE DEMONSTRATED
+# DEFAULT (via the feature sweep + predictive-validity gate; see
+# benchmarks/master/README.md "Default featurizers per entity type" and insight.md
+# §5/§5b). Validated per-dataset exceptions live in data/feature_heuristics.json
+# (currently: moleculenet_bace→chemberta, qmof→mat2vec).
+#   molecule→ecfp1024  material→magpie  mof→magpie  polymer→magpie
+#   protein→esm2 (150M) gene→canonical_kmer
 FEATURE_CANDIDATES: Dict[str, List[str]] = {
     "molecule": ["ecfp1024", "maccs", "rdkit_descriptors", "chemberta"],
     "material": ["magpie", "mat2vec"],   # matminer available after `pip install matminer pymatgen`
