@@ -231,9 +231,16 @@ report/*.bbl
 
 # ── configured datasets (regenerable; too large / not for git) ──────────────
 data/tdc/
-data/qmof/
+# qmof: 21 MB derived table is committed (figshare source is a flaky 392 MB zip)
+data/qmof/*
+!data/qmof/qmof.csv
 data/materials_project/
 data/openpolymer26/
+# new modalities (regenerable via data/download_all.py; raw downloads + prepared
+# records + feature arrays all excluded)
+data/genomic/
+data/oc22/
+data/lincs_l1000/
 # splitter-on-datasets run outputs (assignments can be large); summary.csv is kept
 data/split_results/assignments/
 

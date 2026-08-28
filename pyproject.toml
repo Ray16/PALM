@@ -50,12 +50,23 @@ splitters = [
 ]
 # Dataset loaders (PALM.data): optional per-source clients.
 datasets = [
-    "PyTDC",      # Therapeutics Data Commons
-    "mp-api",     # Materials Project (needs MP_API_KEY)
-    "ase",        # OMol25 / QMOF structure parsing
+    "PyTDC",         # Therapeutics Data Commons (tdc_*)
+    "mp-api",        # Materials Project (needs MP_API_KEY)
+    "ase",           # OMol25 / QMOF / OC22 structure parsing
+    "lmdb",          # OC22 IS2RE LMDB reading
+    "datasets",      # HuggingFace (genomic benchmarks)
+    "h5py",          # LINCS L1000 GCTX (HDF5) reading
+    "requests",      # direct-download loaders (qmof, oc22, lincs)
+]
+# Everything needed to fetch every dataset AND run the master benchmark in one
+# env: `pip install -e ".[benchmark]"`. See data/README.md for the full flow.
+benchmark = [
+    "palm[splitters,datasets,molecules,materials]",
+    "matplotlib",
 ]
 all = [
-    "palm[web,molecules,materials,bio,embeddings,splitters]",
+    "palm[web,molecules,materials,bio,embeddings,splitters,datasets]",
+    "matplotlib",
 ]
 dev = [
     "palm[all]",
