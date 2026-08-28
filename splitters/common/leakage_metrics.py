@@ -153,18 +153,5 @@ def macro_axis_lpi(records, axis_feature_maps, labels, block: int = 2048
     return macro, per_axis
 
 
-def factor_leakage(B: np.ndarray, labels: Sequence[int], n_blocks: int) -> float:
-    """Cross-block leakage in Nyström factor space: ``0.5(||s||^2 - sum_c ||p_c||^2)``.
-
-    Equals ``sum_{c<c'} p_c . p_c'`` ~= the exact cross-split similarity (self
-    pairs excluded). This is the quantity the low-rank optimizer minimizes.
-    """
-    import torch
-
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    Bt = torch.as_tensor(B, dtype=torch.float32, device=device)
-    lab = torch.as_tensor(np.asarray(labels), dtype=torch.long, device=device)
-    P = torch.zeros(n_blocks, Bt.shape[1], device=device, dtype=Bt.dtype)
-    P.index_add_(0, lab, Bt)
-    s = P.sum(0)
-    return 0.5 * float((s @ s) - (P * P).sum())
+# NOTE: ``factor_leakage`` (the low-rank factor-space objective) moved to the
+# standalone package: ``PALM.lowrank.objective.factor_leakage``.

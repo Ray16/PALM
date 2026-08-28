@@ -111,32 +111,6 @@ def fiduccia_mattheyses_exact(labels, X, splits: Sequence[float], metric: str,
     return lab.cpu().numpy(), moves, {}
 
 
-def fiduccia_mattheyses_lowrank(B, labels, splits: Sequence[float], epsilon: float = 0.05,
-                                max_moves: Optional[int] = None, tol: float = 1e-6
-                                ) -> Tuple[np.ndarray, int]:
-    """FM polish on the low-rank factor-space leakage ``0.5(||s||^2 - sum||p_c||^2)``.
-
-    Returns ``(labels, n_moves)``.
-    """
-    import torch
-
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    Bt = torch.as_tensor(B, dtype=torch.float32, device=device)
-    n, k = Bt.shape[0], len(splits)
-    lab = torch.as_tensor(np.asarray(labels), dtype=torch.long, device=device)
-    self_sim = (Bt * Bt).sum(1)
-
-    P = torch.zeros(k, Bt.shape[1], device=device, dtype=Bt.dtype)
-    P.index_add_(0, lab, Bt)
-    S = Bt @ P.T
-
-    caps, floors = capacity_corridor(n, splits, epsilon)
-    caps_t = torch.as_tensor(caps, device=device)
-    floors_t = torch.as_tensor(floors, device=device)
-
-    def sim_col(v):
-        return Bt @ Bt[v]
-
-    lab, moves = fiduccia_mattheyses_loop(lab, S, sim_col, caps_t, floors_t,
-                                          self_term=self_sim, tol=tol, max_moves=max_moves)
-    return lab.cpu().numpy(), moves
+# NOTE: ``fiduccia_mattheyses_lowrank`` (factor-space FM polish) moved to the
+# standalone package: ``PALM.lowrank.optimize.fm_polish``. The shared move loop
+# (``fiduccia_mattheyses_loop``) stays here and is imported by that package.

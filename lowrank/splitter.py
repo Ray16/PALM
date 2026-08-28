@@ -1,0 +1,74 @@
+"""The low-rank leakage-minimizing splitter (registered as ``lowrank``).
+
+Graph-free: factorize ``S ~= B B^T`` (Nyström), then minimize cross-split leakage
+in the r-dim factor space with balanced-Lloyd restarts + a monotone FM polish —
+O(n·r), scales to millions of rows.
+"""
+
+from __future__ import annotations
+
+import logging
+import time
+from dataclasses import dataclass
+from typing import Optional
+
+import numpy as np
+
+from PALM.splitters.base import BaseSplitter, SplitResult, SplitSpec, register
+from PALM.splitters.common.feature_preparation import feature_matrix_from_dict
+from PALM.splitters.common.leakage_metrics import scaled_lpi
+from PALM.splitters.common.split_naming import assign_split_names
+
+from .nystrom import nystrom_features
+from .objective import factor_leakage
+from .optimize import balanced_lloyd, fm_polish
+
+logger = logging.getLogger(__name__)
+
+_LEAKAGE_MAX_N = 100_000
+
+
+@register("lowrank")
+class LowRankSplitter(BaseSplitter):
+    description = "Nyström low-rank factorization + balanced-Lloyd + FM (graph-free, O(n·r))"
+    arity = "1d"
+
+    @dataclass
+    class Params:
+        rank: int = 256
+        metric: Optional[str] = None
+        landmark: str = "kmeans++"
+        n_restarts: int = 4
+        n_iter: int = 25
+        fm: bool = True
+        fm_max_n: int = 200_000
+
+    def split(self, feature_data, spec: SplitSpec) -> SplitResult:
+        p = self.params
+        t0 = time.time()
+        ids, X = feature_matrix_from_dict(feature_data, min_rows=len(spec.splits))
+        n = len(ids)
+        B, metric = nystrom_features(X, rank=p.rank, metric=p.metric,
+                                     landmark=p.landmark, seed=spec.seed)
+        logger.info("  Low-rank: n=%d rank=%d metric=%s", n, B.shape[1], metric)
+
+        best_labels, best_obj = None, np.inf
+        for r in range(p.n_restarts):
+            labels = balanced_lloyd(B, spec.splits, epsilon=spec.epsilon,
+                                    n_iter=p.n_iter, seed=spec.seed + r)
+            obj = factor_leakage(B, labels, len(spec.splits))
+            if obj < best_obj:
+                best_obj, best_labels = obj, labels
+        logger.info("  Best-of-%d Lloyd leakage=%.1f", p.n_restarts, best_obj)
+
+        moves = 0
+        if p.fm and n <= p.fm_max_n:
+            best_labels, moves = fm_polish(B, best_labels, spec.splits, epsilon=spec.epsilon)
+            best_obj = factor_leakage(B, best_labels, len(spec.splits))
+            logger.info("  FM polish: %d moves, leakage=%.1f", moves, best_obj)
+
+        assignment = assign_split_names(ids, best_labels, spec.splits, spec.names)
+        leak = round(scaled_lpi(X, best_labels, metric=metric), 6) if n <= _LEAKAGE_MAX_N else None
+        return self._result(assignment, spec, time.time() - t0, metric=metric,
+                            rank=int(B.shape[1]), factor_leakage=round(float(best_obj), 3),
+                            fm_moves=int(moves), leakage=leak)
