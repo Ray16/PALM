@@ -26,7 +26,10 @@ experiments/  balance_pareto.py — the leakage↔balance frontier
 ## Method-development roadmap
 1. **Multi-objective core** *(done — `balance_slack`)*: the leakage↔balance
    tradeoff. `experiments/balance_pareto.py` shows ~30% slack cuts leakage 24–32%
-   (bace/esol/qmof) — see `balance_pareto.png`.
+   (bace/esol/qmof). **But** `experiments/balance_gap.py` shows this lower leakage
+   does *not* raise the generalization gap (flat/falling) — `balance_slack` is a
+   metric-tradeoff knob, **not** a difficulty controller (that's Step 3). See
+   `FINDINGS.md`.
 2. **Tight & adaptive approximation (A)** *(done — with an honest negative
    result)*: added `landmark="leverage"` (approx. ridge-leverage-score),
    `ridge` (regularized `W⁻¹ᐟ²`), and `energy` (adaptive rank). `experiments/
