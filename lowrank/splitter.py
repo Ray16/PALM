@@ -37,7 +37,9 @@ class LowRankSplitter(BaseSplitter):
     class Params:
         rank: int = 256
         metric: Optional[str] = None
-        landmark: str = "kmeans++"
+        landmark: str = "kmeans++"          # kmeans++ | uniform | leverage
+        ridge: float = 0.0                  # W^{-1/2} regularization (fraction of λ_max)
+        energy: Optional[float] = None      # adaptive rank: keep top spectral-energy fraction
         n_restarts: int = 4
         n_iter: int = 25
         fm: bool = True
@@ -53,7 +55,8 @@ class LowRankSplitter(BaseSplitter):
         ids, X = feature_matrix_from_dict(feature_data, min_rows=len(spec.splits))
         n = len(ids)
         B, metric = nystrom_features(X, rank=p.rank, metric=p.metric,
-                                     landmark=p.landmark, seed=spec.seed)
+                                     landmark=p.landmark, seed=spec.seed,
+                                     ridge=p.ridge, energy=p.energy)
         logger.info("  Low-rank: n=%d rank=%d metric=%s", n, B.shape[1], metric)
 
         # balance corridor: the tradeoff knob when set, else the spec's default

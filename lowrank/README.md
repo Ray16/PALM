@@ -27,8 +27,16 @@ experiments/  balance_pareto.py — the leakage↔balance frontier
 1. **Multi-objective core** *(done — `balance_slack`)*: the leakage↔balance
    tradeoff. `experiments/balance_pareto.py` shows ~30% slack cuts leakage 24–32%
    (bace/esol/qmof) — see `balance_pareto.png`.
-2. **Tight & adaptive approximation (A)**: ridge-leverage-score landmarks, adaptive
-   rank, ridge `W⁻¹ᐟ²`, + a Nyström-error→leakage-error bound.
+2. **Tight & adaptive approximation (A)** *(done — with an honest negative
+   result)*: added `landmark="leverage"` (approx. ridge-leverage-score),
+   `ridge` (regularized `W⁻¹ᐟ²`), and `energy` (adaptive rank). `experiments/
+   nystrom_fidelity.py` finds **the approximation is not the bottleneck**: across
+   bace/esol/qmof, reconstruction error keeps dropping with rank but **leakage
+   plateaus by rank ≈ 32–64** (rank 256 is overkill), and leverage-score / ridge
+   give negligible leakage benefit over k-means++. Net: the fidelity bound holds
+   but is *loose* — the split objective is robust to approximation error. The
+   practical win is **adaptive/lower rank as a speed optimization** (drop
+   256→64 at ~no leakage cost); the real leverage stays in Steps 1 & 3.
 3. **Controllable OOD-hardness (C)**: calibrate the knob to the measured
    r(leakage, gap) law → `split(target_hardness=…)`.
 

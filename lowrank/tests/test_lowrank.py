@@ -47,6 +47,22 @@ def test_fm_polish_monotone():
     assert lowrank_leakage is factor_leakage
 
 
+def test_nystrom_landmark_variants_and_ridge():
+    X = _blobs()
+    for lm in ("kmeans++", "uniform", "leverage"):
+        B, _ = nystrom_features(X, rank=64, landmark=lm, seed=0)
+        assert B.shape == (len(X), 64) and np.isfinite(B).all(), lm
+    Bd, _ = nystrom_features(X, rank=64, landmark="kmeans++", seed=0, ridge=0.01)
+    assert Bd.shape == (len(X), 64) and np.isfinite(Bd).all()
+
+
+def test_nystrom_adaptive_rank():
+    # blobs are ~k-dimensional: energy truncation should pick far fewer than rank cols
+    X = _blobs(n=400, d=16, k=4)
+    B, _ = nystrom_features(X, rank=128, energy=0.95, seed=0)
+    assert B.shape[0] == len(X) and B.shape[1] < 128
+
+
 def test_balance_slack_tradeoff():
     # opening the balance corridor should not INCREASE leakage vs exact sizes,
     # and should keep imbalance within the requested slack.
