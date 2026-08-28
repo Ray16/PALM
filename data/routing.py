@@ -38,8 +38,10 @@ OVERRIDE_LOG = os.path.join(HERE, "routing_overrides.jsonl")
 FEATURE_CANDIDATES: Dict[str, List[str]] = {
     "molecule": ["ecfp1024", "maccs", "rdkit_descriptors", "chemberta"],
     "material": ["magpie", "mat2vec"],   # matminer available after `pip install matminer pymatgen`
-    "biomolecule": ["sequence_properties", "esm2"],
-    "gene": ["kmer", "nt"],
+    "mof": ["magpie", "mat2vec", "linker_ecfp"],
+    "polymer": ["magpie", "mat2vec"],
+    "protein": ["esm2", "sequence_properties"],
+    "gene": ["canonical_kmer", "kmer", "nucleotide_composition"],  # + "nt" once local disk frees for the ~2GB download
 }
 FEATURE_DEFAULTS = {t: c[0] for t, c in FEATURE_CANDIDATES.items()}
 
@@ -52,6 +54,9 @@ _MOL_SET = {"maccs": "maccs_keys", "rdkit_descriptors": "rdkit_descriptors",
             "chemberta": "chemberta_embedding", "physicochemical": "physicochemical"}
 _MAT_SET = {"mat2vec": "mat2vec_embedding", "matminer": "matminer_elementproperty",
             "thermodynamic": "thermodynamic"}
+_PROT_SET = {"esm2": "esm_embedding", "sequence_properties": "sequence_properties"}
+_GENE_SET = {"canonical_kmer": "canonical_kmer_frequencies", "kmer": "kmer_frequencies",
+             "nucleotide_composition": "nucleotide_composition", "nt": "nt_embedding"}
 
 _AA = set("ACDEFGHIKLMNPQRSTVWY")
 _NT = set("ACGTU")
@@ -120,19 +125,28 @@ def apply_featurizer(entity_type: str, feature_set: str, identifiers: Dict) -> D
     """
     from .featurize import composition_matrix, ecfp_matrix
 
-    if entity_type == "molecule":
-        if feature_set in ("ecfp1024", "ecfp", "morgan1024"):
+    if entity_type == "molecule" or (entity_type == "mof" and feature_set == "linker_ecfp"):
+        if entity_type == "molecule" and feature_set not in ("ecfp1024", "ecfp", "morgan1024"):
+            from PALM.features.molecule_features import compute_molecule_features
+            df = compute_molecule_features(identifiers, feature_sets=[_MOL_SET[feature_set]])
+        else:                                          # ecfp1024, or mof linker_ecfp on linker SMILES
             ids = list(identifiers)
             kept, X = ecfp_matrix([identifiers[i] for i in ids])
             return {ids[k]: X[j] for j, k in enumerate(kept)}
-        from PALM.features.molecule_features import compute_molecule_features
-        df = compute_molecule_features(identifiers, feature_sets=[_MOL_SET[feature_set]])
-    elif entity_type == "material":
+    elif entity_type in ("material", "mof", "polymer"):
         if feature_set in ("magpie", "magpie_composition"):
             ids, X = composition_matrix(identifiers)
             return {ids[j]: X[j] for j in range(len(ids))}
         from PALM.features.material_features import compute_material_features
         df = compute_material_features(identifiers, feature_sets=[_MAT_SET[feature_set]])
+    elif entity_type == "protein":
+        from PALM.features.biomolecule_features import compute_biomolecule_features
+        # esm2_t30 (150M) is cached locally; avoids the 650M esm2_t33 default download
+        df = compute_biomolecule_features(identifiers, feature_sets=[_PROT_SET[feature_set]],
+                                          esm_model="esm2_t30")
+    elif entity_type == "gene":
+        from PALM.features.gene_features import compute_gene_features
+        df = compute_gene_features(identifiers, feature_sets=[_GENE_SET[feature_set]])
     else:
         raise ValueError(f"apply_featurizer: unsupported entity_type={entity_type!r}")
 

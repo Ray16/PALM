@@ -4,8 +4,12 @@
     "qmof": "mat2vec"
   },
   "per_entity_type": {
+    "gene": "canonical_kmer",
     "material": "magpie",
-    "molecule": "ecfp1024"
+    "mof": "magpie",
+    "molecule": "ecfp1024",
+    "polymer": "magpie",
+    "protein": "esm2"
   },
   "gate_floors": {
     "regression": 0.2,

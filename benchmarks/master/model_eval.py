@@ -63,11 +63,12 @@ def evaluate_gap(X: np.ndarray, y: np.ndarray, task_type: str,
                 return out
             clf = RandomForestClassifier(random_state=seed, **RF_KW).fit(Xtr, ytr)
             out["model"] = "rf_classifier"
-            if len(np.unique(yte)) >= 2:
+            n_cls = len(np.unique(ytr))
+            if n_cls == 2 and len(np.unique(yte)) >= 2:
                 out["metric_name"] = "roc_auc"
                 tr = roc_auc_score(ytr, clf.predict_proba(Xtr)[:, 1])
                 te = roc_auc_score(yte, clf.predict_proba(Xte)[:, 1])
-            else:                                   # test degenerate -> AUC undefined
+            else:                                   # multiclass, or degenerate test -> accuracy
                 out["metric_name"] = "accuracy"
                 tr = accuracy_score(ytr, clf.predict(Xtr))
                 te = accuracy_score(yte, clf.predict(Xte))

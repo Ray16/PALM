@@ -52,7 +52,15 @@ OUT = os.path.join(RESULTS, "feature_sweep.csv")
 METHODS = [("random", dict()), ("hypergraph", dict(preset="deterministic")),
            ("lowrank", dict())]
 
-_KIND_TO_TYPE = {"smiles": "molecule", "formula": "material"}
+_KIND_TO_TYPE = {"smiles": "molecule", "formula": "material",
+                 "protein": "protein", "nucleotide": "gene"}
+
+
+def _id_source(bundle, etype, feature_set):
+    """Which identifier map to featurize a candidate from (MOF linker uses SMILES)."""
+    if etype == "mof" and feature_set == "linker_ecfp":
+        return bundle.meta.get("linker_smiles") or {}
+    return bundle.identifiers
 
 FIELDS = ["dataset", "category", "entity_type", "feature_set", "dim", "n",
           "task_type", "method", "seed", "status", "leakage", "ref_leakage",
@@ -82,10 +90,10 @@ def run(datasets, seeds, pool_limit, rep_limit, split_geom, names):
                              method="-", status="skipped", reason=reason))
             print(f"[{name}] skip: {reason[:70]}")
             continue
-        etype = _KIND_TO_TYPE.get(b.identifier_kind)
+        etype = b.entity_type or _KIND_TO_TYPE.get(b.identifier_kind)
         if etype not in FEATURE_CANDIDATES:
             rows.append(_row(dataset=name, category=b.category, method="-",
-                             status="skipped", reason=f"no candidates for kind={b.identifier_kind}"))
+                             status="skipped", reason=f"no candidates for entity_type={etype}"))
             continue
 
         cands = FEATURE_CANDIDATES[etype]
@@ -97,12 +105,12 @@ def run(datasets, seeds, pool_limit, rep_limit, split_geom, names):
         feat_maps, errored = {}, {}
         for fs in cands:
             try:
-                feat_maps[fs] = apply_featurizer(etype, fs, b.identifiers)
+                feat_maps[fs] = apply_featurizer(etype, fs, _id_source(b, etype, fs))
             except Exception as exc:
                 errored[fs] = f"{type(exc).__name__}: {exc}"
                 print(f"    {fs}: FEATURIZE ERROR {errored[fs]}")
         try:
-            ref_map = feat_maps.get(ref_fs) or apply_featurizer(etype, ref_fs, b.identifiers)
+            ref_map = feat_maps.get(ref_fs) or apply_featurizer(etype, ref_fs, _id_source(b, etype, ref_fs))
         except Exception as exc:
             rows.append(_row(dataset=name, category=b.category, entity_type=etype,
                              method="-", status="error",

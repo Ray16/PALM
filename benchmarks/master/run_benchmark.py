@@ -89,11 +89,11 @@ def _prep_1d(bundle):
     return ids, X, y, pos_of_id
 
 
-def run(datasets, seeds, limit, split_geom, names):
+def run(datasets, seeds, limit, split_geom, names, route=False):
     rows = []
     for name in datasets:
         try:
-            bundle = load_dataset(name, limit=limit)
+            bundle = load_dataset(name, limit=limit, route=route)
         except Exception as exc:                                    # loader blew up
             rows.append(_row(dataset=name, method="-", status="error",
                              reason=f"load {type(exc).__name__}: {exc}"))
@@ -180,10 +180,12 @@ def main(argv=None):
     ap.add_argument("--splits", nargs="+", type=float, default=[8, 2])
     ap.add_argument("--names", nargs="+", default=["train", "test"])
     ap.add_argument("--out", default=MASTER)
+    ap.add_argument("--route", action="store_true",
+                    help="featurize each dataset with its hand-picked default (PALM.data.routing)")
     args = ap.parse_args(argv)
 
     os.makedirs(os.path.dirname(args.out), exist_ok=True)
-    rows = run(args.datasets, args.seeds, args.limit, args.splits, args.names)
+    rows = run(args.datasets, args.seeds, args.limit, args.splits, args.names, route=args.route)
 
     with open(args.out, "w", newline="") as fh:
         w = csv.DictWriter(fh, fieldnames=FIELDS)

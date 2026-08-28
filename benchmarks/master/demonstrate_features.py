@@ -31,10 +31,13 @@ RESULTS = os.path.abspath(os.path.join(HERE, "..", "results"))
 FIGS = os.path.join(RESULTS, "figures")
 SWEEP = os.path.join(RESULTS, "feature_sweep.csv")
 
-HAND_PICK = {"molecule": "ecfp1024", "material": "magpie"}
+HAND_PICK = {"molecule": "ecfp1024", "material": "magpie", "mof": "magpie",
+             "polymer": "magpie", "protein": "esm2", "gene": "canonical_kmer"}
 EXCEPTIONS = {"moleculenet_bace": "chemberta", "qmof": "mat2vec"}
 COLORS = {"ecfp1024": "#0072B2", "maccs": "#E69F00", "rdkit_descriptors": "#009E73",
-          "chemberta": "#CC79A7", "magpie": "#0072B2", "mat2vec": "#D55E00"}
+          "chemberta": "#CC79A7", "magpie": "#0072B2", "mat2vec": "#D55E00",
+          "linker_ecfp": "#009E73", "esm2": "#0072B2", "sequence_properties": "#E69F00",
+          "canonical_kmer": "#0072B2", "kmer": "#E69F00", "nucleotide_composition": "#009E73"}
 OOD = ("hypergraph", "lowrank")
 
 

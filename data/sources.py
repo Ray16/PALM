@@ -40,8 +40,9 @@ class DatasetBundle:
     targets: Optional[dict] = None               # {id: y} for the generalization-gap layer
     task_type: Optional[str] = None              # "regression" | "classification" | None
     target_name: Optional[str] = None            # source column of the target
-    identifiers: Optional[dict] = None           # {id: raw str} — SMILES/formula for re-featurization + routing
-    identifier_kind: Optional[str] = None        # "smiles" | "formula" | None
+    identifiers: Optional[dict] = None           # {id: raw str} — SMILES/formula/sequence for re-featurization + routing
+    identifier_kind: Optional[str] = None        # "smiles" | "formula" | "protein" | "nucleotide"
+    entity_type: Optional[str] = None            # explicit routing type: molecule|material|mof|polymer|protein|gene
     meta: dict = field(default_factory=dict)
 
 
@@ -145,20 +146,35 @@ def load_qmof(limit=None):
     if tcol in df.columns:
         yv = pd.to_numeric(df[tcol], errors="coerce")
         targets = {qid: float(yv.iloc[row_of_id[qid]]) for qid in ids}
-    # linker SMILES (if present) enable the scaffold splitter on MOF organic linkers
+    # linker SMILES (stored as a stringified list, e.g. "['smi1','smi2']") — parse
+    # and take the first linker; enables the scaffold splitter + the mof linker_ecfp
+    # featurizer candidate.
     smiles = None
     scol = "info.mofid.smiles_linkers"
     if scol in df.columns:
+        import ast
         by_id = {str(df[idcol].iloc[i]): df[scol].iloc[i] for i in idx}
-        smiles = {qid: str(by_id[qid]).split(".")[0] for qid in ids
-                  if isinstance(by_id.get(qid), str) and by_id[qid]}
-        smiles = smiles or None
+
+        def _first_linker(v):
+            if not isinstance(v, str) or not v.strip():
+                return None
+            try:
+                lst = ast.literal_eval(v)
+                v = lst[0] if isinstance(lst, (list, tuple)) and lst else v
+            except (ValueError, SyntaxError):
+                pass
+            return str(v).split(".")[0] or None
+
+        smiles = {qid: _first_linker(by_id.get(qid)) for qid in ids}
+        smiles = {k: v for k, v in smiles.items() if v} or None
     return DatasetBundle("qmof", "inorganic", "1d", True, feature_data=feature_data,
                          smiles=smiles, targets=targets,
                          identifiers={qid: formulas[qid] for qid in ids}, identifier_kind="formula",
+                         entity_type="mof",
                          task_type="regression" if targets else None,
                          target_name=tcol if targets else None,
-                         meta={"n": len(ids), "formula_col": fcol})
+                         meta={"n": len(ids), "formula_col": fcol,
+                               "linker_smiles": smiles or {}})   # for the mof linker_ecfp candidate
 
 
 def load_omol25(limit=DEFAULT_LIMIT):
@@ -185,8 +201,38 @@ def load_omol25(limit=DEFAULT_LIMIT):
                          meta={"n": len(ids), "dim": int(X.shape[1]), "total": int(feats.shape[0])})
 
 
+def _mp_bundle_from_formulas(formulas, energy):
+    """Build the materials_project DatasetBundle from formula/energy dicts."""
+    ids, X = composition_matrix(formulas)
+    feature_data = {mid: X[j] for j, mid in enumerate(ids)}
+    # formation energy per atom -> regression target
+    targets = {mid: float(energy[mid]) for mid in ids if energy.get(mid) is not None}
+    targets = targets or None
+    return DatasetBundle("materials_project", "inorganic", "1d", True,
+                         feature_data=feature_data, targets=targets,
+                         identifiers={mid: formulas[mid] for mid in ids}, identifier_kind="formula",
+                         task_type="regression" if targets else None,
+                         target_name="formation_energy_per_atom" if targets else None,
+                         meta={"n": len(ids)})
+
+
 def load_materials_project(limit=DEFAULT_LIMIT):
-    """Materials Project: <=limit summary docs -> MAGPIE composition (needs MP_API_KEY)."""
+    """Materials Project composition dataset -> MAGPIE composition features.
+
+    Prefers the on-disk snapshot at ``materials_project/summary.csv`` (reproducible,
+    offline; created by ``download_materials_project.py``). Falls back to a live
+    ``mp-api`` pull (needs ``MP_API_KEY``) when the snapshot is absent.
+    """
+    csv_path = os.path.join(HERE, "materials_project", "summary.csv")
+    if os.path.exists(csv_path):
+        df = pd.read_csv(csv_path)
+        if limit and len(df) > limit:
+            df = df.sample(limit, random_state=0).reset_index(drop=True)
+        formulas = {str(r.material_id): str(r.formula_pretty) for r in df.itertuples()}
+        energy = {str(r.material_id): getattr(r, "formation_energy_per_atom", None)
+                  for r in df.itertuples()}
+        return _mp_bundle_from_formulas(formulas, energy)
+
     key = os.environ.get("MP_API_KEY") or os.environ.get("PMG_MAPI_KEY")
     if not key:
         return _unavailable(
@@ -208,17 +254,7 @@ def load_materials_project(limit=DEFAULT_LIMIT):
     docs = docs[:want]
     formulas = {str(d.material_id): str(d.formula_pretty) for d in docs}
     energy = {str(d.material_id): getattr(d, "formation_energy_per_atom", None) for d in docs}
-    ids, X = composition_matrix(formulas)
-    feature_data = {mid: X[j] for j, mid in enumerate(ids)}
-    # formation energy per atom -> regression target
-    targets = {mid: float(energy[mid]) for mid in ids if energy.get(mid) is not None}
-    targets = targets or None
-    return DatasetBundle("materials_project", "inorganic", "1d", True,
-                         feature_data=feature_data, targets=targets,
-                         identifiers={mid: formulas[mid] for mid in ids}, identifier_kind="formula",
-                         task_type="regression" if targets else None,
-                         target_name="formation_energy_per_atom" if targets else None,
-                         meta={"n": len(ids)})
+    return _mp_bundle_from_formulas(formulas, energy)
 
 
 # ── reactions (n-D) ─────────────────────────────────────────────────────────
@@ -268,9 +304,95 @@ def load_openpolymer26(limit=DEFAULT_LIMIT):
     return DatasetBundle("openpolymer26", "polymer", "1d", True,
                          feature_data=feature_data, targets=targets,
                          identifiers={pid: formulas[pid] for pid in ids}, identifier_kind="formula",
+                         entity_type="polymer",
                          task_type="regression" if targets else None,
                          target_name="y" if targets else None,
                          meta={"n": len(ids)})
+
+
+# ── proteins (sequence -> ESM2 / sequence properties) ──────────────────────
+
+def _feat_df_to_map(df):
+    """compute_*_features DataFrame -> {id: float32 vector} (NaN-filled)."""
+    df = df.fillna(0.0)
+    return {idx: np.asarray(df.loc[idx].values, dtype=np.float32) for idx in df.index}
+
+
+def load_lp_pdbbind(limit=DEFAULT_LIMIT):
+    """LP-PDBBind proteins: unique sequences -> mean binding affinity (regression).
+
+    Entity = protein sequence (deduped; affinity averaged over its ligands, so the
+    target carries residual ligand-dependent noise). Load-time features are the
+    cheap ``sequence_properties`` set; the router re-featurizes with ESM2 when asked.
+    """
+    path = os.path.join(DSAIL, "2D", "lp_pdbbind", "LP_PDBBind.csv")
+    if not os.path.exists(path):
+        return _unavailable("lp_pdbbind", "protein", "1d", f"file not found: {path}")
+    df = pd.read_csv(path)
+    if "seq" not in df.columns:
+        return _unavailable("lp_pdbbind", "protein", "1d", "no 'seq' column")
+    df = df.dropna(subset=["seq"]).copy()
+    df["value"] = pd.to_numeric(df.get("value"), errors="coerce")
+    agg = df.groupby("seq")["value"].mean().reset_index().dropna(subset=["value"])
+    idx = _subsample_indices(len(agg), limit)
+    seqs = {f"p{int(i)}": str(agg["seq"].iloc[int(i)]) for i in idx}
+    tgt = {f"p{int(i)}": float(agg["value"].iloc[int(i)]) for i in idx}
+    from PALM.features.biomolecule_features import compute_biomolecule_features
+    fmap = _feat_df_to_map(compute_biomolecule_features(seqs, feature_sets=["sequence_properties"]))
+    ids = [i for i in seqs if i in fmap]
+    return DatasetBundle("lp_pdbbind", "protein", "1d", True,
+                         feature_data={i: fmap[i] for i in ids},
+                         identifiers={i: seqs[i] for i in ids}, identifier_kind="protein",
+                         entity_type="protein",
+                         targets={i: tgt[i] for i in ids}, task_type="regression",
+                         target_name="binding_affinity", meta={"n": len(ids)})
+
+
+# ── RNA / nucleotide (sequence -> k-mer / Nucleotide Transformer) ───────────
+
+def _parse_fasta(path):
+    recs, hdr, seq = [], None, []
+    with open(path) as fh:
+        for line in fh:
+            line = line.rstrip()
+            if line.startswith(">"):
+                if hdr is not None:
+                    recs.append((hdr, "".join(seq)))
+                hdr, seq = line[1:], []
+            elif line:
+                seq.append(line)
+    if hdr is not None:
+        recs.append((hdr, "".join(seq)))
+    return recs
+
+
+def load_rfam(limit=DEFAULT_LIMIT):
+    """Rfam RNA: sequence -> family class (13-way classification).
+
+    Class is the leading ``RFxxxxx`` accession in the FASTA header. Load-time
+    features are cheap canonical k-mer frequencies; router can swap in the
+    Nucleotide Transformer.
+    """
+    path = os.path.join(DSAIL, "1D", "rfam_rna", "dataset_Rfam_6320_13classes.fasta")
+    if not os.path.exists(path):
+        return _unavailable("rfam", "gene", "1d", f"file not found: {path}")
+    recs = _parse_fasta(path)
+    if not recs:
+        return _unavailable("rfam", "gene", "1d", "no sequences parsed")
+    fams = sorted({h.split("_")[0] for h, _ in recs})
+    fam_idx = {f: i for i, f in enumerate(fams)}
+    idx = _subsample_indices(len(recs), limit)
+    seqs = {f"r{int(i)}": recs[int(i)][1].replace("U", "T") for i in idx}
+    tgt = {f"r{int(i)}": fam_idx[recs[int(i)][0].split("_")[0]] for i in idx}
+    from PALM.features.gene_features import compute_gene_features
+    fmap = _feat_df_to_map(compute_gene_features(seqs, feature_sets=["canonical_kmer_frequencies"]))
+    ids = [i for i in seqs if i in fmap]
+    return DatasetBundle("rfam", "gene", "1d", True,
+                         feature_data={i: fmap[i] for i in ids},
+                         identifiers={i: seqs[i] for i in ids}, identifier_kind="nucleotide",
+                         entity_type="gene",
+                         targets={i: tgt[i] for i in ids}, task_type="classification",
+                         target_name="rfam_family", meta={"n": len(ids), "n_classes": len(fams)})
 
 
 # ── registry ────────────────────────────────────────────────────────────────
@@ -300,6 +422,10 @@ REGISTRY: Dict[str, Callable] = {
     "uspto_mcr": lambda limit=DEFAULT_LIMIT: load_uspto_mcr(limit),
     # polymers
     "openpolymer26": lambda limit=DEFAULT_LIMIT: load_openpolymer26(limit),
+    # proteins
+    "lp_pdbbind": lambda limit=DEFAULT_LIMIT: load_lp_pdbbind(limit),
+    # RNA / nucleotide
+    "rfam": lambda limit=DEFAULT_LIMIT: load_rfam(limit),
 }
 
 

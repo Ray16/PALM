@@ -203,6 +203,30 @@ asserting it.
 
 ---
 
+## 5b. Default featurizers for the other entity types (protein / RNA / MOF / polymer)
+
+Same sweep + gate + demonstrate methodology, extended to four more types
+(`figures/feature_tradeoff_{protein,gene,mof,polymer}.png`). Hand-picked default
+per type:
+
+| type | dataset | default | runner-up | reading |
+|---|---|---|---|---|
+| **protein** | lp_pdbbind | **esm2** (150M) | sequence_properties | ESM2 lower leakage (0.20 vs 0.27) and the only OOD-safe option; seq-props goes OOD-negative. *Target (binding affinity) is ligand-dependent, so absolute OOD is low for both — but ESM2 is clearly the better representation.* |
+| **RNA** | rfam (13-class) | **canonical_kmer** | kmer | Canonical k-mers lowest leakage (0.244); OOD family-classification accuracy ~0.29 on the held-out split (chance = 0.077). NT deferred (needs the ~2 GB download the full local disk blocked). |
+| **MOF** | qmof | **magpie** (type default); **qmof → mat2vec** (exception) | linker_ecfp | mat2vec is best on the one MOF we have (lower leakage + better OOD), so it's the validated exception; `linker_ecfp` is OOD-unsafe (−0.01). Type default stays MAGPIE for a novel MOF. |
+| **polymer** | openpolymer26 | **magpie** | mat2vec | mat2vec is leakage-cheaper (0.233 vs 0.270) but **OOD-harmful (R² −0.28)** — the same trap as elsewhere. MAGPIE is the safe pick. |
+
+Two honest caveats specific to these: each new type currently has **one dataset**,
+so its per-type default is single-dataset evidence (the per-dataset exception
+mechanism captures the actual best, e.g. qmof→mat2vec); and the protein target is
+noisy (affinity averaged over ligands), so protein OOD magnitudes are weak even
+though the featurizer ranking is clear. The recurring rule holds across all six
+types: **the leakage-cheaper embedding is repeatedly the OOD-unsafe trap
+(mat2vec on polymer, seq-props on protein, linker_ecfp on MOF), and the robust
+default wins.**
+
+---
+
 ## 6. Caveats (so nobody over-reads the table)
 
 - **TDC (3 sets):** unavailable — Harvard Dataverse host down, cached raw files
