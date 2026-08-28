@@ -23,20 +23,63 @@ def corridor_assign(scores, sizes, caps, floors):
 
     Unlike :func:`balanced_assign` (which pins *exact* sizes), this only requires
     each block's size to lie in ``[floors[c], caps[c]]`` — giving the optimizer the
-    slack to cut more cleanly. Optimal for k==2 (concave in the split point); for
-    k>2 it falls back to the exact assignment at the nominal ``sizes``.
+    slack to cut more cleanly.
+
+    - **k == 2**: exact/optimal (concave in the single split point).
+    - **k > 2**: a regret-based greedy *peel* (the corridor generalization of
+      :func:`balanced_assign`'s k>2 branch). Blocks are peeled in order; each block
+      ``c`` takes its top-preference remaining points — where preference is
+      ``score[:,c] − max score over the still-unassigned blocks`` — and the count is
+      the *natural* number that prefer ``c`` (``pref > 0``), clamped into
+      ``[floors[c], caps[c]]`` and further clamped to keep the later blocks feasible
+      (leave ≥ Σ future floors, ≤ Σ future caps). This is a heuristic (exact k>2 is a
+      transportation problem, and the FM polish refines it afterwards), but it has two
+      guarantees: it always yields corridor-valid sizes, and when the corridor is
+      degenerate (``floors == caps == sizes``) it reproduces the exact assignment. It
+      never scores below the exact peel — the corridor only frees points toward the
+      block they prefer. O(n·k) with k−1 sorts, fully vectorized.
     """
     import torch
 
     n, k = scores.shape
-    if k != 2:
-        return balanced_assign(scores, sizes)             # exact fallback for k>2
-    diff = scores[:, 1] - scores[:, 0]                    # >0 => prefers block 1
-    order = torch.argsort(diff, descending=True)
-    m = int((diff > 0).sum().item())                     # natural block-1 count
-    m = min(max(m, int(floors[1])), int(caps[1]))        # clamp into the corridor
-    lab = torch.zeros(n, dtype=torch.long, device=scores.device)
-    lab[order[:m]] = 1
+    dev = scores.device
+    if k == 2:
+        diff = scores[:, 1] - scores[:, 0]                # >0 => prefers block 1
+        order = torch.argsort(diff, descending=True)
+        m = int((diff > 0).sum().item())                  # natural block-1 count
+        m = min(max(m, int(floors[1])), int(caps[1]))     # clamp into the corridor
+        lab = torch.zeros(n, dtype=torch.long, device=dev)
+        lab[order[:m]] = 1
+        return lab
+
+    caps = [int(x) for x in caps]
+    floors = [int(x) for x in floors]
+    suf_cap = [0] * (k + 1)                                # Σ caps[j], j >= idx
+    suf_flr = [0] * (k + 1)                                # Σ floors[j], j >= idx
+    for j in range(k - 1, -1, -1):
+        suf_cap[j] = suf_cap[j + 1] + caps[j]
+        suf_flr[j] = suf_flr[j + 1] + floors[j]
+
+    remaining = torch.arange(n, device=dev)
+    lab = torch.full((n,), k - 1, dtype=torch.long, device=dev)   # last block = leftovers
+    for c in range(k - 1):
+        R = remaining.numel()
+        sub = scores[remaining]
+        other = sub[:, c + 1:].max(dim=1).values          # best still-unassigned alternative
+        pref = sub[:, c] - other
+        order = torch.argsort(pref, descending=True)
+        natural = int((pref > 0).sum().item())            # #points that prefer block c
+        # keep later blocks feasible: leave >= future floors, <= future caps
+        t_min = max(floors[c], R - suf_cap[c + 1])
+        t_max = min(caps[c], R - suf_flr[c + 1])
+        t_min = max(0, min(t_min, R))
+        t_max = max(t_min, min(t_max, R))                  # guard degenerate corridors
+        t = min(max(natural, t_min), t_max)
+        take = order[:t]
+        lab[remaining[take]] = c
+        keep = torch.ones(R, dtype=torch.bool, device=dev)
+        keep[take] = False
+        remaining = remaining[keep]
     return lab
 
 

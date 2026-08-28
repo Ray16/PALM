@@ -43,7 +43,12 @@ class LowRankSplitter(BaseSplitter):
         n_restarts: int = 4
         n_iter: int = 25
         fm: bool = True
-        fm_max_n: int = 200_000
+        # Flat single-move FM is O(n·r) per move and converges in ~n/100 moves from a
+        # Lloyd init (~12s at n=1M); the old 200k cap shipped *un-polished* Lloyd splits
+        # at scale, leaving ~4% leakage on the table (experiments/multilevel_fm.py). A
+        # multilevel V-cycle recovers the same leakage ~48× slower — not worth it. So we
+        # keep flat FM and just raise the cap. >2M still skips (keeps a hard time bound).
+        fm_max_n: int = 2_000_000
         # balance–leakage tradeoff knob: 0.0 = exact target sizes (default,
         # back-compatible); >0 opens a (1 ± balance_slack) size corridor that both
         # the Lloyd assignment and the FM polish may exploit to lower leakage.

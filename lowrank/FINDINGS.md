@@ -67,6 +67,81 @@ fixed — a near-pure leakage→gap effect.
 
 ---
 
+## Step 4 — Multilevel FM: the optimizer was already optimal (negative), the *cap* was the bug
+*Code: `multilevel.py` (coarsen→refine→uncoarsen V-cycle), `splitter.py` (`fm_max_n`).
+Experiment: `experiments/multilevel_fm.py` → `multilevel_small.csv`, `multilevel_scale.csv`,
+`multilevel_scale.png`.*
+
+Built a multilevel V-cycle to escape single-move-FM local minima (contraction by summing
+B rows preserves `factor_leakage` exactly, so it's provably never worse than flat). It
+gives **zero benefit**:
+
+| dataset (feat) | n | flat Lloyd+FM | multilevel | gain |
+|---|--:|--:|--:|--:|
+| bace (chemberta) | 1513 | 31555.0 | 31555.0 | **+0.00%** |
+| esol (ecfp) | 1128 | 8264.8 | 8264.8 | **+0.00%** |
+| freesolv (ecfp) | 642 | 2055.5 | 2055.5 | **+0.00%** |
+| qmof (mat2vec) | 2000 | 344074.7 | 344074.7 | **+0.00%** |
+
+**Finding:** flat best-of-4 Lloyd + single-move FM is *already at the global optimum*
+(best-of-30 == best-of-4 on esol) — there are no local minima for a V-cycle to escape.
+**The real bug is the conservative `fm_max_n=200_000` cap**: above it the splitter shipped
+an *un-polished Lloyd* split. Removing the cap and running the existing flat FM recovers
+the leakage — at 300k, 367M (capped) → 352.7M (**+3.99%**) in 2.1s; ~12s at 1M. Multilevel
+recovers the identical number ~48× slower. **Shipped change:** `fm_max_n` 200k → 2M (flat
+FM); `multilevel.py` kept as documented negative evidence, not wired in. This is the
+Step-2 lesson again: the lever is the problem definition, not solver fidelity.
+
+---
+
+## Step 5 — target_gap: inverting the hardness calibration (the α→gap curve is convex)
+*Code: `target_gap.py` (`calibrate_gap`, `GapCalibrator`, `split_for_gap`).
+Experiment: `experiments/target_gap.py` → `target_gap.csv`, `target_gap_{esol,bace,freesolv}.png`.*
+
+Productizes Step 3: request a target generalization gap, get the split that delivers it.
+`calibrate_gap` runs cheap probe splits (triplicate), `GapCalibrator.invert` returns the α.
+
+| dataset | calibration (linear summary) | requested↔realized corr | MAE |
+|---|--|--:|--:|
+| bace (chemberta) | gap≈0.100+0.104·α, R²0.75 | +0.910 | **0.014** |
+| esol (ecfp) | gap≈0.216+0.503·α, R²0.84 | +0.997 | **0.090** |
+| freesolv (ecfp) | gap≈0.259+0.396·α, R²0.89 | +0.900 | **0.050** |
+
+**Finding:** requested gap tracks realized gap (corr +0.90–0.997). **The α→gap curve is
+markedly *convex*** (esol 0.30→0.35→0.81 across α), so a naive *linear* calibration
+over-predicts interior gaps (esol MAE 0.122); a monotone **piecewise-linear** engine
+through the probe knots cuts MAE 26–55%. esol's residual (0.090) sits at the gap
+estimator's own noise floor (±0.08 at high α), not inversion error — bace, the low-noise
+dataset, is essentially exact (0.014). Calibrate per (dataset, features, model) — the
+honest Step-3 scope.
+
+---
+
+## Step 6 — k>2 (train/val/test): corridor + hardness generalized to multiway
+*Code: `optimize.py` (`corridor_assign` k>2 branch).
+Experiment: `experiments/kway_split.py` → `kway_balance.csv`, `kway_hardness.csv`, PNGs.*
+
+`corridor_assign` previously fell back to *exact* sizes for k>2, so Step-1's `balance_slack`
+was a silent no-op on 3-way splits. Extended it with a regret-based greedy peel (k==2 stays
+exact; degenerate corridor reproduces exact sizes; feasibility clamps keep every block
+in-corridor). Validated on 3-way [8,1,1], triplicate:
+
+| dataset | leakage slack 0.0→0.30 | Δ | Spearman(slack, leakage) |
+|---|--:|--:|--:|
+| bace | 0.270 → 0.200 | −26% | −1.00 |
+| esol | 0.171 → 0.111 | −35% | −1.00 |
+| freesolv | 0.129 → 0.078 | −39% | −1.00 |
+| qmof | 0.205 → 0.146 | −29% | −1.00 |
+
+**Finding (balance):** the k>2 corridor is a clear win — leakage falls monotonically where
+it was previously frozen. **Finding (hardness):** `interpolate_to_random` and FM were
+already k-agnostic; on 3-way the dial still controls the train→test gap at the endpoints
+(esol ~0.36→1.10) but is **noisier in the interior** — Spearman(α, gap) +0.60/+0.60/+0.90
+vs +0.90–1.00 at k=2 — because the test block is half the size (10% vs 20%), so the gap
+estimate is noisier. Controllable on 3-way; calibrate with more seeds.
+
+---
+
 ## Synthesis — Steps 1 & 3 are NOT one capability (tested, hypothesis refuted)
 *Experiment: `experiments/balance_gap.py` → `balance_vs_hardness_gap.png`,
 `balance_gap.csv`.*

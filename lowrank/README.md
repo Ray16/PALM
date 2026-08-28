@@ -50,11 +50,33 @@ experiments/  balance_pareto.py — the leakage↔balance frontier
    calibration `gap ≈ b + a·α` you invert to request a target difficulty (slopes
    are dataset-specific, so calibrate per dataset — the honest scope).
 
+4. **Optimizer at scale (from the multilevel investigation)** *(done — negative
+   result for the fancy solver, one real win)*: a coarsen→refine→uncoarsen
+   multilevel FM V-cycle (`multilevel.py`) gives **0% leakage benefit** on real
+   datasets — flat best-of-4 Lloyd + single-move FM is already at the global optimum
+   (best-of-30 == best-of-4). The actual bottleneck was the conservative
+   `fm_max_n=200_000` cap, which shipped *un-polished Lloyd* splits above 200k. Flat FM
+   is O(n·r) and converges in ~12s at n=1M, so **raising the cap to 2M recovers ~4%
+   leakage on all large splits** (`experiments/multilevel_fm.py`). `multilevel.py` is
+   kept as documented negative evidence, not wired in.
+5. **`target_gap` API (productizing Step 3)** *(done — validated)*: request a target
+   generalization gap and get the split that delivers it. `calibrate_gap` fits the
+   α→gap curve from cheap probe splits (the curve is **convex**, so a monotone
+   piecewise-linear fit beats a naive linear one), and `split_for_gap` inverts it.
+   Requested↔realized gap corr +0.90–0.997 (`experiments/target_gap.py`).
+
 ## Use
 ```python
 from PALM.splitters import split, SplitSpec
 r = split("lowrank", feature_data, SplitSpec([8, 2], ["train", "test"], seed=0),
           balance_slack=0.10)     # 10% size corridor -> lower leakage
 r.diagnostics["leakage"]
+
+# request a difficulty level instead of hand-picking hardness α (Step 3 / #5):
+from PALM.lowrank import calibrate_gap, split_for_gap
+cal = calibrate_gap(feature_data, X, y, task_type="regression")  # cheap probe splits
+res, inv, _ = split_for_gap(feature_data, target_gap=0.5, calibrator=cal, seed=0)
+print(inv.message)              # "-> alpha=0.68 (predicted gap 0.50)"; flags out-of-range
 ```
-Tests: `python -m PALM.lowrank.tests.test_lowrank` (6 tests).
+Tests: `python -m PALM.lowrank.tests.test_lowrank` (9) ·
+`… .tests.test_multilevel` (4) · `… .tests.test_target_gap` (7).
