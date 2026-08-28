@@ -395,6 +395,95 @@ def load_rfam(limit=DEFAULT_LIMIT):
                          target_name="rfam_family", meta={"n": len(ids), "n_classes": len(fams)})
 
 
+# ── DNA / genomic (sequence -> k-mer / genomic LM) ──────────────────────────
+
+def load_genomic(limit=DEFAULT_LIMIT):
+    """Genomic Benchmarks (human enhancers): DNA sequence -> binary label.
+
+    DNA modality, distinct from RNA (Rfam). Cheap canonical k-mer frequencies at
+    load time (ACGT); router can swap in a genomic LM. Prepared by
+    ``python -m PALM.data.prepare_genomic`` (or PALM.data.download_all).
+    """
+    path = os.path.join(HERE, "genomic", "records.csv")
+    if not os.path.exists(path):
+        return _unavailable("genomic", "gene", "1d",
+                            "not prepared — run `python -m PALM.data.prepare_genomic`")
+    df = pd.read_csv(path).dropna(subset=["sequence"]).reset_index(drop=True)
+    idx = _subsample_indices(len(df), limit)
+    seqs = {f"g{int(i)}": str(df["sequence"].iloc[int(i)]).upper() for i in idx}
+    tgt = {f"g{int(i)}": int(df["label"].iloc[int(i)]) for i in idx}
+    from PALM.features.gene_features import compute_gene_features
+    fmap = _feat_df_to_map(compute_gene_features(seqs, feature_sets=["canonical_kmer_frequencies"]))
+    ids = [i for i in seqs if i in fmap]
+    return DatasetBundle("genomic", "gene", "1d", True,
+                         feature_data={i: fmap[i] for i in ids},
+                         identifiers={i: seqs[i] for i in ids}, identifier_kind="nucleotide",
+                         entity_type="gene",
+                         targets={i: tgt[i] for i in ids}, task_type="classification",
+                         target_name="enhancer", meta={"n": len(ids), "n_classes": 2})
+
+
+# ── catalysis (OC22 composition -> MAGPIE) ──────────────────────────────────
+
+def load_oc22(limit=DEFAULT_LIMIT):
+    """OC22 catalytic systems: composition (formula) -> DFT relaxed energy.
+
+    Interfacial/adsorption materials modality; featurized by formula -> MAGPIE
+    composition like materials_project. Prepared by
+    ``python -m PALM.data.prepare_oc22`` (self-downloads the 114 MB IS2RE LMDBs).
+    """
+    path = os.path.join(HERE, "oc22", "records.csv")
+    if not os.path.exists(path):
+        return _unavailable("oc22", "inorganic", "1d",
+                            "not prepared — run `python -m PALM.data.prepare_oc22`")
+    df = pd.read_csv(path).dropna(subset=["formula"]).reset_index(drop=True)
+    idx = _subsample_indices(len(df), limit)
+    formulas = {str(df["id"].iloc[int(i)]): str(df["formula"].iloc[int(i)]) for i in idx}
+    row_of_id = {str(df["id"].iloc[int(i)]): int(i) for i in idx}
+    ids, X = composition_matrix(formulas)
+    feature_data = {mid: X[j] for j, mid in enumerate(ids)}
+    yv = pd.to_numeric(df["energy"], errors="coerce")
+    targets = {mid: float(yv.iloc[row_of_id[mid]]) for mid in ids}
+    return DatasetBundle("oc22", "inorganic", "1d", True,
+                         feature_data=feature_data, targets=targets,
+                         identifiers={mid: formulas[mid] for mid in ids}, identifier_kind="formula",
+                         entity_type="material",
+                         task_type="regression", target_name="relaxed_energy",
+                         meta={"n": len(ids)})
+
+
+# ── omics / perturbation (LINCS L1000; precomputed expression features) ──────
+
+def load_lincs_l1000(limit=DEFAULT_LIMIT):
+    """LINCS L1000: compound-perturbation signatures (978 landmark genes).
+
+    Precomputed-feature modality — the 978-d expression vector IS the feature
+    (loaded from expression.npy). Each signature also carries the perturbagen's
+    SMILES, so a split can be compared in expression space vs structure space
+    (route by ``identifier_kind='smiles'``, or use the scaffold splitter). No
+    natural regression target -> split-quality only. Prepared by
+    ``python -m PALM.data.prepare_lincs_l1000``.
+    """
+    d = os.path.join(HERE, "lincs_l1000")
+    recs, npy = os.path.join(d, "records.csv"), os.path.join(d, "expression.npy")
+    if not (os.path.exists(recs) and os.path.exists(npy)):
+        return _unavailable("lincs_l1000", "omics", "1d",
+                            "not prepared — run `python -m PALM.data.prepare_lincs_l1000`")
+    df = pd.read_csv(recs)
+    X = np.load(npy)
+    n = min(len(df), len(X))                              # guard row alignment
+    idx = _subsample_indices(n, limit)
+    ids = [f"l{int(i)}" for i in idx]
+    feature_data = {ids[k]: X[int(i)].astype(np.float32) for k, i in enumerate(idx)}
+    smiles = {ids[k]: str(df["smiles"].iloc[int(i)]) for k, i in enumerate(idx)}
+    return DatasetBundle("lincs_l1000", "omics", "1d", True,
+                         feature_data=feature_data, smiles=smiles,
+                         identifiers=dict(smiles), identifier_kind="smiles",
+                         entity_type="molecule",
+                         task_type=None, target_name=None,
+                         meta={"n": len(ids), "dim": int(X.shape[1])})
+
+
 # ── registry ────────────────────────────────────────────────────────────────
 
 # name -> (category, callable(limit) -> DatasetBundle)
@@ -426,6 +515,12 @@ REGISTRY: Dict[str, Callable] = {
     "lp_pdbbind": lambda limit=DEFAULT_LIMIT: load_lp_pdbbind(limit),
     # RNA / nucleotide
     "rfam": lambda limit=DEFAULT_LIMIT: load_rfam(limit),
+    # DNA / genomic
+    "genomic": lambda limit=DEFAULT_LIMIT: load_genomic(limit),
+    # catalysis (interfacial materials)
+    "oc22": lambda limit=DEFAULT_LIMIT: load_oc22(limit),
+    # omics / perturbation (precomputed expression features)
+    "lincs_l1000": lambda limit=DEFAULT_LIMIT: load_lincs_l1000(limit),
 }
 
 
