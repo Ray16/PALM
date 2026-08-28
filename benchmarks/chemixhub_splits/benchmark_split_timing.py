@@ -28,7 +28,7 @@ import matplotlib.pyplot as plt
 
 import make_chemixhub_splits as M
 from PALM.splitters import split, SplitSpec
-from PALM.splitters.methods.lowrank import nystrom_features, balanced_lloyd
+from PALM.lowrank import nystrom_features, balanced_lloyd
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 FIGS = os.path.join(HERE, "figures")

@@ -12,7 +12,7 @@ import numpy as np
 import torch
 
 sys.path.insert(0, "/nfs/lambda_stor_01/homes/rzhu")
-from PALM.splitters.methods.lowrank import balanced_lloyd, lowrank_leakage
+from PALM.lowrank import balanced_lloyd, lowrank_leakage
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 CACHE = os.path.join(HERE, "_cache_uma")

@@ -12,7 +12,7 @@ import os, sys, csv, time
 import numpy as np
 sys.path.insert(0, "/nfs/lambda_stor_01/homes/rzhu")
 from PALM.benchmarks.omol25 import omol25_leakage as LK
-from PALM.splitters.methods.lowrank import balanced_lloyd, fm_polish
+from PALM.lowrank import balanced_lloyd, fm_polish
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 RES = os.path.join(HERE, "results")

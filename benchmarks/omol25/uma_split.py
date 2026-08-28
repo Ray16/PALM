@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, "/nfs/lambda_stor_01/homes/rzhu")
-from PALM.splitters.methods.lowrank import balanced_lloyd, lowrank_leakage
+from PALM.lowrank import balanced_lloyd, lowrank_leakage
 from PALM.benchmarks.omol25 import uma_leakage as UL   # reuse rbf_factor / median_sigma / lpi_from_factor
 
 HERE = os.path.dirname(os.path.abspath(__file__))

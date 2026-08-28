@@ -55,12 +55,12 @@ def test_splitter_registered_and_runs():
     assert res.diagnostics.get("rank")
 
 
-def test_backcompat_import_path():
-    # historical path used by the omol25 studies + old tests must still resolve
-    from PALM.splitters.methods.lowrank import (balanced_lloyd as bl,  # noqa: F401
-                                                fm_polish as fp, lowrank_leakage as ll,
-                                                nystrom_features as nf)
-    assert bl is balanced_lloyd and nf is nystrom_features
+def test_public_api_exports():
+    # the standalone package exposes the full public API from one import
+    from PALM.lowrank import (balanced_lloyd as bl,  # noqa: F401
+                             fm_polish as fp, lowrank_leakage as ll,
+                             nystrom_features as nf)
+    assert bl is balanced_lloyd and nf is nystrom_features and ll is factor_leakage
 
 
 if __name__ == "__main__":

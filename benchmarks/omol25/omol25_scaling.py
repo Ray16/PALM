@@ -41,7 +41,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 from PALM.splitters import SplitSpec, split
-from PALM.splitters.methods.lowrank import balanced_lloyd
+from PALM.lowrank import balanced_lloyd
 from PALM.benchmarks.common.timing import _sync, _time
 from PALM.benchmarks.omol25 import omol25_leakage as LK
 

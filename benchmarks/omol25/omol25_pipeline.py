@@ -26,7 +26,7 @@ import pandas as pd
 sys.path.insert(0, "/nfs/lambda_stor_01/homes/rzhu")
 import logging
 logging.disable(logging.CRITICAL)
-from PALM.splitters.methods.lowrank import balanced_lloyd
+from PALM.lowrank import balanced_lloyd
 from PALM.benchmarks.omol25 import omol25_leakage as LK
 
 RESULTS = os.path.join(os.path.dirname(__file__), "results")
@@ -68,7 +68,7 @@ def main():
     best_lab, best_obj = None, np.inf
     for r in range(N_RESTARTS):
         lab = balanced_lloyd(B, native_sizes.tolist(), epsilon=0.0, n_iter=20, seed=r)
-        from PALM.splitters.methods.lowrank import lowrank_leakage
+        from PALM.lowrank import lowrank_leakage
         obj = lowrank_leakage(B, lab, 3)
         if obj < best_obj:
             best_obj, best_lab = obj, lab

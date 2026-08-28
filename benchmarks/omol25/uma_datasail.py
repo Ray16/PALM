@@ -19,7 +19,7 @@ import numpy as np
 
 sys.path.insert(0, "/nfs/lambda_stor_01/homes/rzhu")
 import logging; logging.disable(logging.CRITICAL)
-from PALM.splitters.methods.lowrank import balanced_lloyd, lowrank_leakage
+from PALM.lowrank import balanced_lloyd, lowrank_leakage
 from PALM.benchmarks.common.datasail import datasail_distance
 from PALM.benchmarks.omol25 import uma_leakage as UL
 

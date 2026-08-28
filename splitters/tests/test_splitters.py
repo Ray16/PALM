@@ -21,7 +21,7 @@ sys.path.insert(0, "/nfs/lambda_stor_01/homes/rzhu")
 
 from PALM.splitters import (SplitSpec, describe_splitters, get_splitter,
                             list_splitters, split)
-from PALM.splitters.methods.lowrank import (balanced_lloyd, fm_polish,
+from PALM.lowrank import (balanced_lloyd, fm_polish,
                                             lowrank_leakage, nystrom_features)
 from PALM.splitters.tool import describe_splitters_tool, run_split_tool
 

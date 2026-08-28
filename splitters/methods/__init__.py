@@ -6,7 +6,7 @@ to the imports below.
 """
 
 from . import hypergraph      # noqa: F401  (registers "hypergraph", "graph")
-from . import lowrank         # noqa: F401  (registers "lowrank")
+import PALM.lowrank           # noqa: F401  (standalone package; registers "lowrank")
 from . import nD_hypergraph   # noqa: F401  (registers "hypergraph_nd", "hypergraph_nd_knn")
 from . import adapters        # noqa: F401  (registers "datasail", "scaffold")
 from . import random          # noqa: F401  (registers "random")
