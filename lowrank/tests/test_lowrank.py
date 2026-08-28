@@ -9,7 +9,8 @@ from __future__ import annotations
 import numpy as np
 
 from PALM.lowrank import (LowRankSplitter, balanced_lloyd, factor_leakage,
-                          fm_polish, lowrank_leakage, nystrom_features)
+                          fm_polish, lowrank_leakage, nystrom_features,
+                          realized_imbalance)
 from PALM.splitters import SplitSpec, split
 
 
@@ -44,6 +45,19 @@ def test_fm_polish_monotone():
     L1 = factor_leakage(B, lab1, 2)
     assert L1 <= L0 + 1e-6            # monotone: never increases leakage
     assert lowrank_leakage is factor_leakage
+
+
+def test_balance_slack_tradeoff():
+    # opening the balance corridor should not INCREASE leakage vs exact sizes,
+    # and should keep imbalance within the requested slack.
+    X = _blobs()
+    B, _ = nystrom_features(X, rank=64, seed=0)
+    lab_exact = balanced_lloyd(B, [8, 2], seed=0, balance_slack=0.0)
+    lab_slack = balanced_lloyd(B, [8, 2], seed=0, balance_slack=0.20)
+    assert abs((lab_exact == 1).mean() - 0.2) < 0.02          # exact stays exact
+    assert realized_imbalance(lab_slack, [8, 2]) <= 0.20 + 1e-6
+    # more freedom -> leakage no worse (usually strictly lower)
+    assert factor_leakage(B, lab_slack, 2) <= factor_leakage(B, lab_exact, 2) + 1e-6
 
 
 def test_splitter_registered_and_runs():

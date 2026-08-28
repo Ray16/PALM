@@ -18,12 +18,38 @@ from PALM.splitters.common.balanced_assignment import (balanced_assign,
 from PALM.splitters.common.fiduccia_mattheyses import fiduccia_mattheyses_loop
 
 
-def balanced_lloyd(B, splits, epsilon=0.05, n_iter=25, init_labels=None, seed=0):
+def corridor_assign(scores, sizes, caps, floors):
+    """Assign n points to k blocks maximizing chosen scores, sizes within a corridor.
+
+    Unlike :func:`balanced_assign` (which pins *exact* sizes), this only requires
+    each block's size to lie in ``[floors[c], caps[c]]`` — giving the optimizer the
+    slack to cut more cleanly. Optimal for k==2 (concave in the split point); for
+    k>2 it falls back to the exact assignment at the nominal ``sizes``.
+    """
+    import torch
+
+    n, k = scores.shape
+    if k != 2:
+        return balanced_assign(scores, sizes)             # exact fallback for k>2
+    diff = scores[:, 1] - scores[:, 0]                    # >0 => prefers block 1
+    order = torch.argsort(diff, descending=True)
+    m = int((diff > 0).sum().item())                     # natural block-1 count
+    m = min(max(m, int(floors[1])), int(caps[1]))        # clamp into the corridor
+    lab = torch.zeros(n, dtype=torch.long, device=scores.device)
+    lab[order[:m]] = 1
+    return lab
+
+
+def balanced_lloyd(B, splits, epsilon=0.05, n_iter=25, init_labels=None, seed=0,
+                   balance_slack=0.0):
     """Balanced-Lloyd minimization of the low-rank leakage in B-space.
 
     Alternates: block sums from current labels, then reassign every point to the
-    most-similar block subject to the exact target ratio. O(n·r·k) per iteration.
-    Returns the final labels (numpy int array).
+    most-similar block subject to a size constraint. ``balance_slack`` sets how far
+    block sizes may deviate from the target ratio: ``0.0`` pins exact sizes (the
+    default, back-compatible); ``>0`` opens a ``(1 ± balance_slack)`` corridor the
+    optimizer can exploit to lower leakage (the leakage↔balance tradeoff knob).
+    O(n·r·k) per iteration. Returns the final labels (numpy int array).
     """
     import torch
 
@@ -32,6 +58,9 @@ def balanced_lloyd(B, splits, epsilon=0.05, n_iter=25, init_labels=None, seed=0)
     n, r = Bt.shape
     k = len(splits)
     sizes = target_sizes(n, splits)
+    use_corridor = balance_slack > 0.0
+    if use_corridor:
+        caps, floors = capacity_corridor(n, splits, balance_slack)
     self_sim = (Bt * Bt).sum(1)
 
     if init_labels is None:
@@ -47,7 +76,8 @@ def balanced_lloyd(B, splits, epsilon=0.05, n_iter=25, init_labels=None, seed=0)
         P.index_add_(0, lab, Bt)
         scores = Bt @ P.T
         scores[torch.arange(n, device=device), lab] -= self_sim   # exclude self
-        new_lab = balanced_assign(scores, sizes)
+        new_lab = (corridor_assign(scores, sizes, caps, floors) if use_corridor
+                   else balanced_assign(scores, sizes))
         if torch.equal(new_lab, lab):
             break
         lab = new_lab

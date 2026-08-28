@@ -42,6 +42,10 @@ class LowRankSplitter(BaseSplitter):
         n_iter: int = 25
         fm: bool = True
         fm_max_n: int = 200_000
+        # balance–leakage tradeoff knob: 0.0 = exact target sizes (default,
+        # back-compatible); >0 opens a (1 ± balance_slack) size corridor that both
+        # the Lloyd assignment and the FM polish may exploit to lower leakage.
+        balance_slack: float = 0.0
 
     def split(self, feature_data, spec: SplitSpec) -> SplitResult:
         p = self.params
@@ -52,10 +56,13 @@ class LowRankSplitter(BaseSplitter):
                                      landmark=p.landmark, seed=spec.seed)
         logger.info("  Low-rank: n=%d rank=%d metric=%s", n, B.shape[1], metric)
 
+        # balance corridor: the tradeoff knob when set, else the spec's default
+        # (preserves back-compatible behaviour: exact Lloyd + spec.epsilon FM).
+        fm_eps = p.balance_slack if p.balance_slack > 0 else spec.epsilon
         best_labels, best_obj = None, np.inf
         for r in range(p.n_restarts):
-            labels = balanced_lloyd(B, spec.splits, epsilon=spec.epsilon,
-                                    n_iter=p.n_iter, seed=spec.seed + r)
+            labels = balanced_lloyd(B, spec.splits, n_iter=p.n_iter, seed=spec.seed + r,
+                                    balance_slack=p.balance_slack)
             obj = factor_leakage(B, labels, len(spec.splits))
             if obj < best_obj:
                 best_obj, best_labels = obj, labels
@@ -63,7 +70,7 @@ class LowRankSplitter(BaseSplitter):
 
         moves = 0
         if p.fm and n <= p.fm_max_n:
-            best_labels, moves = fm_polish(B, best_labels, spec.splits, epsilon=spec.epsilon)
+            best_labels, moves = fm_polish(B, best_labels, spec.splits, epsilon=fm_eps)
             best_obj = factor_leakage(B, best_labels, len(spec.splits))
             logger.info("  FM polish: %d moves, leakage=%.1f", moves, best_obj)
 

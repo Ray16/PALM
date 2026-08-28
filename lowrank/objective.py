@@ -28,3 +28,17 @@ def factor_leakage(B: np.ndarray, labels: Sequence[int], n_blocks: int) -> float
     P.index_add_(0, lab, Bt)
     s = P.sum(0)
     return 0.5 * float((s @ s) - (P * P).sum())
+
+
+def realized_imbalance(labels: Sequence[int], splits: Sequence[float]) -> float:
+    """Max relative deviation of realized block fractions from the target ratio.
+
+    ``0.0`` = exactly balanced; ``0.1`` = some block is 10% off its target share.
+    The balance axis of the leakage↔balance tradeoff.
+    """
+    labels = np.asarray(labels)
+    n = len(labels)
+    total = float(sum(splits))
+    tgt = np.array([s / total for s in splits])
+    real = np.array([(labels == c).sum() / n for c in range(len(splits))])
+    return float(np.max(np.abs(real - tgt) / tgt))
