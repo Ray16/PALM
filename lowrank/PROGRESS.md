@@ -84,18 +84,16 @@ by the main session after review so the two cannot collide. Env `palm`; one GPU 
   - Suite: `test_lowrank` 9 · `test_multilevel` 4 · `test_target_gap` 7 · `test_kway` 5
     = **25 pass**, no k=2 regression.
 
-## In progress
-- **Ablation study** (fork, GPU 0) — RUNNING. "Both, consolidation first."
-  - Part A (primary): per-dataset config table reporting **leakage AND gen-gap side by
-    side** (Random / Lloyd-only / Lloyd+FM anchor / +balance_slack 0.30) to show the
-    exact-balance leakage-min anchor is simultaneously min-leakage & max-difficulty
-    (deliberately NOT an "add-one-in" ladder — balance_slack & hardness pull opposite
-    ways, per Synthesis). esol/bace/freesolv for gap, qmof leakage-only. Triplicate.
-  - Part B (secondary): on the anchor, sweep rank {64,256,1024} & n_restarts {1,4,16},
-    measuring BOTH leakage and gap — does tuning-neutrality (Steps 2/4, leakage-only)
-    extend to the gap?
-  - New file `experiments/ablation.py` → `ablation_components.csv`, `ablation_grid.csv`,
-    PNGs. No existing files edited. Not committed.
+## Done this session (cont.)
+- **Ablation study** — DONE & verified (FINDINGS Step 7). Reports leakage AND gen-gap
+  side by side, 4 configs, triplicate. **Corrected my earlier phrasing**: the anchor
+  (lloyd+FM, exact balance) is near-MAX-gap but NOT global-min-leakage — `balance_slack`
+  reaches lower leakage yet LOWER gap on all 4 (esol 0.81→0.51). So leakage & gap
+  anti-correlate across mechanisms = the sharpened synthesis. Part B: rank & n_restarts
+  neutral on BOTH metrics (n_restarts identical 1/4/16 → Lloyd+FM deterministic to the
+  optimum), reinforcing #4 and the #2 skip. qmof had a usable target → gap column too.
+  Files: `experiments/ablation.py` (+ `ablation_components.csv`, `ablation_grid.csv`,
+  6 PNGs). Committed separately (see below).
 
 ## Skipped
 - **#2 Smarter Lloyd init + local-minimum escape** — SKIPPED (decision). #1 showed flat

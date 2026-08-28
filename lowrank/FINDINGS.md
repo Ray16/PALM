@@ -142,6 +142,44 @@ estimate is noisier. Controllable on 3-way; calibrate with more seeds.
 
 ---
 
+## Step 7 — Ablation: component consolidation on leakage AND gap (confirms + sharpens the synthesis)
+*Code: `experiments/ablation.py` → `ablation_components.csv`, `ablation_grid.csv`,
+`ablation_components_{esol,bace,freesolv,qmof}.png`, `ablation_{rank,n_restarts}_{leakage,gap}.png`.*
+
+A single study reporting **leakage and realized gen-gap side by side** for four configs
+(2-way [8,2], triplicate). Deliberately not an "add-one-in lowers leakage" ladder — because
+leakage and gap turn out to **anti-correlate across mechanisms**:
+
+| dataset | random (L / gap) | lloyd, no FM | lloyd+FM (anchor) | +balance_slack 0.3 |
+|---|--:|--:|--:|--:|
+| esol | 0.307 / 0.30 | 0.166 / 0.72 | 0.160 / **0.81** | **0.109** / 0.51 |
+| bace | 0.308 / 0.11 | 0.269 / 0.26 | 0.257 / 0.23 | **0.194** / 0.22 |
+| freesolv | 0.303 / 0.32 | 0.138 / 0.73 | 0.127 / **0.71** | **0.079** / 0.63 |
+| qmof | 0.310 / 0.42 | 0.206 / 0.56 | 0.195 / 0.54 | **0.142** / 0.52 |
+
+**Findings (Part A — components):**
+1. **`random` is the easy corner everywhere** — highest leakage *and* lowest gap.
+2. **The gap jump is from leakage-minimization itself** (random→lloyd: esol gap 0.30→0.72),
+   *not* from the FM polish on top.
+3. **FM polish** (lloyd→lloyd+FM) is a small leakage drop with a small/noisy gap effect
+   (up on esol, within std on the rest).
+4. **Spending balance** (anchor→slack) reaches the **lowest leakage on all 4** but the gap
+   **falls** (esol 0.81→0.51) — the metric-gaming trap, cleanly reproduced.
+5. **Therefore the min-leakage config (slack) is NOT the max-difficulty config (anchor).**
+   Leakage and gap anti-correlate across mechanisms — the sharpened form of the synthesis
+   below: difficulty is separation at fixed balance, and lowering leakage the other way
+   (imbalance) makes the eval *easier*.
+
+**Findings (Part B — tuning-neutrality extends to the gap):** on the anchor, sweeping
+`rank ∈ {64,256,1024}` moves neither leakage (~0.001 span) nor gap (esol wobble is
+non-monotonic = noise); `n_restarts ∈ {1,4,16}` is **identical** on both metrics (Lloyd+FM
+is effectively deterministic to the optimum — best-of-1 suffices). So the hyperparameters
+are neutral on the gap as well as on leakage — reinforcing Step 4's global-optimum result
+and the decision to skip smarter-init/escape. The only real levers remain **`balance_slack`**
+(leakage↔balance metric tradeoff) and **`hardness`** (difficulty).
+
+---
+
 ## Synthesis — Steps 1 & 3 are NOT one capability (tested, hypothesis refuted)
 *Experiment: `experiments/balance_gap.py` → `balance_vs_hardness_gap.png`,
 `balance_gap.csv`.*
