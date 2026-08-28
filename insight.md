@@ -88,10 +88,43 @@ they look; leakage-minimized splits are a stronger generalization test.
 
 ---
 
-## 5. The feature space is not neutral — but the honest gain is small and specific
+## 5. The feature space is not neutral — so we hand-pick per type and demonstrate it
 
-*(This section was rewritten after hardening the pipeline — see §5a for what
-changed and why the first-pass numbers were wrong.)*
+*(This section was rewritten twice: after hardening the pipeline (§5a), and again
+after the sweep showed per-dataset routing isn't worth its complexity — so we
+**hand-pick a safe featurizer per entity type and demonstrate it**, rather than
+route.)*
+
+**The decision:** don't route per dataset. Use one hand-picked featurizer per
+entity type, chosen from the sweep evidence, with a short list of validated
+exceptions:
+
+| entity type | hand-pick | validated exception |
+|---|---|---|
+| molecule | **ECFP-1024** | bace → ChemBERTa |
+| material | **MAGPIE** | qmof → mat2vec |
+
+**The demonstration** (`demonstrate_features.py` → `figures/feature_tradeoff_*.png`),
+mean over each type's datasets, reference-space leakage vs held-out OOD metric:
+
+| type | feature | ref-leakage | mean OOD | worst OOD | verdict |
+|---|---|--:|--:|--:|---|
+| molecule | **ecfp1024** | **0.208** | 0.47 | 0.06 | hand-pick: lowest leakage, OOD-safe |
+| molecule | maccs | 0.237 | 0.55 | 0.12 | higher leakage |
+| molecule | rdkit_descriptors | 0.278 | 0.52 | 0.02 | leakiest |
+| molecule | chemberta | 0.229 | 0.41 | **−0.91** | OOD-UNSAFE (good only on bace) |
+| material | **magpie** | 0.24 | 0.20 | 0.12 | hand-pick: safe, best mean OOD |
+| material | mat2vec | 0.22 | 0.10 | **−0.28** | OOD-UNSAFE (good only on qmof) |
+
+So the hand-picks are justified directly: **ECFP-1024 has the lowest molecule
+leakage and never goes OOD-harmful; MAGPIE is the safe material default.** The two
+alternatives that *look* attractive on leakage (chemberta, mat2vec) each collapse
+generalization on at least one dataset — which is exactly why they're per-dataset
+exceptions, not defaults. A lower leakage number is not a better split unless the
+model still generalizes.
+
+*(The paragraphs below give the per-dataset detail and the post-mortem on why the
+first, un-hardened pass over-claimed.)*
 
 The feature sweep (`feature_sweep.py`) featurizes each dataset with every
 candidate representation, then selects with three guards:

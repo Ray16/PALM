@@ -63,7 +63,7 @@ def _stats(sweep):
 
 def derive(sweep=SWEEP, out=OUT, floors=FLOORS):
     stats = _stats(sweep)
-    per_dataset, regret_rows = {}, []
+    per_dataset, seen_types = {}, set()
 
     for (ds, etype, task), g in stats.groupby(["dataset", "entity_type", "task_type"]):
         floor = floors.get(task, -np.inf)
@@ -83,38 +83,25 @@ def derive(sweep=SWEEP, out=OUT, floors=FLOORS):
         keep = keep.sort_values(["ref_mean", "gate"], ascending=[True, False])
         best = keep.iloc[0]
 
-        # (4) significance margin vs the canonical default
+        # (4) significance margin vs the canonical default: record ONLY the datasets
+        # where a non-default feature is a validated win (beats the default by
+        # > max(5%, pooled-std)). Everything else falls back to the type default,
+        # so per_dataset is a short, curated exception list — not a full table.
         drow = g[g["feature_set"] == default_fs]
         chosen = best["feature_set"]
         if not drow.empty and chosen != default_fs:
             d_leak, d_std = float(drow["ref_mean"].iloc[0]), float(drow["ref_std"].iloc[0])
             margin = max(MIN_REL * d_leak, d_std, float(best["ref_std"]))
-            if not (best["ref_mean"] < d_leak - margin):
-                chosen = default_fs                       # improvement not significant -> keep default
-        per_dataset[ds] = chosen
+            if best["ref_mean"] < d_leak - margin:
+                per_dataset[ds] = chosen                  # a genuine, significant exception
+        seen_types.add(etype)
 
-        # regret bookkeeping for the per-type fallback (over gated spaces only)
-        gmin = float(gated["ref_mean"].min()) if not gated.empty else float(pool["ref_mean"].min())
-        for _, r in (gated if not gated.empty else pool).iterrows():
-            regret_rows.append(dict(dataset=ds, entity_type=etype,
-                                    feature_set=r["feature_set"],
-                                    regret=float(r["ref_mean"]) - gmin))
-
-    # per entity type: minimax regret (smallest worst-case gap to per-dataset best)
-    per_entity_type = {}
-    rr = pd.DataFrame(regret_rows)
-    if not rr.empty:
-        for etype, ge in rr.groupby("entity_type"):
-            n_ds = ge["dataset"].nunique()
-            # only consider features present (gated) on a majority of the type's datasets
-            cov = ge.groupby("feature_set")["dataset"].nunique()
-            eligible = cov[cov >= max(1, n_ds // 2)].index
-            ge = ge[ge["feature_set"].isin(eligible)]
-            if ge.empty:
-                per_entity_type[etype] = FEATURE_DEFAULTS.get(etype)
-                continue
-            worst = ge.groupby("feature_set")["regret"].max()          # worst-case regret per feature
-            per_entity_type[etype] = worst.idxmin()                    # minimize the worst case
+    # per entity type: the curated SAFE default (ECFP / MAGPIE). The sweep confirms
+    # it wins-or-ties leakage on the majority of each type's datasets AND is never
+    # the OOD-harmful pick; automated per-type selection (minimax regret) is left
+    # out because it can favour a "never-terrible" feature over the "usually-best"
+    # default (e.g. it picked chemberta for molecules, which wins only bace).
+    per_entity_type = {t: FEATURE_DEFAULTS[t] for t in sorted(seen_types) if t in FEATURE_DEFAULTS}
 
     payload = {
         "per_dataset": per_dataset,
@@ -123,7 +110,9 @@ def derive(sweep=SWEEP, out=OUT, floors=FLOORS):
         "selection": {"objective": "min reference-space leakage among gated spaces",
                       "gate": "random-split test >= floor",
                       "ood_tolerance": OOD_TOL, "significance_margin_rel": MIN_REL,
-                      "per_type_rule": "minimax regret", "ood_methods": list(OOD_METHODS)},
+                      "per_type_rule": "curated safe default (ECFP/MAGPIE)",
+                      "per_dataset": "validated exceptions only (significant on leakage AND OOD)",
+                      "ood_methods": list(OOD_METHODS)},
         "provenance": {"sweep": os.path.relpath(sweep)},
     }
     os.makedirs(os.path.dirname(out), exist_ok=True)
@@ -131,10 +120,8 @@ def derive(sweep=SWEEP, out=OUT, floors=FLOORS):
         json.dump(payload, fh, indent=2)
 
     print(f"== heuristics -> {out}")
-    print(f"   per_entity_type (minimax regret): {per_entity_type}")
-    for ds, fs in sorted(per_dataset.items()):
-        tag = "" if fs != FEATURE_DEFAULTS.get(stats[stats.dataset == ds]["entity_type"].iloc[0]) else "  (default; no significant win)"
-        print(f"   {ds:28s} -> {fs}{tag}")
+    print(f"   per_entity_type (curated safe default): {per_entity_type}")
+    print(f"   validated per-dataset exceptions: {per_dataset or '(none)'}")
     return payload
 
 

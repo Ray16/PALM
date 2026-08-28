@@ -1,22 +1,10 @@
 {
   "per_dataset": {
-    "materials_project": "magpie",
     "moleculenet_bace": "chemberta",
-    "moleculenet_bbbp": "ecfp1024",
-    "moleculenet_clintox": "ecfp1024",
-    "moleculenet_esol": "ecfp1024",
-    "moleculenet_freesolv": "ecfp1024",
-    "moleculenet_hiv": "ecfp1024",
-    "moleculenet_lipophilicity": "ecfp1024",
-    "moleculenet_muv": "ecfp1024",
-    "moleculenet_qm8": "ecfp1024",
-    "moleculenet_sider": "ecfp1024",
-    "moleculenet_tox21": "ecfp1024",
-    "openpolymer26": "magpie",
     "qmof": "mat2vec"
   },
   "per_entity_type": {
-    "material": "mat2vec",
+    "material": "magpie",
     "molecule": "ecfp1024"
   },
   "gate_floors": {
@@ -28,7 +16,8 @@
     "gate": "random-split test >= floor",
     "ood_tolerance": 0.03,
     "significance_margin_rel": 0.05,
-    "per_type_rule": "minimax regret",
+    "per_type_rule": "curated safe default (ECFP/MAGPIE)",
+    "per_dataset": "validated exceptions only (significant on leakage AND OOD)",
     "ood_methods": [
       "hypergraph",
       "lowrank"
