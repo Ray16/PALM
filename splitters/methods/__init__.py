@@ -5,8 +5,7 @@ Importing this package registers every built-in splitter (each module applies th
 to the imports below.
 """
 
-from . import hypergraph      # noqa: F401  (registers "hypergraph", "graph")
+import PALM.hypergraph        # noqa: F401  (standalone package; registers "hypergraph", "graph", "hypergraph_nd", "hypergraph_nd_knn")
 import PALM.lowrank           # noqa: F401  (standalone package; registers "lowrank")
-from . import nD_hypergraph   # noqa: F401  (registers "hypergraph_nd", "hypergraph_nd_knn")
 from . import adapters        # noqa: F401  (registers "datasail", "scaffold")
 from . import random          # noqa: F401  (registers "random")

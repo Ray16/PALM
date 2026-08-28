@@ -76,11 +76,19 @@ splitters/
   tool.py            JSON-in/out wrapper for agents/MCP
   cli.py             python -m PALM.splitters
   common/            shared kernels (one home for each concern):
-    feature_preparation, pairwise_similarity, nearest_neighbors,
-    balanced_assignment, split_naming, mtkahypar_partition,
-    fiduccia_mattheyses, leakage_metrics
-  methods/           hypergraph, lowrank, nD_hypergraph, adapters
+    feature_preparation, pairwise_similarity, balanced_assignment,
+    split_naming, fiduccia_mattheyses, leakage_metrics
+  methods/           adapters (datasail, scaffold), random
   tests/             test_splitters.py (registry, every method, tool, low-rank correctness)
+```
+
+The two flagship methods live in their own standalone packages so they can evolve
+independently, registering into this registry on import:
+
+```
+PALM/hypergraph/     hypergraph, graph, hypergraph_nd, hypergraph_nd_knn
+                     (knn construction + Mt-KaHyPar KM1/CUT partitioning)
+PALM/lowrank/        lowrank (Nyström factorization + balanced-Lloyd + FM)
 ```
 
 ## Test

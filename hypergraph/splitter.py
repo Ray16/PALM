@@ -1,7 +1,7 @@
 """Hypergraph-partitioning and weighted-graph-edge-cut splitters (1-D).
 
-Both build a sparse k-NN similarity structure over the entities and hand it to
-Mt-KaHyPar:
+Both build a sparse k-NN similarity structure over the entities (:mod:`.knn`) and
+hand it to Mt-KaHyPar (:mod:`.partition`):
 
 - :class:`HypergraphSplitter` — one mean-weighted k-NN *hyperedge* per node, cut
   under the KM1 connectivity objective. Fast and simple; the objective is a
@@ -21,13 +21,14 @@ import numpy as np
 
 import time
 
-from ..base import BaseSplitter, SplitResult, SplitSpec, register
-from ..common.feature_preparation import choose_metric, feature_matrix_from_dict
-from ..common.fiduccia_mattheyses import fiduccia_mattheyses_exact
-from ..common.nearest_neighbors import build_knn_graph, build_knn_hyperedges
-from ..common.leakage_metrics import scaled_lpi
-from ..common.split_naming import assign_split_names
-from ..common.mtkahypar_partition import partition_graph, partition_hypergraph
+from PALM.splitters.base import BaseSplitter, SplitResult, SplitSpec, register
+from PALM.splitters.common.feature_preparation import choose_metric, feature_matrix_from_dict
+from PALM.splitters.common.fiduccia_mattheyses import fiduccia_mattheyses_exact
+from PALM.splitters.common.leakage_metrics import scaled_lpi
+from PALM.splitters.common.split_naming import assign_split_names
+
+from .knn import build_knn_graph, build_knn_hyperedges
+from .partition import partition_graph, partition_hypergraph
 
 logger = logging.getLogger(__name__)
 

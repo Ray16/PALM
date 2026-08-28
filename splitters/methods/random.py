@@ -37,7 +37,7 @@ class RandomSplitter(BaseSplitter):
     def split(self, data, spec: SplitSpec) -> SplitResult:
         t0 = time.time()
         # n-D input?  (records, axis_feature_maps) tuple / dict / NDInput
-        from .nD_hypergraph import NDInput, _as_nd
+        from PALM.hypergraph import NDInput, _as_nd
         is_nd = isinstance(data, (NDInput, tuple)) or (isinstance(data, dict) and "records" in data)
         if is_nd:
             nd = _as_nd(data)

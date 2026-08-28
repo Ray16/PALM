@@ -27,12 +27,13 @@ from typing import Dict, List, Optional
 
 import numpy as np
 
-from ..base import BaseSplitter, SplitResult, SplitSpec, register
-from ..common.feature_preparation import choose_metric
-from ..common.leakage_metrics import macro_axis_lpi
-from ..common.nearest_neighbors import build_knn_hyperedges
-from ..common.mtkahypar_partition import partition_hypergraph
-from ..common.split_naming import assign_split_names
+from PALM.splitters.base import BaseSplitter, SplitResult, SplitSpec, register
+from PALM.splitters.common.feature_preparation import choose_metric
+from PALM.splitters.common.leakage_metrics import macro_axis_lpi
+from PALM.splitters.common.split_naming import assign_split_names
+
+from .knn import build_knn_hyperedges
+from .partition import partition_hypergraph
 
 logger = logging.getLogger(__name__)
 

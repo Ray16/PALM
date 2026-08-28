@@ -2,7 +2,8 @@
 
 GPU (torch) construction with a CPU (sklearn) fallback, chunked over query rows
 so peak memory is O(block * n) rather than O(n^2). These back the hypergraph and
-graph-edge-cut splitters.
+graph-edge-cut splitters — the *construction* half of the method, where the
+neighbourhood definition (k, metric, thresholding, degree caps) is tuned.
 
 ``metric`` is one of ``"tanimoto"`` / ``"cosine"`` / ``"euclidean"``; the
 euclidean branch standardizes columns first (via
@@ -16,7 +17,8 @@ import logging
 
 import numpy as np
 
-from .pairwise_similarity import pairwise_similarity, standardize_for_metric
+from PALM.splitters.common.pairwise_similarity import (pairwise_similarity,
+                                                       standardize_for_metric)
 
 logger = logging.getLogger(__name__)
 

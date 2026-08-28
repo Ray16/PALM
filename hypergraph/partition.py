@@ -4,7 +4,8 @@ One place for: the process-wide initializer singleton, the preset map, and the
 balanced context setup with explicit per-block capacity caps derived from the
 (possibly non-uniform) split ratios. :func:`partition_hypergraph` and
 :func:`partition_graph` differ only in the objective (KM1 vs CUT) and whether
-they build a hypergraph or a graph.
+they build a hypergraph or a graph — the *cut* half of the method, where the
+partitioning objective and balance constraint are tuned.
 """
 
 from __future__ import annotations
