@@ -29,7 +29,10 @@ import pandas as pd
 from ase.data import atomic_masses, covalent_radii
 from ase.db import connect
 
-DATA_DIR = "/nfs/lambda_stor_01/homes/rzhu/PALM/data/DataSAIL_data/1D/omol25"
+# Repo-relative so the featurizer is portable (a new user's clone lives elsewhere);
+# resolves to <repo>/data/omol25, the path the loader reads.
+HERE = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.normpath(os.path.join(HERE, "..", "..", "data", "omol25"))
 CACHE_DIR = os.path.join(DATA_DIR, "_cache")
 SPLITS = ["train_4M", "val", "test"]
 SPLIT_CODE = {"train_4M": 0, "val": 1, "test": 2}
@@ -96,22 +99,25 @@ def _process_shard(args):
     return key, len(ids)
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--workers", type=int, default=64)
-    args = ap.parse_args()
+def featurize(workers: int = 64):
+    """Featurize every ``*.aselmdb`` shard under ``DATA_DIR`` and merge to the cache.
+
+    Writes ``_cache/features.npy`` [N, 115] + ``_cache/meta.parquet``. Idempotent
+    per shard (finished shards are skipped), so it resumes a partial run. Callable
+    programmatically (e.g. from ``PALM.data.prepare_omol25``) or via ``main()``.
+    """
     os.makedirs(CACHE_DIR, exist_ok=True)
 
     tasks = []
     for split in SPLITS:
         for shard in sorted(glob.glob(os.path.join(DATA_DIR, split, "*.aselmdb"))):
             tasks.append((split, shard))
-    print(f"{len(tasks)} shards across {SPLITS}; featurizing on {args.workers} workers ...", flush=True)
+    print(f"{len(tasks)} shards across {SPLITS}; featurizing on {workers} workers ...", flush=True)
 
     t0 = time.time()
     done, total = 0, 0
     import multiprocessing as mp
-    with ProcessPoolExecutor(max_workers=args.workers,
+    with ProcessPoolExecutor(max_workers=workers,
                              mp_context=mp.get_context("spawn")) as ex:
         futs = {ex.submit(_process_shard, t): t for t in tasks}
         for fut in as_completed(futs):
@@ -142,6 +148,13 @@ def main():
           f"[{N},{FEAT_DIM}] + meta.parquet in {time.time()-t0:.0f}s", flush=True)
     # per-shard temporaries are left in place (feat_*/meta_*); delete manually after
     # verifying features.npy — leaving them avoids any resume/merge race.
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--workers", type=int, default=64)
+    args = ap.parse_args()
+    featurize(args.workers)
 
 
 if __name__ == "__main__":

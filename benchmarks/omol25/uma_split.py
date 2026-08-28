@@ -18,7 +18,7 @@ from PALM.benchmarks.omol25 import uma_leakage as UL   # reuse rbf_factor / medi
 HERE = os.path.dirname(os.path.abspath(__file__))
 CACHE = os.path.join(HERE, "_cache_uma")
 RESULTS = os.path.join(HERE, "results")
-META = os.path.join(HERE, "..", "..", "data", "DataSAIL_data", "1D", "omol25", "_cache", "meta.parquet")
+META = os.path.join(HERE, "..", "..", "data", "omol25", "_cache", "meta.parquet")
 RANK = 256
 
 

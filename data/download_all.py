@@ -13,12 +13,17 @@ to target subsets, --cache-dir to keep HuggingFace/tmp scratch off a full home
 disk, and --mp-n / --limit to size the samplable sources.
 
     python -m PALM.data.download_all --cache-dir /scratch/palm_cache
-    python -m PALM.data.download_all --only qmof oc22
+    python -m PALM.data.download_all --only oc22 lincs_l1000
     python -m PALM.data.download_all --skip lincs_l1000    # skip the 5 GB one
 
 Requires the `datasets` optional deps (see pyproject: PyTDC, mp-api, ase, lmdb,
-datasets, h5py). Materials Project also needs MP_API_KEY. `omol25` (28 GB) is NOT
-fetched here — see data/README.md.
+datasets, h5py). Materials Project also needs MP_API_KEY.
+
+`omol25` is the one *opt-in* step (a ~28 GB gated HuggingFace download + a full
+descriptor featurization): it is excluded from the default all-datasets run and
+fetched only when named explicitly —
+
+    python -m PALM.data.download_all --only omol25   # needs HF login; see prepare_omol25
 """
 
 import argparse
@@ -31,9 +36,14 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 # committed to the repo, because the figshare source is a 392 MB zip behind a flaky
 # 202-async endpoint. A fresh clone already has it.
 
+# Opt-in steps: too large / gated for a routine setup, so they run ONLY when named
+# explicitly with --only (never in the default all-datasets run). omol25 is a ~28 GB
+# gated HuggingFace download + a full descriptor featurization — see prepare_omol25.
+OPT_IN = {"omol25"}
+
 
 # name -> (relative output marker, callable). Order = cheap/small first.
-def _steps(mp_n, limit):
+def _steps(mp_n, limit, workers):
     return {
         "tdc":              ("tdc/Solubility_AqSolDB.csv",
                              lambda: __import__("PALM.data.prepare_tdc",
@@ -53,6 +63,10 @@ def _steps(mp_n, limit):
         "lincs_l1000":      ("lincs_l1000/records.csv",
                              lambda: __import__("PALM.data.prepare_lincs_l1000",
                                                 fromlist=["prepare"]).prepare(limit)),
+        # opt-in (see OPT_IN): ~28 GB gated download + featurization.
+        "omol25":           ("omol25/_cache/features.npy",
+                             lambda: __import__("PALM.data.prepare_omol25",
+                                                fromlist=["prepare"]).prepare(workers)),
     }
 
 
@@ -65,6 +79,8 @@ def main(argv=None):
                     help="Materials Project rows (100000 for the full snapshot)")
     ap.add_argument("--limit", type=int, default=10_000,
                     help="sample cap for openpolymer26 / lincs_l1000")
+    ap.add_argument("--workers", type=int, default=64,
+                    help="parallel featurization workers for the opt-in omol25 step")
     ap.add_argument("--force", action="store_true", help="re-run even if output exists")
     args = ap.parse_args(argv)
 
@@ -75,8 +91,9 @@ def main(argv=None):
         os.environ.setdefault("TMPDIR", args.cache_dir)
         print(f"[cache] HF_HOME + TMPDIR -> {args.cache_dir}")
 
-    steps = _steps(args.mp_n, args.limit)
-    names = args.only or list(steps)
+    steps = _steps(args.mp_n, args.limit, args.workers)
+    # default run = every dataset EXCEPT the opt-in ones (omol25); --only overrides.
+    names = args.only or [n for n in steps if n not in OPT_IN]
     done, skipped, failed = [], [], []
     for name in names:
         if name in args.skip or name not in steps:

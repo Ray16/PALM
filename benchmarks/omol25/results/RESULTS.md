@@ -2,7 +2,7 @@
 
 Merged dataset = OMol25 `train_4M` + `val` + `test` = **9,553,821 structures**
 (train 3,986,754 / val 2,762,021 / test 2,805,046), downloaded to
-`PALM/data/DataSAIL_data/1D/omol25/` and featurized to
+`PALM/data/omol25/` and featurized to
 `_cache/features.npy` [9553821 × 115] + `_cache/meta.parquet`.
 
 ## Metric

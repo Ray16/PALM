@@ -179,7 +179,7 @@ def load_qmof(limit=None):
 
 def load_omol25(limit=DEFAULT_LIMIT):
     """OMol25: subsample of the cached 115-d structural descriptors (9.55M total)."""
-    cache = os.path.join(DSAIL, "1D", "omol25", "_cache")
+    cache = os.path.join(HERE, "omol25", "_cache")   # moved out of DataSAIL_data (not a DataSAIL set)
     feat_path = os.path.join(cache, "features.npy")
     meta_path = os.path.join(cache, "meta.parquet")
     if not (os.path.exists(feat_path) and os.path.exists(meta_path)):

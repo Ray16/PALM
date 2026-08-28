@@ -213,7 +213,7 @@ __marimo__/
 data/DataSAIL_data/3D+/tdc_cache/
 
 # large / regenerable split outputs and caches (keep code + small results only)
-data/DataSAIL_data/1D/omol25/
+data/omol25/
 data/DataSAIL_data/3D+/uspto_mcr/records_large.csv
 lowrank_split/omol25/results/omol25_splits.parquet
 lowrank_split/omol25/_cache_uma/

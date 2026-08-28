@@ -11,6 +11,8 @@ Everything needed to go from a fresh clone to running the master benchmark.
 - **Fetched on demand** (git-ignored, regenerable): the large / API / streamed
   sources — TDC, Materials Project, OpenPolymer26, and the new modalities
   (genomic, OC22, LINCS L1000). One command fetches them all (below).
+- **Opt-in** (git-ignored, large + gated): OMol25 only — excluded from the default
+  fetch; run `python -m PALM.data.download_all --only omol25` (see Notes).
 
 ## 1. Environment (single env)
 
@@ -52,8 +54,11 @@ Idempotent (skips what's already present). Useful flags:
 | genomic | ~10 MB | ~40 MB |
 | OC22 | 114 MB tar | ~record CSV + LMDBs |
 | LINCS L1000 | 5 GB gz | ~12 GB GCTX + 78 MB features |
+| OMol25 *(opt-in)* | 28 GB gated | ~48 GB raw + 4.4 GB feature cache |
 
-LINCS is the heavy one — skip it with `--skip lincs_l1000` for a light setup.
+LINCS is the heavy one in the default run — skip it with `--skip lincs_l1000` for a
+light setup. OMol25 is heavier still but opt-in (`--only omol25`), so it never runs
+unless you ask for it.
 
 ## 3. Run the benchmark
 
@@ -69,9 +74,20 @@ never dropped.
 
 ## Notes
 
-- **OMol25** (28 GB + a 9.5M×115 feature cache) is *not* auto-fetched — it's too
-  large for a routine setup. See its row in `data_source.csv` for the manual
-  download; the loader picks it up once present.
+- **OMol25** (28 GB gated download + a 9.5M×115 feature cache) is the one
+  **opt-in** dataset — excluded from the default `download_all` run because it is
+  too large/gated for a routine setup, but reachable by one command:
+
+  ```bash
+  # one-time: accept the license at https://huggingface.co/facebook/OMol25
+  pip install huggingface_hub && huggingface-cli login   # or export HF_TOKEN=...
+  python -m PALM.data.download_all --only omol25         # ~28 GB + featurization
+  ```
+
+  `prepare_omol25` downloads the `{train_4M,val,test}.tar.gz` tarballs, extracts
+  the `*.aselmdb` shards, and featurizes them (ase-only, no GPU) into
+  `_cache/features.npy` + `meta.parquet` — the files the loader reads. Every stage
+  is idempotent, and if the license/login is missing it prints the exact steps.
 - **New modalities** — `genomic`, `oc22`, and `lincs_l1000` are prepared by
   `download_all` but only enter the benchmark once their loaders are registered in
   `PALM/data/sources.py`. Formats:

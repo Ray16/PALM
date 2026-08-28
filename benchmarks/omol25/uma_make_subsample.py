@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-META = os.path.join(HERE, "..", "..", "data", "DataSAIL_data", "1D", "omol25",
+META = os.path.join(HERE, "..", "..", "data", "omol25",
                     "_cache", "meta.parquet")
 
 

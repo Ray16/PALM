@@ -11,7 +11,7 @@ from fairchem.core import pretrained_mlip
 from fairchem.core.datasets.atomic_data import AtomicData, atomicdata_list_to_batch
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR = os.path.join(HERE, "..", "..", "data", "DataSAIL_data", "1D", "omol25")
+DATA_DIR = os.path.join(HERE, "..", "..", "data", "omol25")
 SPLIT_DIR = {0: "train_4M", 1: "val", 2: "test"}
 N = 150
 

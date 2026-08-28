@@ -19,7 +19,7 @@ from typing import Optional, Tuple
 import numpy as np
 import pandas as pd
 
-CACHE_DIR = "/nfs/lambda_stor_01/homes/rzhu/PALM/data/DataSAIL_data/1D/omol25/_cache"
+CACHE_DIR = "/nfs/lambda_stor_01/homes/rzhu/PALM/data/omol25/_cache"
 
 
 def load_features(mmap: bool = True) -> Tuple[np.ndarray, pd.DataFrame]:
