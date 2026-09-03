@@ -95,6 +95,44 @@ by the main session after review so the two cannot collide. Env `palm`; one GPU 
   Files: `experiments/ablation.py` (+ `ablation_components.csv`, `ablation_grid.csv`,
   6 PNGs). Committed separately (see below).
 
+## Benchmark plan (lowrank & hypergraph vs all methods, then category patterns)
+Goal (user): (1) run both models on all data types + benchmark vs other splitters;
+(2) find patterns of what each is good at per data category.
+- **Key finding**: the master benchmark (`benchmarks/results/master_benchmark_routed.csv`,
+  21 datasets, triplicate, 8 methods 1d + 3 nd) is ALREADY complete for the 1d suite and
+  is capped at `--limit 10000` — max n benchmarked is 10k on every dataset. This session's
+  lowrank changes don't bite at 10k (cap>200k, k>2 n/a to [8,2], target_gap separate), so
+  re-running the 10k sweep would reproduce identical numbers. Not worth it.
+- Real gaps: (A) **nd type** — no `lowrank_nd` (uspto_mcr runs only on hypergraph_nd);
+  (B) **scale** — 10k cap hides lowrank's moat (hypergraph O(n²) infeasible >1e5); (C) for
+  Phase 2, registry is **organic-heavy** (14 organic vs 1–3 each for inorganic/protein/
+  gene/polymer/reaction) → weak per-category patterns outside organic (prepped DNA/OC22/
+  LINCS sets, handed to rzhu-b5, would balance).
+- **Decision (user): build lowrank_nd → 21/21 first.**
+
+## Done this session (cont.)
+- **lowrank_nd** — DONE & verified (fork was interrupted at reporting; I verified). n-D
+  low-rank splitter: per-axis Nyström (feature axes) / one-hot (identity axes) factors,
+  each scaled by 1/√(total_a), CONCATENATED → existing balanced_lloyd + fm_polish (so the
+  1d optimizer minimizes the exact macro_axis_lpi). **Beats hypergraph on uspto_mcr**:
+  macro leakage 0.229 (exact 0.05 imbalance) vs hypergraph_nd_knn 0.256 (0.20 imbalance!)
+  vs hypergraph_nd 0.309 (~96s) vs random 0.320 — lowest leakage, tightest balance, ~100×
+  faster. lowrank now 21/21. Files: `lowrank/nd.py`, `tests/test_nd.py` (4 pass),
+  `experiments/nd_compare.py` (+csv/png); edits `__init__.py`, `benchmarks/master/
+  run_benchmark.py` METHODS_ND. Full suite 29/29. NOT committed. (Follow-up: nd.py
+  hardcodes metric="tanimoto" for feature axes — fine for uspto_mcr ECFP, generalize via
+  choose_metric later. Master-harness scratch run confirmed lowrank_nd path; full nd run
+  slow only due to hypergraph_nd's 96s.)
+
+## Was in progress
+- **lowrank_nd** (fork, GPU 0) — n-D low-rank splitter via per-axis Nyström
+  factors scaled by 1/√(total_a) then CONCATENATED → existing balanced_lloyd + fm_polish
+  (concatenated factor_leakage = macro_axis_lpi up to 1/A). Identity-only axes → one-hot.
+  New: `lowrank/nd.py` (@register lowrank_nd, arity nd), `tests/test_nd.py`,
+  `experiments/nd_compare.py`; edits `lowrank/__init__.py` + adds lowrank_nd to
+  `benchmarks/master/run_benchmark.py` METHODS_ND. Validate vs hypergraph_nd(_knn)/random
+  on uspto_mcr (macro leakage, triplicate). Not committed.
+
 ## Skipped
 - **#2 Smarter Lloyd init + local-minimum escape** — SKIPPED (decision). #1 showed flat
   FM already reaches the global optimum here (best-of-30 == best-of-4), so there are no

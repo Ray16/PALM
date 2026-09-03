@@ -53,6 +53,7 @@ METHODS_ND = [
     ("random",            dict()),
     ("hypergraph_nd",     dict(preset="deterministic", sim_threshold=0.6)),
     ("hypergraph_nd_knn", dict(preset="deterministic", k=25)),
+    ("lowrank_nd",        dict()),
 ]
 
 DATASAIL_MAX_N = 3000                            # C1e is O(n^2) clustering + ILP

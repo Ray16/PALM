@@ -16,6 +16,7 @@ from .objective import factor_leakage, realized_imbalance
 from .optimize import (balanced_lloyd, corridor_assign, fm_polish,
                        interpolate_to_random)
 from .splitter import LowRankSplitter
+from .nd import LowRankNDSplitter
 from .target_gap import GapCalibrator, calibrate_gap, split_for_gap
 
 # ``lowrank_leakage`` kept as an alias for the factor-space objective (historical
@@ -26,6 +27,6 @@ __all__ = [
     "nystrom_features", "_kmeanspp_landmarks",
     "factor_leakage", "lowrank_leakage", "realized_imbalance",
     "balanced_lloyd", "corridor_assign", "fm_polish", "interpolate_to_random",
-    "LowRankSplitter",
+    "LowRankSplitter", "LowRankNDSplitter",
     "calibrate_gap", "split_for_gap", "GapCalibrator",
 ]
