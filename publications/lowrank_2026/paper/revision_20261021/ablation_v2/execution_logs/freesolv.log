@@ -1,0 +1,63 @@
+{"cpu_runner": true, "threads": 2, "interop_threads": 1, "affinity": [6, 7], "memory_node": 0, "transparent_hugepages": false}
+moleculenet_freesolv plain 0 ok 0.196
+moleculenet_freesolv plain 1 ok 0.176
+moleculenet_freesolv plain 2 ok 0.177
+moleculenet_freesolv rank32 0 ok 0.049
+moleculenet_freesolv rank32 1 ok 0.054
+moleculenet_freesolv rank32 2 ok 0.058
+moleculenet_freesolv rank64 0 ok 0.071
+moleculenet_freesolv rank64 1 ok 0.093
+moleculenet_freesolv rank64 2 ok 0.074
+moleculenet_freesolv rank128 0 ok 0.109
+moleculenet_freesolv rank128 1 ok 0.135
+moleculenet_freesolv rank128 2 ok 0.131
+moleculenet_freesolv uniform 0 ok 0.067
+moleculenet_freesolv uniform 1 ok 0.124
+moleculenet_freesolv uniform 2 ok 0.066
+moleculenet_freesolv one_restart 0 ok 0.154
+moleculenet_freesolv one_restart 1 ok 0.152
+moleculenet_freesolv one_restart 2 ok 0.228
+moleculenet_freesolv no_fm 0 ok 0.178
+moleculenet_freesolv no_fm 1 ok 0.174
+moleculenet_freesolv no_fm 2 ok 0.181
+moleculenet_freesolv tolerance05 0 ok 0.184
+moleculenet_freesolv tolerance05 1 ok 0.168
+moleculenet_freesolv tolerance05 2 ok 0.173
+moleculenet_freesolv power2 0 ok 0.196
+moleculenet_freesolv power2 1 ok 0.18
+moleculenet_freesolv power2 2 ok 0.172
+moleculenet_freesolv power3 0 ok 0.261
+moleculenet_freesolv power3 1 ok 0.198
+moleculenet_freesolv power3 2 ok 0.223
+moleculenet_freesolv groups 0 ok 0.275
+moleculenet_freesolv groups 1 ok 0.246
+moleculenet_freesolv groups 2 ok 0.27
+moleculenet_freesolv tail 0 ok 0.286
+moleculenet_freesolv tail 1 ok 0.276
+moleculenet_freesolv tail 2 ok 0.376
+moleculenet_freesolv tau05 0 ok 0.307
+moleculenet_freesolv tau05 1 ok 0.258
+moleculenet_freesolv tau05 2 ok 0.303
+moleculenet_freesolv tau06 0 ok 0.331
+moleculenet_freesolv tau06 1 ok 0.297
+moleculenet_freesolv tau06 2 ok 0.348
+moleculenet_freesolv cap25 0 ok 0.278
+moleculenet_freesolv cap25 1 ok 0.253
+moleculenet_freesolv cap25 2 ok 0.285
+moleculenet_freesolv cap100 0 ok 0.292
+moleculenet_freesolv cap100 1 ok 0.257
+moleculenet_freesolv cap100 2 ok 0.297
+moleculenet_freesolv cap_skip 0 ok 0.285
+moleculenet_freesolv cap_skip 1 ok 0.27
+moleculenet_freesolv cap_skip 2 ok 0.274
+/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/np/ufunc/parallel.py:373: NumbaWarning: The TBB threading layer requires TBB version 2021 update 6 or later i.e., TBB_INTERFACE_VERSION >= 12060. Found TBB_INTERFACE_VERSION = 12050. The TBB threading layer is disabled.
+  warnings.warn(problem)
+/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/pynndescent/pynndescent_.py:1241: UserWarning: Failed to correctly find n_neighbors for some samples. Results may be less than ideal. Try re-running with different parameters.
+  warn(
+moleculenet_freesolv tail_ann 0 ok 26.937
+/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/pynndescent/pynndescent_.py:1241: UserWarning: Failed to correctly find n_neighbors for some samples. Results may be less than ideal. Try re-running with different parameters.
+  warn(
+moleculenet_freesolv tail_ann 1 ok 0.888
+/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/pynndescent/pynndescent_.py:1241: UserWarning: Failed to correctly find n_neighbors for some samples. Results may be less than ideal. Try re-running with different parameters.
+  warn(
+moleculenet_freesolv tail_ann 2 ok 0.932

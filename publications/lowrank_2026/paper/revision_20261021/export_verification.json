@@ -2,5 +2,11 @@
   "package_tests": "95 passed in 32.11s; one non-fatal TBB threading warning",
   "graph_worker_tests": "4 passed in 3.00s",
   "fresh_producer_smoke": "FreeSolv plain, combined and random at epsilon .01 seed 0: all ok; independent new output",
-  "input_repository_blob_checks": "all 12 linked inputs match catalogue SHA256"
+  "input_repository_blob_checks": "all 12 linked inputs match catalogue SHA256",
+  "pdf_review_gate_tests": "3 passed in 0.62s",
+  "component_ablation": "324 release-code partitions validated",
+  "strict_export_rebuild": "passed after compilation, including reviewed page-render signatures",
+  "main_pages": 22,
+  "supplement_pages": 38,
+  "abstract_words": 188
 }

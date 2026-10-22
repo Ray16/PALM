@@ -1,0 +1,89 @@
+{"cpu_runner": true, "threads": 2, "interop_threads": 1, "affinity": [17, 19], "memory_node": 0, "transparent_hugepages": false}
+moleculenet_bbbp plain 0 ok 0.384
+moleculenet_bbbp plain 1 ok 0.379
+moleculenet_bbbp plain 2 ok 0.364
+moleculenet_bbbp rank32 0 ok 0.123
+moleculenet_bbbp rank32 1 ok 0.14
+moleculenet_bbbp rank32 2 ok 0.106
+moleculenet_bbbp rank64 0 ok 0.145
+moleculenet_bbbp rank64 1 ok 0.156
+moleculenet_bbbp rank64 2 ok 0.139
+moleculenet_bbbp rank128 0 ok 0.222
+moleculenet_bbbp rank128 1 ok 0.224
+moleculenet_bbbp rank128 2 ok 0.232
+moleculenet_bbbp uniform 0 ok 0.159
+moleculenet_bbbp uniform 1 ok 0.13
+moleculenet_bbbp uniform 2 ok 0.159
+moleculenet_bbbp one_restart 0 ok 0.312
+moleculenet_bbbp one_restart 1 ok 0.282
+moleculenet_bbbp one_restart 2 ok 0.415
+moleculenet_bbbp no_fm 0 ok 0.336
+moleculenet_bbbp no_fm 1 ok 0.353
+moleculenet_bbbp no_fm 2 ok 0.342
+moleculenet_bbbp tolerance05 0 ok 0.334
+moleculenet_bbbp tolerance05 1 ok 0.383
+moleculenet_bbbp tolerance05 2 ok 0.341
+moleculenet_bbbp power2 0 ok 0.365
+moleculenet_bbbp power2 1 ok 0.347
+moleculenet_bbbp power2 2 ok 0.327
+moleculenet_bbbp power3 0 ok 0.366
+moleculenet_bbbp power3 1 ok 0.42
+moleculenet_bbbp power3 2 ok 0.387
+moleculenet_bbbp groups 0 ok 0.704
+moleculenet_bbbp groups 1 ok 0.796
+moleculenet_bbbp groups 2 ok 0.606
+moleculenet_bbbp tail 0 ok 0.705
+moleculenet_bbbp tail 1 ok 0.944
+moleculenet_bbbp tail 2 ok 0.764
+moleculenet_bbbp tau05 0 ok 0.76
+moleculenet_bbbp tau05 1 ok 0.73
+moleculenet_bbbp tau05 2 ok 0.673
+moleculenet_bbbp tau06 0 ok 0.748
+moleculenet_bbbp tau06 1 ok 0.691
+moleculenet_bbbp tau06 2 ok 0.696
+moleculenet_bbbp cap25 0 ok 0.602
+moleculenet_bbbp cap25 1 ok 0.701
+moleculenet_bbbp cap25 2 ok 0.897
+moleculenet_bbbp cap100 0 ok 0.678
+moleculenet_bbbp cap100 1 ok 0.685
+moleculenet_bbbp cap100 2 ok 0.745
+moleculenet_bbbp cap_skip 0 ok 0.769
+moleculenet_bbbp cap_skip 1 ok 0.83
+moleculenet_bbbp cap_skip 2 ok 0.666
+Timeout (0:01:00)!
+Thread 0x00007f90f13fa640 (most recent call first):
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/multiprocessing/pool.py", line 579 in _handle_results
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/threading.py", line 1012 in run
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007f90f1bff640 (most recent call first):
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/multiprocessing/pool.py", line 531 in _handle_tasks
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/threading.py", line 1012 in run
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007f90f2404640 (most recent call first):
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/selectors.py", line 415 in select
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/multiprocessing/connection.py", line 1136 in wait
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/multiprocessing/pool.py", line 502 in _wait_for_updates
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/multiprocessing/pool.py", line 522 in _handle_workers
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/threading.py", line 1012 in run
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007f90f2c09640 (most recent call first):
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler_lock.py", line 13 in acquire
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler_lock.py", line 20 in __enter__
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/contextlib.py", line 526 in enter_context
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 877 in compile
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 376 in _compile_for_args
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/joblib/parallel.py", line 607 in __call__
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/joblib/_utils.py", line 109 in __call__
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/multiprocessing/pool.py", line 125 in worker
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/threading.py", line 1012 in run
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007f90f340e640 (most recent call first):
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/llvmlite/ir/_utils.py"

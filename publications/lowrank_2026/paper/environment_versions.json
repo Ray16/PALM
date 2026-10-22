@@ -15,5 +15,13 @@
     "pytest": "9.1.1"
   },
   "native_thread_limit": 2,
-  "model_n_jobs": 2
+  "model_n_jobs": 2,
+  "paper_build_modules": {
+    "numpy": "1.26.4",
+    "scipy": "1.17.0",
+    "pandas": "2.3.3",
+    "matplotlib": "3.10.8",
+    "Jinja2": "3.1.6",
+    "PyMuPDF": "1.28.2"
+  }
 }

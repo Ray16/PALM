@@ -1,42 +1,26 @@
 {
   "passed": true,
-  "scope": "All 22 main and 32 supplement rendered pages manually inspected; all 11 standalone figure layouts checked by bounding-box collision/font checks; compiled figure text 18 pt, no visible overlaps or clipped content.",
-  "render_directory": "/tmp/lowrank_narrative_20261021/rendered",
-  "pdf_sha256": {
-    "manuscript.pdf": "737a3b68867756bc89c31e60d01991cc80d98b0243e41282e8d397195636957e",
-    "supplement.pdf": "653f88c146077084405955e2b41cedaa717cbfdd8543576e47e7d193d295de65"
+  "scope": "All 22 main and 38 supplementary rendered pages manually inspected, including all six new component-ablation tables. Source figure layout checks and compiled-font extraction confirm 18 pt figure text, with no observed text/panel overlap or clipped figure text.",
+  "reviewed_documents": {
+    "manuscript.pdf": {
+      "pages": 22,
+      "render_sha256": "44899af8b2ed1438671b99432d175e96d34c5252b40b3b57b748dd8841d8e707",
+      "minimum_figure_font_pt": 18.0,
+      "all_figure_fonts_at_least_18": true,
+      "clipped_figure_text": []
+    },
+    "supplement.pdf": {
+      "pages": 38,
+      "render_sha256": "608e42388fe4e4560fc2de3ee0d8d48fe25469955d3816db48d6781fd6fa5294",
+      "minimum_figure_font_pt": 18.0,
+      "all_figure_fonts_at_least_18": true,
+      "clipped_figure_text": []
+    }
   },
-  "font_check": [
-    {
-      "document": "manuscript.pdf",
-      "pages": 22,
-      "minimum_figure_font_pt": 18.0,
-      "all_figure_fonts_at_least_18": true,
-      "clipped_figure_text": []
-    },
-    {
-      "document": "supplement.pdf",
-      "pages": 32,
-      "minimum_figure_font_pt": 18.0,
-      "all_figure_fonts_at_least_18": true,
-      "clipped_figure_text": []
-    }
-  ],
-  "limitations": "Author metadata remains pending. This is a technical revision, not submission clearance.",
-  "clean_export_pdf_verification": [
-    {
-      "document": "manuscript.pdf",
-      "pages": 22,
-      "minimum_figure_font_pt": 18.0,
-      "sha256": "737a3b68867756bc89c31e60d01991cc80d98b0243e41282e8d397195636957e",
-      "change_review": "Only main page 18 changed to r1 availability URL; manually inspected. All other pages render identically to reviewed export."
-    },
-    {
-      "document": "supplement.pdf",
-      "pages": 32,
-      "minimum_figure_font_pt": 18.0,
-      "sha256": "653f88c146077084405955e2b41cedaa717cbfdd8543576e47e7d193d295de65",
-      "change_review": "Only main page 18 changed to r1 availability URL; manually inspected. All other pages render identically to reviewed export."
-    }
-  ]
+  "pdf_sha256": {
+    "manuscript.pdf": "1e7c6bd8fe3ce0a732823364b02a1ea3b6891326eaa1f76aefbac7adc74cd3a1",
+    "supplement.pdf": "1c72de10bbf92d7fc6117e18e294dd59194821beedcae866b6df186819298892"
+  },
+  "render_directory": "/tmp/lowrank_r2_visual_20261022",
+  "limitations": "Author metadata deferred. This technical review does not certify submission readiness."
 }

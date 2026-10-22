@@ -1,0 +1,141 @@
+{"cpu_runner": true, "threads": 2, "interop_threads": 1, "affinity": [11, 13], "memory_node": 0, "transparent_hugepages": false}
+moleculenet_bace plain 0 ok 0.388
+moleculenet_bace plain 1 ok 0.509
+moleculenet_bace plain 2 ok 0.367
+moleculenet_bace rank32 0 ok 0.148
+moleculenet_bace rank32 1 ok 0.187
+moleculenet_bace rank32 2 ok 0.232
+moleculenet_bace rank64 0 ok 0.205
+moleculenet_bace rank64 1 ok 0.157
+moleculenet_bace rank64 2 ok 0.24
+moleculenet_bace rank128 0 ok 0.205
+moleculenet_bace rank128 1 ok 0.188
+moleculenet_bace rank128 2 ok 0.201
+moleculenet_bace uniform 0 ok 0.24
+moleculenet_bace uniform 1 ok 0.122
+moleculenet_bace uniform 2 ok 0.155
+moleculenet_bace one_restart 0 ok 0.269
+moleculenet_bace one_restart 1 ok 0.622
+moleculenet_bace one_restart 2 ok 0.453
+moleculenet_bace no_fm 0 ok 0.264
+moleculenet_bace no_fm 1 ok 0.264
+moleculenet_bace no_fm 2 ok 0.269
+moleculenet_bace tolerance05 0 ok 0.357
+moleculenet_bace tolerance05 1 ok 0.273
+moleculenet_bace tolerance05 2 ok 0.262
+moleculenet_bace power2 0 ok 0.314
+moleculenet_bace power2 1 ok 0.292
+moleculenet_bace power2 2 ok 0.291
+moleculenet_bace power3 0 ok 0.248
+moleculenet_bace power3 1 ok 0.241
+moleculenet_bace power3 2 ok 0.263
+moleculenet_bace groups 0 ok 0.44
+moleculenet_bace groups 1 ok 0.554
+moleculenet_bace groups 2 ok 0.511
+moleculenet_bace tail 0 ok 0.423
+moleculenet_bace tail 1 ok 0.409
+moleculenet_bace tail 2 ok 0.522
+moleculenet_bace tau05 0 ok 0.408
+moleculenet_bace tau05 1 ok 0.385
+moleculenet_bace tau05 2 ok 0.389
+moleculenet_bace tau06 0 ok 0.381
+moleculenet_bace tau06 1 ok 0.365
+moleculenet_bace tau06 2 ok 0.368
+moleculenet_bace cap25 0 ok 0.423
+moleculenet_bace cap25 1 ok 0.463
+moleculenet_bace cap25 2 ok 0.549
+moleculenet_bace cap100 0 ok 0.44
+moleculenet_bace cap100 1 ok 0.416
+moleculenet_bace cap100 2 ok 0.41
+moleculenet_bace cap_skip 0 ok 0.39
+moleculenet_bace cap_skip 1 ok 0.382
+moleculenet_bace cap_skip 2 ok 0.412
+/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/np/ufunc/parallel.py:373: NumbaWarning: The TBB threading layer requires TBB version 2021 update 6 or later i.e., TBB_INTERFACE_VERSION >= 12060. Found TBB_INTERFACE_VERSION = 12050. The TBB threading layer is disabled.
+  warnings.warn(problem)
+Timeout (0:01:00)!
+Thread 0x00007f767a6c3740 (most recent call first):
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/llvmlite/ir/instructions.py", line 711 in descr
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/llvmlite/ir/values.py", line 548 in _to_string
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/llvmlite/ir/_utils.py", line 48 in __str__
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/llvmlite/ir/values.py", line 1178 in descr
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/llvmlite/ir/values.py", line 1008 in descr_body
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/llvmlite/ir/values.py", line 1014 in descr
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/llvmlite/ir/values.py", line 1019 in __str__
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/llvmlite/ir/module.py", line 222 in _get_body_lines
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/llvmlite/ir/module.py", line 252 in __repr__
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/codegen.py", line 735 in add_ir_module
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/lowering.py", line 216 in lower
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typed_passes.py", line 472 in run_pass
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler_machinery.py", line 272 in check
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler_machinery.py", line 311 in _runPass
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler_lock.py", line 35 in _acquire_compile_lock
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler_machinery.py", line 356 in run
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler.py", line 473 in _compile_core
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler.py", line 505 in _compile_bytecode
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler.py", line 439 in compile_extra
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler.py", line 739 in compile_extra
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 107 in _compile_core
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 94 in _compile_cached
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 80 in compile
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 908 in compile
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 319 in get_call_template
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/types/functions.py", line 541 in get_call_type
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typing/context.py", line 335 in _resolve_user_function_type
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typing/context.py", line 279 in resolve_function_type
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typeinfer.py", line 1569 in resolve_call
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typeinfer.py", line 595 in resolve
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typeinfer.py", line 572 in __call__
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typeinfer.py", line 160 in propagate
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typeinfer.py", line 1075 in propagate
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typed_passes.py", line 95 in type_inference_stage
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typed_passes.py", line 114 in run_pass
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler_machinery.py", line 272 in check
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler_machinery.py", line 311 in _runPass
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler_lock.py", line 35 in _acquire_compile_lock
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler_machinery.py", line 356 in run
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler.py", line 473 in _compile_core
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler.py", line 505 in _compile_bytecode
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler.py", line 439 in compile_extra
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler.py", line 739 in compile_extra
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 107 in _compile_core
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 94 in _compile_cached
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 80 in compile
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 908 in compile
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 319 in get_call_template
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/types/functions.py", line 541 in get_call_type
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typing/context.py", line 335 in _resolve_user_function_type
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typing/context.py", line 279 in resolve_function_type
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typeinfer.py", line 1569 in resolve_call
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typeinfer.py", line 595 in resolve
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typeinfer.py", line 572 in __call__
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typeinfer.py", line 160 in propagate
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typeinfer.py", line 1075 in propagate
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typed_passes.py", line 95 in type_inference_stage
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typed_passes.py", line 114 in run_pass
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler_machinery.py", line 272 in check
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler_machinery.py", line 311 in _runPass
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler_lock.py", line 35 in _acquire_compile_lock
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler_machinery.py", line 356 in run
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler.py", line 473 in _compile_core
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler.py", line 505 in _compile_bytecode
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler.py", line 439 in compile_extra
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler.py", line 739 in compile_extra
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 107 in _compile_core
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 94 in _compile_cached
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 80 in compile
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 908 in compile
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 376 in _compile_for_args
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/pynndescent/pynndescent_.py", line 1225 in __init__
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/low_rank/lowrank/neighbours.py", line 79 in approximate_tanimoto_neighbours
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/low_rank/lowrank/splitter.py", line 202 in _split_grouped
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/low_rank/lowrank/splitter.py", line 175 in split
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/low_rank/splitters/dispatch.py", line 26 in split
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/revision_ablation_v2.py", line 45 in run
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/revision_ablation_v2.py", line 62 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 98 in _run_module_code
+  File "<frozen runpy>", line 287 in run_path
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/cpu_native_runner_v2.py", line 27 in <module>
+moleculenet_bace tail_ann 0 ok 26.853
+moleculenet_bace tail_ann 1 ok 1.705
+moleculenet_bace tail_ann 2 ok 1.664

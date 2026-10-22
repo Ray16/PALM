@@ -199,6 +199,25 @@ similarity. The two positive dataset means are retained.}
 \end{figure}
 \input{robustness_table.tex}
 \clearpage
+\section{Component ablation}
+
+Six full datasets (BACE, BBBP, ESOL, FreeSolv, Lipophilicity and Tox21) are
+partitioned with the release solver at eighteen prespecified settings and
+three split seeds. This study separates landmark sampling, restart budget,
+move/swap refinement and cap policy in addition to the power, grouping, rank
+and capacity controls. It uses the same primary scoring protocol as the main
+benchmark: exact global scoring through 4,000 entities and a fixed uniform
+4,000-row sample above that limit; test-only local queries against the full
+training fold, with three count-preserving permutation controls. All input
+entities are retained. The 0.05-tolerance row may change fold counts; the other
+rows use exact integer targets. Group dissolution counts describe output
+relaxations rather than a guarantee of hard analogue exclusion. NN-Descent
+can return fewer candidate neighbours for some samples; execution logs retain
+these native warnings, and the assignments are scored without tuning the
+search parameters after observing their results.
+\input{ablation_tables.tex}
+\clearpage
+
 \section{Published local and cluster baselines}
 
 Lo-Hi uses the official Hi objective, threshold 0.4 and no coarsening. Resource

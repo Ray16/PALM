@@ -6,6 +6,7 @@ The requirement ledger and final scientific/visual review remain separate gates.
 from pathlib import Path
 import json
 import sys
+from pdf_review import review_issues
 
 PAPER = Path(__file__).resolve().parents[1]
 D = PAPER / "revision_20261021"
@@ -45,11 +46,14 @@ def main():
                  "benchmark_validation.json", "datasail_matched_validation.json", "runtime_validation.json",
                  "robustness_validation.json", "sensitivity_validation.json", "calibration_validation.json",
                  "legacy_calibration_reconciliation.json", "namespaced_release_validation.json",
-                 "metric_validation.json",
+                 "metric_validation.json", "ablation_validation.json",
                  "pipeline_review.json", "final_visual_review.json"):
         path = D / gate
         if not path.exists() or json.loads(path.read_text()).get("passed") is not True:
             issues.append(f"open revision gate: {gate}")
+    visual_path=D/'final_visual_review.json'
+    if visual_path.exists():
+        issues.extend(review_issues(PAPER,json.loads(visual_path.read_text())))
     result = dict(passed=not issues, issues=issues,
         note="author metadata deferred; this validator does not certify scientific conclusions")
     (D / "completion_gate.json").write_text(json.dumps(result, indent=2) + "\n")

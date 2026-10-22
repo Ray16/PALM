@@ -1,0 +1,213 @@
+{"cpu_runner": true, "threads": 2, "interop_threads": 1, "affinity": [14, 15], "memory_node": 0, "transparent_hugepages": false}
+moleculenet_tox21 plain 0 ok 2.073
+moleculenet_tox21 plain 1 ok 2.343
+moleculenet_tox21 plain 2 ok 2.3
+moleculenet_tox21 rank32 0 ok 0.745
+Timeout (0:01:00)!
+Thread 0x00007f9fe6423740 (most recent call first):
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/low_rank/lowrank/optimize.py", line 247 in swap_polish
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/low_rank/lowrank/optimize.py", line 207 in fm_polish
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/low_rank/lowrank/splitter.py", line 170 in split
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/low_rank/splitters/dispatch.py", line 26 in split
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/revision_ablation_v2.py", line 45 in run
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/revision_ablation_v2.py", line 62 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 98 in _run_module_code
+  File "<frozen runpy>", line 287 in run_path
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/cpu_native_runner_v2.py", line 27 in <module>
+moleculenet_tox21 rank32 1 ok 60.001
+moleculenet_tox21 rank32 2 ok 0.555
+moleculenet_tox21 rank64 0 ok 0.706
+moleculenet_tox21 rank64 1 ok 0.64
+moleculenet_tox21 rank64 2 ok 0.638
+moleculenet_tox21 rank128 0 ok 0.942
+moleculenet_tox21 rank128 1 ok 1.089
+moleculenet_tox21 rank128 2 ok 0.893
+moleculenet_tox21 uniform 0 ok 0.655
+moleculenet_tox21 uniform 1 ok 0.9
+moleculenet_tox21 uniform 2 ok 0.953
+Timeout (0:01:00)!
+Thread 0x00007f9fe6423740 (most recent call first):
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/low_rank/lowrank/optimize.py", line 242 in swap_polish
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/low_rank/lowrank/optimize.py", line 207 in fm_polish
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/low_rank/lowrank/splitter.py", line 170 in split
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/low_rank/splitters/dispatch.py", line 26 in split
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/revision_ablation_v2.py", line 45 in run
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/revision_ablation_v2.py", line 62 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 98 in _run_module_code
+  File "<frozen runpy>", line 287 in run_path
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/cpu_native_runner_v2.py", line 27 in <module>
+moleculenet_tox21 one_restart 0 ok 8.006
+moleculenet_tox21 one_restart 1 ok 2.023
+moleculenet_tox21 one_restart 2 ok 1.466
+moleculenet_tox21 no_fm 0 ok 0.901
+moleculenet_tox21 no_fm 1 ok 0.951
+moleculenet_tox21 no_fm 2 ok 0.949
+moleculenet_tox21 tolerance05 0 ok 1.029
+moleculenet_tox21 tolerance05 1 ok 0.917
+moleculenet_tox21 tolerance05 2 ok 0.966
+moleculenet_tox21 power2 0 ok 1.14
+moleculenet_tox21 power2 1 ok 1.035
+moleculenet_tox21 power2 2 ok 1.225
+moleculenet_tox21 power3 0 ok 1.068
+moleculenet_tox21 power3 1 ok 1.255
+moleculenet_tox21 power3 2 ok 1.063
+moleculenet_tox21 groups 0 ok 4.297
+Timeout (0:01:00)!
+Thread 0x00007f9fe6423740 (most recent call first):
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/revision_benchmark.py", line 50 in score
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/revision_ablation_v2.py", line 53 in run
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/revision_ablation_v2.py", line 62 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 98 in _run_module_code
+  File "<frozen runpy>", line 287 in run_path
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/cpu_native_runner_v2.py", line 27 in <module>
+moleculenet_tox21 groups 1 ok 5.433
+moleculenet_tox21 groups 2 ok 5.072
+moleculenet_tox21 tail 0 ok 4.233
+moleculenet_tox21 tail 1 ok 4.541
+moleculenet_tox21 tail 2 ok 4.166
+moleculenet_tox21 tau05 0 ok 3.46
+moleculenet_tox21 tau05 1 ok 3.537
+moleculenet_tox21 tau05 2 ok 2.968
+moleculenet_tox21 tau06 0 ok 5.075
+moleculenet_tox21 tau06 1 ok 3.542
+Timeout (0:01:00)!
+Thread 0x00007f9fe6423740 (most recent call first):
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/revision_benchmark.py", line 50 in score
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/revision_ablation_v2.py", line 53 in run
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/revision_ablation_v2.py", line 62 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 98 in _run_module_code
+  File "<frozen runpy>", line 287 in run_path
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/cpu_native_runner_v2.py", line 27 in <module>
+moleculenet_tox21 tau06 2 ok 4.281
+moleculenet_tox21 cap25 0 ok 4.066
+moleculenet_tox21 cap25 1 ok 3.719
+moleculenet_tox21 cap25 2 ok 3.262
+moleculenet_tox21 cap100 0 ok 3.478
+moleculenet_tox21 cap100 1 ok 3.15
+moleculenet_tox21 cap100 2 ok 3.062
+moleculenet_tox21 cap_skip 0 ok 3.542
+moleculenet_tox21 cap_skip 1 ok 2.992
+moleculenet_tox21 cap_skip 2 ok 2.946
+Timeout (0:01:00)!
+Thread 0x00007f9ea3fff640 (most recent call first):
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/multiprocessing/pool.py", line 579 in _handle_results
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/threading.py", line 1012 in run
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007f9eb1001640 (most recent call first):
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/multiprocessing/pool.py", line 531 in _handle_tasks
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/threading.py", line 1012 in run
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007f9eb1806640 (most recent call first):
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/selectors.py", line 415 in select
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/multiprocessing/connection.py", line 1136 in wait
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/multiprocessing/pool.py", line 502 in _wait_for_updates
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/multiprocessing/pool.py", line 522 in _handle_workers
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/threading.py", line 1012 in run
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007f9eb200b640 (most recent call first):
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler_lock.py", line 13 in acquire
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler_lock.py", line 20 in __enter__
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/contextlib.py", line 526 in enter_context
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 877 in compile
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 376 in _compile_for_args
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/joblib/parallel.py", line 607 in __call__
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/joblib/_utils.py", line 109 in __call__
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/multiprocessing/pool.py", line 125 in worker
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/threading.py", line 1012 in run
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007f9eb2810640 (most recent call first):
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/llvmlite/binding/ffi.py", line 212 in __call__
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/llvmlite/binding/newpassmanagers.py", line 124 in run
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/codegen.py", line 665 in _optimize_functions
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/codegen.py", line 742 in add_llvm_module
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/codegen.py", line 739 in add_ir_module
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/lowering.py", line 216 in lower
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typed_passes.py", line 472 in run_pass
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler_machinery.py", line 272 in check
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler_machinery.py", line 311 in _runPass
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler_lock.py", line 35 in _acquire_compile_lock
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler_machinery.py", line 356 in run
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler.py", line 473 in _compile_core
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler.py", line 505 in _compile_bytecode
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler.py", line 439 in compile_extra
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler.py", line 739 in compile_extra
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 107 in _compile_core
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 94 in _compile_cached
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 80 in compile
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 908 in compile
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 319 in get_call_template
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/types/functions.py", line 541 in get_call_type
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typing/templates.py", line 824 in _build_impl
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typing/templates.py", line 720 in _get_impl
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typing/templates.py", line 621 in generic
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typing/templates.py", line 358 in apply
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/types/functions.py", line 311 in get_call_type
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typing/context.py", line 335 in _resolve_user_function_type
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typing/context.py", line 279 in resolve_function_type
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typeinfer.py", line 1569 in resolve_call
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typeinfer.py", line 595 in resolve
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typeinfer.py", line 572 in __call__
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typeinfer.py", line 160 in propagate
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typeinfer.py", line 1075 in propagate
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typed_passes.py", line 95 in type_inference_stage
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/typed_passes.py", line 114 in run_pass
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler_machinery.py", line 272 in check
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler_machinery.py", line 311 in _runPass
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler_lock.py", line 35 in _acquire_compile_lock
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler_machinery.py", line 356 in run
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler.py", line 473 in _compile_core
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler.py", line 505 in _compile_bytecode
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler.py", line 439 in compile_extra
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/compiler.py", line 739 in compile_extra
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 107 in _compile_core
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 94 in _compile_cached
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 80 in compile
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 908 in compile
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 376 in _compile_for_args
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/joblib/parallel.py", line 607 in __call__
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/joblib/_utils.py", line 109 in __call__
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/multiprocessing/pool.py", line 125 in worker
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/threading.py", line 1012 in run
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/threading.py", line 1075 in _bootstrap_inner
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/threading.py", line 1032 in _bootstrap
+
+Thread 0x00007f9fe6423740 (most recent call first):
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/joblib/parallel.py", line 1800 in _retrieve
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/joblib/parallel.py", line 1682 in _get_outputs
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/joblib/parallel.py", line 2072 in __call__
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/pynndescent/rp_trees.py", line 2911 in rptree_leaf_array_parallel
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/pynndescent/rp_trees.py", line 2920 in rptree_leaf_array
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/pynndescent/pynndescent_.py", line 1108 in __init__
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/low_rank/lowrank/neighbours.py", line 79 in approximate_tanimoto_neighbours
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/low_rank/lowrank/splitter.py", line 202 in _split_grouped
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/low_rank/lowrank/splitter.py", line 175 in split
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/low_rank/splitters/dispatch.py", line 26 in split
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/revision_ablation_v2.py", line 45 in run
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/revision_ablation_v2.py", line 62 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 98 in _run_module_code
+  File "<frozen runpy>", line 287 in run_path
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/cpu_native_runner_v2.py", line 27 in <module>
+/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/np/ufunc/parallel.py:373: NumbaWarning: The TBB threading layer requires TBB version 2021 update 6 or later i.e., TBB_INTERFACE_VERSION >= 12060. Found TBB_INTERFACE_VERSION = 12050. The TBB threading layer is disabled.
+  warnings.warn(problem)
+/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/pynndescent/pynndescent_.py:1241: UserWarning: Failed to correctly find n_neighbors for some samples. Results may be less than ideal. Try re-running with different parameters.
+  warn(
+moleculenet_tox21 tail_ann 0 ok 33.54
+/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/pynndescent/pynndescent_.py:1241: UserWarning: Failed to correctly find n_neighbors for some samples. Results may be less than ideal. Try re-running with different parameters.
+  warn(
+moleculenet_tox21 tail_ann 1 ok 9.548
+/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/pynndescent/pynndescent_.py:1241: UserWarning: Failed to correctly find n_neighbors for some samples. Results may be less than ideal. Try re-running with different parameters.
+  warn(
+moleculenet_tox21 tail_ann 2 ok 9.655

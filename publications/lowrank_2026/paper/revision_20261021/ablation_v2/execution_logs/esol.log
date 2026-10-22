@@ -1,0 +1,76 @@
+{"cpu_runner": true, "threads": 2, "interop_threads": 1, "affinity": [5, 10], "memory_node": 0, "transparent_hugepages": false}
+moleculenet_esol plain 0 ok 0.246
+moleculenet_esol plain 1 ok 0.229
+moleculenet_esol plain 2 ok 0.253
+moleculenet_esol rank32 0 ok 0.074
+moleculenet_esol rank32 1 ok 0.075
+moleculenet_esol rank32 2 ok 0.102
+moleculenet_esol rank64 0 ok 0.084
+moleculenet_esol rank64 1 ok 0.12
+moleculenet_esol rank64 2 ok 0.117
+moleculenet_esol rank128 0 ok 0.152
+moleculenet_esol rank128 1 ok 0.188
+moleculenet_esol rank128 2 ok 0.166
+moleculenet_esol uniform 0 ok 0.101
+moleculenet_esol uniform 1 ok 0.114
+moleculenet_esol uniform 2 ok 0.106
+moleculenet_esol one_restart 0 ok 0.22
+moleculenet_esol one_restart 1 ok 0.286
+moleculenet_esol one_restart 2 ok 0.23
+moleculenet_esol no_fm 0 ok 0.214
+moleculenet_esol no_fm 1 ok 0.215
+moleculenet_esol no_fm 2 ok 0.224
+moleculenet_esol tolerance05 0 ok 0.232
+moleculenet_esol tolerance05 1 ok 0.239
+moleculenet_esol tolerance05 2 ok 0.216
+moleculenet_esol power2 0 ok 0.239
+moleculenet_esol power2 1 ok 0.253
+moleculenet_esol power2 2 ok 0.259
+moleculenet_esol power3 0 ok 0.284
+moleculenet_esol power3 1 ok 0.289
+moleculenet_esol power3 2 ok 0.246
+moleculenet_esol groups 0 ok 0.326
+moleculenet_esol groups 1 ok 0.388
+moleculenet_esol groups 2 ok 0.394
+moleculenet_esol tail 0 ok 0.4
+moleculenet_esol tail 1 ok 0.434
+moleculenet_esol tail 2 ok 0.371
+moleculenet_esol tau05 0 ok 0.411
+moleculenet_esol tau05 1 ok 0.42
+moleculenet_esol tau05 2 ok 0.403
+moleculenet_esol tau06 0 ok 0.475
+moleculenet_esol tau06 1 ok 0.537
+moleculenet_esol tau06 2 ok 0.458
+moleculenet_esol cap25 0 ok 0.383
+moleculenet_esol cap25 1 ok 0.389
+moleculenet_esol cap25 2 ok 0.347
+moleculenet_esol cap100 0 ok 0.379
+moleculenet_esol cap100 1 ok 0.411
+moleculenet_esol cap100 2 ok 0.368
+moleculenet_esol cap_skip 0 ok 0.39
+moleculenet_esol cap_skip 1 ok 0.392
+moleculenet_esol cap_skip 2 ok 0.348
+/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/np/ufunc/parallel.py:373: NumbaWarning: The TBB threading layer requires TBB version 2021 update 6 or later i.e., TBB_INTERFACE_VERSION >= 12060. Found TBB_INTERFACE_VERSION = 12050. The TBB threading layer is disabled.
+  warnings.warn(problem)
+/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/pynndescent/pynndescent_.py:1241: UserWarning: Failed to correctly find n_neighbors for some samples. Results may be less than ideal. Try re-running with different parameters.
+  warn(
+moleculenet_esol tail_ann 0 ok 27.24
+/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/pynndescent/pynndescent_.py:1241: UserWarning: Failed to correctly find n_neighbors for some samples. Results may be less than ideal. Try re-running with different parameters.
+  warn(
+moleculenet_esol tail_ann 1 ok 1.435
+Timeout (0:01:00)!
+Thread 0x00007f25b238a740 (most recent call first):
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/pynndescent/pynndescent_.py", line 1225 in __init__
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/low_rank/lowrank/neighbours.py", line 79 in approximate_tanimoto_neighbours
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/low_rank/lowrank/splitter.py", line 202 in _split_grouped
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/low_rank/lowrank/splitter.py", line 175 in split
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/low_rank/splitters/dispatch.py", line 26 in split
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/revision_ablation_v2.py", line 45 in run
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/revision_ablation_v2.py", line 62 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 98 in _run_module_code
+  File "<frozen runpy>", line 287 in run_path
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/cpu_native_runner_v2.py", line 27 in <module>
+/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/pynndescent/pynndescent_.py:1241: UserWarning: Failed to correctly find n_neighbors for some samples. Results may be less than ideal. Try re-running with different parameters.
+  warn(
+moleculenet_esol tail_ann 2 ok 1.433

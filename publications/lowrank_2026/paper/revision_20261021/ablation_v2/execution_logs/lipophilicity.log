@@ -1,0 +1,111 @@
+{"cpu_runner": true, "threads": 2, "interop_threads": 1, "affinity": [8, 12], "memory_node": 0, "transparent_hugepages": false}
+moleculenet_lipophilicity plain 0 ok 1.148
+moleculenet_lipophilicity plain 1 ok 1.037
+moleculenet_lipophilicity plain 2 ok 1.838
+moleculenet_lipophilicity rank32 0 ok 0.419
+moleculenet_lipophilicity rank32 1 ok 0.524
+moleculenet_lipophilicity rank32 2 ok 0.323
+moleculenet_lipophilicity rank64 0 ok 0.617
+moleculenet_lipophilicity rank64 1 ok 0.767
+moleculenet_lipophilicity rank64 2 ok 0.567
+moleculenet_lipophilicity rank128 0 ok 0.75
+moleculenet_lipophilicity rank128 1 ok 0.705
+moleculenet_lipophilicity rank128 2 ok 0.668
+moleculenet_lipophilicity uniform 0 ok 0.54
+moleculenet_lipophilicity uniform 1 ok 0.718
+moleculenet_lipophilicity uniform 2 ok 0.719
+moleculenet_lipophilicity one_restart 0 ok 0.924
+moleculenet_lipophilicity one_restart 1 ok 1.036
+moleculenet_lipophilicity one_restart 2 ok 1.051
+moleculenet_lipophilicity no_fm 0 ok 0.521
+moleculenet_lipophilicity no_fm 1 ok 0.515
+moleculenet_lipophilicity no_fm 2 ok 0.553
+moleculenet_lipophilicity tolerance05 0 ok 0.511
+moleculenet_lipophilicity tolerance05 1 ok 0.564
+moleculenet_lipophilicity tolerance05 2 ok 0.511
+moleculenet_lipophilicity power2 0 ok 0.722
+moleculenet_lipophilicity power2 1 ok 0.605
+moleculenet_lipophilicity power2 2 ok 0.541
+moleculenet_lipophilicity power3 0 ok 0.688
+moleculenet_lipophilicity power3 1 ok 0.603
+Timeout (0:01:00)!
+Thread 0x00007f4a044ed740 (most recent call first):
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/low_rank/lowrank/nystrom.py", line 48 in _kmeanspp_landmarks
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/low_rank/lowrank/nystrom.py", line 89 in nystrom_features
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/low_rank/lowrank/splitter.py", line 154 in split
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/low_rank/splitters/dispatch.py", line 26 in split
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/revision_ablation_v2.py", line 45 in run
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/revision_ablation_v2.py", line 62 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 98 in _run_module_code
+  File "<frozen runpy>", line 287 in run_path
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/cpu_native_runner_v2.py", line 27 in <module>
+moleculenet_lipophilicity power3 2 ok 0.718
+moleculenet_lipophilicity groups 0 ok 1.609
+moleculenet_lipophilicity groups 1 ok 1.616
+moleculenet_lipophilicity groups 2 ok 1.801
+moleculenet_lipophilicity tail 0 ok 2.396
+moleculenet_lipophilicity tail 1 ok 1.902
+moleculenet_lipophilicity tail 2 ok 1.728
+moleculenet_lipophilicity tau05 0 ok 1.527
+moleculenet_lipophilicity tau05 1 ok 1.674
+moleculenet_lipophilicity tau05 2 ok 1.559
+moleculenet_lipophilicity tau06 0 ok 1.407
+moleculenet_lipophilicity tau06 1 ok 1.981
+moleculenet_lipophilicity tau06 2 ok 1.537
+moleculenet_lipophilicity cap25 0 ok 1.752
+moleculenet_lipophilicity cap25 1 ok 2.008
+moleculenet_lipophilicity cap25 2 ok 1.685
+moleculenet_lipophilicity cap100 0 ok 1.688
+moleculenet_lipophilicity cap100 1 ok 1.58
+moleculenet_lipophilicity cap100 2 ok 1.74
+moleculenet_lipophilicity cap_skip 0 ok 1.784
+moleculenet_lipophilicity cap_skip 1 ok 1.833
+moleculenet_lipophilicity cap_skip 2 ok 1.703
+Timeout (0:01:00)!
+Thread 0x00007f4a044ed740 (most recent call first):
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/caching.py", line 587 in _load_index
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/caching.py", line 571 in load
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/caching.py", line 728 in _load_overload
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/caching.py", line 721 in load_overload
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/dispatcher.py", line 889 in compile
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/core/decorators.py", line 234 in wrapper
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/pynndescent/utils.py", line 330 in <module>
+  File "<frozen importlib._bootstrap>", line 488 in _call_with_frames_removed
+  File "<frozen importlib._bootstrap_external>", line 999 in exec_module
+  File "<frozen importlib._bootstrap>", line 935 in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1331 in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 1360 in _find_and_load
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/pynndescent/sparse.py", line 9 in <module>
+  File "<frozen importlib._bootstrap>", line 488 in _call_with_frames_removed
+  File "<frozen importlib._bootstrap_external>", line 999 in exec_module
+  File "<frozen importlib._bootstrap>", line 935 in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1331 in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 1360 in _find_and_load
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/pynndescent/pynndescent_.py", line 22 in <module>
+  File "<frozen importlib._bootstrap>", line 488 in _call_with_frames_removed
+  File "<frozen importlib._bootstrap_external>", line 999 in exec_module
+  File "<frozen importlib._bootstrap>", line 935 in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1331 in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 1360 in _find_and_load
+  File "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/pynndescent/__init__.py", line 5 in <module>
+  File "<frozen importlib._bootstrap>", line 488 in _call_with_frames_removed
+  File "<frozen importlib._bootstrap_external>", line 999 in exec_module
+  File "<frozen importlib._bootstrap>", line 935 in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1331 in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 1360 in _find_and_load
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/low_rank/lowrank/neighbours.py", line 65 in approximate_tanimoto_neighbours
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/low_rank/lowrank/splitter.py", line 202 in _split_grouped
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/low_rank/lowrank/splitter.py", line 175 in split
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/low_rank/splitters/dispatch.py", line 26 in split
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/revision_ablation_v2.py", line 45 in run
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/revision_ablation_v2.py", line 62 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 98 in _run_module_code
+  File "<frozen runpy>", line 287 in run_path
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting/comparisons/paper_lowrank/cpu_native_runner_v2.py", line 27 in <module>
+/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/np/ufunc/parallel.py:373: NumbaWarning: The TBB threading layer requires TBB version 2021 update 6 or later i.e., TBB_INTERFACE_VERSION >= 12060. Found TBB_INTERFACE_VERSION = 12050. The TBB threading layer is disabled.
+  warnings.warn(problem)
+moleculenet_lipophilicity tail_ann 0 ok 30.708
+moleculenet_lipophilicity tail_ann 1 ok 5.979
+moleculenet_lipophilicity tail_ann 2 ok 5.653

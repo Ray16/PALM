@@ -17,13 +17,11 @@ fi
 "$mlst_python" "$paper_dir/build_tools/local_baselines_report.py"
 "$mlst_python" "$paper_dir/build_tools/sensitivity_report.py"
 "$mlst_python" "$paper_dir/build_tools/calibration_report.py"
+"$mlst_python" "$paper_dir/build_tools/ablation_report.py"
 "$mlst_python" "$paper_dir/build_tools/datasail_report.py"
 "$mlst_python" "$paper_dir/build_tools/benchmark_report.py" "${report_flags[@]}"
 "$mlst_python" "$paper_dir/build_tools/runtime_report.py" "${report_flags[@]}"
 "$mlst_python" "$paper_dir/build_tools/revision_figures.py"
-if [[ "${1:-}" != "--allow-partial" ]]; then
-  "$mlst_python" "$paper_dir/build_tools/validate_revision.py"
-fi
 cd -- "$paper_dir"
 mkdir -p logs
 pdflatex -interaction=nonstopmode -halt-on-error manuscript.tex > logs/latex_pass1.log 2>&1
@@ -34,4 +32,7 @@ pdflatex -interaction=nonstopmode -halt-on-error supplement.tex > logs/supplemen
 bibtex supplement > logs/supplement_bibtex.log 2>&1
 pdflatex -interaction=nonstopmode -halt-on-error supplement.tex > logs/supplement_pass2.log 2>&1
 pdflatex -interaction=nonstopmode -halt-on-error supplement.tex > logs/supplement_pass3.log 2>&1
+if [[ "${1:-}" != "--allow-partial" ]]; then
+  "$mlst_python" "$paper_dir/build_tools/validate_revision.py"
+fi
 printf '%s\n' "Built $paper_dir/manuscript.pdf"

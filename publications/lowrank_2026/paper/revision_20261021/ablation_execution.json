@@ -1,0 +1,48 @@
+{
+  "logs": [
+    {
+      "log": "bace.log",
+      "sha256": "15ac0dc7442169f6ec67febde78338fb12db15462f015df40a635de916c9e727",
+      "ann_underfilled_candidate_warnings": 0,
+      "numba_tbb_warnings": 1
+    },
+    {
+      "log": "bbbp.log",
+      "sha256": "455337a4e9f9b28cdb850fca6b26a0ced55281d2c29eb1b3e7ae381edede5f45",
+      "ann_underfilled_candidate_warnings": 0,
+      "numba_tbb_warnings": 0
+    },
+    {
+      "log": "bbbp.retry1.log",
+      "sha256": "5b5fe81877c38dcaa0902bd03576ca661234597f1db6aef6d9e61fd5a012caf7",
+      "ann_underfilled_candidate_warnings": 0,
+      "numba_tbb_warnings": 1
+    },
+    {
+      "log": "esol.log",
+      "sha256": "da9566c86b7a1394a4f4a076f53e39ac61a23988a9aa05ef40ee503961d432b1",
+      "ann_underfilled_candidate_warnings": 3,
+      "numba_tbb_warnings": 1
+    },
+    {
+      "log": "freesolv.log",
+      "sha256": "3acf32f72d69008d9e45c0a37c00d2aff1601e0c867b9b1c18e6828f94b43bab",
+      "ann_underfilled_candidate_warnings": 3,
+      "numba_tbb_warnings": 1
+    },
+    {
+      "log": "lipophilicity.log",
+      "sha256": "b6401c5497ada76b3cc535bf87c2eb1f38cf4a65bf9445857022a84f937f9d93",
+      "ann_underfilled_candidate_warnings": 0,
+      "numba_tbb_warnings": 1
+    },
+    {
+      "log": "tox21.log",
+      "sha256": "2ef5b00df2f440abb45e3a006728a827fe2b9e1dd318a57673203423d6ef4f19",
+      "ann_underfilled_candidate_warnings": 3,
+      "numba_tbb_warnings": 1
+    }
+  ],
+  "note": "Native ANN candidate warnings are retained without tuning or dropping results. BBBP resumed three unfinished ANN settings after its original process became terminal; all 51 complete rows were preserved. Initial record-writer setup failure produced no accepted observations and is excluded from the final study.",
+  "diagnostic_log_note": "Periodic 'Timeout (0:01:00)' messages are faulthandler stack snapshots, not enforced runtime limits. Successful final records and retained assignment checks establish completion."
+}

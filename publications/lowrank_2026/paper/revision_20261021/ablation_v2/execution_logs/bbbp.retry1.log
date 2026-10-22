@@ -1,0 +1,6 @@
+{"cpu_runner": true, "threads": 2, "interop_threads": 1, "affinity": [17, 19], "memory_node": 0, "transparent_hugepages": false}
+/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/np/ufunc/parallel.py:373: NumbaWarning: The TBB threading layer requires TBB version 2021 update 6 or later i.e., TBB_INTERFACE_VERSION >= 12060. Found TBB_INTERFACE_VERSION = 12050. The TBB threading layer is disabled.
+  warnings.warn(problem)
+moleculenet_bbbp tail_ann 0 ok 27.015
+moleculenet_bbbp tail_ann 1 ok 2.666
+moleculenet_bbbp tail_ann 2 ok 2.519

@@ -27,8 +27,10 @@ are optional for the base API; the paper environment is recorded separately.
 ## Rebuild both PDFs from retained observations
 
 Use Python 3.12, the versions in `paper/environment_versions.json`, and TeX Live
-with pdflatex/bibtex. The build also needs Jinja2 and PyMuPDF for reporting and
-PDF checks. It does not rerun expensive experiments.
+with pdflatex/bibtex. Install the pinned report/render dependencies with
+`python -m pip install -r paper/requirements-build.txt`. The build does not rerun
+expensive experiments. Its strict final gate compares the rebuilt PDFs to the
+reviewed page-render signatures, including the 18 pt figure-font check.
 
 ```bash
 MLST_PYTHON=python bash paper/build.sh
@@ -59,7 +61,7 @@ Study entry points include `revision_powered_fidelity`, `revision_robustness`,
 `revision_lohi`, `revision_umap`, `revision_sensitivity_v2`,
 `revision_calibration_v2`, `revision_external_control`,
 `revision_datasail_matched_v2`, `revision_runtime`, and
-`revision_metric_validation`. Each accepts `--help` through the launcher.
+`revision_metric_validation`, and `revision_ablation_v2`. Each accepts `--help` through the launcher.
 The runtime study is deliberately expensive (DataSAIL has a 7,200-second solver
 limit, plus preprocessing). Lo-Hi uses version 1.1; UMAP 0.5.7;
 Mt-KaHyPar 1.6.1; DataSAIL 1.3.0. The DataSAIL 1.4 solver equivalence check is
@@ -73,7 +75,7 @@ QUALITY preset and CUT objective. Random, scaffold and Butina are reference
 controls. This publication folder contains no hypergraph benchmark results.
 The surrounding repository contains separate historical research.
 
-The version tag is `lowrank-v0.1.0-review-20261021-r1`. No archival DOI has been issued.
+The version tag is `lowrank-v0.1.0-review-20261021-r2`. No archival DOI has been issued.
 
 `SHA256SUMS.json` inventories this bundle. Individual records retain measurement
 source hashes, assignments, native/returned counts, solver outcomes and scoring
