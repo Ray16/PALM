@@ -1,0 +1,20 @@
+\begin{table}[htbp]\centering\small
+\begin{tabular}{llrrr}
+\toprule
+Dataset & Method & Median seconds & Global ratio & Local ratio \\
+\midrule
+bace & combined & 0.555 & 0.785 & 0.066 \\
+bace & datasail & 7210.760 & 0.766 & 0.019 \\
+bace & plain & 0.279 & 0.750 & 0.363 \\
+bbbp & combined & 1.041 & 0.743 & 0.001 \\
+bbbp & datasail & 7219.393 & 0.731 & 0.002 \\
+bbbp & plain & 0.337 & 0.692 & 0.099 \\
+clintox & combined & 1.057 & 0.698 & 0.001 \\
+clintox & datasail & 1411.427 & 0.699 & 0.020 \\
+clintox & plain & 0.434 & 0.658 & 0.082 \\
+lipophilicity & combined & 2.700 & 0.869 & 0.004 \\
+lipophilicity & datasail & 8796.726 & 0.956 & 0.013 \\
+lipophilicity & plain & 1.095 & 0.799 & 0.314 \\
+\bottomrule
+\end{tabular}
+\caption{Same-host split-call time and exact-count quality. DataSAIL distance construction, clustering and integer programming are inside its clock; imports, feature loading and scoring are outside. Low-rank calls exclude a 100-entity warm-up. DataSAIL has one solve per dataset; low-rank entries aggregate three seeds. The solver time limit is 7,200 seconds and is not an end-to-end wall-time bound. Native solver states and all three low-rank observations accompany the table.}\end{table}

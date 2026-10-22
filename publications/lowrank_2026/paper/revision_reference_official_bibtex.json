@@ -1,0 +1,10 @@
+{
+  "kumar2012": {
+    "url": "https://www.jmlr.org/papers/v13/kumar12a.bib",
+    "bibtex": "@article{JMLR:v13:kumar12a,\n  author  = {Sanjiv Kumar and Mehryar Mohri and Ameet Talwalkar},\n  title   = {Sampling Methods for the Nystr&#246;m Method},\n  journal = {Journal of Machine Learning Research},\n  year    = {2012},\n  volume  = {13},\n  number  = {34},\n  pages   = {981--1006},\n  url     = {http://jmlr.org/papers/v13/kumar12a.html}\n}"
+  },
+  "musco2017": {
+    "url": "https://proceedings.neurips.cc/paper_files/paper/2017/file/a03fa30821986dff10fc66647c84c9c3-Bibtex.bib",
+    "bibtex": "@inproceedings{NIPS2017_a03fa308,\n author = {Musco, Cameron and Musco, Christopher},\n booktitle = {Advances in Neural Information Processing Systems},\n editor = {I. Guyon and U. Von Luxburg and S. Bengio and H. Wallach and R. Fergus and S. Vishwanathan and R. Garnett},\n pages = {},\n publisher = {Curran Associates, Inc.},\n title = {Recursive Sampling for the Nystrom Method},\n url = {https://proceedings.neurips.cc/paper_files/paper/2017/file/a03fa30821986dff10fc66647c84c9c3-Paper.pdf},\n volume = {30},\n year = {2017}\n}\n"
+  }
+}

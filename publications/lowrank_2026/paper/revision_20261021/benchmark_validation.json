@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "issues": [],
+  "rows": 572,
+  "expected_rows": 572,
+  "missing_by_dataset": {},
+  "scope": "thirteen full datasets, eight methods, both tolerances; all retained assignments/counts and common scoring checked"
+}

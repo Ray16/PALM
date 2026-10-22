@@ -1,0 +1,9 @@
+{
+  "version": "0.1.0",
+  "tag": "lowrank-v0.1.0-review-20261021",
+  "source_root": "reproduction",
+  "public_package": "package",
+  "paper": "paper",
+  "author_metadata": "deferred by author; technical manuscript draft",
+  "base_commit": "7f40d2e141dbca038037b92cd707bcceb46d3a0e"
+}

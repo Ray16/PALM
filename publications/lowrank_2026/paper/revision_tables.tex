@@ -1,0 +1,133 @@
+\begin{table}[htbp]\centering\small
+\begin{tabular}{rrrrr}
+\toprule
+Power & Rank & Max error / mass & Median bound / mass & Max bound / mass \\
+\midrule
+1 & 32 & 0.0808 & 0.4403 & 0.6789 \\
+1 & 64 & 0.0369 & 0.2488 & 0.3695 \\
+1 & 128 & 0.0164 & 0.1323 & 0.2451 \\
+1 & 256 & 0.0058 & 0.0716 & 0.1191 \\
+1 & 512 & 0.0021 & 0.0337 & 0.0569 \\
+3 & 32 & 0.3110 & 3.3021 & 7.2872 \\
+3 & 64 & 0.2788 & 3.1409 & 7.1525 \\
+3 & 128 & 0.2239 & 2.6336 & 7.0219 \\
+3 & 256 & 0.1563 & 2.1753 & 5.8603 \\
+3 & 512 & 0.0958 & 1.4566 & 2.7974 \\
+\bottomrule
+\end{tabular}
+
+\caption{Six full development datasets, three seeds and five partition perturbations per factor. Numerical spectral estimates use a symmetric eigensolver and are not certified upper bounds. Values above one give a vacuous bound on a cut ratio.}\end{table}
+\begin{table}[htbp]\centering\small
+\begin{tabular}{lrrrrr}
+\toprule
+Assay & Random & SIMPD & Plain & Combined & Balanced \\
+\midrule
+1293269-1 & 0.875 & 0.931 & 0.724 & 0.409 & 0.886 \\
+1889-1 & 0.870 & 0.903 & 0.496 & 0.464 & 0.846 \\
+225-1 & 0.784 & 0.848 & 0.534 & 0.525 & 0.583 \\
+237-1 & 0.890 & 0.839 & 0.605 & 0.529 & 0.656 \\
+269-1 & 0.933 & 0.887 & 0.500 & 0.384 & 0.867 \\
+2820-1 & 0.900 & 0.903 & 0.439 & 0.416 & 0.815 \\
+284-1 & 0.890 & 0.847 & 0.711 & 0.554 & 0.767 \\
+3837-1 & 0.932 & 0.901 & 0.456 & 0.410 & 0.545 \\
+3952-3 & 0.921 & 0.839 & 0.624 & 0.824 & 0.821 \\
+4105864-1 & 0.713 & 0.767 & 0.801 & 0.706 & 0.781 \\
+\bottomrule
+\end{tabular}
+
+\caption{RF mean test ROC-AUC by assay. Balanced refers to the combined partition after the target-aware intervention; it is not the label-blind method.}\end{table}
+\begin{table}[htbp]\centering\small
+\begin{tabular}{lrrrrr}
+\toprule
+Assay & Random & SIMPD & Plain & Combined & Balanced \\
+\midrule
+1293269-1 & 0.903 & 0.915 & 0.925 & 0.422 & 0.871 \\
+1889-1 & 0.858 & 0.912 & 0.701 & 0.601 & 0.841 \\
+225-1 & 0.795 & 0.849 & 0.476 & 0.596 & 0.663 \\
+237-1 & 0.883 & 0.846 & 0.647 & 0.543 & 0.586 \\
+269-1 & 0.927 & 0.867 & 0.512 & 0.499 & 0.776 \\
+2820-1 & 0.899 & 0.878 & 0.380 & 0.322 & 0.756 \\
+284-1 & 0.866 & 0.862 & 0.650 & 0.387 & 0.617 \\
+3837-1 & 0.909 & 0.861 & 0.515 & 0.560 & 0.620 \\
+3952-3 & 0.897 & 0.777 & 0.193 & 0.433 & 0.783 \\
+4105864-1 & 0.693 & 0.759 & 0.661 & 0.538 & 0.736 \\
+\bottomrule
+\end{tabular}
+
+\caption{XGB mean test ROC-AUC by assay. Balanced refers to the combined partition after the target-aware intervention; it is not the label-blind method.}\end{table}
+\begin{table}[htbp]\centering\small
+\begin{tabular}{lrr}
+\toprule
+Assay & Train positive rate & Test positive rate \\
+\midrule
+1293269-1 & 0.415 & 0.356 \\
+1889-1 & 0.388 & 0.395 \\
+225-1 & 0.387 & 0.359 \\
+237-1 & 0.397 & 0.405 \\
+269-1 & 0.418 & 0.362 \\
+2820-1 & 0.403 & 0.396 \\
+284-1 & 0.412 & 0.390 \\
+3837-1 & 0.387 & 0.411 \\
+3952-3 & 0.394 & 0.352 \\
+4105864-1 & 0.389 & 0.451 \\
+\bottomrule
+\end{tabular}
+
+\caption{Class proportions for random; averages over split seeds.}\end{table}
+\begin{table}[htbp]\centering\small
+\begin{tabular}{lrr}
+\toprule
+Assay & Train positive rate & Test positive rate \\
+\midrule
+1293269-1 & 0.417 & 0.350 \\
+1889-1 & 0.374 & 0.453 \\
+225-1 & 0.352 & 0.500 \\
+237-1 & 0.370 & 0.514 \\
+269-1 & 0.390 & 0.473 \\
+2820-1 & 0.391 & 0.444 \\
+284-1 & 0.388 & 0.486 \\
+3837-1 & 0.429 & 0.242 \\
+3952-3 & 0.363 & 0.479 \\
+4105864-1 & 0.410 & 0.367 \\
+\bottomrule
+\end{tabular}
+
+\caption{Class proportions for published simpd; averages over split seeds.}\end{table}
+\begin{table}[htbp]\centering\small
+\begin{tabular}{lrr}
+\toprule
+Assay & Train positive rate & Test positive rate \\
+\midrule
+1293269-1 & 0.429 & 0.300 \\
+1889-1 & 0.374 & 0.453 \\
+225-1 & 0.383 & 0.375 \\
+237-1 & 0.433 & 0.257 \\
+269-1 & 0.468 & 0.161 \\
+2820-1 & 0.464 & 0.154 \\
+284-1 & 0.401 & 0.433 \\
+3837-1 & 0.386 & 0.414 \\
+3952-3 & 0.391 & 0.366 \\
+4105864-1 & 0.408 & 0.376 \\
+\bottomrule
+\end{tabular}
+
+\caption{Class proportions for plain; averages over split seeds.}\end{table}
+\begin{table}[htbp]\centering\small
+\begin{tabular}{lrr}
+\toprule
+Assay & Train positive rate & Test positive rate \\
+\midrule
+1293269-1 & 0.333 & 0.683 \\
+1889-1 & 0.392 & 0.380 \\
+225-1 & 0.388 & 0.356 \\
+237-1 & 0.419 & 0.315 \\
+269-1 & 0.455 & 0.215 \\
+2820-1 & 0.466 & 0.145 \\
+284-1 & 0.400 & 0.438 \\
+3837-1 & 0.382 & 0.431 \\
+3952-3 & 0.430 & 0.211 \\
+4105864-1 & 0.430 & 0.287 \\
+\bottomrule
+\end{tabular}
+
+\caption{Class proportions for combined; averages over split seeds.}\end{table}

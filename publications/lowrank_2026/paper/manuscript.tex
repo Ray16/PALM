@@ -1,0 +1,496 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,booktabs,graphicx,natbib,hyperref,tikz,placeins}
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\bottomfraction}{0.95}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.7}
+\usetikzlibrary{arrows.meta,positioning}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+\graphicspath{{figures/}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\cut}{\mathcal{C}}
+\newcommand{\nnl}{\operatorname{NNL}}
+\input{revision_numbers.tex}
+\input{robustness_numbers.tex}
+\input{scaling_numbers.tex}
+\input{sensitivity_numbers.tex}
+\IfFileExists{benchmark_numbers.tex}{\input{benchmark_numbers.tex}}{}
+\IfFileExists{runtime_numbers.tex}{\input{runtime_numbers.tex}}{}
+\title{Compressing dense similarity for dataset splitting with global and local control}
+\author{Author information pending}
+\date{}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Similarity-aware evaluation requires separating related entities across data
+folds, but their total overlap is a dense pairwise quantity. We introduce
+low-rank similarity splitting, which uses a Nystr\"om factor to compress the kernel into shared
+coordinates and optimizes cross-fold overlap through their fold sums.
+At fixed rank, factor storage grows linearly with dataset size, and capacity
+constraints control the returned fold counts. On six molecular datasets, the
+largest measured rank-256 cut error for the ordinary kernel is
+\PlainFidelityError{} of its off-diagonal similarity mass. The plain method
+partitions two million molecular fingerprints in \ScalePlainLargeSeconds{}
+seconds on an H100 NVL. Kernel powers and capped groups add control over
+close-analogue contamination, allowing a trade-off between global and local
+overlap. Across four cases with exactly matched fold counts, the combined
+setting takes \RuntimeCombinedMinSeconds{}--\RuntimeCombinedMaxSeconds{}
+CPU seconds, compared with \RuntimeDataSailMinSeconds{}--\RuntimeDataSailMaxSeconds{}
+for DataSAIL, with dataset-dependent quality differences. Independent fingerprints
+and ten external bioactivity assays establish the scope of this control:
+separation depends on the representation, and strong chemical-series holdouts
+can induce target shift and chance-level prediction. Low rank provides a
+compact framework for constructing capacity-controlled generalization tests
+whose scientific purpose can be assessed explicitly.
+\end{abstract}
+
+\noindent\textbf{Keywords:} dataset splitting; molecular machine learning;
+Nystr\"om approximation; information leakage; scientific model evaluation.
+
+\section{Introduction}
+
+An evaluation split defines the generalization task a model must solve. In
+molecular machine learning, predicting another member of a known chemical
+series differs from predicting a new series. Random, scaffold, cluster and
+temporal splits impose different boundaries between these tasks and can change
+apparent model performance \citep{wu2018moleculenet,yang2019representations}.
+Lo-Hi makes the distinction between lead optimization and novel-hit
+identification explicit \citep{steshin2023lohi}. Temporal studies and SIMPD
+further show that the appropriate degree of separation depends on the intended
+project scenario \citep{sheridan2013timesplit,landrum2023simpd}.
+Evaluation guidelines and activity-cliff benchmarks also motivate examining
+response variation alongside structural similarity
+\citep{bender2022,vantilborg2022}.
+
+Similarity offers a direct way to specify such a boundary: minimize the total
+similarity crossing folds while preserving their requested sizes. This quantity
+includes every pair of entities. Storing it explicitly requires quadratic
+memory, making repeated split construction costly as datasets grow. DataSAIL
+addresses the optimization through clustering and integer programming
+\citep{joeres2025datasail,joeres2026datasailaddendum}. A sparse nearest-neighbour
+graph offers another representation, retaining strong local connections while
+omitting most pairs. These choices raise a computational question: can we
+optimize an approximation to the dense overlap without storing the dense matrix?
+
+We address this question by compressing the kernel into a low-rank factor.
+Each entity receives a short vector, and the dot product of two vectors
+approximates their similarity. Crucially, cross-fold overlap can then be
+computed from the sum of vectors in each fold. The solver works with these
+compact sums and specified integer capacities, rather than an explicit
+pairwise matrix. A sparse graph represents a selected set of pairs; the factor
+instead approximates similarities through coordinates shared by all entities
+(Figure~\ref{fig:overview}). This is useful when similarity contains redundancy
+that a modest rank captures. Nystr\"om approximation and its connections to
+kernel clustering are established
+\citep{williams2000nystrom,dhillon2004kernel,gittens2016nystrom,wang2019scalablekernel,chitta2011};
+our contribution is a capacity-constrained splitting framework and an evaluation
+of when its compressed objective is useful.
+
+Making the dense objective affordable also exposes a distinction in what it
+measures. A sum over many pairs can assign little importance to a few close
+analogues crossing the split, although those analogues may strongly affect
+prediction. We therefore measure total overlap and nearest-training-neighbour
+similarity separately. Integer kernel powers emphasize strong similarities,
+while capped groups encourage nearby entities to stay together. Both operate
+within the factor framework, allowing explicit choices between global overlap,
+local contamination and fold capacities. The powered kernel has its own
+approximation requirements, and grouping adds neighbour-construction work.
+
+The study asks three linked questions: how well compression preserves cut
+values, how the returned partitions control global and local overlap relative
+to established alternatives, and what that separation means for prediction.
+We test fidelity and rank sensitivity, compare full-size molecular and materials
+benchmarks, and measure computational scaling separately for the plain and
+combined settings. Synthetic families and per-molecule errors test the meaning
+of the local metric. External assay tasks then examine the consequences of
+fixed settings, including target-composition shifts. Together these experiments
+establish a practical use for low rank: constructing and comparing specified
+similarity-aware generalization tests at controlled fold sizes.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=6.5in]{revision/concept.pdf}
+\caption{Three approaches to representing similarity for splitting. The
+schematic illustrates clustering into blocks, truncating to nearby pairwise
+edges, and low-rank compression of all pairs. Compression supplies the
+block-sum cut identity in Equation~\ref{eq:factor}; power and grouping then
+control the global--local trade-off. The matrices are illustrative.}
+\label{fig:overview}
+\end{figure}
+
+\FloatBarrier
+\section{Low-rank similarity splitting}
+\label{sec:framework}
+
+\subsection{Problem and evaluation quantities}
+
+Let $S\in\R^{n\times n}$ be a symmetric, nonnegative, positive-semidefinite kernel over $n$
+entities and let $z_i\in\{1,\ldots,k\}$ denote the fold of entity $i$. For a
+partition $z$, define the unordered cross-fold similarity
+\begin{equation}
+ \cut_S(z)=\sum_{i<j}S_{ij}\,\mathbf{1}[z_i\ne z_j],\qquad
+ L_S(z)=\frac{\cut_S(z)}{\sum_{i<j}S_{ij}}.
+ \label{eq:cut}
+\end{equation}
+The denominator is independent of the partition and the diagonal contributes
+nothing. We use $L_S$ only when the off-diagonal total is positive. Signed cosine
+kernels can be positive semidefinite while violating nonnegativity; their ratios
+do not have the same interpretation and are outside our leakage claims.
+
+We evaluate global overlap relative to the random expectation at the realized
+fold sizes. A separate local score measures each test entity's similarity to
+its nearest training neighbour. For molecular fingerprints, a ramp from 0.4 to
+0.8 emphasizes close analogues. Section~\ref{sec:methods} defines the scoring
+and count-preserving random normalization precisely.
+
+\subsection{Factor-space formulation}
+
+Sample $r$ landmark entities, form the entity--landmark matrix $C$ and landmark
+kernel $W$, and construct $B=CW^{-1/2}$ using a regularized eigendecomposition. This produces a regularized Nystr\"om approximation
+$\widetilde S=BB^\top$. For the sum of factor rows in fold $c$,
+$p_c=\sum_{i:z_i=c}B_i$, the approximate cut satisfies
+\begin{equation}
+ \cut_{\widetilde S}(z)=
+ \frac12\left(\left\|\sum_c p_c\right\|^2-\sum_c\|p_c\|^2\right).
+ \label{eq:factor}
+\end{equation}
+Equation~\ref{eq:factor} is exact for $\widetilde S$, and computing the block sums
+requires $O(nr)$ work. It is an approximation to the cut of $S$, not a certificate
+that the original cut has been minimized. Supplementary Information gives a uniform
+objective-error bound and separates it from optimization error.
+
+\subsection{Capacities and optimization}
+
+Largest-remainder rounding converts requested ratios into integer fold targets
+summing to $n$. Zero size tolerance enforces those counts exactly; positive
+tolerance permits a two-sided corridor containing them. Each restart alternates
+between computing fold sums and proposing capacity-constrained assignments.
+A proposal is accepted when it does not increase the approximate cut, and the best
+restart undergoes greedy move or swap refinement
+\citep{fiduccia1982,kernighan1970}. At exact capacities, swaps preserve fold counts.
+For a move from fold $a$ to $b$, the change in cut is
+\begin{equation}
+ \Delta\cut=B_i^\top p_a-B_i^\top p_b-\|B_i\|^2.
+ \label{eq:move}
+\end{equation}
+Thus refinement also uses factor rows and fold sums. Finite restarts and a
+restricted swap search provide a heuristic solution. The standard configuration
+uses rank 256, four restarts and up to 25 assignment iterations. The supplement
+specifies assignment, landmark selection and stopping rules.
+Table~\ref{tab:algorithm} summarizes the workflow.
+
+
+
+\subsection{Kernel sharpening and capped groups}
+
+For an integer $p\ge1$, we factorize the elementwise power $S^{\circ p}$.
+The Schur product theorem preserves positive semidefiniteness. Powering reduces
+weak background similarities relative to strong ones: $0.1^3=0.001$, whereas
+$0.7^3=0.343$. More formally, if $N_\tau(z)$ counts crossing pairs with similarity
+at least $\tau>0$, then $\cut_{S^{\circ p}}(z)\ge\tau^pN_\tau(z)$
+(Supplementary Information). The powered cut therefore penalizes strong crossing
+pairs, although it differs from the average nearest-neighbour evaluation score.
+All leakage comparisons use the same original kernel, regardless of the
+optimization power.
+
+Grouping complements this change of weighting by restricting assignments.
+We process top-32-neighbour edges above a threshold $\tau$ in descending order,
+merging components subject to a count cap. A group is represented by the sum of
+its factor rows and its entity count, so the same cut and move identities apply
+to whole-group assignments. The combined molecular setting uses $p=3$,
+$\tau=0.4$ and a cap of half the smallest target fold. For non-Tanimoto features,
+$\tau$ is the 0.995 pair-similarity quantile. The builder stops component growth
+after a cap-blocked merge. If whole-group repair fails to satisfy capacities,
+it can dissolve groups into singletons; we report this relaxation and check the
+returned counts. Grouping consequently encourages local separation while
+retaining all valid input entities. Omitted neighbour edges, capped merges and
+repair prevent a universal threshold-exclusion guarantee.
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{@{}r p{5.8in}@{}}
+\toprule
+ & Low-rank similarity splitting \\
+\midrule
+1 & Round requested capacities and check that every target fold is nonempty. \\
+2 & Select landmarks and build a rank-$r$ factor of $S^{\circ p}$. \\
+3 & If grouping is enabled, construct capped neighbour groups and sum their
+factor rows; retain their entity counts as weights. \\
+4 & For each seeded restart, alternate fold sums with capacity-constrained
+assignment proposals. Repair weighted capacities, recording dissolved groups. \\
+5 & Retain the best restart and refine through legal moves or count-preserving
+swaps. Accept operations that decrease the factor cut. \\
+6 & Verify final capacities and return every entity's fold with diagnostics. \\
+\bottomrule
+\end{tabular}
+\caption{Algorithm outline. Fold sums replace repeated dense-cut evaluation.
+All acceptance tests concern the approximate kernel. The supplement specifies
+the proposal, repair and stopping rules.}
+\label{tab:algorithm}
+\end{table}
+
+\subsection{Computational scope}
+
+At rank $r$, factor storage and fold-sum construction require $O(nr)$ space and
+work, respectively. This compact representation makes the dense objective
+accessible at large $n$. Total runtime also depends on factor construction,
+assignment and refinement. The combined setting adds neighbour construction,
+with quadratic arithmetic for exact similarities. We measure its scaling
+separately from the plain method; the supplement gives the operation-by-operation
+costs, stopping rules and neighbour-backend details.
+
+\FloatBarrier
+\section{Results}
+
+\input{results_revision.tex}
+
+\FloatBarrier
+\section{Discussion}
+
+Low rank makes dense similarity an accessible objective for split construction.
+The factor-space identity replaces a stored pairwise matrix with shared
+coordinates and fold sums, and capacities provide direct control over the
+returned counts. This combination is useful for repeatedly constructing
+benchmarks, comparing overlap at matched sizes, and exploring how an evaluation
+boundary changes model performance. The measured fidelity of the ordinary
+kernel and the two-million-entity plain-factor run support this computational
+role. Its value depends on the kernel's compressibility and the chosen
+optimization settings.
+
+The distinction between global and local similarity gives that computation a
+scientific interpretation. Total overlap measures a distributed relationship
+between folds; nearest-training-neighbour similarity measures opportunities for
+local analogue transfer. Powering and grouping let users change their relative
+importance, with an explicit cost in dense overlap, approximation requirements
+and neighbour construction. The Morgan sensitivity study supports local control
+beyond one threshold. The mixed independent-fingerprint results show why this
+control must be interpreted in the representation used to define similarity.
+
+In practice, a user should first specify the intended transfer task and examine
+a plain partition at the required fold counts. The share of test molecules with
+a training neighbour above a chosen similarity threshold reveals whether local
+contamination remains relevant. Power and grouping can then strengthen
+separation for a new-series task. Fold composition, class proportions and
+absolute predictive scores should accompany that choice. The external assays
+show why maximizing separation alone is a poor selection rule: it can produce
+large target shifts and leave little learnable signal. The class-balance
+intervention changes structural composition as well as labels across folds,
+and therefore serves as a sensitivity check. Confirmatory benchmarks require
+the split policy to be fixed before the final model's test outcomes are viewed.
+
+\subsection{Limitations}
+
+Approximation, optimization and task validity impose separate limits. A small
+cut-value error does not certify a globally optimal partition. Kernel powering
+can require substantially more rank than ordinary similarity, while the
+spectral bound can be too loose to guide rank selection. Grouping adds exact
+neighbour work and only conditionally preserves groups under capacity repair.
+Consequently, the plain method's measured scaling cannot be transferred to the
+combined setting, and a hard analogue-exclusion requirement calls for a
+different retention or feasibility contract, as illustrated by Lo-Hi and
+GraphPart \citep{steshin2023lohi,teufel2023graphpart}.
+
+The empirical collection contains convenience datasets and single-target slices
+of multitask sources, with incomplete DataSAIL coverage under the stated
+resource configuration. Composition descriptors define similarity in that
+representation and cannot establish crystal-structure novelty. The simulated
+SIMPD scenarios supply no observed future outcomes, and calibration depends on
+the selected labels and model. Broader tests should include chronological
+project data and additional representations, with independently specified
+deployment tasks. These limits guide where the framework can support benchmark
+design and where external evidence remains necessary.
+
+\section{Conclusion}
+
+Low-rank similarity splitting uses compressed fold sums to construct
+capacity-controlled partitions without storing the dense kernel. It supports
+a practical distinction between reducing total overlap and separating close
+analogues, with power and grouping controlling the trade-off. This makes low
+rank useful for designing and comparing scientific generalization tests,
+provided that structural separation is checked against the task, target
+composition and predictive behaviour.
+
+\FloatBarrier
+\section{Methods}
+\label{sec:methods}
+\subsection{Evaluation metrics}
+
+To account for realized fold sizes $n_c$, we also report the global ratio
+$L_S(z)/L_{\mathrm{random}}$, where
+\begin{equation}
+ L_{\mathrm{random}}=1-\frac{\sum_c n_c(n_c-1)}{n(n-1)}.
+ \label{eq:random}
+\end{equation}
+This expectation corresponds to random assignment at the same counts. It removes
+a direct size dependence of the global score, but does not remove differences in
+test composition or target distribution.
+
+For local similarity, let $s_i=\max_{j:z_j=\mathrm{train}}S_{ij}$ for each held-out
+entity. The nearest-neighbour score is the mean of
+$h(s_i)=\min\{1,\max\{0,(s_i-\ell)/(u-\ell)\}\}$. Molecular Tanimoto experiments use
+$(\ell,u)=(0.4,0.8)$; these are operational thresholds for the chosen fingerprint,
+not universal definitions of chemical relatedness. For composition descriptors,
+the ramp uses the 0.99 and 0.999 quantiles of pair similarities estimated from
+at most 1024 sampled rows and 8192 sampled reference rows. We normalize by the
+mean score under random permutations of fold labels at fixed counts to obtain
+$\nnl_{\mathrm{rel}}$. A value near one denotes the random
+baseline, and zero denotes no sampled held-out neighbour above $\ell$; the relative
+score is not universally bounded by one. The main baseline comparison uses
+test-only queries and $k=1$; validation-plus-test queries are a separate secondary
+measure of contamination relevant to model selection. The rank-sensitivity
+study retains that pooled held-out convention and labels it explicitly.
+
+\subsection{Datasets, baselines and prediction studies}
+
+The full-size benchmark covers eleven MoleculeNet datasets and two
+composition-based materials datasets, QMOF and a Materials Project snapshot
+\citep{rosen2021qmof,jain2013materials}.
+Molecular features are radius-two Morgan fingerprints with 1024 bits and Tanimoto
+similarity \citep{ralai2005}. Materials features combine MAGPIE-style elemental statistics,
+electronic, bonding and stoichiometric descriptors with a standardized Euclidean
+similarity $1/(1+\|x_i-x_j\|)$ \citep{rogers2010fingerprints,ward2016materials}. All feature construction and retained row identities
+are recorded. For multitask sources, the study uses one declared target, rather
+than claiming an evaluation across all tasks. The materials datasets provide a
+representation-specific generality check, reported in the supplement.
+
+Comparator choice follows the question each method can answer. DataSAIL is the
+closest published comparator for dense cross-fold similarity. To isolate
+compression from sparsification, we use an ordinary weighted nearest-neighbour
+graph partitioned with Mt-KaHyPar's quality preset and edge-cut objective
+\citep{karypis1998,gottesburen2024}. Graph construction is included in its split
+time. Lo-Hi's Hi splitter tests threshold-based chemical separation, allowing
+bridging molecules to be discarded; its comparisons match both the retained
+subset and realized counts \citep{steshin2023lohi}. Published UMAP cluster splitting
+provides an embedding-and-clustering alternative
+\citep{hernandez2023clustering,guo2025umap}. We transfer the former study's
+UMAP/Ward recipe, with every native cluster holdout receiving count-matched
+controls. The supplement gives the exact recipe and eligibility policy. Random, scaffold and Butina
+splits supply familiar reference points. This focus on specified overlap levels
+is also consistent with SPECTRA's generalizability evaluation perspective
+\citep{ektefaie2024spectra}.
+
+The full-size comparison uses an 8:1:1 ratio and size tolerances 0.01 and 0.05.
+Three split seeds quantify variation for plain low rank and the combined settings.
+DataSAIL 1.3.0 uses its C1e technique with SCIP, up to 7,200 seconds, cluster count
+$\min\{\max(9,\lfloor n/20\rfloor),n\}$, and the stated size tolerance.
+DataSAIL has one recorded assignment per configuration. Solver logs distinguish
+time-limited feasible assignments, optima, solver failures, memory-policy skips
+and unattempted datasets. Local resource limits do not establish that another method
+cannot process a dataset in general.
+
+Exact-size ablations use the same ratios with zero tolerance.
+Additional
+baselines assign entire Bemis--Murcko scaffolds or Butina clusters, using fixed
+fingerprints and a 0.6 distance cutoff for Butina
+\citep{bemis1996frameworks,butina1999clustering}. Their indivisibility can cause
+count deviations, which we report rather than silently discarding examples.
+Butina's all-pairs implementation is limited to 10,000 entities. These baselines
+are informative structural comparators but are not exact-count controls when
+their realized counts differ.
+
+The external assay study uses random forests and histogram-based gradient-boosted
+trees \citep{breiman2001forests,chen2016xgboost}
+using 128 trees, two model seeds and three
+split seeds. Boosted trees use maximum depth four and learning rate 0.05. Settings
+are fixed across methods; no test-label tuning or per-split model selection is
+performed. Classification reports ROC-AUC and average precision; single-class
+test folds have undefined AUC and are not replaced with accuracy. Regression
+reports RMSE and $R^2$. Train--test target shift and classification rates accompany
+the scores. Model-initialization variability and split variability are retained
+separately.
+
+Local-metric validation uses saved directed-message-passing neural-network
+predictions for random and plain-low-rank partitions of ESOL, FreeSolv,
+Lipophilicity and BBBP \citep{yang2019representations}. Their test counts match
+the native DataSAIL counts. Each partition uses a 30-epoch protocol, normalized
+RDKit 2D features and five model initializations, with one split realization
+and a random validation carve-out. Prediction and assignment provenance are
+specified in the supplement.
+
+For external evaluation, ten of the 99 public SIMPD assay files are selected by
+sorting SHA256 hashes of filenames and taking the first ten, before inspecting
+their prediction outcomes \citep{landrum2023simpd}. No parameters are selected on
+these assays. Their published simulated temporal split provides a scenario
+reference; new splits match its train/test counts exactly where the method permits.
+We use the provided activity labels with the same two tree-model families and
+retain all valid molecules. This evaluates transfer to assay tasks outside the
+development suite, not independence of every molecular structure or validation
+against observed future experiments.
+
+\subsection{Ablation, label balance and difficulty calibration}
+
+Six full-size development datasets support a factorial ablation separating kernel
+power, grouping, rank, landmarks, restarts, refinement, capacity tolerance, threshold
+and cap policy. We show the complete tested frontier rather than choose a winner
+using downstream test scores. These datasets also informed method development;
+the external assay study tests transfer of the fixed settings.
+
+A label-balance sensitivity analysis reassigns the minimum possible number of
+entities needed to match class proportions or five regression quantile bins across
+folds, while preserving fold counts. Rounding is solved as a small transportation
+problem. For that fixed integer target table, as many original assignments as
+possible are retained. Choices among interchangeable entities use a seeded shuffle. Both
+leakage measures and model scores are then recomputed. This intervention explicitly
+uses labels and can break groups; it diagnoses sensitivity to target distribution
+and is not a label-blind splitter or a causal isolation of structural novelty.
+
+An optional hardness parameter uses swaps to randomize an optimized split
+while preserving fold counts. We assess difficulty relative to the random endpoint:
+the decrease in test AUC for classification, and the proportional increase
+in test RMSE for regression. RF calibration uses split
+seeds 0--2; seeds 10--14 test fixed knots and three interior targets, using RF
+and boosted trees. Labels are part of benchmark design in this study. The
+supplement reports both observed monotonicity and model-transfer error.
+
+\subsection{Scoring, uncertainty and reproducibility}
+
+The full-size baseline comparison uses one scoring protocol for every method.
+Global scores use all pairs up to 4,000 entities and a uniform 4,000-entity subset
+above that limit. Nearest-neighbour scoring uses all held-out entities up to 2,048
+and a uniform subset above that limit, always against the complete training fold.
+Standardization is fitted to the complete feature set before similarity sampling.
+Three count-preserving permutations normalize nearest-neighbour
+scores. Sampling limits and reference counts accompany each result; sampled
+large-data global scores are not labelled exact. The powered-kernel fidelity
+study instead evaluates exact cuts of the full matrices on six development
+datasets with at most 5,000 entities. External assays are small enough for exact
+global and local scoring. These protocols answer different questions and their
+scope accompanies each table or figure.
+
+Cross-dataset summaries average within each dataset first. Descriptive bootstrap
+intervals resample dataset means, with 10,000 replicates and seed 31415, avoiding
+molecule-level pseudo-replication. They describe the empirical collection and do
+not imply that thirteen convenience datasets are a random population sample.
+Per-seed tables and exceptions remain available. Supplementary uncertainty tables separate between-split
+variation from within-split initializer variation and use a split-then-model
+bootstrap with 2,000 draws and seed 2718. Single-split references cannot estimate
+split-choice variation. Split timing excludes separately
+computed diagnostics. Hardware, thread limits, source identities, input hashes,
+assignments and failures are retained in the accompanying manifests. The supplement identifies reused prediction studies and their source snapshots.
+
+
+\section*{Data and code availability}
+
+Code, manuscript sources, compiled PDFs and reproducibility material are
+available in the versioned repository release
+\href{https://github.com/Ray16/PALM/tree/lowrank-v0.1.0-review-20261021/publications/lowrank_2026}{lowrank-v0.1.0-review-20261021}.
+The package includes source identities, environment versions, study settings,
+per-seed metrics, split assignments, input checksums and scripts that rebuild
+the tables and figures. Download manifests identify the public SIMPD assays
+and original benchmark snapshots. MoleculeNet, QMOF, Materials Project and
+ChEMBL inputs retain their original source attribution and terms.
+
+\input{submission_metadata.tex}
+
+\section*{Acknowledgements and use of AI tools}
+
+OpenAI Codex and Anthropic Claude assisted with code development and review,
+analysis and manuscript preparation. The reproducibility package records source
+versions and computational outputs. The authors are responsible for the
+scientific claims, references and final submitted manuscript.
+
+\bibliographystyle{unsrtnat}
+\bibliography{references}
+\end{document}

@@ -1,0 +1,18 @@
+\begin{table}[htbp]\centering\small
+\begin{tabular}{lrrrr}
+\toprule
+Setting & Molecules & Seconds & GPU GiB & Host RSS GiB \\
+\midrule
+Plain & 1000 & 0.10 & 0.05 & 1.47 \\
+Plain & 10000 & 0.32 & 0.16 & 2.12 \\
+Plain & 100000 & 1.37 & 1.30 & 5.34 \\
+Plain & 300000 & 3.55 & 3.83 & 11.86 \\
+Plain & 1000000 & 10.83 & 12.67 & 34.70 \\
+Plain & 2000000 & 19.93 & 25.32 & 67.34 \\
+Combined & 1000 & 0.15 & 0.05 & 1.49 \\
+Combined & 10000 & 1.67 & 0.16 & 2.13 \\
+Combined & 30000 & 27.45 & 0.42 & 3.01 \\
+Combined & 100000 & 89.04 & 1.30 & 5.33 \\
+\bottomrule
+\end{tabular}
+\caption{Fresh-process H100 NVL scaling cases at rank 256 and size tolerance 0.01. Split time excludes feature loading and scoring and follows a 100-entity warm-up. GPU peak is reset after warm-up; process RSS includes inputs and warm-up. The combined setting uses exact tiled neighbours. These are single-seed measurements, not repeated timing distributions.}\end{table}

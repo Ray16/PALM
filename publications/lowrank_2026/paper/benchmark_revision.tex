@@ -1,0 +1,89 @@
+The full benchmark separates the benefit of compressing a dense objective from
+the effect of changing that objective. At tolerance 0.01, plain low rank has
+lower global overlap than the quality-preset graph comparator on
+\BenchPlainGraphGlobalWins{} of \BenchPlainGraphGlobalN{} molecular datasets
+(Figure~\ref{fig:benchmark-global}). The combined setting reduces local leakage
+relative to plain low rank on \BenchCombinedPlainLocalWins{} of
+\BenchCombinedPlainLocalN{} datasets, while raising the ordinary dense cut.
+Its local score is lower than the graph comparator on
+\BenchCombinedGraphLocalWins{} of \BenchCombinedGraphLocalN{} datasets
+(Figure~\ref{fig:benchmark-local}). The mean combined-minus-graph local
+change is \BenchCombinedGraphLocalChange{}, reflecting the differing
+dataset effects. These comparisons expose the choice the
+framework offers: the plain factor directly targets distributed overlap;
+power and grouping spend some of that global advantage on local separation.
+The complete tables include both tolerances, all reference methods, realized
+counts and group relaxations. Paired dataset effects, bootstrap intervals and
+Holm-adjusted sign tests are supplied in the supplement.
+
+\begin{figure}[!htbp]
+\centering\includegraphics[width=6.5in]{revision/benchmark_global.pdf}
+\caption{Global overlap on eleven full molecular datasets at size tolerance
+0.01, ordered by dataset size. Points are means of three split seeds; bars show
+their standard deviations. The dotted line is the count-matched random
+expectation. All methods retain the same input entities. The graph comparator
+uses exact top-32 construction, an ordinary pairwise Graph API, the quality
+preset and CUT objective, with lower/upper count repair. The supplement reports
+all methods, actual counts, degree sensitivity and the two materials checks.}
+\label{fig:benchmark-global}
+\end{figure}
+
+\begin{figure}[!htbp]
+\centering\includegraphics[width=6.5in]{revision/benchmark_local.pdf}
+\caption{Test-only nearest-training-neighbour leakage for the same partitions
+and scoring protocol as Figure~\ref{fig:benchmark-global}. Ratios are normalized
+by count-preserving random permutations. Bars show split-seed standard
+deviations, truncated at zero where necessary. Controlling total overlap and
+close-neighbour contamination gives different method orderings.}
+\label{fig:benchmark-local}
+\end{figure}
+
+DataSAIL provides a closer comparison for the dense objective. Its saved
+assignments cover seven datasets, with source outcomes classified separately
+from missing attempts and resource-policy exclusions. At their exact native
+counts, plain low rank has lower global overlap on
+\BenchPlainDataSailGlobalWins{} of \BenchPlainDataSailGlobalN{} datasets.
+The combined setting has lower global overlap on
+\BenchCombinedDataSailGlobalWins{} of \BenchCombinedDataSailGlobalN{} and lower
+local leakage on \BenchCombinedDataSailLocalWins{}, with
+\BenchCombinedDataSailLocalTies{} tie. Thus compression provides a practical
+dense-cut objective, while the local setting remains a choice among competing
+criteria. Reused assignments are rescored with the common protocol and supply
+no new runtime.
+
+The published local and cluster methods clarify the retention contract.
+Lo-Hi satisfies its 0.4 cross-fold threshold on all seven eligible datasets,
+retaining between 98.0\% and 99.9\% of their molecules. Low-rank controls match
+each retained subset and its exact counts; their capped groups offer soft local
+control rather than that hard threshold guarantee. In the transferred UMAP
+recipe, seven native cluster holdouts and their count-matched controls retain
+every molecule. The supplement reports both studies separately. The FreeSolv native UMAP
+failure and MUV memory-policy exclusion remain unscored.
+
+\IfFileExists{runtime_numbers.tex}{
+\subsection{Dense splitting has a distinct computational advantage}
+
+The same-host comparison measures the public split call at exactly the native
+DataSAIL counts. Across four cases, median combined-setting times range from
+\RuntimeCombinedMinSeconds{} to \RuntimeCombinedMaxSeconds{} seconds;
+DataSAIL takes \RuntimeDataSailMinSeconds{} to
+\RuntimeDataSailMaxSeconds{} seconds, including distance construction,
+clustering and its integer program (Figure~\ref{fig:runtime-matched}).
+Local quality remains dataset-dependent: on BACE the combined mean local ratio
+is \RuntimeBaceCombinedLocal{}, compared with
+\RuntimeBaceDatasailLocal{} for DataSAIL. Speed and the desired separation
+criterion must therefore be considered together. Solver outcomes, initialization
+policy, individual timings and all exact counts appear in the supplement.
+
+\begin{figure}[!htbp]
+\centering\includegraphics[width=6.5in]{revision/runtime_matched.pdf}
+\caption{CPU cost and local overlap on four same-host cases at exactly matched
+DataSAIL fold counts. Colour denotes method and shape denotes dataset.
+Low-rank points average three split seeds for local leakage and use median
+split-call time; DataSAIL has one solve per case. The clock excludes feature
+loading and scoring. DataSAIL's distance construction, clustering and solver
+are included; low-rank calls exclude a 100-entity warm-up. Solver-reported
+optima and time-limited feasible outcomes are distinguished in the supplement.}
+\label{fig:runtime-matched}
+\end{figure}
+}{}

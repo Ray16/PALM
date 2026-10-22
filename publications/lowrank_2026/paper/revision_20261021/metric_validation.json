@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "issues": [],
+  "synthetic_rows": 144,
+  "per_molecule_rows": 6244,
+  "observation_sha256": {
+    "synthetic_observations.csv": "d0241813dc7e7945dd723f8128feb9e9aa8e2d63f57ce3cdb02d8fa5e9e26694",
+    "per_molecule_observations.csv": "6719d4eb20bc3ba0fb06e50af34b59324ac683c8f818815159e777cdcd278c4e"
+  },
+  "scope": "all pooled and within-regime/split correlations recomputed from provided observations; original prediction alignment has a separate provenance record"
+}

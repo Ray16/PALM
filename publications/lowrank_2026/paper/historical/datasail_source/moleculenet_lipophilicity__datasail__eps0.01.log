@@ -1,0 +1,36 @@
+[1;33mWarning: This version of DIAMOND is more than 180 days old. It is recommended to always use the latest version.
+/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/cvxpy/problems/problem.py:158: UserWarning: Objective contains too many subexpressions. Consider vectorizing your CVXPY code to speed up compilation.
+  warnings.warn("Objective contains too many subexpressions. "
+===============================================================================
+                                     CVXPY                                     
+                                     v1.5.3                                    
+===============================================================================
+(CVXPY) Oct 09 02:50:07 AM: Your problem has 630 variables, 213 constraints, and 0 parameters.
+(CVXPY) Oct 09 02:50:12 AM: It is compliant with the following grammars: DCP, DQCP
+(CVXPY) Oct 09 02:50:12 AM: (If you need to solve this problem multiple times, but with different data, consider using parameters.)
+(CVXPY) Oct 09 02:50:12 AM: CVXPY will first compile your problem; then, it will invoke a numerical solver to obtain a solution.
+(CVXPY) Oct 09 02:50:12 AM: Your problem is compiled with the CPP canonicalization backend.
+-------------------------------------------------------------------------------
+                                  Compilation                                  
+-------------------------------------------------------------------------------
+(CVXPY) Oct 09 02:50:15 AM: Compiling problem (target solver=SCIP).
+(CVXPY) Oct 09 02:50:15 AM: Reduction chain: Dcp2Cone -> CvxAttr2Constr -> ConeMatrixStuffing -> SCIP
+(CVXPY) Oct 09 02:50:15 AM: Applying reduction Dcp2Cone
+(CVXPY) Oct 09 02:50:21 AM: Applying reduction CvxAttr2Constr
+(CVXPY) Oct 09 02:50:22 AM: Applying reduction ConeMatrixStuffing
+(CVXPY) Oct 09 02:50:52 AM: Applying reduction SCIP
+(CVXPY) Oct 09 02:50:53 AM: Finished problem compilation (took 4.191e+01 seconds).
+-------------------------------------------------------------------------------
+                                Numerical solver                               
+-------------------------------------------------------------------------------
+(CVXPY) Oct 09 02:50:53 AM: Invoking solver SCIP  to obtain a solution.
+/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/cvxpy/problems/problem.py:1407: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  warnings.warn(
+-------------------------------------------------------------------------------
+                                    Summary                                    
+-------------------------------------------------------------------------------
+(CVXPY) Oct 09 04:50:58 AM: Problem status: optimal_inaccurate
+(CVXPY) Oct 09 04:50:58 AM: Optimal value: 3.694e+05
+(CVXPY) Oct 09 04:50:58 AM: Compilation took 4.191e+01 seconds
+(CVXPY) Oct 09 04:50:58 AM: Solver (including time spent in interface) took 7.203e+03 seconds
+[moleculenet_lipophilicity] datasail eps=0.01 s=0 7291.91s leak_ratio=0.957 nnl_rel=0.015 n_test=415

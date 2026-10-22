@@ -1,0 +1,32 @@
+\begin{table}[htbp]\centering\small
+\begin{tabular}{lrrr}
+\toprule
+Regime & Observations & Global rho & Local rho \\
+\midrule
+continuum & 24 & 0.844 & 0.578 \\
+hierarchy & 30 & 0.402 & 0.491 \\
+long\_tail & 30 & -0.022 & 0.631 \\
+near\_dup & 24 & -0.290 & 0.588 \\
+pooled & 120 & 0.020 & 0.519 \\
+tightness & 12 & 0.435 & 0.808 \\
+\bottomrule
+\end{tabular}
+
+\caption{Family-leakage correlations on identical finite observations for both metrics. Local similarity is more strongly associated in four of the five constructed regimes; the continuum regime favors the global measure. The pooled contrast also reflects differences among regimes.}\end{table}
+\begin{table}[htbp]\centering\small
+\begin{tabular}{llrrr}
+\toprule
+Dataset & Partition & Test entities & NN rho & Global rho \\
+\midrule
+BBBP & Plain & 387 & 0.064 & 0.209 \\
+BBBP & Random & 408 & -0.078 & -0.142 \\
+ESOL & Plain & 214 & -0.189 & -0.074 \\
+ESOL & Random & 226 & -0.094 & 0.078 \\
+FreeSolv & Plain & 121 & -0.375 & -0.072 \\
+FreeSolv & Random & 128 & -0.109 & -0.042 \\
+Lipophilicity & Plain & 798 & -0.187 & -0.058 \\
+Lipophilicity & Random & 840 & -0.217 & 0.039 \\
+\bottomrule
+\end{tabular}
+
+\caption{Within-partition correlations with absolute five-initialization D-MPNN ensemble error. NN similarity uses the actual training fold as reference; the global proxy is the per-point overlap score. Each partition has one split realization. Pooled and training-plus-validation analyses accompany these primary within-partition values as CSV files.}\end{table}

@@ -1,0 +1,13 @@
+regime,proxy,n,rho
+pooled,leak_ratio,120,0.01970609714685128
+pooled,nnl_rel,120,0.5192670868141167
+continuum,leak_ratio,24,0.8437423607700295
+continuum,nnl_rel,24,0.5781209179987528
+hierarchy,leak_ratio,30,0.4016697735909262
+hierarchy,nnl_rel,30,0.49050566388797634
+long_tail,leak_ratio,30,-0.022141052921380775
+long_tail,nnl_rel,30,0.6307186948008511
+near_dup,leak_ratio,24,-0.2895923522340086
+near_dup,nnl_rel,24,0.587757406481112
+tightness,leak_ratio,12,0.4345240946267408
+tightness,nnl_rel,12,0.8075728530872482

@@ -1,0 +1,42 @@
+{
+  "passed": true,
+  "scope": "All 22 main and 32 supplement rendered pages manually inspected; all 11 standalone figure layouts checked by bounding-box collision/font checks; compiled figure text 18 pt, no visible overlaps or clipped content.",
+  "render_directory": "/tmp/lowrank_narrative_20261021/rendered",
+  "pdf_sha256": {
+    "manuscript.pdf": "96ae8a60b1b6dc25e1b430bcf6fdcc3e00ccc559410167f1a72f47bb7fcad8e1",
+    "supplement.pdf": "2645ef9beca64e7c43084ccc18a694341cc7b81dbf49c01d84d8f7a9cfd0f633"
+  },
+  "font_check": [
+    {
+      "document": "manuscript.pdf",
+      "pages": 22,
+      "minimum_figure_font_pt": 18.0,
+      "all_figure_fonts_at_least_18": true,
+      "clipped_figure_text": []
+    },
+    {
+      "document": "supplement.pdf",
+      "pages": 32,
+      "minimum_figure_font_pt": 18.0,
+      "all_figure_fonts_at_least_18": true,
+      "clipped_figure_text": []
+    }
+  ],
+  "limitations": "Author metadata remains pending. This is a technical revision, not submission clearance.",
+  "clean_export_pdf_verification": [
+    {
+      "document": "manuscript.pdf",
+      "pages": 22,
+      "manual_review_render_identical": true,
+      "minimum_figure_font_pt": 18.0,
+      "sha256": "96ae8a60b1b6dc25e1b430bcf6fdcc3e00ccc559410167f1a72f47bb7fcad8e1"
+    },
+    {
+      "document": "supplement.pdf",
+      "pages": 32,
+      "manual_review_render_identical": true,
+      "minimum_figure_font_pt": 18.0,
+      "sha256": "2645ef9beca64e7c43084ccc18a694341cc7b81dbf49c01d84d8f7a9cfd0f633"
+    }
+  ]
+}

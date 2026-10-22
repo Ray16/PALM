@@ -1,0 +1,29 @@
+[1;33mWarning: This version of DIAMOND is more than 180 days old. It is recommended to always use the latest version.
+/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/cvxpy/problems/problem.py:158: UserWarning: Objective contains too many subexpressions. Consider vectorizing your CVXPY code to speed up compilation.
+  warnings.warn("Objective contains too many subexpressions. "
+===============================================================================
+                                     CVXPY                                     
+                                     v1.5.3                                    
+===============================================================================
+(CVXPY) Oct 09 04:53:45 AM: Your problem has 1173 variables, 394 constraints, and 0 parameters.
+(CVXPY) Oct 09 04:54:01 AM: It is compliant with the following grammars: DCP, DQCP
+(CVXPY) Oct 09 04:54:01 AM: (If you need to solve this problem multiple times, but with different data, consider using parameters.)
+(CVXPY) Oct 09 04:54:01 AM: CVXPY will first compile your problem; then, it will invoke a numerical solver to obtain a solution.
+(CVXPY) Oct 09 04:54:01 AM: Your problem is compiled with the CPP canonicalization backend.
+-------------------------------------------------------------------------------
+                                  Compilation                                  
+-------------------------------------------------------------------------------
+(CVXPY) Oct 09 04:54:14 AM: Compiling problem (target solver=SCIP).
+(CVXPY) Oct 09 04:54:14 AM: Reduction chain: Dcp2Cone -> CvxAttr2Constr -> ConeMatrixStuffing -> SCIP
+(CVXPY) Oct 09 04:54:14 AM: Applying reduction Dcp2Cone
+(CVXPY) Oct 09 04:54:34 AM: Applying reduction CvxAttr2Constr
+(CVXPY) Oct 09 04:54:36 AM: Applying reduction ConeMatrixStuffing
+(CVXPY) Oct 09 04:58:04 AM: Applying reduction SCIP
+(CVXPY) Oct 09 04:58:08 AM: Finished problem compilation (took 2.472e+02 seconds).
+-------------------------------------------------------------------------------
+                                Numerical solver                               
+-------------------------------------------------------------------------------
+(CVXPY) Oct 09 04:58:08 AM: Invoking solver SCIP  to obtain a solution.
+2026-10-09 06:58:30,769 Splitting failed for C1e, try to increase the timelimit or the epsilon value.
+2026-10-09 06:58:35,673 No assignments could be made for any technique! Please check your input data and values for cluster-numbers, delta, and epsilon.
+[moleculenet_tox21] datasail eps=0.05 s=0 FAILED TypeError: 'NoneType' object is not subscriptable

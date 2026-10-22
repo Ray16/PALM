@@ -1,0 +1,41 @@
+scope,epsilon,first,second,metric,n,wins,ties,losses,mean_change,ci_low,ci_high,sign_p,count_contract,holm_p
+molecular,0.01,plain,knn_graph,leak_ratio,11,11,0,0,-0.16313926555841088,-0.18427489623280977,-0.13494511513719748,0.0009765625,common two-sided corridor; actual counts retained,0.01953125
+molecular,0.01,plain,knn_graph,test_ramp_default_rel,11,0,0,11,0.2219160057814676,0.1339038618781375,0.32306134892755106,0.0009765625,common two-sided corridor; actual counts retained,0.01953125
+molecular,0.01,combined,plain,leak_ratio,11,0,0,11,0.08208454927790537,0.05743057166240285,0.1077654507362263,0.0009765625,common two-sided corridor; actual counts retained,0.01953125
+molecular,0.01,combined,plain,test_ramp_default_rel,11,11,0,0,-0.21511741476533724,-0.3102311403041194,-0.13584620685490667,0.0009765625,common two-sided corridor; actual counts retained,0.01953125
+molecular,0.01,combined,knn_graph,leak_ratio,11,10,0,1,-0.08105471628050552,-0.11399263748177094,-0.04849476766381019,0.01171875,common two-sided corridor; actual counts retained,0.15234375
+molecular,0.01,combined,knn_graph,test_ramp_default_rel,11,7,0,4,0.006798591016130309,-0.011663848644234564,0.03742240364070967,0.548828125,common two-sided corridor; actual counts retained,1.0
+molecular,0.01,plain,datasail,leak_ratio,7,7,0,0,-0.06686020129775594,-0.10221660817427729,-0.039474371951650246,0.015625,exact DataSAIL counts,0.15625
+molecular,0.01,plain,datasail,test_ramp_default_rel,7,0,0,7,0.18367351937152646,0.0879710484780226,0.2827792403701846,0.015625,exact DataSAIL counts,0.15625
+molecular,0.01,combined,datasail,leak_ratio,7,4,0,3,-0.0068001927391349104,-0.0369668287825406,0.016224981077731713,1.0,exact DataSAIL counts,1.0
+molecular,0.01,combined,datasail,test_ramp_default_rel,7,4,1,2,-0.000569119706520716,-0.02065672840504588,0.022698321254683886,0.6875,exact DataSAIL counts,1.0
+molecular,0.05,plain,knn_graph,leak_ratio,11,11,0,0,-0.15900596008350984,-0.18196199471311195,-0.13031171617189669,0.0009765625,common two-sided corridor; actual counts retained,0.01953125
+molecular,0.05,plain,knn_graph,test_ramp_default_rel,11,1,0,10,0.21269170310349084,0.11346789344112243,0.32446523610450023,0.01171875,common two-sided corridor; actual counts retained,0.15234375
+molecular,0.05,combined,plain,leak_ratio,11,0,0,11,0.09101837930350137,0.06193599792040425,0.1201237013635597,0.0009765625,common two-sided corridor; actual counts retained,0.01953125
+molecular,0.05,combined,plain,test_ramp_default_rel,11,11,0,0,-0.2053676787504661,-0.30229401596311467,-0.11831588885689596,0.0009765625,common two-sided corridor; actual counts retained,0.01953125
+molecular,0.05,combined,knn_graph,leak_ratio,11,10,0,1,-0.06798758078000845,-0.11393949080656271,-0.018233801426652197,0.01171875,common two-sided corridor; actual counts retained,0.15234375
+molecular,0.05,combined,knn_graph,test_ramp_default_rel,11,7,0,4,0.00732402435302468,-0.016091465531891815,0.037599889113680826,0.548828125,common two-sided corridor; actual counts retained,1.0
+molecular,0.05,plain,datasail,leak_ratio,7,7,0,0,-0.0693881741991887,-0.11259488722824629,-0.03626932714099646,0.015625,exact DataSAIL counts,0.15625
+molecular,0.05,plain,datasail,test_ramp_default_rel,7,0,0,7,0.17065554213846545,0.08879679372038243,0.2602311854352975,0.015625,exact DataSAIL counts,0.15625
+molecular,0.05,combined,datasail,leak_ratio,7,4,0,3,-0.011051283549970434,-0.05202227908431404,0.017799680161816305,1.0,exact DataSAIL counts,1.0
+molecular,0.05,combined,datasail,test_ramp_default_rel,7,4,1,2,-0.006519129633562187,-0.024791627349172018,0.0128622120282167,0.6875,exact DataSAIL counts,1.0
+all_datasets,0.01,plain,knn_graph,leak_ratio,13,13,0,0,-0.15107340607230973,-0.17571457782921165,-0.12309093128789524,0.000244140625,common two-sided corridor; actual counts retained,0.0048828125
+all_datasets,0.01,plain,knn_graph,test_ramp_default_rel,13,0,0,13,0.2094422542027726,0.13577030565954776,0.2961838805632857,0.000244140625,common two-sided corridor; actual counts retained,0.0048828125
+all_datasets,0.01,combined,plain,leak_ratio,13,0,0,13,0.07427722827197275,0.05133926542415656,0.09947754988468083,0.000244140625,common two-sided corridor; actual counts retained,0.0048828125
+all_datasets,0.01,combined,plain,test_ramp_default_rel,13,13,0,0,-0.2056152470537781,-0.28780594775023466,-0.13872606081191874,0.000244140625,common two-sided corridor; actual counts retained,0.0048828125
+all_datasets,0.01,combined,knn_graph,leak_ratio,13,12,0,1,-0.07679617780033698,-0.1057167792492594,-0.04859141116906208,0.00341796875,common two-sided corridor; actual counts retained,0.04443359375
+all_datasets,0.01,combined,knn_graph,test_ramp_default_rel,13,8,0,5,0.0038270071489945228,-0.015227410132644907,0.031175124614839712,0.5810546875,common two-sided corridor; actual counts retained,1.0
+all_datasets,0.01,plain,datasail,leak_ratio,7,7,0,0,-0.06686020129775594,-0.10221660817427729,-0.039474371951650246,0.015625,exact DataSAIL counts,0.15625
+all_datasets,0.01,plain,datasail,test_ramp_default_rel,7,0,0,7,0.18367351937152646,0.0879710484780226,0.2827792403701846,0.015625,exact DataSAIL counts,0.15625
+all_datasets,0.01,combined,datasail,leak_ratio,7,4,0,3,-0.0068001927391349104,-0.0369668287825406,0.016224981077731713,1.0,exact DataSAIL counts,1.0
+all_datasets,0.01,combined,datasail,test_ramp_default_rel,7,4,1,2,-0.000569119706520716,-0.02065672840504588,0.022698321254683886,0.6875,exact DataSAIL counts,1.0
+all_datasets,0.05,plain,knn_graph,leak_ratio,13,13,0,0,-0.14922383998476416,-0.17384254900858193,-0.12078934791542081,0.000244140625,common two-sided corridor; actual counts retained,0.0048828125
+all_datasets,0.05,plain,knn_graph,test_ramp_default_rel,13,1,0,12,0.200636277960151,0.11729942080165717,0.29680350662427935,0.00341796875,common two-sided corridor; actual counts retained,0.04443359375
+all_datasets,0.05,combined,plain,leak_ratio,13,0,0,13,0.08097925378714907,0.053920914744086286,0.10908724676153304,0.000244140625,common two-sided corridor; actual counts retained,0.0048828125
+all_datasets,0.05,combined,plain,test_ramp_default_rel,13,13,0,0,-0.1972687297466726,-0.2797883754044145,-0.12400107617360168,0.000244140625,common two-sided corridor; actual counts retained,0.0048828125
+all_datasets,0.05,combined,knn_graph,leak_ratio,13,12,0,1,-0.0682445861976151,-0.10706545240997291,-0.02556565722864845,0.00341796875,common two-sided corridor; actual counts retained,0.04443359375
+all_datasets,0.05,combined,knn_graph,test_ramp_default_rel,13,8,0,5,0.003367548213478411,-0.018760702062968673,0.030454378555549902,0.5810546875,common two-sided corridor; actual counts retained,1.0
+all_datasets,0.05,plain,datasail,leak_ratio,7,7,0,0,-0.0693881741991887,-0.11259488722824629,-0.03626932714099646,0.015625,exact DataSAIL counts,0.15625
+all_datasets,0.05,plain,datasail,test_ramp_default_rel,7,0,0,7,0.17065554213846545,0.08879679372038243,0.2602311854352975,0.015625,exact DataSAIL counts,0.15625
+all_datasets,0.05,combined,datasail,leak_ratio,7,4,0,3,-0.011051283549970434,-0.05202227908431404,0.017799680161816305,1.0,exact DataSAIL counts,1.0
+all_datasets,0.05,combined,datasail,test_ramp_default_rel,7,4,1,2,-0.006519129633562187,-0.024791627349172018,0.0128622120282167,0.6875,exact DataSAIL counts,1.0

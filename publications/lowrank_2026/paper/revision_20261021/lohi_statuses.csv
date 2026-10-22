@@ -1,0 +1,12 @@
+dataset,n,status,reason,classification,retention,retained_n,train_n,test_n,maximum_cross_similarity,solver_status
+moleculenet_freesolv,642,ok,,scored on exactly matched retained subset,0.9906542056074766,636.0,556.0,80.0,0.4000000059604645,OptimizationStatus.OPTIMAL
+moleculenet_esol,1128,ok,,scored on exactly matched retained subset,0.9893617021276596,1116.0,976.0,140.0,0.4000000059604645,OptimizationStatus.OPTIMAL
+moleculenet_bace,1513,ok,,scored on exactly matched retained subset,0.9801718440185063,1483.0,1287.0,196.0,0.4000000059604645,OptimizationStatus.OPTIMAL
+moleculenet_bbbp,2039,ok,,scored on exactly matched retained subset,0.9970573810691515,2033.0,1778.0,255.0,0.4000000059604645,OptimizationStatus.OPTIMAL
+moleculenet_sider,1427,ok,,scored on exactly matched retained subset,0.9992992291520673,1426.0,1247.0,179.0,0.4000000059604645,OptimizationStatus.OPTIMAL
+moleculenet_clintox,1480,ok,,scored on exactly matched retained subset,0.9986486486486487,1478.0,1293.0,185.0,0.4000000059604645,OptimizationStatus.OPTIMAL
+moleculenet_lipophilicity,4200,ok,,scored on exactly matched retained subset,0.9990476190476191,4196.0,3671.0,525.0,0.4000000059604645,OptimizationStatus.OPTIMAL
+moleculenet_tox21,7823,unavailable,prespecified input/size eligibility; not solver infeasibility,prespecified resource-policy exclusion,,,,,,
+moleculenet_qm8,21786,unavailable,prespecified input/size eligibility; not solver infeasibility,prespecified resource-policy exclusion,,,,,,
+moleculenet_hiv,41120,unavailable,prespecified input/size eligibility; not solver infeasibility,prespecified resource-policy exclusion,,,,,,
+moleculenet_muv,93087,unavailable,prespecified input/size eligibility; not solver infeasibility,prespecified resource-policy exclusion,,,,,,

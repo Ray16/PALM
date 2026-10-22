@@ -1,0 +1,123 @@
+[
+  {
+    "figure": "external_rf",
+    "width_inches": 6.5,
+    "height_inches": 4.8,
+    "minimum_source_font_pt": 18.0,
+    "detected_text_overlaps": [],
+    "clipped_text": [],
+    "final_width_inches": 6.5,
+    "visual_inspection": "pending",
+    "final_manuscript_font_check": "pending"
+  },
+  {
+    "figure": "external_xgb",
+    "width_inches": 6.5,
+    "height_inches": 4.8,
+    "minimum_source_font_pt": 18.0,
+    "detected_text_overlaps": [],
+    "clipped_text": [],
+    "final_width_inches": 6.5,
+    "visual_inspection": "pending",
+    "final_manuscript_font_check": "pending"
+  },
+  {
+    "figure": "powered_fidelity",
+    "width_inches": 6.5,
+    "height_inches": 4.8,
+    "minimum_source_font_pt": 18.0,
+    "detected_text_overlaps": [],
+    "clipped_text": [],
+    "final_width_inches": 6.5,
+    "visual_inspection": "pending",
+    "final_manuscript_font_check": "pending"
+  },
+  {
+    "figure": "combined_rank",
+    "width_inches": 6.5,
+    "height_inches": 5.5,
+    "minimum_source_font_pt": 18.0,
+    "detected_text_overlaps": [],
+    "clipped_text": [],
+    "final_width_inches": 6.5,
+    "visual_inspection": "pending",
+    "final_manuscript_font_check": "pending"
+  },
+  {
+    "figure": "concept",
+    "width_inches": 6.5,
+    "height_inches": 6.5,
+    "minimum_source_font_pt": 18.0,
+    "detected_text_overlaps": [],
+    "clipped_text": [],
+    "final_width_inches": 6.5,
+    "visual_inspection": "pending",
+    "final_manuscript_font_check": "pending"
+  },
+  {
+    "figure": "power_threshold_frontier",
+    "width_inches": 6.5,
+    "height_inches": 5.4,
+    "minimum_source_font_pt": 18.0,
+    "detected_text_overlaps": [],
+    "clipped_text": [],
+    "final_width_inches": 6.5,
+    "visual_inspection": "pending",
+    "final_manuscript_font_check": "pending"
+  },
+  {
+    "figure": "independent_fingerprint",
+    "width_inches": 6.5,
+    "height_inches": 5.2,
+    "minimum_source_font_pt": 18.0,
+    "detected_text_overlaps": [],
+    "clipped_text": [],
+    "final_width_inches": 6.5,
+    "visual_inspection": "pending",
+    "final_manuscript_font_check": "pending"
+  },
+  {
+    "figure": "scaling",
+    "width_inches": 6.5,
+    "height_inches": 4.8,
+    "minimum_source_font_pt": 18.0,
+    "detected_text_overlaps": [],
+    "clipped_text": [],
+    "final_width_inches": 6.5,
+    "visual_inspection": "pending",
+    "final_manuscript_font_check": "pending"
+  },
+  {
+    "figure": "benchmark_global",
+    "width_inches": 6.5,
+    "height_inches": 6.8,
+    "minimum_source_font_pt": 18.0,
+    "detected_text_overlaps": [],
+    "clipped_text": [],
+    "final_width_inches": 6.5,
+    "visual_inspection": "pending",
+    "final_manuscript_font_check": "pending"
+  },
+  {
+    "figure": "benchmark_local",
+    "width_inches": 6.5,
+    "height_inches": 6.8,
+    "minimum_source_font_pt": 18.0,
+    "detected_text_overlaps": [],
+    "clipped_text": [],
+    "final_width_inches": 6.5,
+    "visual_inspection": "pending",
+    "final_manuscript_font_check": "pending"
+  },
+  {
+    "figure": "runtime_matched",
+    "width_inches": 6.5,
+    "height_inches": 7.0,
+    "minimum_source_font_pt": 18.0,
+    "detected_text_overlaps": [],
+    "clipped_text": [],
+    "final_width_inches": 6.5,
+    "visual_inspection": "pending",
+    "final_manuscript_font_check": "pending"
+  }
+]

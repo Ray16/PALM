@@ -1,0 +1,27 @@
+dataset,epsilon,classification,native_cvxpy_status,legacy_csv_status,has_saved_assignment,old_seconds_for_provenance_only
+moleculenet_freesolv,0.01,solver-reported optimum of clustered problem,optimal,ok,True,7.93
+moleculenet_freesolv,0.05,solver-reported optimum of clustered problem,optimal,ok,True,7.14
+moleculenet_esol,0.01,solver-reported optimum of clustered problem,optimal,ok,True,103.7
+moleculenet_esol,0.05,solver-reported optimum of clustered problem,optimal,ok,True,101.65
+moleculenet_bace,0.01,feasible assignment; no optimality certificate,optimal_inaccurate,ok,True,7217.7
+moleculenet_bace,0.05,feasible assignment; no optimality certificate,optimal_inaccurate,ok,True,7224.09
+moleculenet_bbbp,0.01,feasible assignment; no optimality certificate,optimal_inaccurate,ok,True,7231.02
+moleculenet_bbbp,0.05,feasible assignment; no optimality certificate,optimal_inaccurate,ok,True,7219.66
+moleculenet_sider,0.01,solver-reported optimum of clustered problem,optimal,ok,True,151.33
+moleculenet_sider,0.05,solver-reported optimum of clustered problem,optimal,ok,True,93.57
+moleculenet_clintox,0.01,solver-reported optimum of clustered problem,optimal,ok,True,1824.58
+moleculenet_clintox,0.05,solver-reported optimum of clustered problem,optimal,ok,True,877.9
+moleculenet_lipophilicity,0.01,feasible assignment; no optimality certificate,optimal_inaccurate,ok,True,7291.91
+moleculenet_lipophilicity,0.05,feasible assignment; no optimality certificate,optimal_inaccurate,ok,True,7292.05
+moleculenet_tox21,0.01,no feasible assignment returned within configured solve,,infeasible,False,7652.04
+moleculenet_tox21,0.05,no feasible assignment returned within configured solve,,infeasible,False,7647.32
+moleculenet_qm8,0.01,no recorded attempt under this protocol,,,False,
+moleculenet_qm8,0.05,no recorded attempt under this protocol,,,False,
+moleculenet_hiv,0.01,no recorded attempt under this protocol,,,False,
+moleculenet_hiv,0.05,no recorded attempt under this protocol,,,False,
+moleculenet_muv,0.01,resource-policy exclusion,,skipped_oom,False,
+moleculenet_muv,0.05,resource-policy exclusion,,skipped_oom,False,
+qmof,0.01,no recorded attempt under this protocol,,,False,
+qmof,0.05,no recorded attempt under this protocol,,,False,
+materials_project,0.01,resource-policy exclusion,,skipped_oom,False,
+materials_project,0.05,resource-policy exclusion,,skipped_oom,False,

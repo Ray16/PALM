@@ -1,0 +1,502 @@
+[
+  {
+    "dataset": "moleculenet_freesolv",
+    "epsilon": 0.01,
+    "files": {
+      "csv": {
+        "path": "moleculenet_freesolv__datasail__eps0.01.csv",
+        "sha256": "bfdf81abbb5c72b17704d584083e1a2c19d8900d13c7955351eb34853b9cf710"
+      },
+      "log": {
+        "path": "moleculenet_freesolv__datasail__eps0.01.log",
+        "sha256": "c7c27bc3beda6497a87509a7cbd80fe13352e3f334c34a07de51da5d28980a06"
+      },
+      "assignment": {
+        "path": "moleculenet_freesolv__datasail__eps0.01__s0.npy",
+        "sha256": "c78aeb7bad4990c814d155102e336e0f4bf8677f4aaf185b25019847a74a89ac"
+      },
+      "ids": {
+        "path": "moleculenet_freesolv__ids.npy",
+        "sha256": "cc1e6b7407703f58fd5865e78ee0b2b3337fb0c00fb647ec30cc7ff37023911e"
+      }
+    }
+  },
+  {
+    "dataset": "moleculenet_freesolv",
+    "epsilon": 0.05,
+    "files": {
+      "csv": {
+        "path": "moleculenet_freesolv__datasail__eps0.05.csv",
+        "sha256": "785c54e2b7b209c693eab66e5b9f216b695b74474c7e6a39951699938c5bbad6"
+      },
+      "log": {
+        "path": "moleculenet_freesolv__datasail__eps0.05.log",
+        "sha256": "2c40ef8605999c229ea2f9241c7e42bc5314fa4354742283f95596d77660d899"
+      },
+      "assignment": {
+        "path": "moleculenet_freesolv__datasail__eps0.05__s0.npy",
+        "sha256": "6e9660aaad0dc96ba3030337f506bafb2d87b3ec4fd37752a04ead203a48a8fb"
+      },
+      "ids": {
+        "path": "moleculenet_freesolv__ids.npy",
+        "sha256": "cc1e6b7407703f58fd5865e78ee0b2b3337fb0c00fb647ec30cc7ff37023911e"
+      }
+    }
+  },
+  {
+    "dataset": "moleculenet_esol",
+    "epsilon": 0.01,
+    "files": {
+      "csv": {
+        "path": "moleculenet_esol__datasail__eps0.01.csv",
+        "sha256": "8a7eadd9bbe021ff66f2e8da06d93f7972427a2046eea774fab5add813fe4861"
+      },
+      "log": {
+        "path": "moleculenet_esol__datasail__eps0.01.log",
+        "sha256": "8e513bee15a22ae605c991a2dfe8c11136080327fdc574ffb1efb4fc9261e88d"
+      },
+      "assignment": {
+        "path": "moleculenet_esol__datasail__eps0.01__s0.npy",
+        "sha256": "4f3bfecac88d10cd5cc2ad44add6aaf8aba79c748a9276b8d805d7dfebd66701"
+      },
+      "ids": {
+        "path": "moleculenet_esol__ids.npy",
+        "sha256": "e9af1795f486ddd6380b3cb848d50cc4e19233816a68483d350337f6cc78932b"
+      }
+    }
+  },
+  {
+    "dataset": "moleculenet_esol",
+    "epsilon": 0.05,
+    "files": {
+      "csv": {
+        "path": "moleculenet_esol__datasail__eps0.05.csv",
+        "sha256": "d9f6dac81b047a657dca373e2d10584a3b6e7ca9806e2d9d49fd04c125dc308a"
+      },
+      "log": {
+        "path": "moleculenet_esol__datasail__eps0.05.log",
+        "sha256": "74815381cb25d7379a7298c099f2d03affefd4f7e6f45e59f02a3c07387769ce"
+      },
+      "assignment": {
+        "path": "moleculenet_esol__datasail__eps0.05__s0.npy",
+        "sha256": "14f26df92dc98ae62587c84719bb59add0c856ace16ebefaf2f0ac6a8ca3cefd"
+      },
+      "ids": {
+        "path": "moleculenet_esol__ids.npy",
+        "sha256": "e9af1795f486ddd6380b3cb848d50cc4e19233816a68483d350337f6cc78932b"
+      }
+    }
+  },
+  {
+    "dataset": "moleculenet_bace",
+    "epsilon": 0.01,
+    "files": {
+      "csv": {
+        "path": "moleculenet_bace__datasail__eps0.01.csv",
+        "sha256": "db4a16a15d52d9fad40ef393cc0ce0a6e3d3473381d7a90c9bed521ae87415b3"
+      },
+      "log": {
+        "path": "moleculenet_bace__datasail__eps0.01.log",
+        "sha256": "724d9ab00676a3e3f7fb9b84159081aa50d2ab24fe7d13369a317e50b98a2191"
+      },
+      "assignment": {
+        "path": "moleculenet_bace__datasail__eps0.01__s0.npy",
+        "sha256": "e80fc2b524c19493586c2a6fee31f43e556eca5be1dddd703c53c9373f3de907"
+      },
+      "ids": {
+        "path": "moleculenet_bace__ids.npy",
+        "sha256": "72541e49a4995265ca414ff16f9ac18ff318a71ecb9b75307c33bb9f1c5d8e00"
+      }
+    }
+  },
+  {
+    "dataset": "moleculenet_bace",
+    "epsilon": 0.05,
+    "files": {
+      "csv": {
+        "path": "moleculenet_bace__datasail__eps0.05.csv",
+        "sha256": "9906a7dd3aef2442cc6883fd95906d7e80424391a8d4cf74f77cf51267880024"
+      },
+      "log": {
+        "path": "moleculenet_bace__datasail__eps0.05.log",
+        "sha256": "36993047fdf0c68b8e008a2e0bcfbadbdaa3cf009898f7d15fbe46466489f0c4"
+      },
+      "assignment": {
+        "path": "moleculenet_bace__datasail__eps0.05__s0.npy",
+        "sha256": "b9fdc6897dd0018f9198e0d9169dfeba363138dcbf9c8b30b5ee1cc7d5b8927d"
+      },
+      "ids": {
+        "path": "moleculenet_bace__ids.npy",
+        "sha256": "72541e49a4995265ca414ff16f9ac18ff318a71ecb9b75307c33bb9f1c5d8e00"
+      }
+    }
+  },
+  {
+    "dataset": "moleculenet_bbbp",
+    "epsilon": 0.01,
+    "files": {
+      "csv": {
+        "path": "moleculenet_bbbp__datasail__eps0.01.csv",
+        "sha256": "184bedf501bb5ed2a12cc6720f0a7306173b13b6b02b6e45fee43f8a459925dd"
+      },
+      "log": {
+        "path": "moleculenet_bbbp__datasail__eps0.01.log",
+        "sha256": "6963cb488976f14ea4b22e57ae76a336e28912994f35fd22410b80992dc6364d"
+      },
+      "assignment": {
+        "path": "moleculenet_bbbp__datasail__eps0.01__s0.npy",
+        "sha256": "a9d2c09a3686e9f99791e13a6f46bbb5a00121e8b3c89f538f152392b9dab674"
+      },
+      "ids": {
+        "path": "moleculenet_bbbp__ids.npy",
+        "sha256": "442bd8a0f7582d71eaff7df14d72cea2444bb0b5643fd489d8aecc55f6f23cfc"
+      }
+    }
+  },
+  {
+    "dataset": "moleculenet_bbbp",
+    "epsilon": 0.05,
+    "files": {
+      "csv": {
+        "path": "moleculenet_bbbp__datasail__eps0.05.csv",
+        "sha256": "14ed326a307d6f075138ad1dc72090e633eed532559e96cd8761a8d30118f747"
+      },
+      "log": {
+        "path": "moleculenet_bbbp__datasail__eps0.05.log",
+        "sha256": "a5a54d2587915802ef3a86c365d55fd08b2baf2777250795e36e152490038b26"
+      },
+      "assignment": {
+        "path": "moleculenet_bbbp__datasail__eps0.05__s0.npy",
+        "sha256": "e450b33a6f4a034f3b76c9b827a4c35bb8d38ab222339ee7d797ec86804125a4"
+      },
+      "ids": {
+        "path": "moleculenet_bbbp__ids.npy",
+        "sha256": "442bd8a0f7582d71eaff7df14d72cea2444bb0b5643fd489d8aecc55f6f23cfc"
+      }
+    }
+  },
+  {
+    "dataset": "moleculenet_sider",
+    "epsilon": 0.01,
+    "files": {
+      "csv": {
+        "path": "moleculenet_sider__datasail__eps0.01.csv",
+        "sha256": "ce9a16fa2070033b573869c1090b4a5bf4e3d7fc2dd85a2f7c282c58f413aabc"
+      },
+      "log": {
+        "path": "moleculenet_sider__datasail__eps0.01.log",
+        "sha256": "2e76af66a238a243c3c652d08dec63c06582f790864395abe79d4a1cf5c5709b"
+      },
+      "assignment": {
+        "path": "moleculenet_sider__datasail__eps0.01__s0.npy",
+        "sha256": "be59c475c17231b5ccb882743a6c4871a66772aeed851a742391c7833407a391"
+      },
+      "ids": {
+        "path": "moleculenet_sider__ids.npy",
+        "sha256": "96afa3c4cef00b547808031eca205b2201a9c9235fc3d5db8224d9f9ce07bdf0"
+      }
+    }
+  },
+  {
+    "dataset": "moleculenet_sider",
+    "epsilon": 0.05,
+    "files": {
+      "csv": {
+        "path": "moleculenet_sider__datasail__eps0.05.csv",
+        "sha256": "23c14f8fc28596929fc07c4c3d2cecb7ce8105e39366dbacf78ae32262c737e7"
+      },
+      "log": {
+        "path": "moleculenet_sider__datasail__eps0.05.log",
+        "sha256": "8c805d13c38ccef860939879dc08cc22ba08ccaedb0cef413a729b5da599a4e4"
+      },
+      "assignment": {
+        "path": "moleculenet_sider__datasail__eps0.05__s0.npy",
+        "sha256": "1090cd990b443880d5aa585ca09f199b074b0cdbafed28a8e619ff6d588c3fb6"
+      },
+      "ids": {
+        "path": "moleculenet_sider__ids.npy",
+        "sha256": "96afa3c4cef00b547808031eca205b2201a9c9235fc3d5db8224d9f9ce07bdf0"
+      }
+    }
+  },
+  {
+    "dataset": "moleculenet_clintox",
+    "epsilon": 0.01,
+    "files": {
+      "csv": {
+        "path": "moleculenet_clintox__datasail__eps0.01.csv",
+        "sha256": "cd430ec8900ebd098ee1531b8e88b0d9564bd9e8e70f67e8610fc647b562c796"
+      },
+      "log": {
+        "path": "moleculenet_clintox__datasail__eps0.01.log",
+        "sha256": "e6fcef0c0e4f1df6025ff5eee155cc2dc6ea7b6c1281ebc4a9b4b77a0b67eae2"
+      },
+      "assignment": {
+        "path": "moleculenet_clintox__datasail__eps0.01__s0.npy",
+        "sha256": "3fe1fbcdd9195a4491a3462cc791e0a53b1b8106c6b877b08287ae1290568049"
+      },
+      "ids": {
+        "path": "moleculenet_clintox__ids.npy",
+        "sha256": "1c222a9c439c95cabbcdd716a62cb476aa439844c2f723ac30016a21fb73d021"
+      }
+    }
+  },
+  {
+    "dataset": "moleculenet_clintox",
+    "epsilon": 0.05,
+    "files": {
+      "csv": {
+        "path": "moleculenet_clintox__datasail__eps0.05.csv",
+        "sha256": "865b1e51fe9b9ef44600b79cfa7c77c66003fb73fd0f62ef533a76eea043a52d"
+      },
+      "log": {
+        "path": "moleculenet_clintox__datasail__eps0.05.log",
+        "sha256": "ef2a80aaaeafb46eea75fee7a9338fd18e69145d7eb8b12f61bf1d4b794d0193"
+      },
+      "assignment": {
+        "path": "moleculenet_clintox__datasail__eps0.05__s0.npy",
+        "sha256": "b5bfa39f5aae7d2626e1a4a01d470e5461e008d3918b04b5fdfc4c70db75adb6"
+      },
+      "ids": {
+        "path": "moleculenet_clintox__ids.npy",
+        "sha256": "1c222a9c439c95cabbcdd716a62cb476aa439844c2f723ac30016a21fb73d021"
+      }
+    }
+  },
+  {
+    "dataset": "moleculenet_lipophilicity",
+    "epsilon": 0.01,
+    "files": {
+      "csv": {
+        "path": "moleculenet_lipophilicity__datasail__eps0.01.csv",
+        "sha256": "a3a856f714d34b281c26591ad7c11fe95cab9cfdd17643a0c65e49931a0a319b"
+      },
+      "log": {
+        "path": "moleculenet_lipophilicity__datasail__eps0.01.log",
+        "sha256": "fb3f0bf0b7e0af775191cb65628d04faf3d404ee90431032b2cdfda5381a24dc"
+      },
+      "assignment": {
+        "path": "moleculenet_lipophilicity__datasail__eps0.01__s0.npy",
+        "sha256": "a853f285f640ff44e4a4abd9ace6d41bfd247445388d664f108474cf0f6e597d"
+      },
+      "ids": {
+        "path": "moleculenet_lipophilicity__ids.npy",
+        "sha256": "fe6b4eea6cc7c2ed3cbc598785d56dbcd6824a1363653c4d5f89ce1a7ef2e3d2"
+      }
+    }
+  },
+  {
+    "dataset": "moleculenet_lipophilicity",
+    "epsilon": 0.05,
+    "files": {
+      "csv": {
+        "path": "moleculenet_lipophilicity__datasail__eps0.05.csv",
+        "sha256": "8c836138b625801e2a9729688f5fcdd8023303993df516b3fcb4bea4ca086bc4"
+      },
+      "log": {
+        "path": "moleculenet_lipophilicity__datasail__eps0.05.log",
+        "sha256": "4f0d13815ae258e8464fdeb46292eace38968c740b9306177abaf3029fb0b39f"
+      },
+      "assignment": {
+        "path": "moleculenet_lipophilicity__datasail__eps0.05__s0.npy",
+        "sha256": "67e9258376fe4842aaad126cd82d4b085dbfdd7796d369abd2306ba46a9732fb"
+      },
+      "ids": {
+        "path": "moleculenet_lipophilicity__ids.npy",
+        "sha256": "fe6b4eea6cc7c2ed3cbc598785d56dbcd6824a1363653c4d5f89ce1a7ef2e3d2"
+      }
+    }
+  },
+  {
+    "dataset": "moleculenet_tox21",
+    "epsilon": 0.01,
+    "files": {
+      "csv": {
+        "path": "moleculenet_tox21__datasail__eps0.01.csv",
+        "sha256": "0cb9c275ab9e4405e626eca42d75c00a143a7c1412c290b3fefbcc710d3d6234"
+      },
+      "log": {
+        "path": "moleculenet_tox21__datasail__eps0.01.log",
+        "sha256": "65277b57d596301a2b5f8f347798eb07b52d77575d3506162aea0ec9edd2e0d3"
+      },
+      "ids": {
+        "path": "moleculenet_tox21__ids.npy",
+        "sha256": "3d363c07765cda3dbb69b0fe0f3381d67f8ad07a1b7442a1dde050a5bb4d70b6"
+      }
+    }
+  },
+  {
+    "dataset": "moleculenet_tox21",
+    "epsilon": 0.05,
+    "files": {
+      "csv": {
+        "path": "moleculenet_tox21__datasail__eps0.05.csv",
+        "sha256": "3e60da481d080027d43cecd7d475020b2fc0195463018e9a724db8043787d9e8"
+      },
+      "log": {
+        "path": "moleculenet_tox21__datasail__eps0.05.log",
+        "sha256": "455d002f1fbd60ab479ba793e577fbcb299b504016dabbbd1d617e447ae2fbdd"
+      },
+      "ids": {
+        "path": "moleculenet_tox21__ids.npy",
+        "sha256": "3d363c07765cda3dbb69b0fe0f3381d67f8ad07a1b7442a1dde050a5bb4d70b6"
+      }
+    }
+  },
+  {
+    "dataset": "moleculenet_qm8",
+    "epsilon": 0.01,
+    "files": {
+      "log": {
+        "path": "moleculenet_qm8__datasail__eps0.01.log",
+        "sha256": "c276ba3fa8ed5da8e65bd452a405849033399d14b296612fbddffead9dc36aeb"
+      },
+      "ids": {
+        "path": "moleculenet_qm8__ids.npy",
+        "sha256": "ff0dc179207d1a0f33d79c77591d86ab1be96d3804daac006981eab2a752a45c"
+      }
+    }
+  },
+  {
+    "dataset": "moleculenet_qm8",
+    "epsilon": 0.05,
+    "files": {
+      "log": {
+        "path": "moleculenet_qm8__datasail__eps0.05.log",
+        "sha256": "05e2a4598bbb2b4a1f12ffe5ece94cf34bf593af20c103192a1bc8d51775c79d"
+      },
+      "ids": {
+        "path": "moleculenet_qm8__ids.npy",
+        "sha256": "ff0dc179207d1a0f33d79c77591d86ab1be96d3804daac006981eab2a752a45c"
+      }
+    }
+  },
+  {
+    "dataset": "moleculenet_hiv",
+    "epsilon": 0.01,
+    "files": {
+      "log": {
+        "path": "moleculenet_hiv__datasail__eps0.01.log",
+        "sha256": "d8474ef6b47f1de91b5e22ba1c110775d75f938ffbbbba567ecc6f3ed97bce8a"
+      },
+      "ids": {
+        "path": "moleculenet_hiv__ids.npy",
+        "sha256": "d0a0ddaa0adba82001a2519ec394730c22db7086e7d292150c36e7b8637ddc55"
+      }
+    }
+  },
+  {
+    "dataset": "moleculenet_hiv",
+    "epsilon": 0.05,
+    "files": {
+      "log": {
+        "path": "moleculenet_hiv__datasail__eps0.05.log",
+        "sha256": "d8474ef6b47f1de91b5e22ba1c110775d75f938ffbbbba567ecc6f3ed97bce8a"
+      },
+      "ids": {
+        "path": "moleculenet_hiv__ids.npy",
+        "sha256": "d0a0ddaa0adba82001a2519ec394730c22db7086e7d292150c36e7b8637ddc55"
+      }
+    }
+  },
+  {
+    "dataset": "moleculenet_muv",
+    "epsilon": 0.01,
+    "files": {
+      "csv": {
+        "path": "moleculenet_muv__datasail__eps0.01.csv",
+        "sha256": "1e2f6f9d05dc48fc311777a42279bce16ab56d57dc4e75f67819277fa0d5f89c"
+      },
+      "log": {
+        "path": "moleculenet_muv__datasail__eps0.01.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "ids": {
+        "path": "moleculenet_muv__ids.npy",
+        "sha256": "fb06f5d9f8b0d66a577090ad95d086dd64fd5df513f62b349800519def97e38f"
+      }
+    }
+  },
+  {
+    "dataset": "moleculenet_muv",
+    "epsilon": 0.05,
+    "files": {
+      "csv": {
+        "path": "moleculenet_muv__datasail__eps0.05.csv",
+        "sha256": "5b1b32c21c6b6660e302cb68c1c808a6ca3cd438b2dfc6476c57d3ce87cdebbc"
+      },
+      "log": {
+        "path": "moleculenet_muv__datasail__eps0.05.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "ids": {
+        "path": "moleculenet_muv__ids.npy",
+        "sha256": "fb06f5d9f8b0d66a577090ad95d086dd64fd5df513f62b349800519def97e38f"
+      }
+    }
+  },
+  {
+    "dataset": "qmof",
+    "epsilon": 0.01,
+    "files": {
+      "log": {
+        "path": "qmof__datasail__eps0.01.log",
+        "sha256": "5206d7fcb8ca748419828646776645ca6b6e3e99ec6623e8a895bf00ddae1e87"
+      },
+      "ids": {
+        "path": "qmof__ids.npy",
+        "sha256": "ace585f2f6f0885ef46088a015c7d91ad4189d253a319575b38602bdb74cbaa1"
+      }
+    }
+  },
+  {
+    "dataset": "qmof",
+    "epsilon": 0.05,
+    "files": {
+      "log": {
+        "path": "qmof__datasail__eps0.05.log",
+        "sha256": "01e53274ede722cad6bb47365f90af8fd760f6b6a047a21c6b055114686604df"
+      },
+      "ids": {
+        "path": "qmof__ids.npy",
+        "sha256": "ace585f2f6f0885ef46088a015c7d91ad4189d253a319575b38602bdb74cbaa1"
+      }
+    }
+  },
+  {
+    "dataset": "materials_project",
+    "epsilon": 0.01,
+    "files": {
+      "csv": {
+        "path": "materials_project__datasail__eps0.01.csv",
+        "sha256": "24fa5ac0b3493f1ecae1bb06217e554931b108dc6cf06648f2576ff047592a70"
+      },
+      "log": {
+        "path": "materials_project__datasail__eps0.01.log",
+        "sha256": "96b2e5d078bf5fa23096882eddaeec0f70ace41d73e04f64f37c6460f2e5f8dc"
+      },
+      "ids": {
+        "path": "materials_project__ids.npy",
+        "sha256": "4b238c7ec9d0b508f6eedd994eecfa39e351df9f5745a1f1922d5b6bf9be72b7"
+      }
+    }
+  },
+  {
+    "dataset": "materials_project",
+    "epsilon": 0.05,
+    "files": {
+      "csv": {
+        "path": "materials_project__datasail__eps0.05.csv",
+        "sha256": "fd4808fa40831e6e3eca5b202e33b4bca065a63d3227b4b805a4ced64f50eb26"
+      },
+      "log": {
+        "path": "materials_project__datasail__eps0.05.log",
+        "sha256": "96b2e5d078bf5fa23096882eddaeec0f70ace41d73e04f64f37c6460f2e5f8dc"
+      },
+      "ids": {
+        "path": "materials_project__ids.npy",
+        "sha256": "4b238c7ec9d0b508f6eedd994eecfa39e351df9f5745a1f1922d5b6bf9be72b7"
+      }
+    }
+  }
+]

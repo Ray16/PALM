@@ -1,0 +1,13 @@
+dataset,n,status,reason,classification
+moleculenet_freesolv,642,failed,"ValueError: Input X contains NaN.
+AgglomerativeClustering does not accept missing values encoded as NaN natively. For supervised learning, you might want to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor which accept missing values encoded as NaNs natively. Alternatively, it is possible to preprocess the data, for instance by using an imputer transformer in a pipeline or drop samples with missing values. See https://scikit-learn.org/stable/modules/impute.html You can find a list of all estimators that handle NaN values at the following page: https://scikit-learn.org/stable/modules/impute.html#estimators-that-handle-nan-values",audited native method failure; no scored partition
+moleculenet_esol,1128,ok,,all seven native holdouts and count-matched controls scored
+moleculenet_bace,1513,ok,,all seven native holdouts and count-matched controls scored
+moleculenet_bbbp,2039,ok,,all seven native holdouts and count-matched controls scored
+moleculenet_sider,1427,ok,,all seven native holdouts and count-matched controls scored
+moleculenet_clintox,1480,ok,,all seven native holdouts and count-matched controls scored
+moleculenet_lipophilicity,4200,ok,,all seven native holdouts and count-matched controls scored
+moleculenet_tox21,7823,ok,,all seven native holdouts and count-matched controls scored
+moleculenet_qm8,21786,ok,,all seven native holdouts and count-matched controls scored
+moleculenet_hiv,41120,ok,,all seven native holdouts and count-matched controls scored
+moleculenet_muv,93087,unavailable,prespecified memory/input eligibility,prespecified resource-policy exclusion

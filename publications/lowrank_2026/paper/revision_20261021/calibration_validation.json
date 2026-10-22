@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "issues": [],
+  "complete_datasets": 6,
+  "result_sha256": {
+    "revision_20261021/calibration_v2/moleculenet_freesolv/result.json": "719af84b2033d24f8922647f1440ea4498622034a77e84717c36a50a03bc2bbf",
+    "revision_20261021/calibration_v2/moleculenet_esol/result.json": "25b7866931d2573565e467127a01adb09b8c14f3ec4d9f89463ec4d152bd059a",
+    "revision_20261021/calibration_v2/moleculenet_bace/result.json": "a58bdebafea9a84c7e1585c526704c48608e6a3250eb9839eb9e7d7c7b134304",
+    "revision_20261021/calibration_v2/moleculenet_bbbp/result.json": "cdaa12d508bbc2adb51c82daaceeadc1ca083292ed2bcc37d8b2bab3294c3853",
+    "revision_20261021/calibration_v2/moleculenet_lipophilicity/result.json": "6436a60cdc4d8585138d60d06d2c81c01b3b1d461a7daabfcfacaef106dcdf25",
+    "revision_20261021/calibration_v2/moleculenet_sider/result.json": "732968cefa6ddb4aacb853b198ea6bd99c9717c1e974d56a2f7338f3c9445f7a"
+  },
+  "scope": "six datasets, exact saved counts, 570 fixed-model-seed fits; fixed knots and target inversion are distinct"
+}

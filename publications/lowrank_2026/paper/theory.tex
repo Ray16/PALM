@@ -1,0 +1,69 @@
+\section{Objective identities and conditional bounds}
+\label{app:theory}
+
+Let $H\in\{0,1\}^{n\times k}$ be the assignment matrix, with one nonzero per row,
+and let $h_c$ denote its columns. The cross-fold mask is
+$\mathbf{1}\mathbf{1}^\top-HH^\top$ and has zero diagonal. Consequently,
+\begin{equation}
+ \cut_S(H)=\tfrac12\left(\mathbf{1}^\top S\mathbf{1}
+                       -\sum_c h_c^\top S h_c\right).
+\end{equation}
+Substituting $S=BB^\top$ yields Equation~\ref{main-eq:factor}. Group contraction is exact
+because a whole group's contribution to every block sum is the sum of its rows.
+This statement concerns retained groups; dissolving a group changes the admissible
+partition set rather than invalidating the identity.
+
+For a positive-semidefinite kernel with features $\phi_i$, its integer elementwise
+power has features $\phi_i^{\otimes p}$ because
+$\langle\phi_i^{\otimes p},\phi_j^{\otimes p}\rangle=
+\langle\phi_i,\phi_j\rangle^p$. This gives the stated positive-semidefinite
+property directly and explains why arbitrary fractional powers are not accepted.
+
+For nonnegative similarities, let $N_\tau(z)$ count unordered crossing pairs
+with $S_{ij}\ge\tau>0$. Each such pair contributes at least $\tau^p$, so
+\begin{equation}
+ \cut_{S^{\circ p}}(z)\ge\tau^p N_\tau(z).
+\end{equation}
+Thus the powered cut supplies a soft penalty on the number of strong crossing
+pairs. For a fixed nonempty set of crossing pairs,
+$\lim_{p\to\infty}\cut_{S^{\circ p}}(z)^{1/p}
+=\max_{i<j:z_i\ne z_j}S_{ij}$, by the finite-dimensional $\ell_p$ norm limit.
+This is the maximum over all crossing pairs, not the average of per-test-point
+nearest neighbours used in $\nnl$. The power therefore provides a principled
+tail surrogate, without making the optimized objective identical to the
+evaluation metric. A rank-limited factor introduces a separate approximation
+error for each power.
+
+For symmetric residual $E=S-BB^\top$, the spectral norm inequality
+$|v^\top E v|\le\|E\|_2\|v\|^2$ gives
+\begin{align}
+ |\cut_S(H)-\cut_{BB^\top}(H)|
+ &\le\tfrac12\|E\|_2\left(\|\mathbf{1}\|^2+\sum_c\|h_c\|^2\right)\\
+ &=n\|E\|_2\equiv\delta.
+ \label{eq:bound}
+\end{align}
+The bound is uniform across assignments and can be loose in practice. If a solver
+returns $\widehat H$ with approximate-kernel objective at most $\eta$ above the
+minimum over a specified feasible set, then
+\begin{equation}
+ \cut_S(\widehat H)\le\min_{H\ \mathrm{feasible}}\cut_S(H)+2\delta+\eta.
+\end{equation}
+Our heuristic does not certify $\eta$, so this conditional inequality is not an
+empirical optimality guarantee. It also requires comparing the same feasible set;
+grouping, count changes and kernel sharpening alter the optimization problem.
+
+Moving a factor row $b$ from block $a$ to $c$ replaces $(p_a,p_c)$ by
+$(p_a-b,p_c+b)$. Expansion of Equation~\ref{main-eq:factor} gives
+$\Delta\cut=b^\top p_a-b^\top p_c-\|b\|^2$. For a swap of factor rows $u$ and $v$,
+the reduction equals the sum of their single-move reductions minus $2u^\top v$.
+These identities hold for group sums as well. Searching only a finite set of swap
+candidates preserves the validity of an accepted move, but does not establish
+that no improving swap exists elsewhere.
+
+If all fold counts equal a fixed value $m$, kernel k-means maximizes
+$m^{-1}\sum_c\|p_c\|^2$ and agrees with dense-cut minimization. For unequal fixed
+counts it maximizes a differently weighted sum, and for a capacity corridor the
+weights themselves change with the assignment. This is why we do not transfer
+ordinary kernel k-means convergence or approximation guarantees to the present
+solver without further assumptions.
+

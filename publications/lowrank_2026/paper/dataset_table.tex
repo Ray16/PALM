@@ -1,0 +1,21 @@
+\begin{table}[htbp]\centering\small
+\begin{tabular}{lrrp{2.5in}r}
+\toprule
+Dataset & Entities & Labelled & Target & Positive \\
+\midrule
+bace & 1513 & 1513 & Class & 691 \\
+bbbp & 2039 & 2039 & p\_np & 1560 \\
+esol & 1128 & 1128 & measured log solubility in mols per litre & -- \\
+freesolv & 642 & 642 & expt & -- \\
+lipophilicity & 4200 & 4200 & exp & -- \\
+clintox & 1480 & 1480 & CT\_TOX & 112 \\
+hiv & 41120 & 41120 & HIV\_active & 1443 \\
+tox21 & 7823 & 7258 & NR-AR & 308 \\
+sider & 1427 & 1427 & Hepatobiliary disorders & 743 \\
+muv & 93087 & 14841 & MUV-466 & 27 \\
+qm8 & 21786 & 21786 & E1-CC2 & -- \\
+qmof & 20372 & 20372 & outputs.pbe.bandgap & -- \\
+materials project & 100000 & 99998 & formation\_energy\_per\_atom & -- \\
+\bottomrule
+\end{tabular}
+\caption{Retained entities, declared target slices and label coverage. Positive counts apply only to binary tasks; dashes denote continuous targets. Structural splitting retains valid features independently of missing responses. Single-target slices do not constitute an evaluation of all assays in a multitask source. Exact raw-file and retained-identity hashes accompany the catalogue.}\end{table}

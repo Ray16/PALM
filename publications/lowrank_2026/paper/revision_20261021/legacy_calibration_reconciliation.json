@@ -1,0 +1,222 @@
+{
+  "passed": true,
+  "rows": [
+    {
+      "dataset": "moleculenet_freesolv",
+      "model": "rf",
+      "source": "calibration_validation.csv",
+      "raw_source": "results/calibration__moleculenet_freesolv.json",
+      "mae": 0.1537430336052502,
+      "n": 25,
+      "study": "validation"
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "model": "xgb",
+      "source": "calibration_validation.csv",
+      "raw_source": "results/calibration__moleculenet_freesolv.json",
+      "mae": 0.10505290052101693,
+      "n": 25,
+      "study": "validation"
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "model": "rf",
+      "source": "inversion_validation.csv",
+      "raw_source": "results/inversion__moleculenet_freesolv.json",
+      "mae": 0.14706618608796604,
+      "n": 15,
+      "study": "inversion"
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "model": "xgb",
+      "source": "inversion_validation.csv",
+      "raw_source": "results/inversion__moleculenet_freesolv.json",
+      "mae": 0.1540419299141588,
+      "n": 15,
+      "study": "inversion"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "model": "rf",
+      "source": "calibration_validation.csv",
+      "raw_source": "results/calibration__moleculenet_esol.json",
+      "mae": 0.10796314887829166,
+      "n": 25,
+      "study": "validation"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "model": "xgb",
+      "source": "calibration_validation.csv",
+      "raw_source": "results/calibration__moleculenet_esol.json",
+      "mae": 0.11646259628411723,
+      "n": 25,
+      "study": "validation"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "model": "rf",
+      "source": "inversion_validation.csv",
+      "raw_source": "results/inversion__moleculenet_esol.json",
+      "mae": 0.05192935064912184,
+      "n": 15,
+      "study": "inversion"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "model": "xgb",
+      "source": "inversion_validation.csv",
+      "raw_source": "results/inversion__moleculenet_esol.json",
+      "mae": 0.11558463487808567,
+      "n": 15,
+      "study": "inversion"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "model": "rf",
+      "source": "calibration_validation.csv",
+      "raw_source": "results/calibration__moleculenet_bace.json",
+      "mae": 0.030563974411520176,
+      "n": 25,
+      "study": "validation"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "model": "xgb",
+      "source": "calibration_validation.csv",
+      "raw_source": "results/calibration__moleculenet_bace.json",
+      "mae": 0.05078427771059832,
+      "n": 25,
+      "study": "validation"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "model": "rf",
+      "source": "inversion_validation.csv",
+      "raw_source": "results/inversion__moleculenet_bace.json",
+      "mae": 0.03629677700440029,
+      "n": 15,
+      "study": "inversion"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "model": "xgb",
+      "source": "inversion_validation.csv",
+      "raw_source": "results/inversion__moleculenet_bace.json",
+      "mae": 0.0622772635867332,
+      "n": 15,
+      "study": "inversion"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "model": "rf",
+      "source": "calibration_validation.csv",
+      "raw_source": "results/calibration__moleculenet_bbbp.json",
+      "mae": 0.04522815015319999,
+      "n": 25,
+      "study": "validation"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "model": "xgb",
+      "source": "calibration_validation.csv",
+      "raw_source": "results/calibration__moleculenet_bbbp.json",
+      "mae": 0.03746206867553492,
+      "n": 25,
+      "study": "validation"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "model": "rf",
+      "source": "inversion_validation.csv",
+      "raw_source": "results/inversion__moleculenet_bbbp.json",
+      "mae": 0.04820215594897697,
+      "n": 15,
+      "study": "inversion"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "model": "xgb",
+      "source": "inversion_validation.csv",
+      "raw_source": "results/inversion__moleculenet_bbbp.json",
+      "mae": 0.04135482452031056,
+      "n": 15,
+      "study": "inversion"
+    },
+    {
+      "dataset": "moleculenet_lipophilicity",
+      "model": "rf",
+      "source": "calibration_validation.csv",
+      "raw_source": "results/calibration__moleculenet_lipophilicity.json",
+      "mae": 0.02845742066081725,
+      "n": 25,
+      "study": "validation"
+    },
+    {
+      "dataset": "moleculenet_lipophilicity",
+      "model": "xgb",
+      "source": "calibration_validation.csv",
+      "raw_source": "results/calibration__moleculenet_lipophilicity.json",
+      "mae": 0.31695597115555596,
+      "n": 25,
+      "study": "validation"
+    },
+    {
+      "dataset": "moleculenet_lipophilicity",
+      "model": "rf",
+      "source": "inversion_validation.csv",
+      "raw_source": "results/inversion__moleculenet_lipophilicity.json",
+      "mae": 0.025922382231628134,
+      "n": 15,
+      "study": "inversion"
+    },
+    {
+      "dataset": "moleculenet_lipophilicity",
+      "model": "xgb",
+      "source": "inversion_validation.csv",
+      "raw_source": "results/inversion__moleculenet_lipophilicity.json",
+      "mae": 0.31312158111290805,
+      "n": 15,
+      "study": "inversion"
+    },
+    {
+      "dataset": "moleculenet_sider",
+      "model": "rf",
+      "source": "calibration_validation.csv",
+      "raw_source": "results/calibration__moleculenet_sider.json",
+      "mae": 0.03597980957883338,
+      "n": 25,
+      "study": "validation"
+    },
+    {
+      "dataset": "moleculenet_sider",
+      "model": "xgb",
+      "source": "calibration_validation.csv",
+      "raw_source": "results/calibration__moleculenet_sider.json",
+      "mae": 0.04522013415744417,
+      "n": 25,
+      "study": "validation"
+    },
+    {
+      "dataset": "moleculenet_sider",
+      "model": "rf",
+      "source": "inversion_validation.csv",
+      "raw_source": "results/inversion__moleculenet_sider.json",
+      "mae": 0.05608317482008834,
+      "n": 15,
+      "study": "inversion"
+    },
+    {
+      "dataset": "moleculenet_sider",
+      "model": "xgb",
+      "source": "inversion_validation.csv",
+      "raw_source": "results/inversion__moleculenet_sider.json",
+      "mae": 0.0689764564888334,
+      "n": 15,
+      "study": "inversion"
+    }
+  ],
+  "conclusion": "The old files describe distinct designs: 25 fixed-knot scores versus 15 interior targets. Both use train-minus-test gaps, not random-relative difficulty. The new authoritative estimator is calibration_v2/validation_summary.csv."
+}

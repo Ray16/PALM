@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "issues": [],
+  "complete_datasets": 6,
+  "result_sha256": {
+    "moleculenet_freesolv": "46db61f2cdfa0d389515b1db48bfb17dd5d173fb69748e2a2d9a18d6f9f5e59c",
+    "moleculenet_esol": "8122b8c21512c98e710c59c5fe715a802f03f038b2f78c0ba94f58cba5b01cf2",
+    "moleculenet_bace": "a1d6ff6aeb51cb2b01042b7d28baae5fe493b787d568afbbe39cdd00f2447407",
+    "moleculenet_bbbp": "29d1ad2d375c107d98e42b7d288a2a15961ae4cec951fbe2746271a88c46ca16",
+    "moleculenet_clintox": "5fd522bf932ec40f88392eb076dd21e41a695a5a433e4082b71317022e4991a2",
+    "moleculenet_lipophilicity": "6217ada24dd6718fb4fb274ad2e17ab631ca211a23d6ecba8f293ab9a0931d21"
+  },
+  "scope": "graph k sensitivity on six full datasets; five-seed FreeSolv search control; no optimality certificate"
+}

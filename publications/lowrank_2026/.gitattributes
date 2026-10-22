@@ -1,0 +1,4 @@
+* -text
+*.npy -filter -diff -merge -text
+*.pdf -filter -diff -merge -text
+*.whl -filter -diff -merge -text

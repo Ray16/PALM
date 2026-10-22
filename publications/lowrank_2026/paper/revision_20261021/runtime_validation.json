@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "issues": [],
+  "cases": 4,
+  "result_sha256": {
+    "moleculenet_clintox": "e600298874b3d1c1c196a5ac82614cca4acc790f21bb45e7db191f3cc16c11ab",
+    "moleculenet_bace": "9d8deef3ee81fb60134db7fcfc8906a36f570f0dc9993bd2f842c48d1a2975bd",
+    "moleculenet_bbbp": "5fad6676a2306b2a7955ea5914ff73272987019b6d08d2aa65d1a0d5d722683d",
+    "moleculenet_lipophilicity": "6b75de777f308680ad263998f469df2a044750fd2f7cd2348e2b26c52094b159"
+  },
+  "scope": "four same-host cases, two threads, split-call-only clocks, exact native counts; one DataSAIL solve and three low-rank seeds"
+}

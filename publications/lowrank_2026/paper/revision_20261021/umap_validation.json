@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "issues": [],
+  "successful_datasets": 9,
+  "policy_exclusions": 1,
+  "native_failures": 1,
+  "result_sha256": {
+    "moleculenet_freesolv": "127313418e381dacf7c56032e72947a380866f963d1b6e3d9c2385b5a28885c4",
+    "moleculenet_esol": "0b5345f5b43eaaf97890b9f555caa3c64ce314824fc2a1f9147818ef967c9c2b",
+    "moleculenet_bace": "0f1fc5fea75a44215da798968ab67f125fb5672bf0bd239dd08e82ebd0b5732e",
+    "moleculenet_bbbp": "ba39b5c5897e04de3cfe8135d3d93e6dbdcaa8047604058e72e311a3702b3f89",
+    "moleculenet_sider": "cadb52dd4c670f852b20ea50818abe198a0bb087ef14e85f9510ba397ddcb1c4",
+    "moleculenet_clintox": "fb6a41f4eefa3fca0dfe95f7a731d58745059f7fef8c121bc83bf9e0098dad7e",
+    "moleculenet_lipophilicity": "485fd3b36b64a0c1a5100595746f745078523d089a7b51be63ab0cd235d909ed",
+    "moleculenet_tox21": "2874acb00b9e9a420843479b70533631e36badcbeaea04b984a1dd9c8ab73e15",
+    "moleculenet_qm8": "fe0f1a0f025612f42673a973803f1c49c01a6ae9721ed6073a67d683c490dc8f",
+    "moleculenet_hiv": "3738d99959a6f3e54abe4b6ed7c6f8a8d2a2d4c41b0cef4ec70fee891ecc86e2",
+    "moleculenet_muv": "a379d18500ea9976d2a688145e1907149fae9d2fbd1c3f822065038e5370db37"
+  },
+  "scope": "retention and exact-count matching; native failures remain unscored; dataset means precede cross-dataset summaries"
+}

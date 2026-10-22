@@ -1,0 +1,14 @@
+!paper/
+!paper/**
+!package/dist/
+!package/dist/*.whl
+__pycache__/
+.pytest_cache/
+*.pyc
+*.aux
+*.bbl
+*.blg
+*.out
+*.toc
+paper/logs/
+paper/*.log

@@ -1,0 +1,2 @@
+dataset,method,eps,seed,n,metric,secs,status,leakage,leak_ratio,nnl,nnl_rel,test_nn_sim,test_nn_gt06,test_nn_gt08,n_train,n_val,n_test,test_imbalance,test_metric,train_metric,gen_gap,metric_name,y_shift
+moleculenet_freesolv,datasail,0.01,0,642,tanimoto,7.93,ok,0.1709,0.50974,0.00364,0.00922,0.17836,0.0,0.0,516,63,63,0.0187,0.1385,0.9606,0.8221,r2,0.4879

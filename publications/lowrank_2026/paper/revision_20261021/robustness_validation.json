@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "issues": [],
+  "datasets": 6,
+  "rows": 306,
+  "settings_per_dataset": 17,
+  "seeds": 3,
+  "validation_scope": "prespecified completed grid, assignment hashes and row/fold coverage; paired diagnostics derived without supervised parameter selection"
+}

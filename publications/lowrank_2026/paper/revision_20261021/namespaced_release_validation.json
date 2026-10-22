@@ -1,0 +1,22 @@
+{
+  "registered": [
+    "lowrank",
+    "lowrank_nd",
+    "random"
+  ],
+  "exact_counts": [
+    96,
+    12,
+    12
+  ],
+  "plain_and_grouped_smoke": true,
+  "top_level_import_guard": true,
+  "passed": true,
+  "wheel": "lowrank_split-0.1.0-py3-none-any.whl",
+  "wheel_sha256": "3d5d3d81977a125c6bdd4e1ebcb79368350404d269870c28cdce8282bbde211a",
+  "installed_top_level": [
+    "lowrank",
+    "lowrank_split-0.1.0.dist-info"
+  ],
+  "scope": "isolated installation and public API; full candidate tests are a separate check"
+}

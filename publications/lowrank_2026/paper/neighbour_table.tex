@@ -1,0 +1,16 @@
+\begin{table}[htbp]\centering\small
+\begin{tabular}{rlrrr}
+\toprule
+Entities & Backend & Graph seconds & Top-32 recall & Strong recall \\
+\midrule
+1000 & Exact tiled & 0.009 & 1.000 & 1.000 \\
+10000 & Exact tiled & 0.240 & 1.000 & 1.000 \\
+100000 & Exact tiled & 13.002 & 1.000 & 1.000 \\
+30000 & Exact tiled & 1.287 & 1.000 & 1.000 \\
+1000 & NN-Descent & 0.842 & 1.000 & 1.000 \\
+10000 & NN-Descent & 8.132 & 0.993 & 1.000 \\
+100000 & NN-Descent & 97.569 & 0.990 & 0.998 \\
+30000 & NN-Descent & 26.129 & 0.994 & 1.000 \\
+\bottomrule
+\end{tabular}
+\caption{Neighbour-graph engineering measurements on ChEMBL fingerprints. Exact tiled search uses a Tesla T4; NN-Descent uses two CPU threads. Recall is measured on 256 sampled query entities; strong recall restricts exact top-32 edges to similarity at least 0.4. ANN compilation warm-up is separate. These are graph-construction observations from the preserved source study, not H100 split-call timings or measurements of the revised partition optimizer.}\end{table}

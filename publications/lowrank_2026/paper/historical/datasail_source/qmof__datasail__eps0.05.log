@@ -1,0 +1,27 @@
+  3 element(s) missing from built-in property tables (contribute 0 to formula-based features): ['Np', 'Pu', 'Tc']
+[1;33mWarning: This version of DIAMOND is more than 180 days old. It is recommended to always use the latest version.
+/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/cvxpy/problems/problem.py:158: UserWarning: Objective contains too many subexpressions. Consider vectorizing your CVXPY code to speed up compilation.
+  warnings.warn("Objective contains too many subexpressions. "
+===============================================================================
+                                     CVXPY                                     
+                                     v1.5.3                                    
+===============================================================================
+(CVXPY) Oct 09 08:05:25 AM: Your problem has 3054 variables, 1021 constraints, and 0 parameters.
+(CVXPY) Oct 09 08:07:10 AM: It is compliant with the following grammars: DCP, DQCP
+(CVXPY) Oct 09 08:07:10 AM: (If you need to solve this problem multiple times, but with different data, consider using parameters.)
+(CVXPY) Oct 09 08:07:10 AM: CVXPY will first compile your problem; then, it will invoke a numerical solver to obtain a solution.
+(CVXPY) Oct 09 08:07:10 AM: Your problem is compiled with the CPP canonicalization backend.
+-------------------------------------------------------------------------------
+                                  Compilation                                  
+-------------------------------------------------------------------------------
+(CVXPY) Oct 09 08:08:44 AM: Compiling problem (target solver=SCIP).
+(CVXPY) Oct 09 08:08:44 AM: Reduction chain: Dcp2Cone -> CvxAttr2Constr -> ConeMatrixStuffing -> SCIP
+(CVXPY) Oct 09 08:08:44 AM: Applying reduction Dcp2Cone
+(CVXPY) Oct 09 08:11:14 AM: Applying reduction CvxAttr2Constr
+(CVXPY) Oct 09 08:11:24 AM: Applying reduction ConeMatrixStuffing
+(CVXPY) Oct 09 12:01:32 PM: Applying reduction SCIP
+(CVXPY) Oct 09 12:02:01 PM: Finished problem compilation (took 1.409e+04 seconds).
+-------------------------------------------------------------------------------
+                                Numerical solver                               
+-------------------------------------------------------------------------------
+(CVXPY) Oct 09 12:02:01 PM: Invoking solver SCIP  to obtain a solution.

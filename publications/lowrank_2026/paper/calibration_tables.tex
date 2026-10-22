@@ -1,0 +1,51 @@
+\begin{table}[htbp]\centering\small
+\begin{tabular}{llrr}
+\toprule
+Dataset & Units & RF MAE & XGB MAE \\
+\midrule
+bace & AUC decrement & 0.041 & 0.023 \\
+bbbp & AUC decrement & 0.052 & 0.047 \\
+esol & relative RMSE & 0.092 & 0.096 \\
+freesolv & relative RMSE & 0.555 & 0.624 \\
+lipophilicity & relative RMSE & 0.044 & 0.083 \\
+sider & AUC decrement & 0.030 & 0.042 \\
+\bottomrule
+\end{tabular}
+
+\caption{Fixed-knot validation on five unseen split seeds (25 points per model and dataset). Classification uses AUC(random) minus AUC(split); regression uses RMSE(split)/RMSE(random) minus one. No test label is used to fit the calibration on validation seeds. Each model has initialization seed zero.}\end{table}
+\begin{table}[htbp]\centering\small
+\begin{tabular}{llrr}
+\toprule
+Dataset & Units & RF MAE & XGB MAE \\
+\midrule
+bace & AUC decrement & 0.056 & 0.030 \\
+bbbp & AUC decrement & 0.062 & 0.054 \\
+esol & relative RMSE & 0.101 & 0.115 \\
+freesolv & relative RMSE & 0.711 & 0.747 \\
+lipophilicity & relative RMSE & 0.060 & 0.096 \\
+sider & AUC decrement & 0.067 & 0.069 \\
+\bottomrule
+\end{tabular}
+
+\caption{Interior-target inversion on the same five validation seeds (15 points per model and dataset). Targets are fitted using RF calibration seeds 0--2. Classification uses AUC(random) minus AUC(split); regression uses RMSE(split)/RMSE(random) minus one. No test label is used to fit the calibration on validation seeds. Each model has initialization seed zero.}\end{table}
+\begin{table}[htbp]\centering\small
+\begin{tabular}{llrr}
+\toprule
+Dataset & Model & Decreases & Adjacent steps \\
+\midrule
+bace & rf & 6 & 20 \\
+bace & xgb & 3 & 20 \\
+bbbp & rf & 6 & 20 \\
+bbbp & xgb & 5 & 20 \\
+esol & rf & 8 & 20 \\
+esol & xgb & 4 & 20 \\
+freesolv & rf & 4 & 20 \\
+freesolv & xgb & 5 & 20 \\
+lipophilicity & rf & 0 & 20 \\
+lipophilicity & xgb & 1 & 20 \\
+sider & rf & 4 & 20 \\
+sider & xgb & 8 & 20 \\
+\bottomrule
+\end{tabular}
+
+\caption{Observed decreases in random-relative difficulty as hardness increases on validation seeds. Four adjacent knot steps are checked for each of five seeds. Isotonic fitting does not remove these violations from the observed scores.}\end{table}

@@ -1,0 +1,1230 @@
+{
+  "10.1039/D4DD00250D": {
+    "indexed": {
+      "date-parts": [
+        [
+          2026,
+          10,
+          16
+        ]
+      ],
+      "date-time": "2026-10-16T18:25:48Z",
+      "timestamp": 1792175148789,
+      "version": "4.4.0"
+    },
+    "reference-count": 33,
+    "publisher": "Royal Society of Chemistry (RSC)",
+    "issue": "3",
+    "license": [
+      {
+        "start": {
+          "date-parts": [
+            [
+              2024,
+              12,
+              9
+            ]
+          ],
+          "date-time": "2024-12-09T00:00:00Z",
+          "timestamp": 1733702400000
+        },
+        "content-version": "vor",
+        "delay-in-days": 0,
+        "URL": "http://creativecommons.org/licenses/by/3.0/"
+      }
+    ],
+    "funder": [
+      {
+        "DOI": "10.13039/100006234",
+        "name": "Sandia National Laboratories",
+        "doi-asserted-by": "publisher",
+        "award": [
+          "NA0003525"
+        ],
+        "award-info": [
+          {
+            "award-number": [
+              "NA0003525"
+            ]
+          }
+        ],
+        "id": [
+          {
+            "id": "10.13039/100006234",
+            "id-type": "DOI",
+            "asserted-by": "publisher"
+          }
+        ]
+      },
+      {
+        "DOI": "10.13039/100000015",
+        "name": "U.S. Department of Energy",
+        "doi-asserted-by": "publisher",
+        "id": [
+          {
+            "id": "10.13039/100000015",
+            "id-type": "DOI",
+            "asserted-by": "publisher"
+          }
+        ]
+      },
+      {
+        "DOI": "10.13039/100007000",
+        "name": "Laboratory Directed Research and Development",
+        "doi-asserted-by": "publisher",
+        "id": [
+          {
+            "id": "10.13039/100007000",
+            "id-type": "DOI",
+            "asserted-by": "publisher"
+          }
+        ]
+      },
+      {
+        "DOI": "10.13039/100015257",
+        "name": "Northeastern University",
+        "doi-asserted-by": "publisher",
+        "id": [
+          {
+            "id": "10.13039/100015257",
+            "id-type": "DOI",
+            "asserted-by": "publisher"
+          }
+        ]
+      },
+      {
+        "DOI": "10.13039/100000084",
+        "name": "Directorate for Engineering",
+        "doi-asserted-by": "publisher",
+        "id": [
+          {
+            "id": "10.13039/100000084",
+            "id-type": "DOI",
+            "asserted-by": "publisher"
+          }
+        ]
+      }
+    ],
+    "content-domain": {
+      "domain": [
+        "rsc.org"
+      ],
+      "crossmark-restriction": true
+    },
+    "short-container-title": [
+      "Digital Discovery"
+    ],
+    "abstract": "<jats:p>A general-purpose, featurization-agnostic toolkit, MatFold, is provided to automate reproducible generation of cross-validation splits to assess out-of-distribution generalization and encourage further community use in materials model benchmarking.</jats:p>",
+    "DOI": "10.1039/d4dd00250d",
+    "type": "journal-article",
+    "created": {
+      "date-parts": [
+        [
+          2024,
+          12,
+          9
+        ]
+      ],
+      "date-time": "2024-12-09T17:41:16Z",
+      "timestamp": 1733766076000
+    },
+    "page": "625-635",
+    "update-policy": "https://doi.org/10.1039/rsc_crossmark_policy",
+    "source": "Crossref",
+    "is-referenced-by-count": 19,
+    "title": [
+      "MatFold: systematic insights into materials discovery models' performance through standardized cross-validation protocols"
+    ],
+    "prefix": "10.1039",
+    "volume": "4",
+    "author": [
+      {
+        "ORCID": "https://orcid.org/0000-0001-6263-5114",
+        "authenticated-orcid": false,
+        "given": "Matthew D.",
+        "family": "Witman",
+        "sequence": "first",
+        "affiliation": [
+          {
+            "name": "Sandia National Laboratories, Livermore, California 94551, USA"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "ORCID": "https://orcid.org/0000-0002-1319-6570",
+        "authenticated-orcid": false,
+        "given": "Peter",
+        "family": "Schindler",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Northeastern University, Boston, Massachusetts 02115, USA"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "member": "292",
+    "published-online": {
+      "date-parts": [
+        [
+          2025
+        ]
+      ]
+    },
+    "reference": [
+      {
+        "key": "D4DD00250D/cit1/1",
+        "doi-asserted-by": "crossref",
+        "first-page": "71",
+        "DOI": "10.1146/annurev-matsci-070218-010015",
+        "volume": "50",
+        "author": "Morgan",
+        "year": "2020",
+        "journal-title": "Annu. Rev. Mater. Res."
+      },
+      {
+        "key": "D4DD00250D/cit2/1",
+        "doi-asserted-by": "publisher",
+        "DOI": "10.48550/arXiv.2406.15650",
+        "volume-title": "arXiv",
+        "author": "Jacobs",
+        "year": "2024",
+        "unstructured": "R.Jacobs ,  L. E.Schultz ,  A.Scourtas ,  K. J.Schmidt ,  O.Price-Skelly ,  W.Engler ,  I.Foster ,  B.Blaiszik ,  P. M.Voyles  and  D.Morgan ,  Machine Learning Materials Properties with Accurate Predictions, Uncertainty Estimates, Domain Guidance, and Persistent Online Accessibility ,  arXiv ,  2024 , preprint,  10.48550/arXiv.2406.15650"
+      },
+      {
+        "key": "D4DD00250D/cit3/1",
+        "doi-asserted-by": "crossref",
+        "first-page": "115",
+        "DOI": "10.1038/s41524-022-00794-8",
+        "volume": "8",
+        "author": "Palmer",
+        "year": "2022",
+        "journal-title": "npj Comput. Mater."
+      },
+      {
+        "issue": "8",
+        "key": "D4DD00250D/cit4/1",
+        "doi-asserted-by": "publisher",
+        "first-page": "1534",
+        "DOI": "10.1039/D4DD00088A",
+        "volume": "3",
+        "author": "Jiang",
+        "year": "2024",
+        "journal-title": "Digital Discovery"
+      },
+      {
+        "key": "D4DD00250D/cit5/1",
+        "doi-asserted-by": "crossref",
+        "first-page": "1513",
+        "DOI": "10.1007/s10462-023-10562-9",
+        "volume": "56",
+        "author": "Gawlikowski",
+        "year": "2023",
+        "journal-title": "Artif. Intell. Rev."
+      },
+      {
+        "key": "D4DD00250D/cit6/1",
+        "doi-asserted-by": "crossref",
+        "first-page": "1",
+        "DOI": "10.1186/s13321-014-0047-1",
+        "volume": "6",
+        "author": "Baumann",
+        "year": "2014",
+        "journal-title": "J. Cheminf."
+      },
+      {
+        "key": "D4DD00250D/cit7/1",
+        "doi-asserted-by": "crossref",
+        "first-page": "109498",
+        "DOI": "10.1016/j.commatsci.2019.109498",
+        "volume": "174",
+        "author": "Kauwe",
+        "year": "2020",
+        "journal-title": "Comput. Mater. Sci."
+      },
+      {
+        "key": "D4DD00250D/cit8/1",
+        "doi-asserted-by": "crossref",
+        "first-page": "819",
+        "DOI": "10.1039/C8ME00012C",
+        "volume": "3",
+        "author": "Meredig",
+        "year": "2018",
+        "journal-title": "Mol. Syst. Des. Eng."
+      },
+      {
+        "key": "D4DD00250D/cit9/1",
+        "doi-asserted-by": "crossref",
+        "first-page": "138",
+        "DOI": "10.1038/s41524-020-00406-3",
+        "volume": "6",
+        "author": "Dunn",
+        "year": "2020",
+        "journal-title": "npj Comput. Mater."
+      },
+      {
+        "key": "D4DD00250D/cit10/1",
+        "doi-asserted-by": "crossref",
+        "first-page": "144",
+        "DOI": "10.1038/s41524-024-01316-4",
+        "volume": "10",
+        "author": "Omee",
+        "year": "2024",
+        "journal-title": "npj Comput. Mater."
+      },
+      {
+        "key": "D4DD00250D/cit11/1",
+        "doi-asserted-by": "crossref",
+        "first-page": "300",
+        "DOI": "10.1039/D3DD00162H",
+        "volume": "3",
+        "author": "Hu",
+        "year": "2024",
+        "journal-title": "Digital Discovery"
+      },
+      {
+        "key": "D4DD00250D/cit12/1",
+        "doi-asserted-by": "crossref",
+        "first-page": "1",
+        "DOI": "10.1038/s41524-022-00962-w",
+        "volume": "9",
+        "author": "Li",
+        "year": "2023",
+        "journal-title": "npj Comput. Mater."
+      },
+      {
+        "issue": "2",
+        "key": "D4DD00250D/cit13/1",
+        "doi-asserted-by": "crossref",
+        "first-page": "021403",
+        "DOI": "10.1063/5.0139197",
+        "volume": "10",
+        "author": "Zhang",
+        "year": "2023",
+        "journal-title": "Appl. Phys. Rev."
+      },
+      {
+        "key": "D4DD00250D/cit14/1",
+        "doi-asserted-by": "crossref",
+        "first-page": "513",
+        "DOI": "10.1039/C7SC02664A",
+        "volume": "9",
+        "author": "Wu",
+        "year": "2018",
+        "journal-title": "Chem. Sci."
+      },
+      {
+        "key": "D4DD00250D/cit15/1",
+        "doi-asserted-by": "crossref",
+        "first-page": "109203",
+        "DOI": "10.1016/j.commatsci.2019.109203",
+        "volume": "171",
+        "author": "Xiong",
+        "year": "2020",
+        "journal-title": "Comput. Mater. Sci."
+      },
+      {
+        "key": "D4DD00250D/cit16/1",
+        "doi-asserted-by": "crossref",
+        "first-page": "783",
+        "DOI": "10.1021/ci400084k",
+        "volume": "53",
+        "author": "Sheridan",
+        "year": "2013",
+        "journal-title": "J. Chem. Inf. Model."
+      },
+      {
+        "key": "D4DD00250D/cit17/1",
+        "first-page": "1",
+        "volume": "14",
+        "author": "Li",
+        "year": "2023",
+        "journal-title": "Nat. Commun."
+      },
+      {
+        "key": "D4DD00250D/cit18/1",
+        "doi-asserted-by": "publisher",
+        "DOI": "10.48550/arXiv.2406.06489",
+        "volume-title": "arXiv",
+        "author": "Li",
+        "year": "2024",
+        "unstructured": "K.Li ,  A. N.Rubungo ,  X.Lei ,  D.Persaud ,  K.Choudhary ,  B.DeCost ,  A. B.Dieng  and  J.Hattrick-Simpers ,  Probing out-of-distribution generalization in machine learning for materials ,  arXiv ,  2024 , preprint, arxiv:2406.06489,  10.48550/arXiv.2406.06489"
+      },
+      {
+        "key": "D4DD00250D/cit19/1",
+        "doi-asserted-by": "crossref",
+        "first-page": "145301",
+        "DOI": "10.1103/PhysRevLett.120.145301",
+        "volume": "120",
+        "author": "Xie",
+        "year": "2018",
+        "journal-title": "Phys. Rev. Lett."
+      },
+      {
+        "key": "D4DD00250D/cit20/1",
+        "doi-asserted-by": "crossref",
+        "first-page": "16028",
+        "DOI": "10.1038/npjcompumats.2016.28",
+        "volume": "2",
+        "author": "Ward",
+        "year": "2016",
+        "journal-title": "npj Comput. Mater."
+      },
+      {
+        "key": "D4DD00250D/cit21/1",
+        "doi-asserted-by": "crossref",
+        "first-page": "675",
+        "DOI": "10.1038/s43588-023-00495-2",
+        "volume": "3",
+        "author": "Witman",
+        "year": "2023",
+        "journal-title": "Nat. Comput. Sci."
+      },
+      {
+        "key": "D4DD00250D/cit22/1",
+        "first-page": "1",
+        "volume": "2401764",
+        "author": "Schindler",
+        "year": "2024",
+        "journal-title": "Adv. Funct. Mater."
+      },
+      {
+        "key": "D4DD00250D/cit23/1",
+        "doi-asserted-by": "crossref",
+        "first-page": "3564",
+        "DOI": "10.1021/acs.chemmater.9b01294",
+        "volume": "31",
+        "author": "Chen",
+        "year": "2019",
+        "journal-title": "Chem. Mater."
+      },
+      {
+        "key": "D4DD00250D/cit24/1",
+        "doi-asserted-by": "crossref",
+        "first-page": "346",
+        "DOI": "10.1039/D2DD00096B",
+        "volume": "2",
+        "author": "Choudhary",
+        "year": "2023",
+        "journal-title": "Digital Discovery"
+      },
+      {
+        "key": "D4DD00250D/cit25/1",
+        "doi-asserted-by": "crossref",
+        "first-page": "1031",
+        "DOI": "10.1038/s42256-023-00716-3",
+        "volume": "5",
+        "author": "Deng",
+        "year": "2023",
+        "journal-title": "Nat. Mach. Intell."
+      },
+      {
+        "key": "D4DD00250D/cit26/1",
+        "doi-asserted-by": "publisher",
+        "DOI": "10.48550/arXiv.2401.00096",
+        "volume-title": "arXiv",
+        "author": "Batatia",
+        "year": "2023",
+        "unstructured": "I.Batatia ,  et al., A foundation model for atomistic materials chemistry ,  arXiv ,  2023 , preprint, arXiv:2401.00096,  10.48550/arXiv.2401.00096"
+      },
+      {
+        "key": "D4DD00250D/cit27/1",
+        "doi-asserted-by": "publisher",
+        "DOI": "10.5281/zenodo.8087871",
+        "volume-title": "A database of vacancy formation enthalpies for materials discovery (0.0.1) [dataset]",
+        "author": "Witman",
+        "year": "2023",
+        "unstructured": "M.Witman ,  A.Goyal ,  T.Ogitsu ,  A. H.McDaniel  and  S.Lany ,  A database of vacancy formation enthalpies for materials discovery (0.0.1) [dataset] ,  Zenodo ,  2023 ,  10.5281/zenodo.8087871"
+      },
+      {
+        "key": "D4DD00250D/cit28/1",
+        "doi-asserted-by": "crossref",
+        "first-page": "13212",
+        "DOI": "10.1021/jacs.1c05570",
+        "volume": "143",
+        "author": "Wexler",
+        "year": "2021",
+        "journal-title": "J. Am. Chem. Soc."
+      },
+      {
+        "key": "D4DD00250D/cit29/1",
+        "doi-asserted-by": "crossref",
+        "first-page": "109075",
+        "DOI": "10.1016/j.commatsci.2019.06.010",
+        "volume": "169",
+        "author": "Lu",
+        "year": "2019",
+        "journal-title": "Comput. Mater. Sci."
+      },
+      {
+        "key": "D4DD00250D/cit30/1",
+        "doi-asserted-by": "publisher",
+        "DOI": "10.48550/arXiv.2404.09896",
+        "volume-title": "arXiv",
+        "author": "Agrawal",
+        "year": "2024",
+        "unstructured": "V.Agrawal ,  S.Zhang ,  L. E.Schultz  and  D.Morgan ,  Accelerating Ensemble Error Bar Prediction with Single Models Fits ,  arXiv ,  2024 , preprint, arxiv:2404.09896,  10.48550/arXiv.2404.09896"
+      },
+      {
+        "key": "D4DD00250D/cit31/1",
+        "doi-asserted-by": "crossref",
+        "first-page": "2436",
+        "DOI": "10.1021/acsenergylett.9b01214",
+        "volume": "4",
+        "author": "Schindler",
+        "year": "2019",
+        "journal-title": "ACS Energy Lett."
+      },
+      {
+        "key": "D4DD00250D/cit32/1",
+        "doi-asserted-by": "crossref",
+        "first-page": "2104081",
+        "DOI": "10.1002/adma.202104081",
+        "volume": "33",
+        "author": "Antoniuk",
+        "year": "2021",
+        "journal-title": "Adv. Mater."
+      },
+      {
+        "key": "D4DD00250D/cit33/1",
+        "doi-asserted-by": "crossref",
+        "first-page": "235447",
+        "DOI": "10.1103/PhysRevB.101.235447",
+        "volume": "101",
+        "author": "Antoniuk",
+        "year": "2020",
+        "journal-title": "Phys. Rev. B"
+      }
+    ],
+    "container-title": [
+      "Digital Discovery"
+    ],
+    "original-title": [],
+    "language": "en",
+    "link": [
+      {
+        "URL": "http://pubs.rsc.org/en/content/articlepdf/2025/DD/D4DD00250D",
+        "content-type": "application/pdf",
+        "content-version": "vor",
+        "intended-application": "syndication"
+      },
+      {
+        "URL": "http://pubs.rsc.org/en/content/articlepdf/2025/DD/D4DD00250D",
+        "content-type": "unspecified",
+        "content-version": "vor",
+        "intended-application": "similarity-checking"
+      }
+    ],
+    "deposited": {
+      "date-parts": [
+        [
+          2026,
+          7,
+          1
+        ]
+      ],
+      "date-time": "2026-07-01T04:40:54Z",
+      "timestamp": 1782880854000
+    },
+    "score": 1,
+    "resource": {
+      "primary": {
+        "URL": "https://pubs.rsc.org/dd/article/4/3/625-635/846149"
+      }
+    },
+    "subtitle": [],
+    "short-title": [],
+    "issued": {
+      "date-parts": [
+        [
+          2025
+        ]
+      ]
+    },
+    "references-count": 33,
+    "journal-issue": {
+      "issue": "3",
+      "published-print": {
+        "date-parts": [
+          [
+            2025,
+            3,
+            12
+          ]
+        ]
+      }
+    },
+    "URL": "https://doi.org/10.1039/d4dd00250d",
+    "relation": {
+      "has-preprint": [
+        {
+          "id-type": "doi",
+          "id": "10.26434/chemrxiv-2024-bmw1n",
+          "asserted-by": "object"
+        }
+      ],
+      "has-review": [
+        {
+          "id-type": "doi",
+          "id": "10.1039/D4DD00250D/v2/decision1",
+          "asserted-by": "object"
+        },
+        {
+          "id-type": "doi",
+          "id": "10.1039/D4DD00250D/v2/review2",
+          "asserted-by": "object"
+        },
+        {
+          "id-type": "doi",
+          "id": "10.1039/D4DD00250D/v1/review1",
+          "asserted-by": "object"
+        },
+        {
+          "id-type": "doi",
+          "id": "10.1039/D4DD00250D/v1/review2",
+          "asserted-by": "object"
+        },
+        {
+          "id-type": "doi",
+          "id": "10.1039/D4DD00250D/v1/decision1",
+          "asserted-by": "object"
+        },
+        {
+          "id-type": "doi",
+          "id": "10.1039/D4DD00250D/v2/review1",
+          "asserted-by": "object"
+        },
+        {
+          "id-type": "doi",
+          "id": "10.1039/D4DD00250D/v2/response1",
+          "asserted-by": "object"
+        }
+      ]
+    },
+    "ISSN": [
+      "2635-098X"
+    ],
+    "issn-type": [
+      {
+        "value": "2635-098X",
+        "type": "electronic"
+      }
+    ],
+    "subject": [],
+    "published": {
+      "date-parts": [
+        [
+          2025
+        ]
+      ]
+    }
+  },
+  "10.3390/biom13030498": {
+    "indexed": {
+      "date-parts": [
+        [
+          2026,
+          10,
+          15
+        ]
+      ],
+      "date-time": "2026-10-15T21:31:52Z",
+      "timestamp": 1792099912552,
+      "version": "4.4.0"
+    },
+    "reference-count": 38,
+    "publisher": "MDPI AG",
+    "issue": "3",
+    "license": [
+      {
+        "start": {
+          "date-parts": [
+            [
+              2023,
+              3,
+              8
+            ]
+          ],
+          "date-time": "2023-03-08T00:00:00Z",
+          "timestamp": 1678233600000
+        },
+        "content-version": "vor",
+        "delay-in-days": 0,
+        "URL": "https://creativecommons.org/licenses/by/4.0/"
+      }
+    ],
+    "funder": [
+      {
+        "DOI": "10.13039/501100003141",
+        "name": "National Council of Sciences and Technology of Mexico (CONACYT)",
+        "doi-asserted-by": "publisher",
+        "award": [
+          "775584"
+        ],
+        "award-info": [
+          {
+            "award-number": [
+              "775584"
+            ]
+          }
+        ],
+        "id": [
+          {
+            "id": "10.13039/501100003141",
+            "id-type": "DOI",
+            "asserted-by": "publisher"
+          }
+        ]
+      },
+      {
+        "name": "Wolfson Foundation",
+        "award": [
+          "775584"
+        ],
+        "award-info": [
+          {
+            "award-number": [
+              "775584"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Royal Society for a Royal Society Wolfson Fellowship",
+        "award": [
+          "775584"
+        ],
+        "award-info": [
+          {
+            "award-number": [
+              "775584"
+            ]
+          }
+        ]
+      }
+    ],
+    "content-domain": {
+      "domain": [],
+      "crossmark-restriction": false
+    },
+    "short-container-title": [
+      "Biomolecules"
+    ],
+    "abstract": "<jats:p>Machine learning-based models have been widely used in the early drug-design pipeline. To validate these models, cross-validation strategies have been employed, including those using clustering of molecules in terms of their chemical structures. However, the poor clustering of compounds will compromise such validation, especially on test molecules dissimilar to those in the training set. This study aims at finding the best way to cluster the molecules screened by the National Cancer Institute (NCI)-60 project by comparing hierarchical, Taylor\u2013Butina, and uniform manifold approximation and projection (UMAP) clustering methods. The best-performing algorithm can then be used to generate clusters for model validation strategies. This study also aims at measuring the impact of removing outlier molecules prior to the clustering step. Clustering results are evaluated using three well-known clustering quality metrics. In addition, we compute an average similarity matrix to assess the quality of each cluster. The results show variation in clustering quality from method to method. The clusters obtained by the hierarchical and Taylor\u2013Butina methods are more computationally expensive to use in cross-validation strategies, and both cluster the molecules poorly. In contrast, the UMAP method provides the best quality, and therefore we recommend it to analyze this highly valuable dataset.</jats:p>",
+    "DOI": "10.3390/biom13030498",
+    "type": "journal-article",
+    "created": {
+      "date-parts": [
+        [
+          2023,
+          3,
+          8
+        ]
+      ],
+      "date-time": "2023-03-08T05:01:12Z",
+      "timestamp": 1678251672000
+    },
+    "page": "498",
+    "update-policy": "https://doi.org/10.3390/mdpi_crossmark_policy",
+    "source": "Crossref",
+    "is-referenced-by-count": 31,
+    "title": [
+      "On the Best Way to Cluster NCI-60 Molecules"
+    ],
+    "prefix": "10.3390",
+    "volume": "13",
+    "author": [
+      {
+        "given": "Saiveth",
+        "family": "Hern\u00e1ndez-Hern\u00e1ndez",
+        "sequence": "first",
+        "affiliation": [
+          {
+            "name": "Cancer Research Center of Marseille (INSERM U1068, Institut Paoli-Calmettes, Aix-Marseille Universit\u00e9 UM105, CNRS UMR7258), 13009 Marseille, France"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "ORCID": "https://orcid.org/0000-0002-4078-743X",
+        "authenticated-orcid": false,
+        "given": "Pedro J.",
+        "family": "Ballester",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Department of Bioengineering, Imperial College London, London SW7 2AZ, UK"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "member": "1968",
+    "published-online": {
+      "date-parts": [
+        [
+          2023,
+          3,
+          8
+        ]
+      ]
+    },
+    "reference": [
+      {
+        "key": "ref_1",
+        "first-page": "bbab450",
+        "article-title": "Artificial intelligence for drug response prediction in disease models",
+        "volume": "23",
+        "author": "Ballester",
+        "year": "2022",
+        "journal-title": "Brief. Bioinform."
+      },
+      {
+        "key": "ref_2",
+        "doi-asserted-by": "crossref",
+        "unstructured": "Ballester, P.J. (2019). Machine learning for molecular modelling in drug design. Biomolecules, 9.",
+        "DOI": "10.3390/biom9060216"
+      },
+      {
+        "key": "ref_3",
+        "doi-asserted-by": "crossref",
+        "first-page": "813",
+        "DOI": "10.1038/nrc1951",
+        "article-title": "The NCI60 human tumour cell line anticancer drug screen",
+        "volume": "6",
+        "author": "Shoemaker",
+        "year": "2006",
+        "journal-title": "Nat. Rev. Cancer"
+      },
+      {
+        "key": "ref_4",
+        "doi-asserted-by": "crossref",
+        "first-page": "887",
+        "DOI": "10.1038/ijo.2015.214",
+        "article-title": "The importance of prediction model validation and assessment in obesity and nutrition research",
+        "volume": "40",
+        "author": "Ivanescu",
+        "year": "2016",
+        "journal-title": "Int. J. Obes."
+      },
+      {
+        "key": "ref_5",
+        "doi-asserted-by": "crossref",
+        "first-page": "916",
+        "DOI": "10.1021/acs.jcim.7b00403",
+        "article-title": "Most ligand-based classification benchmarks reward memorization rather than generalization",
+        "volume": "58",
+        "author": "Wallach",
+        "year": "2018",
+        "journal-title": "J. Chem. Inf. Model."
+      },
+      {
+        "key": "ref_6",
+        "doi-asserted-by": "crossref",
+        "first-page": "1739",
+        "DOI": "10.1021/ci200057e",
+        "article-title": "Comments on \u201cleave-cluster-out cross-validation is appropriate for scoring functions derived from diverse protein data sets\u201d: Significance for the validation of scoring functions",
+        "volume": "51",
+        "author": "Ballester",
+        "year": "2011",
+        "journal-title": "J. Chem. Inf. Model."
+      },
+      {
+        "key": "ref_7",
+        "doi-asserted-by": "crossref",
+        "first-page": "85",
+        "DOI": "10.1093/bioinformatics/btv529",
+        "article-title": "Improved large-scale prediction of growth inhibition patterns using the NCI60 cancer cell line panel",
+        "volume": "32",
+        "author": "Bouvier",
+        "year": "2016",
+        "journal-title": "Bioinformatics"
+      },
+      {
+        "key": "ref_8",
+        "doi-asserted-by": "crossref",
+        "first-page": "3989",
+        "DOI": "10.1093/bioinformatics/btz183",
+        "article-title": "Classical scoring functions for docking are unable to exploit large volumes of structural and interaction data",
+        "volume": "35",
+        "author": "Li",
+        "year": "2019",
+        "journal-title": "Bioinformatics"
+      },
+      {
+        "key": "ref_9",
+        "doi-asserted-by": "crossref",
+        "unstructured": "Tran-Nguyen, V.K., and Ballester, P.J. (2023). Beware of Simple Methods for Structure-Based Virtual Screening: The Critical Importance of Broader Comparisons. J. Chem. Inf. Model.",
+        "DOI": "10.1021/acs.jcim.3c00218"
+      },
+      {
+        "key": "ref_10",
+        "doi-asserted-by": "crossref",
+        "first-page": "393",
+        "DOI": "10.1093/bib/bbz170",
+        "article-title": "Deep learning-based clustering approaches for bioinformatics",
+        "volume": "22",
+        "author": "Karim",
+        "year": "2021",
+        "journal-title": "Brief. Bioinform."
+      },
+      {
+        "key": "ref_11",
+        "doi-asserted-by": "crossref",
+        "first-page": "2987",
+        "DOI": "10.1021/acs.jcim.2c00265",
+        "article-title": "iRaPCA and SOMoC: Development and Validation of Web Applications for New Approaches for the Clustering of Small Molecules",
+        "volume": "62",
+        "author": "Llanos",
+        "year": "2022",
+        "journal-title": "J. Chem. Inf. Model."
+      },
+      {
+        "key": "ref_12",
+        "doi-asserted-by": "crossref",
+        "first-page": "W486",
+        "DOI": "10.1093/nar/gkr320",
+        "article-title": "ChemMine tools: An online service for analyzing and clustering small molecules",
+        "volume": "39",
+        "author": "Backman",
+        "year": "2011",
+        "journal-title": "Nucleic Acids Res."
+      },
+      {
+        "key": "ref_13",
+        "doi-asserted-by": "crossref",
+        "unstructured": "Ferreira, L.T., Borba, J.V., Moreira-Filho, J.T., Rimoldi, A., Andrade, C.H., and Costa, F.T.M. (2021). QSAR-based virtual screening of natural products database for identification of potent antimalarial hits. Biomolecules, 11.",
+        "DOI": "10.3390/biom11030459"
+      },
+      {
+        "key": "ref_14",
+        "first-page": "1",
+        "article-title": "Consensus diversity plots: A global diversity analysis of chemical libraries",
+        "volume": "8",
+        "author": "Owen",
+        "year": "2016",
+        "journal-title": "J. Cheminform."
+      },
+      {
+        "key": "ref_15",
+        "doi-asserted-by": "crossref",
+        "first-page": "1",
+        "DOI": "10.1186/s12859-022-04667-1",
+        "article-title": "Deep clustering of small molecules at large-scale via variational autoencoder embedding and K-means",
+        "volume": "23",
+        "author": "Hadipour",
+        "year": "2022",
+        "journal-title": "BMC Bioinform."
+      },
+      {
+        "key": "ref_16",
+        "doi-asserted-by": "crossref",
+        "first-page": "520",
+        "DOI": "10.1038/sj.leu.2402464",
+        "article-title": "Developmental therapeutics program at the NCI: Molecular target and drug discovery process",
+        "volume": "16",
+        "author": "Monga",
+        "year": "2002",
+        "journal-title": "Leukemia"
+      },
+      {
+        "key": "ref_17",
+        "unstructured": "Hern\u00e1ndez-Hern\u00e1ndez, S., Vishwakarma, S., and Ballester, P. (2022, January 24\u201326). Conformal prediction of small-molecule drug resistance in cancer cell lines. Proceedings of the Conformal and Probabilistic Prediction with Applications, Brighton, UK."
+      },
+      {
+        "key": "ref_18",
+        "doi-asserted-by": "crossref",
+        "first-page": "742",
+        "DOI": "10.1021/ci100050t",
+        "article-title": "Extended-connectivity fingerprints",
+        "volume": "50",
+        "author": "Rogers",
+        "year": "2010",
+        "journal-title": "J. Chem. Inf. Model."
+      },
+      {
+        "key": "ref_19",
+        "first-page": "1",
+        "article-title": "Predicting the reliability of drug-target interaction predictions with maximum coverage of target space",
+        "volume": "7",
+        "author": "Naulaerts",
+        "year": "2017",
+        "journal-title": "Sci. Rep."
+      },
+      {
+        "key": "ref_20",
+        "first-page": "1",
+        "article-title": "Comparing structural fingerprints using a literature-based similarity benchmark",
+        "volume": "8",
+        "author": "Sayle",
+        "year": "2016",
+        "journal-title": "J. Cheminform."
+      },
+      {
+        "key": "ref_21",
+        "doi-asserted-by": "crossref",
+        "first-page": "bbab291",
+        "DOI": "10.1093/bib/bbab291",
+        "article-title": "Comparative analysis of molecular fingerprints in prediction of drug combination effects",
+        "volume": "22",
+        "author": "Zagidullin",
+        "year": "2021",
+        "journal-title": "Brief. Bioinform."
+      },
+      {
+        "key": "ref_22",
+        "doi-asserted-by": "crossref",
+        "first-page": "1",
+        "DOI": "10.1038/s41598-020-77327-0",
+        "article-title": "Retrospective assessment of rat liver microsomal stability at NCATS: Data and QSAR models",
+        "volume": "10",
+        "author": "Siramshetty",
+        "year": "2020",
+        "journal-title": "Sci. Rep."
+      },
+      {
+        "key": "ref_23",
+        "first-page": "1",
+        "article-title": "QSAR-derived affinity fingerprints (part 2): Modeling performance for potency prediction",
+        "volume": "12",
+        "author": "Bender",
+        "year": "2020",
+        "journal-title": "J. Cheminform."
+      },
+      {
+        "key": "ref_24",
+        "first-page": "1",
+        "article-title": "QSAR-derived affinity fingerprints (part 1): Fingerprint construction and modeling performance for similarity searching, bioactivity classification and scaffold hopping",
+        "volume": "12",
+        "author": "Dehaen",
+        "year": "2020",
+        "journal-title": "J. Cheminform."
+      },
+      {
+        "key": "ref_25",
+        "doi-asserted-by": "crossref",
+        "unstructured": "Nielsen, F. (2016). Introduction to HPC with MPI for Data Science, Springer.",
+        "DOI": "10.1007/978-3-319-21903-5"
+      },
+      {
+        "key": "ref_26",
+        "doi-asserted-by": "crossref",
+        "first-page": "e1219",
+        "DOI": "10.1002/widm.1219",
+        "article-title": "Algorithms for hierarchical clustering: An overview, II",
+        "volume": "7",
+        "author": "Murtagh",
+        "year": "2017",
+        "journal-title": "Wiley Interdiscip. Rev. Data Min. Knowl. Discov."
+      },
+      {
+        "key": "ref_27",
+        "unstructured": "Landrum, G. (2022, November 01). RDKit: Open-Source Cheminformatics. Available online: https://www.rdkit.org."
+      },
+      {
+        "key": "ref_28",
+        "doi-asserted-by": "crossref",
+        "first-page": "747",
+        "DOI": "10.1021/ci9803381",
+        "article-title": "Unsupervised data base clustering based on daylight\u2019s fingerprint and Tanimoto similarity: A fast and automated way to cluster small and large data sets",
+        "volume": "39",
+        "author": "Butina",
+        "year": "1999",
+        "journal-title": "J. Chem. Inf. Comput. Sci."
+      },
+      {
+        "key": "ref_29",
+        "doi-asserted-by": "crossref",
+        "unstructured": "McInnes, L., Healy, J., and Melville, J. (2018). Umap: Uniform manifold approximation and projection for dimension reduction. arXiv.",
+        "DOI": "10.21105/joss.00861"
+      },
+      {
+        "key": "ref_30",
+        "doi-asserted-by": "crossref",
+        "first-page": "1286",
+        "DOI": "10.1021/acs.jctc.1c00983",
+        "article-title": "Behavior of Linear and Nonlinear Dimensionality Reduction for Collective Variable Identification of Small Molecule Solution-Phase Reactions",
+        "volume": "18",
+        "author": "Le",
+        "year": "2022",
+        "journal-title": "J. Chem. Theory Comput."
+      },
+      {
+        "key": "ref_31",
+        "first-page": "2825",
+        "article-title": "Scikit-learn: Machine learning in Python",
+        "volume": "12",
+        "author": "Pedregosa",
+        "year": "2011",
+        "journal-title": "J. Mach. Learn. Res."
+      },
+      {
+        "key": "ref_32",
+        "doi-asserted-by": "crossref",
+        "first-page": "53",
+        "DOI": "10.1016/0377-0427(87)90125-7",
+        "article-title": "Silhouettes: A graphical aid to the interpretation and validation of cluster analysis",
+        "volume": "20",
+        "author": "Rousseeuw",
+        "year": "1987",
+        "journal-title": "J. Comput. Appl. Math."
+      },
+      {
+        "key": "ref_33",
+        "doi-asserted-by": "crossref",
+        "first-page": "1",
+        "DOI": "10.1080/03610927408827101",
+        "article-title": "A dendrite method for cluster analysis",
+        "volume": "3",
+        "author": "Harabasz",
+        "year": "1974",
+        "journal-title": "Commun. Stat.-Theory Methods"
+      },
+      {
+        "key": "ref_34",
+        "doi-asserted-by": "crossref",
+        "first-page": "224",
+        "DOI": "10.1109/TPAMI.1979.4766909",
+        "article-title": "A cluster separation measure",
+        "volume": "PAMI-1",
+        "author": "Davies",
+        "year": "1979",
+        "journal-title": "IEEE Trans. Pattern Anal. Mach. Intell."
+      },
+      {
+        "key": "ref_35",
+        "doi-asserted-by": "crossref",
+        "first-page": "208",
+        "DOI": "10.1016/j.chemolab.2007.01.005",
+        "article-title": "Improving hierarchical cluster analysis: A new method with outlier detection and automatic clustering",
+        "volume": "87",
+        "author": "Almeida",
+        "year": "2007",
+        "journal-title": "Chemom. Intell. Lab. Syst."
+      },
+      {
+        "key": "ref_36",
+        "unstructured": "Bengfort, B., and Bilbro, R. (2023, February 01). Yellowbrick: Machine Learning Visualization. Available online: http://www.scikit-yb.org/."
+      },
+      {
+        "key": "ref_37",
+        "first-page": "1",
+        "article-title": "PyOD: A Python Toolbox for Scalable Outlier Detection",
+        "volume": "20",
+        "author": "Zhao",
+        "year": "2019",
+        "journal-title": "J. Mach. Learn. Res."
+      },
+      {
+        "key": "ref_38",
+        "doi-asserted-by": "crossref",
+        "first-page": "81",
+        "DOI": "10.1016/j.ddtec.2020.09.001",
+        "article-title": "Selecting machine-learning scoring functions for structure-based virtual screening",
+        "volume": "32",
+        "author": "Ballester",
+        "year": "2019",
+        "journal-title": "Drug Discov. Today Technol."
+      }
+    ],
+    "container-title": [
+      "Biomolecules"
+    ],
+    "original-title": [],
+    "language": "en",
+    "link": [
+      {
+        "URL": "https://www.mdpi.com/2218-273X/13/3/498/pdf",
+        "content-type": "unspecified",
+        "content-version": "vor",
+        "intended-application": "similarity-checking"
+      }
+    ],
+    "deposited": {
+      "date-parts": [
+        [
+          2025,
+          10,
+          10
+        ]
+      ],
+      "date-time": "2025-10-10T18:50:49Z",
+      "timestamp": 1760122249000
+    },
+    "score": 1,
+    "resource": {
+      "primary": {
+        "URL": "https://www.mdpi.com/2218-273X/13/3/498"
+      }
+    },
+    "subtitle": [],
+    "short-title": [],
+    "issued": {
+      "date-parts": [
+        [
+          2023,
+          3,
+          8
+        ]
+      ]
+    },
+    "references-count": 38,
+    "journal-issue": {
+      "issue": "3",
+      "published-online": {
+        "date-parts": [
+          [
+            2023,
+            3
+          ]
+        ]
+      }
+    },
+    "alternative-id": [
+      "biom13030498"
+    ],
+    "URL": "https://doi.org/10.3390/biom13030498",
+    "relation": {},
+    "ISSN": [
+      "2218-273X"
+    ],
+    "issn-type": [
+      {
+        "value": "2218-273X",
+        "type": "electronic"
+      }
+    ],
+    "subject": [],
+    "published": {
+      "date-parts": [
+        [
+          2023,
+          3,
+          8
+        ]
+      ]
+    }
+  }
+}

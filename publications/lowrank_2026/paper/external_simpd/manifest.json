@@ -1,0 +1,78 @@
+{
+  "selection": "first 10 of 99 filenames in SHA256(filename) order; fixed before outcomes were inspected",
+  "created_utc": "2026-10-21T06:25:47.351648+00:00",
+  "source": "https://github.com/rinikerlab/molecular_time_series",
+  "scenario": "published simulated temporal split, not observed chronological ordering",
+  "files": [
+    {
+      "path": "CHEMBL237-1.csv",
+      "url": "https://raw.githubusercontent.com/rinikerlab/molecular_time_series/main/datasets/chemblKi_SIMPD/CHEMBL237-1.csv",
+      "git_blob_sha": "c6bb94eafdcff2f4293b89557817bfe9daeea4d1",
+      "sha256": "eb330e190ea5f002d54922564c71736f235b2050d4eacc716fc705a6ad9851bf",
+      "n": 374
+    },
+    {
+      "path": "CHEMBL3952-3.csv",
+      "url": "https://raw.githubusercontent.com/rinikerlab/molecular_time_series/main/datasets/chemblKi_SIMPD/CHEMBL3952-3.csv",
+      "git_blob_sha": "c4affde2f5514ad8e2fb0c96305eb9ba5340ad0d",
+      "sha256": "b3d94f55181a081ac469c6cdc80f51acfdc2a3280f00c0663d469d081cb51286",
+      "n": 355
+    },
+    {
+      "path": "CHEMBL2820-1.csv",
+      "url": "https://raw.githubusercontent.com/rinikerlab/molecular_time_series/main/datasets/chemblKi_SIMPD/CHEMBL2820-1.csv",
+      "git_blob_sha": "2d9959b0a9bbbe0ff70697b192d2d796d87db45f",
+      "sha256": "5a0db491c71c6608eff6e047e304b8ba10f64a2dfac30b712fdabdf588c5ca3a",
+      "n": 585
+    },
+    {
+      "path": "CHEMBL4105864-1.csv",
+      "url": "https://raw.githubusercontent.com/rinikerlab/molecular_time_series/main/datasets/chemblKi_SIMPD/CHEMBL4105864-1.csv",
+      "git_blob_sha": "8d10468badf33f66f32f76e9273fed95d4b2cc74",
+      "sha256": "455cc152f2cb9aa60388e89716ef13bb67afa89ba326fbfcbd456d0668c16861",
+      "n": 396
+    },
+    {
+      "path": "CHEMBL1293269-1.csv",
+      "url": "https://raw.githubusercontent.com/rinikerlab/molecular_time_series/main/datasets/chemblKi_SIMPD/CHEMBL1293269-1.csv",
+      "git_blob_sha": "69125ba195efe7d06a11bc3f8cb3cc3b9e03e412",
+      "sha256": "46914816c3573d486c278a45897c19119c2519914d3f6614a327cbfa74637d6f",
+      "n": 300
+    },
+    {
+      "path": "CHEMBL269-1.csv",
+      "url": "https://raw.githubusercontent.com/rinikerlab/molecular_time_series/main/datasets/chemblKi_SIMPD/CHEMBL269-1.csv",
+      "git_blob_sha": "f16bca46c891ed8c63f3f13d8ce87405941346c3",
+      "sha256": "6d2d229e75643a4e1c169f5f2ed29a16aae3c26e18f5b08cc2a49226f4408e80",
+      "n": 467
+    },
+    {
+      "path": "CHEMBL3837-1.csv",
+      "url": "https://raw.githubusercontent.com/rinikerlab/molecular_time_series/main/datasets/chemblKi_SIMPD/CHEMBL3837-1.csv",
+      "git_blob_sha": "9ff6d1d898a7e0eba19e9f8b7e34327185334a6a",
+      "sha256": "54289aa7350998ab3660b0941427574e30edf2bb85bc33448233bdd8909bb1b5",
+      "n": 498
+    },
+    {
+      "path": "CHEMBL225-1.csv",
+      "url": "https://raw.githubusercontent.com/rinikerlab/molecular_time_series/main/datasets/chemblKi_SIMPD/CHEMBL225-1.csv",
+      "git_blob_sha": "ffae5f56d845b5397c9c6612c1adbd3c8d44537e",
+      "sha256": "f044d25b1ddec1296cb5496d5ee123d35ad3e609c04eb7caaca97093546973cd",
+      "n": 524
+    },
+    {
+      "path": "CHEMBL284-1.csv",
+      "url": "https://raw.githubusercontent.com/rinikerlab/molecular_time_series/main/datasets/chemblKi_SIMPD/CHEMBL284-1.csv",
+      "git_blob_sha": "def2fe96b21f292fbe7e71c891ff67753ed32676",
+      "sha256": "3ee48950df273b47180104e33d54eaa43f0f9b0d4e8c5f23a33fb5cc5a293610",
+      "n": 351
+    },
+    {
+      "path": "CHEMBL1889-1.csv",
+      "url": "https://raw.githubusercontent.com/rinikerlab/molecular_time_series/main/datasets/chemblKi_SIMPD/CHEMBL1889-1.csv",
+      "git_blob_sha": "fcf98f5249df200ff72a6f3a582f3bc6ae94ea6c",
+      "sha256": "e8d2c3cdbc6557116ed6526e62daf2d1b428984460b60438637003bce88b1d35",
+      "n": 431
+    }
+  ]
+}

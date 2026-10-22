@@ -1,0 +1,154 @@
+% Handwritten interpretation; numerical values are generated separately.
+\subsection{Compression preserves the ordinary dense cut at modest rank}
+
+The first question is whether a compact factor represents the cut values that
+the solver is intended to improve. Across six full development datasets, three
+factor seeds and five partition perturbations per factor, the largest rank-256
+error for the ordinary kernel is \PlainFidelityError{} of its off-diagonal
+similarity mass. Error decreases with rank (Figure~\ref{fig:powered}). Thus, in
+this collection, a modest factor supports accurate evaluation of the dense cut
+without storing its full matrix. This tests objective fidelity across the
+examined partitions; optimization quality remains a separate question.
+
+For comparison, the top-32 graph retains a mean \GraphMassDefault\% of the
+ordinary kernel's similarity mass on the same six datasets. Raising its degree
+to 128 increases this to \GraphMassHigh\%. Compression and sparsification thus
+retain different aspects of the dense objective. The graph-degree study and
+its returned-partition scores appear in the supplement.
+
+\begin{figure}[htbp]
+\centering\includegraphics[width=6.5in]{revision/powered_fidelity.pdf}
+\caption{Cut-value fidelity for the ordinary and cubed kernels. Each point is
+the largest absolute factor-versus-exact cut difference, divided by the exact
+kernel's off-diagonal similarity mass, across six full datasets, three seeds
+and five partition perturbations. The powers have different denominators.
+The cubed kernel requires substantially more rank.}
+\label{fig:powered}
+\end{figure}
+
+\subsection{Local similarity measures a distinct aspect of separation}
+
+A faithful dense objective is useful only if its scientific meaning is clear.
+On synthetic datasets with known families, local leakage correlates with
+cross-fold family contamination at Spearman $\rho=\SyntheticLocalRho$, compared
+with $\SyntheticGlobalRho$ for the global ratio on the same \SyntheticCount{}
+observations. Pooled correlations span several constructed regimes; their
+individual results appear in the supplement. The continuum regime favors the
+global score, whereas four other regimes favor the local score. This supports measuring
+close-neighbour contamination separately from total overlap.
+
+Predictions provide a second interpretation. In the random and plain-low-rank
+D-MPNN partitions, similarity to the nearest training molecule correlates
+negatively with absolute ensemble error on ESOL, FreeSolv and Lipophilicity
+($\rho=\LocalEsolRho$, $\LocalFreesolvRho$ and $\LocalLipoRho$, respectively).
+On Lipophilicity, the per-point global score has a weak positive correlation
+($\GlobalLipoRho$). BBBP is an exception to the local trend
+($\rho=\LocalBbbpRho$), and within-split associations vary. Local similarity
+therefore captures an empirically relevant aspect of prediction, with a
+model- and dataset-dependent relationship to error. Within-split analyses and
+prediction provenance are supplied in the supplement.
+
+\subsection{Power and grouping control local overlap, with a fidelity cost}
+
+The second question is whether the same framework can reduce close-analogue
+contamination. We varied power over $\{2,3,4\}$ and grouping threshold over
+$\{0.3,0.4,0.5,0.6\}$ on six full datasets, using exact fold counts and three
+seeds. Plain, power-only and group-only controls complete the 306-partition
+study. The resulting global--local frontier is supplied in the supplement.
+At the fixed combined setting, local leakage is lower than plain low rank on
+all six datasets under each of three Morgan ramps, the top-five-neighbour ramp
+and the fraction of test molecules above similarity 0.6. The improvement
+therefore extends beyond the ramp whose floor coincides with the grouping
+threshold. MACCS, used only for evaluation, shows lower mean nearest-training
+similarity on \RobustMaccsWins{} of six datasets. Its dataset-bootstrap interval
+for the mean paired change includes zero. Local control is consequently strongest
+in the representation used to construct the split.
+
+That control has a computational trade-off. For the cubed kernel, the maximum
+rank-256 cut error is \PowerFidelityError{} of powered mass, falling to
+\PowerHighRankError{} at rank 512 (Figure~\ref{fig:powered}). The ordinary
+kernel's fidelity therefore cannot be assumed after sharpening. The normalized
+spectral estimates are often above one and give a vacuous uniform bound.
+Nevertheless, combined-setting local leakage changes less with rank: BACE's
+mean local ratio falls from \BaceRankSmall{} at rank 32 to
+\BaceRankDefault{} at rank 256 and \BaceRankLarge{} at rank 512.
+Grouping can preserve local structure even when the powered factor is coarse.
+We therefore evaluate the returned partition as well as the factor's objective
+error. Full rank curves, alternative metrics and group-relaxation counts appear
+in the supplement.
+
+\subsection{Full-size baseline comparison}
+
+\IfFileExists{benchmark_numbers.tex}{\input{benchmark_revision.tex}}{
+\noindent\textbf{Revision in progress:} the full-size, version-stamped baseline
+rerun is still running. The final comparison will use the common protocol in
+Methods. No earlier runtime is used here to claim a speedup, and no partial grid
+is presented as a completed thirteen-dataset result.}
+
+\subsection{Computational scaling differs between settings}
+
+On an H100 NVL, plain low rank partitions two million 2048-bit ChEMBL
+fingerprints in \ScalePlainLargeSeconds{} seconds, with
+\ScalePlainLargeMemory{} GiB of peak GPU allocation. The measurement includes
+the public split call's factor construction, four restarts and refinement,
+after a small warm-up; loading features and evaluating leakage are outside
+the clock. The combined setting takes \ScaleCombinedLargeSeconds{} seconds
+at 100,000 entities using exact tiled neighbours. These settings have different
+computational profiles (Figure~\ref{fig:scaling-revision}). The combined
+pipeline is measured through 100,000 entities, and its performance is not
+extrapolated from the two-million-entity plain-factor result. Per-case memory,
+settings and output counts are supplied in the supplement.
+
+\begin{figure}[htbp]
+\centering\includegraphics[width=6.5in]{revision/scaling.pdf}
+\caption{Split-call time on nested ChEMBL samples using the standard solver,
+rank 256 and size tolerance 0.01. All cases use H100 NVL hardware with two pinned
+CPU cores per worker. Each point is a fresh process with a 100-entity warm-up;
+feature loading and quadratic diagnostics are excluded. The plain and combined
+settings have separate measured ranges. k denotes thousands and M millions.
+Full per-case timings, GPU peaks and host RSS appear in the supplement.}
+\label{fig:scaling-revision}
+\end{figure}
+
+\subsection{Small-assay separation is strongly sensitive to target composition}
+
+On all ten prespecified external assays, the combined setting yields mean
+test ROC-AUC \ExtCombinedRF{} for RF and \ExtCombinedXGB{} for boosted trees.
+Random splitting gives \ExtRandomRF{} and \ExtRandomXGB{}, respectively;
+the published SIMPD references give \ExtSimpdRF{} and \ExtSimpdXGB{}.
+In this assay collection SIMPD's aggregate scores are close to random, so a
+large drop from SIMPD is not by itself evidence of realistic project transfer.
+Several combined partitions produce below-chance AUC. Absolute scores and fold class proportions are supplied in the supplement.
+
+At unchanged fold counts, matching class proportions raises the combined
+setting's mean AUC to \ExtCombinedBalancedRF{} for RF and
+\ExtCombinedBalancedXGB{} for boosted trees (Figure~\ref{fig:external-revision}).
+The intervention changes a median \ExternalMoved\% of the combined assignments.
+Mean standardized target shift falls from \ExternalShiftOriginal{} to
+\ExternalShiftBalanced{}. Plain low rank is also sensitive, changing from
+\ExtPlainRF{} to \ExtPlainBalancedRF{} for RF. The intervention simultaneously
+changes which chemical series appear in each fold, so it is not a causal
+estimate of the contribution of class proportions alone. Nevertheless, the
+original chance-level results cannot be interpreted simply as successful
+construction of a more useful benchmark.
+
+\begin{figure}[htbp]
+\centering\includegraphics[width=6.5in]{revision/external_rf.pdf}
+\caption{Absolute RF test AUC on ten external assays before and after the
+label-balance sensitivity intervention. Each assay is weighted equally after
+averaging split and model seeds. Error bars are descriptive 95\% bootstrap
+intervals over assay means. The intervention uses target labels, preserves
+fold counts and can break structural groups. It is not part of the label-blind
+method. SIMPD supplies one published split per assay. The dotted line is AUC
+0.5. Boosted-tree results and class proportions appear in the supplement.}
+\label{fig:external-revision}
+\end{figure}
+
+These assays delimit the purpose of stronger structural separation. A
+new-series test can also separate the activity distributions associated with
+those series, as anticipated by the distinction between the Lo and Hi tasks
+\citep{steshin2023lohi}. The combined setting is useful when that transfer is the
+intended question and sufficient predictive signal remains. For within-series
+interpolation, its imposed boundary can be excessive. Structural leakage,
+response composition and absolute model scores are needed together to assess
+the resulting benchmark.

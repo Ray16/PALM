@@ -1,0 +1,15 @@
+{
+  "reproduction/low_rank/data": "../../inputs",
+  "inputs/DataSAIL_data/1D/moleculenet/bace.csv": "../../../../../../data/DataSAIL_data/1D/moleculenet/bace.csv",
+  "inputs/DataSAIL_data/1D/moleculenet/bbbp.csv": "../../../../../../data/DataSAIL_data/1D/moleculenet/bbbp.csv",
+  "inputs/DataSAIL_data/1D/moleculenet/esol.csv": "../../../../../../data/DataSAIL_data/1D/moleculenet/esol.csv",
+  "inputs/DataSAIL_data/1D/moleculenet/freesolv.csv": "../../../../../../data/DataSAIL_data/1D/moleculenet/freesolv.csv",
+  "inputs/DataSAIL_data/1D/moleculenet/lipophilicity.csv": "../../../../../../data/DataSAIL_data/1D/moleculenet/lipophilicity.csv",
+  "inputs/DataSAIL_data/1D/moleculenet/clintox.csv": "../../../../../../data/DataSAIL_data/1D/moleculenet/clintox.csv",
+  "inputs/DataSAIL_data/1D/moleculenet/hiv.csv": "../../../../../../data/DataSAIL_data/1D/moleculenet/hiv.csv",
+  "inputs/DataSAIL_data/1D/moleculenet/tox21.csv": "../../../../../../data/DataSAIL_data/1D/moleculenet/tox21.csv",
+  "inputs/DataSAIL_data/1D/moleculenet/sider.csv": "../../../../../../data/DataSAIL_data/1D/moleculenet/sider.csv",
+  "inputs/DataSAIL_data/1D/moleculenet/muv.csv": "../../../../../../data/DataSAIL_data/1D/moleculenet/muv.csv",
+  "inputs/DataSAIL_data/1D/moleculenet/qm8.csv": "../../../../../../data/DataSAIL_data/1D/moleculenet/qm8.csv",
+  "inputs/qmof/qmof.csv": "../../../../data/qmof/qmof.csv"
+}

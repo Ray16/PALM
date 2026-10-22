@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "issues": [],
+  "cases": 10,
+  "expected_cases": 10,
+  "scope": "assignment coverage, counts/corridors, nested sample identities, fixed rank and diagnostic settings, same H100 hardware; timed split excludes feature loading and scoring",
+  "source_directory": "scaling_h100"
+}

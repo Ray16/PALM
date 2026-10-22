@@ -1,0 +1,2 @@
+dataset,method,eps,seed,n,metric,secs,status,code_version,leakage,leak_ratio,nnl,nnl_rel,test_nn_sim,test_nn_gt06,test_nn_gt08,n_train,n_val,n_test,test_imbalance,test_metric,train_metric,gen_gap,metric_name,y_shift
+moleculenet_lipophilicity,datasail,0.01,0,4200,tanimoto,7291.91,ok,,0.32238,0.95735,0.00903,0.01459,0.32297,0.0,0.0,3370,415,415,0.0119,0.0754,0.9326,0.8571,r2,0.0478

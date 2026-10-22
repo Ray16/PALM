@@ -1,0 +1,30 @@
+\begin{table}[htbp]\centering\small
+\begin{tabular}{lrrrrrr}
+\toprule
+Dataset & Plain G & Plain N & Combined G & Combined N & DataSAIL G & DataSAIL N \\
+\midrule
+bace & 0.750 & 0.363 & 0.785 & 0.066 & 0.775 & 0.007 \\
+bbbp & 0.692 & 0.099 & 0.743 & 0.001 & 0.731 & 0.002 \\
+clintox & 0.658 & 0.082 & 0.698 & 0.001 & 0.699 & 0.020 \\
+esol & 0.524 & 0.093 & 0.635 & 0.027 & 0.597 & 0.072 \\
+freesolv & 0.415 & 0.357 & 0.497 & 0.009 & 0.510 & 0.000 \\
+lipophilicity & 0.799 & 0.314 & 0.869 & 0.004 & 0.956 & 0.013 \\
+sider & 0.594 & 0.091 & 0.625 & 0.000 & 0.634 & 0.000 \\
+\bottomrule
+\end{tabular}
+
+\caption{Exact-count controls for saved DataSAIL assignments at nominal tolerance 0.01. Each low-rank partition retains the same entities and has exactly the three native DataSAIL counts. Low-rank scores average three seeds; DataSAIL has one assignment per configuration. G and N denote global and test-only local ratios. These reused assignments supply no new runtime.}\end{table}
+\begin{table}[htbp]\centering\small
+\begin{tabular}{p{4in}rr}
+\toprule
+Recorded outcome & Tolerance 0.01 & Tolerance 0.05 \\
+\midrule
+feasible assignment; no optimality certificate & 3 & 3 \\
+no feasible assignment returned within configured solve & 1 & 1 \\
+no recorded attempt under this protocol & 3 & 3 \\
+resource-policy exclusion & 2 & 2 \\
+solver-reported optimum of clustered problem & 4 & 4 \\
+\bottomrule
+\end{tabular}
+
+\caption{DataSAIL source coverage, classified from native logs and saved assignments. Solver-reported optima concern its clustered integer program. The legacy CSV label ``infeasible'' is not treated as proof of infeasibility when no such solver certificate was retained. Resource exclusions and missing recorded attempts are separate.}\end{table}

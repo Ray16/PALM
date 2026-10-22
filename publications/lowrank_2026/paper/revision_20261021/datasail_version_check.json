@@ -1,0 +1,94 @@
+{
+  "installed_version": "1.3.0",
+  "compared_version": "1.4.0",
+  "wheel_sha256": "7e72ff21064596f549e0f673838d06fb363f2395b58768f66f9acc772be432f7",
+  "solver_modules": [
+    {
+      "module": "datasail/solver/__init__.py",
+      "identical_bytes": true,
+      "identical_ast": true
+    },
+    {
+      "module": "datasail/solver/cluster_1d.py",
+      "identical_bytes": true,
+      "identical_ast": true
+    },
+    {
+      "module": "datasail/solver/cluster_2d.py",
+      "identical_bytes": true,
+      "identical_ast": true
+    },
+    {
+      "module": "datasail/solver/id_1d.py",
+      "identical_bytes": true,
+      "identical_ast": true
+    },
+    {
+      "module": "datasail/solver/id_2d.py",
+      "identical_bytes": true,
+      "identical_ast": true
+    },
+    {
+      "module": "datasail/solver/overflow.py",
+      "identical_bytes": true,
+      "identical_ast": true
+    },
+    {
+      "module": "datasail/solver/solve.py",
+      "identical_bytes": true,
+      "identical_ast": true
+    },
+    {
+      "module": "datasail/solver/utils.py",
+      "identical_bytes": true,
+      "identical_ast": true
+    }
+  ],
+  "official_changelog": "https://raw.githubusercontent.com/kalininalab/DataSAIL/main/CHANGELOG.md",
+  "reason": "fixed 1.3.0 protocol reuses saved assignments; 1.4.0 changelog describes packaging, Python/NumPy support and documentation changes",
+  "identical_ast_modules": [
+    "datasail/__init__.py",
+    "datasail/argparse_patch.py",
+    "datasail/cluster/__init__.py",
+    "datasail/cluster/caching.py",
+    "datasail/cluster/cdhit.py",
+    "datasail/cluster/cdhit_est.py",
+    "datasail/cluster/ecfp.py",
+    "datasail/cluster/foldseek.py",
+    "datasail/cluster/mash.py",
+    "datasail/cluster/mmseqs2.py",
+    "datasail/cluster/mmseqspp.py",
+    "datasail/cluster/tmalign.py",
+    "datasail/cluster/utils.py",
+    "datasail/cluster/vectors.py",
+    "datasail/cluster/wlk.py",
+    "datasail/reader/__init__.py",
+    "datasail/reader/read.py",
+    "datasail/reader/read_genomes.py",
+    "datasail/reader/read_molecules.py",
+    "datasail/reader/read_other.py",
+    "datasail/reader/read_proteins.py",
+    "datasail/reader/utils.py",
+    "datasail/report.py",
+    "datasail/solver/__init__.py",
+    "datasail/solver/cluster_1d.py",
+    "datasail/solver/cluster_2d.py",
+    "datasail/solver/id_1d.py",
+    "datasail/solver/id_2d.py",
+    "datasail/solver/overflow.py",
+    "datasail/solver/solve.py",
+    "datasail/solver/utils.py"
+  ],
+  "changed_modules": [
+    "datasail/__main__.py",
+    "datasail/cluster/clustering.py",
+    "datasail/cluster/diamond.py",
+    "datasail/eval.py",
+    "datasail/parsers.py",
+    "datasail/reader/validate.py",
+    "datasail/routine.py",
+    "datasail/sail.py",
+    "datasail/settings.py",
+    "datasail/version.py"
+  ]
+}

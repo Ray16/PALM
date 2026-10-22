@@ -1,0 +1,32 @@
+[
+  {
+    "path": "comparisons/results/regimes_near_dup.csv",
+    "original_sha256": "7dca713841d6d120ea8ff2a636c217b4dac52eb5ec9cb6277375788a423dff60",
+    "published_sha256": "f3b24df2e0d0b28c69c463af7617172c3c869c77135d559af63a583153a7ab70",
+    "rule": "retain lowrank and datasail observations only"
+  },
+  {
+    "path": "comparisons/results/regimes_continuum.csv",
+    "original_sha256": "0438f89e089372f340449e3e88b5963ac5b4dcd43c36cb6d14f79df0019cac9a",
+    "published_sha256": "b3d60e8bad5a77bf17fec411e2f2769f8a305041e4f0617939f839b0a6d1d80d",
+    "rule": "retain lowrank and datasail observations only"
+  },
+  {
+    "path": "comparisons/results/regimes_hierarchy.csv",
+    "original_sha256": "aa3c6334ed19e6b636512e1fb2bb52c76104ff198d0995690b7ea1c0c1c19b7a",
+    "published_sha256": "e360b9fdd77b05fe1911775f9a7d2b1314c5979b8deb5c6a347854857906f47b",
+    "rule": "retain lowrank and datasail observations only"
+  },
+  {
+    "path": "comparisons/results/regimes_long_tail.csv",
+    "original_sha256": "e207f9125ed5048191b98916ea94fd0496da07da2b1a142c04bf6bdafa65b2b2",
+    "published_sha256": "af775858c5912640711a626fdd7d833efb1eef3341ae671a09d7e3c771fb5ef4",
+    "rule": "retain lowrank and datasail observations only"
+  },
+  {
+    "path": "comparisons/results/regimes_tightness.csv",
+    "original_sha256": "0d22ec56ec48a2cdfae52f7e9e8577d9ca44601144c08f687ea8862b005e8ffd",
+    "published_sha256": "36216dac0fb9345e37479e444a99aed8937e5a68e3aa683eed603a112ac268cc",
+    "rule": "retain lowrank and datasail observations only"
+  }
+]

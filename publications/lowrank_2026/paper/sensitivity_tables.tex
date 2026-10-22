@@ -1,0 +1,24 @@
+\begin{table}[htbp]\centering\small
+\begin{tabular}{rrrr}
+\toprule
+Neighbours & Retained mass & Global ratio & Local ratio \\
+\midrule
+16 & 0.0624 & 0.8218 & 0.0138 \\
+32 & 0.1057 & 0.8103 & 0.0184 \\
+64 & 0.1749 & 0.7639 & 0.0538 \\
+128 & 0.2824 & 0.7166 & 0.0296 \\
+\bottomrule
+\end{tabular}
+
+\caption{Graph degree sensitivity on six full datasets. Dataset means average three seeds before cross-dataset averaging. Retained mass uses quantized graph weights and the full ordinary-kernel mass, with quantization-error bounds supplied in the CSV. Global and local scores follow the main common protocol. Build, partition and capacity repair are included in split time.}\end{table}
+\begin{table}[htbp]\centering\small
+\begin{tabular}{lrrr}
+\toprule
+Setting & Dense cut change & Powered cut change & Local ratio change \\
+\midrule
+combined & -0.0182 & -0.0297 & 0.0214 \\
+plain & -0.0004 & -0.0004 & -0.0687 \\
+\bottomrule
+\end{tabular}
+
+\caption{Thirty versus four restarts on full FreeSolv at exact counts, averaged over five fixed seeds. Cut changes are relative to the four-restart value; local changes are absolute. Both use the same factor seed within each pair. More restarts do not certify optimality, and choosing a different pre-refinement basin can change the final polished solution.}\end{table}

@@ -1,0 +1,19 @@
+{
+  "python": "3.12.12 | packaged by conda-forge | (main, Jan 26 2026, 23:51:32) [GCC 14.3.0]",
+  "platform": "Linux-5.15.0-177-generic-x86_64-with-glibc2.35",
+  "modules": {
+    "numpy": "1.26.4",
+    "scipy": "1.17.0",
+    "pandas": "2.3.3",
+    "scikit-learn": "1.2.2",
+    "torch": "2.8.0",
+    "rdkit": "2026.3.5",
+    "pynndescent": "0.6.0",
+    "numba": "0.63.1",
+    "xgboost": "3.4.1",
+    "matplotlib": "3.10.8",
+    "pytest": "9.1.1"
+  },
+  "native_thread_limit": 2,
+  "model_n_jobs": 2
+}

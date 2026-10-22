@@ -1,0 +1,13 @@
+{
+  "dataset": "moleculenet_freesolv",
+  "classification": "native method failure",
+  "failed_result_sha256": "127313418e381dacf7c56032e72947a380866f963d1b6e3d9c2385b5a28885c4",
+  "feature_matrix_finite": true,
+  "zero_similarity_rows": [
+    286
+  ],
+  "reason": "Published Jaccard UMAP recipe produces nonfinite embedding coordinates for a disconnected vertex; Ward clustering rejects NaNs. No input row was discarded or imputed.",
+  "native_status": "failed",
+  "native_reason": "ValueError: Input X contains NaN.\nAgglomerativeClustering does not accept missing values encoded as NaN natively. For supervised learning, you might want to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor which accept missing values encoded as NaNs natively. Alternatively, it is possible to preprocess the data, for instance by using an imputer transformer in a pipeline or drop samples with missing values. See https://scikit-learn.org/stable/modules/impute.html You can find a list of all estimators that handle NaN values at the following page: https://scikit-learn.org/stable/modules/impute.html#estimators-that-handle-nan-values",
+  "final_reporting": "Report failure separately from the MUV memory-policy exclusion; do not include as a scored UMAP partition."
+}

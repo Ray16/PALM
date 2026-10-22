@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "issues": [],
+  "datasets": 7,
+  "result_sha256": {
+    "moleculenet_bace": "1a2864a95c21ac34a669b54e37a5acc801275a7b287d2b76710667fd8e7856e3",
+    "moleculenet_bbbp": "67fb52b140fc9bad9acc47687ac9e48bacfcc55557517e8c556880d32b6d36d9",
+    "moleculenet_clintox": "c92406ca9da33a32189cea998e8edece347e462064c8cec2db8038febfeddd3f",
+    "moleculenet_esol": "318f55c03a31ce6077e84549765409f53b31e8224d94855de0ba98a1c4ef24c5",
+    "moleculenet_freesolv": "1b77d6e0f9c2473b37e312d534588831cec7a9835882e6cad0a37b04dd7dfe13",
+    "moleculenet_lipophilicity": "3a5c969cb7cc6ef082950080419f37ecc5da25812b7c658564496f84c6d567cc",
+    "moleculenet_sider": "c4be6ab0e41fd7a5537a2a1689056b251de19e083a2b8a5cd84f66326fc17492"
+  },
+  "scope": "seven saved DataSAIL assignment sources; both tolerances; exact all-input count matching and common scoring"
+}

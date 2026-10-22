@@ -1,0 +1,20 @@
+[1;33mWarning: This version of DIAMOND is more than 180 days old. It is recommended to always use the latest version.
+/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/cvxpy/problems/problem.py:158: UserWarning: Objective contains too many subexpressions. Consider vectorizing your CVXPY code to speed up compilation.
+  warnings.warn("Objective contains too many subexpressions. "
+===============================================================================
+                                     CVXPY                                     
+                                     v1.5.3                                    
+===============================================================================
+(CVXPY) Oct 09 12:56:17 PM: Your problem has 3267 variables, 1092 constraints, and 0 parameters.
+(CVXPY) Oct 09 12:58:35 PM: It is compliant with the following grammars: DCP, DQCP
+(CVXPY) Oct 09 12:58:35 PM: (If you need to solve this problem multiple times, but with different data, consider using parameters.)
+(CVXPY) Oct 09 12:58:35 PM: CVXPY will first compile your problem; then, it will invoke a numerical solver to obtain a solution.
+(CVXPY) Oct 09 12:58:35 PM: Your problem is compiled with the CPP canonicalization backend.
+-------------------------------------------------------------------------------
+                                  Compilation                                  
+-------------------------------------------------------------------------------
+(CVXPY) Oct 09 01:00:24 PM: Compiling problem (target solver=SCIP).
+(CVXPY) Oct 09 01:00:24 PM: Reduction chain: Dcp2Cone -> CvxAttr2Constr -> ConeMatrixStuffing -> SCIP
+(CVXPY) Oct 09 01:00:24 PM: Applying reduction Dcp2Cone
+(CVXPY) Oct 09 01:03:18 PM: Applying reduction CvxAttr2Constr
+(CVXPY) Oct 09 01:03:29 PM: Applying reduction ConeMatrixStuffing

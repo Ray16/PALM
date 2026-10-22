@@ -1,0 +1,2 @@
+dataset,method,eps,seed,n,metric,secs,status,leakage,leak_ratio,nnl,nnl_rel,test_nn_sim,test_nn_gt06,test_nn_gt08,n_train,n_val,n_test,test_imbalance,test_metric,train_metric,gen_gap,metric_name,y_shift
+moleculenet_sider,datasail,0.01,0,1427,tanimoto,151.33,ok,0.21357,0.63394,0.00112,0.00324,0.16799,0.0,0.0,1145,141,141,0.0119,0.6035,1.0,0.3965,roc_auc,0.4171
