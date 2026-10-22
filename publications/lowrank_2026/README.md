@@ -73,6 +73,8 @@ QUALITY preset and CUT objective. Random, scaffold and Butina are reference
 controls. This publication folder contains no hypergraph benchmark results.
 The surrounding repository contains separate historical research.
 
+The version tag is `lowrank-v0.1.0-review-20261021-r1`. No archival DOI has been issued.
+
 `SHA256SUMS.json` inventories this bundle. Individual records retain measurement
 source hashes, assignments, native/returned counts, solver outcomes and scoring
 scope. `reproduction/retained_input_transformations.json` documents filtering of
