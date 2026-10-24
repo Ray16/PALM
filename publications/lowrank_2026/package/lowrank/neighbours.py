@@ -137,6 +137,8 @@ def approximate_tanimoto_neighbours(X, k=32, *, candidates=64, seed=0, n_jobs=1)
     Requires the optional ``pynndescent`` dependency and binary input. Fixed
     ``n_jobs=1`` is recommended for reproducible construction. Candidate width
     controls the speed/recall tradeoff; it is not an exact search guarantee.
+    Deficient candidate rows (missing, repeated or self neighbours) are repaired
+    by bounded exact-query search. This cost is part of construction time.
     """
     try:
         from pynndescent import NNDescent
@@ -177,4 +179,16 @@ def approximate_tanimoto_neighbours(X, k=32, *, candidates=64, seed=0, n_jobs=1)
         order = np.lexsort((safe, -sim), axis=1)[:, :k]
         out_i[start:end] = np.take_along_axis(safe, order, axis=1)
         out_s[start:end] = np.take_along_axis(sim, order, axis=1)
+    invalid = (~np.isfinite(out_s).all(axis=1)
+               | np.any(out_i == np.arange(n)[:, None], axis=1)
+               | np.any(np.diff(np.sort(out_i, axis=1), axis=1) == 0, axis=1))
+    if invalid.any():
+        import logging
+        queries = np.flatnonzero(invalid)
+        logging.getLogger(__name__).warning(
+            "ANN candidate lists deficient for %d/%d rows; repairing with exact tiled queries",
+            len(queries), n)
+        repaired_i, repaired_s = tiled_neighbours(X, "tanimoto", k=k,
+                                                  queries=queries, device="cpu")
+        out_i[queries], out_s[queries] = repaired_i, repaired_s
     return out_i, out_s

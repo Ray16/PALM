@@ -1,0 +1,9 @@
+........................................................................ [ 50%]
+.......................................................................  [100%]
+=============================== warnings summary ===============================
+tests/test_ann_neighbours.py::test_ann_edge_weights_equal_exact_binary_jaccard
+  /homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/np/ufunc/parallel.py:373: NumbaWarning: The TBB threading layer requires TBB version 2021 update 6 or later i.e., TBB_INTERFACE_VERSION >= 12060. Found TBB_INTERFACE_VERSION = 12050. The TBB threading layer is disabled.
+    warnings.warn(problem)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+143 passed, 1 warning in 55.86s

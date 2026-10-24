@@ -1,0 +1,1698 @@
+{
+  "completed_cases": 216,
+  "datasets": [
+    "moleculenet_bace",
+    "moleculenet_bbbp",
+    "moleculenet_esol",
+    "moleculenet_freesolv",
+    "moleculenet_lipophilicity",
+    "moleculenet_tox21"
+  ],
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "settings": {
+    "new_auto": {
+      "by_dataset": {
+        "moleculenet_bace": {
+          "global_ratio": 0.2550245089872017,
+          "local_ramp_04": 0.2440491634488895,
+          "maccs_mean_nearest_training": 0.7754927477562928,
+          "test_fraction_above_06": 0.3200883002207506,
+          "target_wasserstein": 0.32652123744264766,
+          "median_split_seconds": 0.49090997874736786
+        },
+        "moleculenet_bbbp": {
+          "global_ratio": 0.2363854152058106,
+          "local_ramp_04": 0.004639624981189344,
+          "maccs_mean_nearest_training": 0.5865375916747486,
+          "test_fraction_above_06": 0.0016339869281045752,
+          "target_wasserstein": 0.029883627270650776,
+          "median_split_seconds": 1.8060198668390512
+        },
+        "moleculenet_esol": {
+          "global_ratio": 0.17985830835730834,
+          "local_ramp_04": 0.025749271832618967,
+          "maccs_mean_nearest_training": 0.596026099273237,
+          "test_fraction_above_06": 0.02654867256637168,
+          "target_wasserstein": 1.2372925848164353,
+          "median_split_seconds": 1.184881404042244
+        },
+        "moleculenet_freesolv": {
+          "global_ratio": 0.14255973644009606,
+          "local_ramp_04": 0.032043384181128606,
+          "maccs_mean_nearest_training": 0.5960090223234147,
+          "test_fraction_above_06": 0.026041666666666668,
+          "target_wasserstein": 1.9331894455252918,
+          "median_split_seconds": 0.538746302947402
+        },
+        "moleculenet_lipophilicity": {
+          "global_ratio": 0.27034961758045634,
+          "local_ramp_04": 0.12778641236206842,
+          "maccs_mean_nearest_training": 0.751782226231363,
+          "test_fraction_above_06": 0.19285714285714287,
+          "target_wasserstein": 0.28767757936507937,
+          "median_split_seconds": 4.053812118247151
+        },
+        "moleculenet_tox21": {
+          "global_ratio": 0.1923561147366298,
+          "local_ramp_04": 0.053177752068653196,
+          "maccs_mean_nearest_training": 0.6778866697455307,
+          "test_fraction_above_06": 0.05115089514066496,
+          "target_wasserstein": 0.026506053374469134,
+          "median_split_seconds": 8.391838191077113
+        }
+      },
+      "mean_scores": {
+        "global_ratio": 0.21275561688458378,
+        "local_ramp_04": 0.08124093481242468,
+        "maccs_mean_nearest_training": 0.663955726167431,
+        "test_fraction_above_06": 0.10305344406328355,
+        "target_wasserstein": 0.6401784212990957
+      },
+      "median_split_seconds": 1.4911845587193966,
+      "median_process_peak_mb": 616.869140625,
+      "median_preparation_split_scoring_seconds": 8.767904217354953
+    },
+    "new_auto_combined": {
+      "by_dataset": {
+        "moleculenet_bace": {
+          "global_ratio": 0.26638980237194987,
+          "local_ramp_04": 0.00694962945644078,
+          "maccs_mean_nearest_training": 0.7076934831295055,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 0.13478179236323398,
+          "median_split_seconds": 1.7383264303207397
+        },
+        "moleculenet_bbbp": {
+          "global_ratio": 0.25100969915567733,
+          "local_ramp_04": 0.0010665657408616635,
+          "maccs_mean_nearest_training": 0.6014887426608527,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 0.06940086478081932,
+          "median_split_seconds": 2.671667106449604
+        },
+        "moleculenet_esol": {
+          "global_ratio": 0.2153555830647084,
+          "local_ramp_04": 0.006100477165411587,
+          "maccs_mean_nearest_training": 0.5987100260095962,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 1.43672647149239,
+          "median_split_seconds": 1.5743386838585138
+        },
+        "moleculenet_freesolv": {
+          "global_ratio": 0.16999229865742968,
+          "local_ramp_04": 0.0007440477299193535,
+          "maccs_mean_nearest_training": 0.558549282917132,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 2.392181622892348,
+          "median_split_seconds": 1.0915411356836557
+        },
+        "moleculenet_lipophilicity": {
+          "global_ratio": 0.29109818981772656,
+          "local_ramp_04": 0.0015537183357294266,
+          "maccs_mean_nearest_training": 0.7211657065957312,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 0.13756051587301585,
+          "median_split_seconds": 6.227482631802559
+        },
+        "moleculenet_tox21": {
+          "global_ratio": 0.2410385992347539,
+          "local_ramp_04": 0.007645213068734176,
+          "maccs_mean_nearest_training": 0.7006336956047545,
+          "test_fraction_above_06": 0.0004262574595055414,
+          "target_wasserstein": 0.03197091720674158,
+          "median_split_seconds": 14.176197135820985
+        }
+      },
+      "mean_scores": {
+        "global_ratio": 0.23914736205037426,
+        "local_ramp_04": 0.004009941916182831,
+        "maccs_mean_nearest_training": 0.6480401561529288,
+        "test_fraction_above_06": 7.104290991759024e-05,
+        "target_wasserstein": 0.7004370307680915
+      },
+      "median_split_seconds": 2.1015435764566064,
+      "median_process_peak_mb": 656.5625,
+      "median_preparation_split_scoring_seconds": 9.739874803461134
+    },
+    "new_auto_sampled": {
+      "by_dataset": {
+        "moleculenet_bace": {
+          "global_ratio": 0.2550245089872017,
+          "local_ramp_04": 0.2440491634488895,
+          "maccs_mean_nearest_training": 0.7754927477562928,
+          "test_fraction_above_06": 0.3200883002207506,
+          "target_wasserstein": 0.32652123744264766,
+          "median_split_seconds": 0.57009332254529
+        },
+        "moleculenet_bbbp": {
+          "global_ratio": 0.2363854152058106,
+          "local_ramp_04": 0.004639624981189344,
+          "maccs_mean_nearest_training": 0.5865375916747486,
+          "test_fraction_above_06": 0.0016339869281045752,
+          "target_wasserstein": 0.029883627270650776,
+          "median_split_seconds": 1.8651451356709003
+        },
+        "moleculenet_esol": {
+          "global_ratio": 0.17985830835730834,
+          "local_ramp_04": 0.025749271832618967,
+          "maccs_mean_nearest_training": 0.596026099273237,
+          "test_fraction_above_06": 0.02654867256637168,
+          "target_wasserstein": 1.2372925848164353,
+          "median_split_seconds": 1.2899552825838327
+        },
+        "moleculenet_freesolv": {
+          "global_ratio": 0.14255973644009606,
+          "local_ramp_04": 0.032043384181128606,
+          "maccs_mean_nearest_training": 0.5960090223234147,
+          "test_fraction_above_06": 0.026041666666666668,
+          "target_wasserstein": 1.9331894455252918,
+          "median_split_seconds": 0.6377975586801767
+        },
+        "moleculenet_lipophilicity": {
+          "global_ratio": 0.27034961758045634,
+          "local_ramp_04": 0.12778641236206842,
+          "maccs_mean_nearest_training": 0.751782226231363,
+          "test_fraction_above_06": 0.19285714285714287,
+          "target_wasserstein": 0.28767757936507937,
+          "median_split_seconds": 3.8477003760635853
+        },
+        "moleculenet_tox21": {
+          "global_ratio": 0.1923561147366298,
+          "local_ramp_04": 0.053177752068653196,
+          "maccs_mean_nearest_training": 0.6778866697455307,
+          "test_fraction_above_06": 0.05115089514066496,
+          "target_wasserstein": 0.026506053374469134,
+          "median_split_seconds": 8.060484698042274
+        }
+      },
+      "mean_scores": {
+        "global_ratio": 0.21275561688458378,
+        "local_ramp_04": 0.08124093481242468,
+        "maccs_mean_nearest_training": 0.663955726167431,
+        "test_fraction_above_06": 0.10305344406328355,
+        "target_wasserstein": 0.6401784212990957
+      },
+      "median_split_seconds": 1.54693981166929,
+      "median_process_peak_mb": 649.91015625,
+      "median_preparation_split_scoring_seconds": 8.796295027248561
+    },
+    "new_combined": {
+      "by_dataset": {
+        "moleculenet_bace": {
+          "global_ratio": 0.2668807396503757,
+          "local_ramp_04": 0.013518495056188832,
+          "maccs_mean_nearest_training": 0.7169792940285031,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 0.12043027217394629,
+          "median_split_seconds": 0.6995824947953224
+        },
+        "moleculenet_bbbp": {
+          "global_ratio": 0.25459048453475935,
+          "local_ramp_04": 0.0005784197700309334,
+          "maccs_mean_nearest_training": 0.5622099845919734,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 0.004629462657738355,
+          "median_split_seconds": 1.1814683694392443
+        },
+        "moleculenet_esol": {
+          "global_ratio": 0.21939448174221443,
+          "local_ramp_04": 0.006608042598591205,
+          "maccs_mean_nearest_training": 0.6265432727372049,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 1.0181752840295901,
+          "median_split_seconds": 0.575420493260026
+        },
+        "moleculenet_freesolv": {
+          "global_ratio": 0.1715726165785224,
+          "local_ramp_04": 0.001488095459838707,
+          "maccs_mean_nearest_training": 0.5787978925121328,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 1.7001173394941633,
+          "median_split_seconds": 0.38756689988076687
+        },
+        "moleculenet_lipophilicity": {
+          "global_ratio": 0.2938341608159365,
+          "local_ramp_04": 0.001756110267033652,
+          "maccs_mean_nearest_training": 0.7189129255120718,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 0.18501289682539682,
+          "median_split_seconds": 3.6047687493264675
+        },
+        "moleculenet_tox21": {
+          "global_ratio": 0.24370987968798127,
+          "local_ramp_04": 0.007596483061888839,
+          "maccs_mean_nearest_training": 0.7021961177731821,
+          "test_fraction_above_06": 0.0004262574595055414,
+          "target_wasserstein": 0.02883487707182834,
+          "median_split_seconds": 7.541649574413896
+        }
+      },
+      "mean_scores": {
+        "global_ratio": 0.2416637271682983,
+        "local_ramp_04": 0.005257607702262028,
+        "maccs_mean_nearest_training": 0.6509399145258447,
+        "test_fraction_above_06": 7.104290991759024e-05,
+        "target_wasserstein": 0.5095333553754439
+      },
+      "median_split_seconds": 0.8808047408238053,
+      "median_process_peak_mb": 647.1015625,
+      "median_preparation_split_scoring_seconds": 8.524271097034216
+    },
+    "new_combined_strict": {
+      "by_dataset": {
+        "moleculenet_bace": {
+          "global_ratio": 0.26976845368537183,
+          "local_ramp_04": 0.040174800368071126,
+          "maccs_mean_nearest_training": 0.7164482254592525,
+          "test_fraction_above_06": 0.0662251655629139,
+          "target_wasserstein": 0.24516253693606982,
+          "median_split_seconds": 1.3144473135471344
+        },
+        "moleculenet_bbbp": {
+          "global_ratio": 0.25459048453475935,
+          "local_ramp_04": 0.0005784197700309334,
+          "maccs_mean_nearest_training": 0.5622099845919734,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 0.004629462657738355,
+          "median_split_seconds": 1.1835339274257421
+        },
+        "moleculenet_esol": {
+          "global_ratio": 0.21939448174221443,
+          "local_ramp_04": 0.006608042598591205,
+          "maccs_mean_nearest_training": 0.6265432727372049,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 1.0181752840295901,
+          "median_split_seconds": 0.5655547697097063
+        },
+        "moleculenet_freesolv": {
+          "global_ratio": 0.17182751226353984,
+          "local_ramp_04": 0.001488095459838707,
+          "maccs_mean_nearest_training": 0.5763955437578261,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 2.030499554150454,
+          "median_split_seconds": 0.38714538514614105
+        },
+        "moleculenet_lipophilicity": {
+          "global_ratio": 0.2938341608159365,
+          "local_ramp_04": 0.001756110267033652,
+          "maccs_mean_nearest_training": 0.7189129255120718,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 0.18501289682539682,
+          "median_split_seconds": 3.5987310614436865
+        },
+        "moleculenet_tox21": {
+          "global_ratio": 0.24370987968798127,
+          "local_ramp_04": 0.007596483061888839,
+          "maccs_mean_nearest_training": 0.7021961177731821,
+          "test_fraction_above_06": 0.0004262574595055414,
+          "target_wasserstein": 0.02883487707182834,
+          "median_split_seconds": 7.436346573755145
+        }
+      },
+      "mean_scores": {
+        "global_ratio": 0.24218749545496723,
+        "local_ramp_04": 0.00970032525424241,
+        "maccs_mean_nearest_training": 0.6504510116385851,
+        "test_fraction_above_06": 0.011108570503736573,
+        "target_wasserstein": 0.5853857686118463
+      },
+      "median_split_seconds": 1.3047240832820535,
+      "median_process_peak_mb": 642.603515625,
+      "median_preparation_split_scoring_seconds": 8.615512845106423
+    },
+    "new_local_025": {
+      "by_dataset": {
+        "moleculenet_bace": {
+          "global_ratio": 0.26179405171622466,
+          "local_ramp_04": 0.0998861164490557,
+          "maccs_mean_nearest_training": 0.738701782347614,
+          "test_fraction_above_06": 0.08830022075055188,
+          "target_wasserstein": 0.23603538571191596,
+          "median_split_seconds": 0.922046260908246
+        },
+        "moleculenet_bbbp": {
+          "global_ratio": 0.2397450193475089,
+          "local_ramp_04": 0.006956924653910342,
+          "maccs_mean_nearest_training": 0.5918731936831879,
+          "test_fraction_above_06": 0.0032679738562091504,
+          "target_wasserstein": 0.10053878489879502,
+          "median_split_seconds": 1.1561203617602587
+        },
+        "moleculenet_esol": {
+          "global_ratio": 0.18221939315312918,
+          "local_ramp_04": 0.03536171998715096,
+          "maccs_mean_nearest_training": 0.589480340964323,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 1.441043659125248,
+          "median_split_seconds": 0.728064576163888
+        },
+        "moleculenet_freesolv": {
+          "global_ratio": 0.14467686034330263,
+          "local_ramp_04": 0.0011780752489964157,
+          "maccs_mean_nearest_training": 0.5622900162513057,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 1.7849795314526589,
+          "median_split_seconds": 0.5793010108172894
+        },
+        "moleculenet_lipophilicity": {
+          "global_ratio": 0.2749088501599292,
+          "local_ramp_04": 0.03458797929305878,
+          "maccs_mean_nearest_training": 0.7166924371605828,
+          "test_fraction_above_06": 0.0253968253968254,
+          "target_wasserstein": 0.18373809523809526,
+          "median_split_seconds": 2.6078367922455072
+        },
+        "moleculenet_tox21": {
+          "global_ratio": 0.20418395597702924,
+          "local_ramp_04": 0.047887171227744295,
+          "maccs_mean_nearest_training": 0.6880589445317696,
+          "test_fraction_above_06": 0.03324808184143222,
+          "target_wasserstein": 0.038381574127065145,
+          "median_split_seconds": 5.592200560495257
+        }
+      },
+      "mean_scores": {
+        "global_ratio": 0.2179213551161873,
+        "local_ramp_04": 0.03764299780998608,
+        "maccs_mean_nearest_training": 0.6478494524897972,
+        "test_fraction_above_06": 0.025035516974169777,
+        "target_wasserstein": 0.630786171758963
+      },
+      "median_split_seconds": 1.0210399264469743,
+      "median_process_peak_mb": 615.552734375,
+      "median_preparation_split_scoring_seconds": 8.484997770749032
+    },
+    "new_local_1": {
+      "by_dataset": {
+        "moleculenet_bace": {
+          "global_ratio": 0.26617294745743303,
+          "local_ramp_04": 0.046538604498786725,
+          "maccs_mean_nearest_training": 0.7209093408210915,
+          "test_fraction_above_06": 0.06181015452538632,
+          "target_wasserstein": 0.1747921463114971,
+          "median_split_seconds": 0.8316056467592716
+        },
+        "moleculenet_bbbp": {
+          "global_ratio": 0.24780920252712257,
+          "local_ramp_04": 0.006668115606884548,
+          "maccs_mean_nearest_training": 0.5739513996233737,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 0.0630512576990739,
+          "median_split_seconds": 1.3624989725649357
+        },
+        "moleculenet_esol": {
+          "global_ratio": 0.200172276825644,
+          "local_ramp_04": 0.01853766439586965,
+          "maccs_mean_nearest_training": 0.5927020003222435,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 1.2710478059245598,
+          "median_split_seconds": 0.8308142237365246
+        },
+        "moleculenet_freesolv": {
+          "global_ratio": 0.16531513190885658,
+          "local_ramp_04": 0.00801218264839715,
+          "maccs_mean_nearest_training": 0.5725107124696175,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 1.8543837143320363,
+          "median_split_seconds": 0.6065244879573584
+        },
+        "moleculenet_lipophilicity": {
+          "global_ratio": 0.28426244235832426,
+          "local_ramp_04": 0.01734759415741319,
+          "maccs_mean_nearest_training": 0.721324413447153,
+          "test_fraction_above_06": 0.004761904761904762,
+          "target_wasserstein": 0.2803720238095238,
+          "median_split_seconds": 3.0712925884872675
+        },
+        "moleculenet_tox21": {
+          "global_ratio": 0.2243546215266575,
+          "local_ramp_04": 0.025742187266086906,
+          "maccs_mean_nearest_training": 0.6591351223952325,
+          "test_fraction_above_06": 0.006820119352088661,
+          "target_wasserstein": 0.035854377583799425,
+          "median_split_seconds": 6.818193079903722
+        }
+      },
+      "mean_scores": {
+        "global_ratio": 0.2313477704340063,
+        "local_ramp_04": 0.02047439142890636,
+        "maccs_mean_nearest_training": 0.6400888315131187,
+        "test_fraction_above_06": 0.012232029773229958,
+        "target_wasserstein": 0.6132502209434151
+      },
+      "median_split_seconds": 1.1285460675135255,
+      "median_process_peak_mb": 614.587890625,
+      "median_preparation_split_scoring_seconds": 8.551086989231408
+    },
+    "new_plain": {
+      "by_dataset": {
+        "moleculenet_bace": {
+          "global_ratio": 0.25479629425118744,
+          "local_ramp_04": 0.18822878594780948,
+          "maccs_mean_nearest_training": 0.7508874605296727,
+          "test_fraction_above_06": 0.24282560706401765,
+          "target_wasserstein": 0.32265673562614955,
+          "median_split_seconds": 0.4104535523802042
+        },
+        "moleculenet_bbbp": {
+          "global_ratio": 0.23645756234408322,
+          "local_ramp_04": 0.030773278788413874,
+          "maccs_mean_nearest_training": 0.6217381658178627,
+          "test_fraction_above_06": 0.029411764705882356,
+          "target_wasserstein": 0.03621620321948523,
+          "median_split_seconds": 0.4729992561042309
+        },
+        "moleculenet_esol": {
+          "global_ratio": 0.17990248436032197,
+          "local_ramp_04": 0.030000969870135022,
+          "maccs_mean_nearest_training": 0.5972329888020292,
+          "test_fraction_above_06": 0.032448377581120944,
+          "target_wasserstein": 1.2588079652558393,
+          "median_split_seconds": 0.31280126608908176
+        },
+        "moleculenet_freesolv": {
+          "global_ratio": 0.14255973644009606,
+          "local_ramp_04": 0.032043384181128606,
+          "maccs_mean_nearest_training": 0.5960090223234147,
+          "test_fraction_above_06": 0.026041666666666668,
+          "target_wasserstein": 1.9331894455252918,
+          "median_split_seconds": 0.2437713947147131
+        },
+        "moleculenet_lipophilicity": {
+          "global_ratio": 0.27038234807329153,
+          "local_ramp_04": 0.13395006072426596,
+          "maccs_mean_nearest_training": 0.757596605826938,
+          "test_fraction_above_06": 0.2031746031746032,
+          "target_wasserstein": 0.3090982142857143,
+          "median_split_seconds": 1.4937533307820559
+        },
+        "moleculenet_tox21": {
+          "global_ratio": 0.19240356780324744,
+          "local_ramp_04": 0.06500574845622702,
+          "maccs_mean_nearest_training": 0.6859357843504231,
+          "test_fraction_above_06": 0.05583972719522592,
+          "target_wasserstein": 0.03192557806332889,
+          "median_split_seconds": 2.8413643874228
+        }
+      },
+      "mean_scores": {
+        "global_ratio": 0.2127503322120379,
+        "local_ramp_04": 0.08000037132799666,
+        "maccs_mean_nearest_training": 0.6682333379417233,
+        "test_fraction_above_06": 0.09829029106458613,
+        "target_wasserstein": 0.6486490236626349
+      },
+      "median_split_seconds": 0.4700760766863823,
+      "median_process_peak_mb": 612.513671875,
+      "median_preparation_split_scoring_seconds": 8.139094103127718
+    },
+    "release_combined": {
+      "by_dataset": {
+        "moleculenet_bace": {
+          "global_ratio": 0.2668807396503757,
+          "local_ramp_04": 0.013518495056188832,
+          "maccs_mean_nearest_training": 0.7169792940285031,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 0.12043027217394629,
+          "median_split_seconds": 0.6673410795629025
+        },
+        "moleculenet_bbbp": {
+          "global_ratio": 0.25459048453475935,
+          "local_ramp_04": 0.0005784197700309334,
+          "maccs_mean_nearest_training": 0.5622099845919734,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 0.004629462657738355,
+          "median_split_seconds": 1.1734025347977877
+        },
+        "moleculenet_esol": {
+          "global_ratio": 0.21939448174221443,
+          "local_ramp_04": 0.006608042598591205,
+          "maccs_mean_nearest_training": 0.6265432727372049,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 1.0181752840295901,
+          "median_split_seconds": 0.5539162084460258
+        },
+        "moleculenet_freesolv": {
+          "global_ratio": 0.1715726165785224,
+          "local_ramp_04": 0.001488095459838707,
+          "maccs_mean_nearest_training": 0.5787978925121328,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 1.7001173394941633,
+          "median_split_seconds": 0.368681812658906
+        },
+        "moleculenet_lipophilicity": {
+          "global_ratio": 0.2938341608159365,
+          "local_ramp_04": 0.001756110267033652,
+          "maccs_mean_nearest_training": 0.7189129255120718,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 0.18501289682539682,
+          "median_split_seconds": 3.7597542852163315
+        },
+        "moleculenet_tox21": {
+          "global_ratio": 0.24370987968798127,
+          "local_ramp_04": 0.007596483061888839,
+          "maccs_mean_nearest_training": 0.7021961177731821,
+          "test_fraction_above_06": 0.0004262574595055414,
+          "target_wasserstein": 0.02883487707182834,
+          "median_split_seconds": 7.745064938440919
+        }
+      },
+      "mean_scores": {
+        "global_ratio": 0.2416637271682983,
+        "local_ramp_04": 0.005257607702262028,
+        "maccs_mean_nearest_training": 0.6509399145258447,
+        "test_fraction_above_06": 7.104290991759024e-05,
+        "target_wasserstein": 0.5095333553754439
+      },
+      "median_split_seconds": 0.8325630454346538,
+      "median_process_peak_mb": 626.9296875,
+      "median_preparation_split_scoring_seconds": 8.473540632985532
+    },
+    "release_groups": {
+      "by_dataset": {
+        "moleculenet_bace": {
+          "global_ratio": 0.2637977494556956,
+          "local_ramp_04": 0.08886144931391814,
+          "maccs_mean_nearest_training": 0.7320241064951646,
+          "test_fraction_above_06": 0.052980132450331126,
+          "target_wasserstein": 0.19743411662410248,
+          "median_split_seconds": 0.6532033458352089
+        },
+        "moleculenet_bbbp": {
+          "global_ratio": 0.24695048974255343,
+          "local_ramp_04": 0.0023675981365257866,
+          "maccs_mean_nearest_training": 0.6099323558261971,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 0.10709677290086277,
+          "median_split_seconds": 0.9677225165069103
+        },
+        "moleculenet_esol": {
+          "global_ratio": 0.18858777092869464,
+          "local_ramp_04": 0.007018418350754232,
+          "maccs_mean_nearest_training": 0.5648181326357665,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 1.333054533027229,
+          "median_split_seconds": 0.5085925199091434
+        },
+        "moleculenet_freesolv": {
+          "global_ratio": 0.17033289547733568,
+          "local_ramp_04": 0.001178075404216845,
+          "maccs_mean_nearest_training": 0.5550079304569712,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 2.260013172827497,
+          "median_split_seconds": 0.31231678277254105
+        },
+        "moleculenet_lipophilicity": {
+          "global_ratio": 0.29182366631381024,
+          "local_ramp_04": 0.0015216756198141305,
+          "maccs_mean_nearest_training": 0.7224005667936234,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 0.1805625,
+          "median_split_seconds": 2.6903358940035105
+        },
+        "moleculenet_tox21": {
+          "global_ratio": 0.2201182009869902,
+          "local_ramp_04": 0.03267622528410865,
+          "maccs_mean_nearest_training": 0.6912892577123255,
+          "test_fraction_above_06": 0.004262574595055414,
+          "target_wasserstein": 0.04033286280507383,
+          "median_split_seconds": 8.397017745301127
+        }
+      },
+      "mean_scores": {
+        "global_ratio": 0.23026846215084662,
+        "local_ramp_04": 0.02227057368488963,
+        "maccs_mean_nearest_training": 0.6459120583200081,
+        "test_fraction_above_06": 0.00954045117423109,
+        "target_wasserstein": 0.6864156596974609
+      },
+      "median_split_seconds": 0.8020084761083126,
+      "median_process_peak_mb": 622.880859375,
+      "median_preparation_split_scoring_seconds": 8.415008717216551
+    },
+    "release_plain": {
+      "by_dataset": {
+        "moleculenet_bace": {
+          "global_ratio": 0.25479629425118744,
+          "local_ramp_04": 0.18822878594780948,
+          "maccs_mean_nearest_training": 0.7508874605296727,
+          "test_fraction_above_06": 0.24282560706401765,
+          "target_wasserstein": 0.32265673562614955,
+          "median_split_seconds": 0.35570572316646576
+        },
+        "moleculenet_bbbp": {
+          "global_ratio": 0.23645756234408322,
+          "local_ramp_04": 0.030773278788413874,
+          "maccs_mean_nearest_training": 0.6217381658178627,
+          "test_fraction_above_06": 0.029411764705882356,
+          "target_wasserstein": 0.03621620321948523,
+          "median_split_seconds": 0.43195997178554535
+        },
+        "moleculenet_esol": {
+          "global_ratio": 0.17990248436032197,
+          "local_ramp_04": 0.030000969870135022,
+          "maccs_mean_nearest_training": 0.5972329888020292,
+          "test_fraction_above_06": 0.032448377581120944,
+          "target_wasserstein": 1.2588079652558393,
+          "median_split_seconds": 0.3016951475292444
+        },
+        "moleculenet_freesolv": {
+          "global_ratio": 0.14255973644009606,
+          "local_ramp_04": 0.032043384181128606,
+          "maccs_mean_nearest_training": 0.5960090223234147,
+          "test_fraction_above_06": 0.026041666666666668,
+          "target_wasserstein": 1.9331894455252918,
+          "median_split_seconds": 0.22457647696137428
+        },
+        "moleculenet_lipophilicity": {
+          "global_ratio": 0.27038234807329153,
+          "local_ramp_04": 0.13395006072426596,
+          "maccs_mean_nearest_training": 0.757596605826938,
+          "test_fraction_above_06": 0.2031746031746032,
+          "target_wasserstein": 0.3090982142857143,
+          "median_split_seconds": 1.4983792267739773
+        },
+        "moleculenet_tox21": {
+          "global_ratio": 0.19240356780324744,
+          "local_ramp_04": 0.06500574845622702,
+          "maccs_mean_nearest_training": 0.6859357843504231,
+          "test_fraction_above_06": 0.05583972719522592,
+          "target_wasserstein": 0.03192557806332889,
+          "median_split_seconds": 2.7224710155278444
+        }
+      },
+      "mean_scores": {
+        "global_ratio": 0.2127503322120379,
+        "local_ramp_04": 0.08000037132799666,
+        "maccs_mean_nearest_training": 0.6682333379417233,
+        "test_fraction_above_06": 0.09829029106458613,
+        "target_wasserstein": 0.6486490236626349
+      },
+      "median_split_seconds": 0.42236785404384136,
+      "median_process_peak_mb": 608.142578125,
+      "median_preparation_split_scoring_seconds": 8.103118336759508
+    },
+    "release_power3": {
+      "by_dataset": {
+        "moleculenet_bace": {
+          "global_ratio": 0.26171294940346423,
+          "local_ramp_04": 0.05085513675537418,
+          "maccs_mean_nearest_training": 0.7035645236637418,
+          "test_fraction_above_06": 0.07726269315673288,
+          "target_wasserstein": 0.2909477690704962,
+          "median_split_seconds": 0.3172888793051243
+        },
+        "moleculenet_bbbp": {
+          "global_ratio": 0.2413307041631099,
+          "local_ramp_04": 0.02506396492582001,
+          "maccs_mean_nearest_training": 0.5903621444028188,
+          "test_fraction_above_06": 0.026143790849673203,
+          "target_wasserstein": 0.0733711224117687,
+          "median_split_seconds": 0.48674244433641434
+        },
+        "moleculenet_esol": {
+          "global_ratio": 0.2070742262240468,
+          "local_ramp_04": 0.02065559565259057,
+          "maccs_mean_nearest_training": 0.6191052792698234,
+          "test_fraction_above_06": 0.0058997050147492625,
+          "target_wasserstein": 0.9269029491984381,
+          "median_split_seconds": 0.3161310814321041
+        },
+        "moleculenet_freesolv": {
+          "global_ratio": 0.17614294607826772,
+          "local_ramp_04": 0.013744057363106141,
+          "maccs_mean_nearest_training": 0.573925057038044,
+          "test_fraction_above_06": 0.0,
+          "target_wasserstein": 1.7794293125810636,
+          "median_split_seconds": 0.2612564489245415
+        },
+        "moleculenet_lipophilicity": {
+          "global_ratio": 0.27298557171039856,
+          "local_ramp_04": 0.1104067903189432,
+          "maccs_mean_nearest_training": 0.7496434379901205,
+          "test_fraction_above_06": 0.16111111111111112,
+          "target_wasserstein": 0.2719404761904762,
+          "median_split_seconds": 1.0973833743482828
+        },
+        "moleculenet_tox21": {
+          "global_ratio": 0.20780338769486426,
+          "local_ramp_04": 0.07819126238959116,
+          "maccs_mean_nearest_training": 0.7257113836305525,
+          "test_fraction_above_06": 0.09633418584825233,
+          "target_wasserstein": 0.03807528892121862,
+          "median_split_seconds": 1.6679795607924461
+        }
+      },
+      "mean_scores": {
+        "global_ratio": 0.22784163087902523,
+        "local_ramp_04": 0.04981946790090421,
+        "maccs_mean_nearest_training": 0.6603853043325169,
+        "test_fraction_above_06": 0.061125247663419806,
+        "target_wasserstein": 0.5634444863955769
+      },
+      "median_split_seconds": 0.3936722194775939,
+      "median_process_peak_mb": 607.298828125,
+      "median_preparation_split_scoring_seconds": 8.011316419579089
+    }
+  },
+  "paired": {
+    "new_auto__vs__release_plain": {
+      "global_ratio": {
+        "mean_paired_change": 5.284672545865139e-06,
+        "dataset_bootstrap_ci95": [
+          -5.26844842715507e-05,
+          9.828967913458331e-05
+        ]
+      },
+      "local_ramp_04": {
+        "mean_paired_change": 0.001240563484428011,
+        "dataset_bootstrap_ci95": [
+          -0.015511334309817208,
+          0.024911581292244783
+        ]
+      },
+      "maccs_mean_nearest_training": {
+        "mean_paired_change": -0.004277611774292256,
+        "dataset_bootstrap_ci95": [
+          -0.01914295442717114,
+          0.009790912991766801
+        ]
+      },
+      "test_fraction_above_06": {
+        "mean_paired_change": 0.004763152998697433,
+        "dataset_bootstrap_ci95": [
+          -0.015608465608465611,
+          0.03592848568966486
+        ]
+      },
+      "target_wasserstein": {
+        "mean_paired_change": -0.008470602363539163,
+        "dataset_bootstrap_ci95": [
+          -0.016407072849829615,
+          -0.000822691377445448
+        ]
+      },
+      "dominates_on_global_and_local": [
+        "moleculenet_bbbp",
+        "moleculenet_esol",
+        "moleculenet_freesolv",
+        "moleculenet_lipophilicity",
+        "moleculenet_tox21"
+      ]
+    },
+    "new_auto__vs__release_power3": {
+      "global_ratio": {
+        "mean_paired_change": -0.015086013994441436,
+        "dataset_bootstrap_ci95": [
+          -0.025016876692625072,
+          -0.0061220026967643655
+        ]
+      },
+      "local_ramp_04": {
+        "mean_paired_change": 0.03142146691152046,
+        "dataset_bootstrap_ci95": [
+          -0.012011977984898952,
+          0.0989861640370276
+        ]
+      },
+      "maccs_mean_nearest_training": {
+        "mean_paired_change": 0.0035704218349143315,
+        "dataset_bootstrap_ci95": [
+          -0.023915592041674,
+          0.03516081747306123
+        ]
+      },
+      "test_fraction_above_06": {
+        "mean_paired_change": 0.041928196399863754,
+        "dataset_bootstrap_ci95": [
+          -0.01634804235917786,
+          0.12695911928053047
+        ]
+      },
+      "target_wasserstein": {
+        "mean_paired_change": 0.07673393490351878,
+        "dataset_bootstrap_ci95": [
+          -0.007263074250741272,
+          0.1829661288738804
+        ]
+      },
+      "dominates_on_global_and_local": [
+        "moleculenet_bbbp",
+        "moleculenet_tox21"
+      ]
+    },
+    "new_auto__vs__release_groups": {
+      "global_ratio": {
+        "mean_paired_change": -0.017512845266262827,
+        "dataset_bootstrap_ci95": [
+          -0.02459367323282445,
+          -0.011174088224976194
+        ]
+      },
+      "local_ramp_04": {
+        "mean_paired_change": 0.05897036112753504,
+        "dataset_bootstrap_ci95": [
+          0.015857211586198783,
+          0.10690400690099082
+        ]
+      },
+      "maccs_mean_nearest_training": {
+        "mean_paired_change": 0.0180436678474231,
+        "dataset_bootstrap_ci95": [
+          -0.00383287572432169,
+          0.03795046418843714
+        ]
+      },
+      "test_fraction_above_06": {
+        "mean_paired_change": 0.09351299288905246,
+        "dataset_bootstrap_ci95": [
+          0.02146471671692062,
+          0.17793643988006372
+        ]
+      },
+      "target_wasserstein": {
+        "mean_paired_change": -0.04623723839836516,
+        "dataset_bootstrap_ci95": [
+          -0.1738179929182763,
+          0.06357500437970785
+        ]
+      },
+      "dominates_on_global_and_local": []
+    },
+    "new_auto__vs__release_combined": {
+      "global_ratio": {
+        "mean_paired_change": -0.028908110283714466,
+        "dataset_bootstrap_ci95": [
+          -0.03996760615822797,
+          -0.018770003893025328
+        ]
+      },
+      "local_ramp_04": {
+        "mean_paired_change": 0.07598332711016263,
+        "dataset_bootstrap_ci95": [
+          0.02103456519233897,
+          0.14645548078595275
+        ]
+      },
+      "maccs_mean_nearest_training": {
+        "mean_paired_change": 0.013015811641586475,
+        "dataset_bootstrap_ci95": [
+          -0.012235579948386829,
+          0.03738404096470319
+        ]
+      },
+      "test_fraction_above_06": {
+        "mean_paired_change": 0.10298240115336597,
+        "dataset_bootstrap_ci95": [
+          0.022149984785500707,
+          0.20103656477535634
+        ]
+      },
+      "target_wasserstein": {
+        "mean_paired_change": 0.1306450659236518,
+        "dataset_bootstrap_ci95": [
+          0.054503890221536455,
+          0.20218907690738855
+        ]
+      },
+      "dominates_on_global_and_local": []
+    },
+    "new_auto_combined__vs__release_plain": {
+      "global_ratio": {
+        "mean_paired_change": 0.026397029838336347,
+        "dataset_bootstrap_ci95": [
+          0.01673994897108029,
+          0.03713164608129598
+        ]
+      },
+      "local_ramp_04": {
+        "mean_paired_change": -0.07599042941181383,
+        "dataset_bootstrap_ci95": [
+          -0.12721684338294795,
+          -0.03264571389054223
+        ]
+      },
+      "maccs_mean_nearest_training": {
+        "mean_paired_change": -0.0201931817887947,
+        "dataset_bootstrap_ci95": [
+          -0.036331292666852734,
+          -0.002023065265455241
+        ]
+      },
+      "test_fraction_above_06": {
+        "mean_paired_change": -0.09821924815466854,
+        "dataset_bootstrap_ci95": [
+          -0.16991887861391627,
+          -0.03312811834365656
+        ]
+      },
+      "target_wasserstein": {
+        "mean_paired_change": 0.051788007105456564,
+        "dataset_bootstrap_ci95": [
+          -0.11426588044108021,
+          0.23609033358105905
+        ]
+      },
+      "dominates_on_global_and_local": []
+    },
+    "new_auto_combined__vs__release_power3": {
+      "global_ratio": {
+        "mean_paired_change": 0.011305731171349045,
+        "dataset_bootstrap_ci95": [
+          0.0022691874627697264,
+          0.021630037235581153
+        ]
+      },
+      "local_ramp_04": {
+        "mean_paired_change": -0.04580952598472138,
+        "dataset_bootstrap_ci95": [
+          -0.07566846370043641,
+          -0.020761378596435915
+        ]
+      },
+      "maccs_mean_nearest_training": {
+        "mean_paired_change": -0.012345148179588114,
+        "dataset_bootstrap_ci95": [
+          -0.023303144537777803,
+          -0.00013921587888338083
+        ]
+      },
+      "test_fraction_above_06": {
+        "mean_paired_change": -0.06105420475350221,
+        "dataset_bootstrap_ci95": [
+          -0.1094173258131355,
+          -0.018412478068907015
+        ]
+      },
+      "target_wasserstein": {
+        "mean_paired_change": 0.1369925443725145,
+        "dataset_bootstrap_ci95": [
+          -0.09489674783417827,
+          0.38553989007653827
+        ]
+      },
+      "dominates_on_global_and_local": [
+        "moleculenet_freesolv"
+      ]
+    },
+    "new_auto_combined__vs__release_groups": {
+      "global_ratio": {
+        "mean_paired_change": 0.008878899899527656,
+        "dataset_bootstrap_ci95": [
+          0.000881479174959024,
+          0.01760338259198128
+        ]
+      },
+      "local_ramp_04": {
+        "mean_paired_change": -0.018260631768706802,
+        "dataset_bootstrap_ci95": [
+          -0.045353073441241114,
+          -0.0005206276330824725
+        ]
+      },
+      "maccs_mean_nearest_training": {
+        "mean_paired_change": 0.0021280978329206537,
+        "dataset_bootstrap_ci95": [
+          -0.011336365576298543,
+          0.016719128646077736
+        ]
+      },
+      "test_fraction_above_06": {
+        "mean_paired_change": -0.0094694082643135,
+        "dataset_bootstrap_ci95": [
+          -0.027129452414423872,
+          0.0
+        ]
+      },
+      "target_wasserstein": {
+        "mean_paired_change": 0.01402137107063057,
+        "dataset_bootstrap_ci95": [
+          -0.042894411749013504,
+          0.07582614764389317
+        ]
+      },
+      "dominates_on_global_and_local": [
+        "moleculenet_freesolv"
+      ]
+    },
+    "new_auto_combined__vs__release_combined": {
+      "global_ratio": {
+        "mean_paired_change": -0.0025163651179239827,
+        "dataset_bootstrap_ci95": [
+          -0.0034303215032718084,
+          -0.0015616476889436838
+        ]
+      },
+      "local_ramp_04": {
+        "mean_paired_change": -0.001247665786079197,
+        "dataset_bootstrap_ci95": [
+          -0.003445499609793009,
+          6.96410257656868e-05
+        ]
+      },
+      "maccs_mean_nearest_training": {
+        "mean_paired_change": -0.002899758372915969,
+        "dataset_bootstrap_ci95": [
+          -0.018440437999200476,
+          0.015743803379130356
+        ]
+      },
+      "test_fraction_above_06": {
+        "mean_paired_change": 0.0,
+        "dataset_bootstrap_ci95": [
+          0.0,
+          0.0
+        ]
+      },
+      "target_wasserstein": {
+        "mean_paired_change": 0.19090367539264752,
+        "dataset_bootstrap_ci95": [
+          0.00025619692971778674,
+          0.4271085799858912
+        ]
+      },
+      "dominates_on_global_and_local": [
+        "moleculenet_bace",
+        "moleculenet_esol",
+        "moleculenet_freesolv",
+        "moleculenet_lipophilicity"
+      ]
+    },
+    "new_local_025__vs__release_plain": {
+      "global_ratio": {
+        "mean_paired_change": 0.0051710229041493595,
+        "dataset_bootstrap_ci95": [
+          0.0027803374136818187,
+          0.008153445130209741
+        ]
+      },
+      "local_ramp_04": {
+        "mean_paired_change": -0.042357373518010576,
+        "dataset_bootstrap_ci95": [
+          -0.07306387618130249,
+          -0.014149182365931684
+        ]
+      },
+      "maccs_mean_nearest_training": {
+        "mean_paired_change": -0.020383885451926227,
+        "dataset_bootstrap_ci95": [
+          -0.03243432809296424,
+          -0.007977807992458785
+        ]
+      },
+      "test_fraction_above_06": {
+        "mean_paired_change": -0.07325477409041635,
+        "dataset_bootstrap_ci95": [
+          -0.1243914606490978,
+          -0.025993486109120237
+        ]
+      },
+      "target_wasserstein": {
+        "mean_paired_change": -0.017862851903671803,
+        "dataset_bootstrap_ci95": [
+          -0.10455090334850022,
+          0.07883295397024419
+        ]
+      },
+      "dominates_on_global_and_local": []
+    },
+    "new_local_025__vs__release_power3": {
+      "global_ratio": {
+        "mean_paired_change": -0.009920275762837943,
+        "dataset_bootstrap_ci95": [
+          -0.02046523661348125,
+          -0.00023132096238627034
+        ]
+      },
+      "local_ramp_04": {
+        "mean_paired_change": -0.012176470090918129,
+        "dataset_bootstrap_ci95": [
+          -0.04344282263486985,
+          0.018646040204866224
+        ]
+      },
+      "maccs_mean_nearest_training": {
+        "mean_paired_change": -0.01253585184271964,
+        "dataset_bootstrap_ci95": [
+          -0.03041114315814662,
+          0.008752792695439937
+        ]
+      },
+      "test_fraction_above_06": {
+        "mean_paired_change": -0.036089730689250026,
+        "dataset_bootstrap_ci95": [
+          -0.0803445417582204,
+          -0.0019665683382497543
+        ]
+      },
+      "target_wasserstein": {
+        "mean_paired_change": 0.06734168536338615,
+        "dataset_bootstrap_ci95": [
+          -0.04780027414285024,
+          0.25337127129674514
+        ]
+      },
+      "dominates_on_global_and_local": [
+        "moleculenet_bbbp",
+        "moleculenet_freesolv",
+        "moleculenet_tox21"
+      ]
+    },
+    "new_local_025__vs__release_groups": {
+      "global_ratio": {
+        "mean_paired_change": -0.012347107034659332,
+        "dataset_bootstrap_ci95": [
+          -0.019174841717984992,
+          -0.0062228083603971624
+        ]
+      },
+      "local_ramp_04": {
+        "mean_paired_change": 0.015372424125096455,
+        "dataset_bootstrap_ci95": [
+          0.006253659034250759,
+          0.024931924487734305
+        ]
+      },
+      "maccs_mean_nearest_training": {
+        "mean_paired_change": 0.0019373941697891268,
+        "dataset_bootstrap_ci95": [
+          -0.008892671165967462,
+          0.012873989991780133
+        ]
+      },
+      "test_fraction_above_06": {
+        "mean_paired_change": 0.015495065799938687,
+        "dataset_bootstrap_ci95": [
+          0.004777466542172425,
+          0.02681077869929685
+        ]
+      },
+      "target_wasserstein": {
+        "mean_paired_change": -0.055629487938497806,
+        "dataset_bootstrap_ci95": [
+          -0.23250148861946288,
+          0.054727880015373154
+        ]
+      },
+      "dominates_on_global_and_local": [
+        "moleculenet_freesolv"
+      ]
+    },
+    "new_local_025__vs__release_combined": {
+      "global_ratio": {
+        "mean_paired_change": -0.02374237205211097,
+        "dataset_bootstrap_ci95": [
+          -0.033203848581883605,
+          -0.01406959942681818
+        ]
+      },
+      "local_ramp_04": {
+        "mean_paired_change": 0.03238539010772405,
+        "dataset_bootstrap_ci95": [
+          0.012287085960109854,
+          0.0564339877090601
+        ]
+      },
+      "maccs_mean_nearest_training": {
+        "mean_paired_change": -0.0030904620360474957,
+        "dataset_bootstrap_ci95": [
+          -0.020583212943386553,
+          0.014667964477103113
+        ]
+      },
+      "test_fraction_above_06": {
+        "mean_paired_change": 0.024964474064252187,
+        "dataset_bootstrap_ci95": [
+          0.004777466542172425,
+          0.052615718840884416
+        ]
+      },
+      "target_wasserstein": {
+        "mean_paired_change": 0.12125281638351919,
+        "dataset_bootstrap_ci95": [
+          0.032885884189237116,
+          0.24647412657978307
+        ]
+      },
+      "dominates_on_global_and_local": [
+        "moleculenet_freesolv"
+      ]
+    },
+    "new_local_1__vs__release_plain": {
+      "global_ratio": {
+        "mean_paired_change": 0.018597438221968382,
+        "dataset_bootstrap_ci95": [
+          0.013264772575596,
+          0.025038331547892017
+        ]
+      },
+      "local_ramp_04": {
+        "mean_paired_change": -0.0595259798990903,
+        "dataset_bootstrap_ci95": [
+          -0.10084028921426508,
+          -0.02239295639761052
+        ]
+      },
+      "maccs_mean_nearest_training": {
+        "mean_paired_change": -0.028144506428604776,
+        "dataset_bootstrap_ci95": [
+          -0.03832191046203994,
+          -0.01722359789692009
+        ]
+      },
+      "test_fraction_above_06": {
+        "mean_paired_change": -0.08605826129135617,
+        "dataset_bootstrap_ci95": [
+          -0.1429535888668308,
+          -0.032062474694892706
+        ]
+      },
+      "target_wasserstein": {
+        "mean_paired_change": -0.035398802719219795,
+        "dataset_bootstrap_ci95": [
+          -0.08738177252230246,
+          0.0088920665568164
+        ]
+      },
+      "dominates_on_global_and_local": []
+    },
+    "new_local_1__vs__release_power3": {
+      "global_ratio": {
+        "mean_paired_change": 0.0035061395549810803,
+        "dataset_bootstrap_ci95": [
+          -0.004301707117039574,
+          0.010963580715463809
+        ]
+      },
+      "local_ramp_04": {
+        "mean_paired_change": -0.02934507647199785,
+        "dataset_bootstrap_ci95": [
+          -0.058199582068046964,
+          -0.006166108510043535
+        ]
+      },
+      "maccs_mean_nearest_training": {
+        "mean_paired_change": -0.020296472819398188,
+        "dataset_bootstrap_ci95": [
+          -0.040978816266133165,
+          -0.000683699431154113
+        ]
+      },
+      "test_fraction_above_06": {
+        "mean_paired_change": -0.048893217890189834,
+        "dataset_bootstrap_ci95": [
+          -0.09824446046774597,
+          -0.009692837653923038
+        ]
+      },
+      "target_wasserstein": {
+        "mean_paired_change": 0.049805734547838154,
+        "dataset_bootstrap_ci95": [
+          -0.04590013060327863,
+          0.17769795848688522
+        ]
+      },
+      "dominates_on_global_and_local": [
+        "moleculenet_esol",
+        "moleculenet_freesolv"
+      ]
+    },
+    "new_local_1__vs__release_groups": {
+      "global_ratio": {
+        "mean_paired_change": 0.0010793082831596912,
+        "dataset_bootstrap_ci95": [
+          -0.003767717018450097,
+          0.006065374812784695
+        ]
+      },
+      "local_ramp_04": {
+        "mean_paired_change": -0.0017961822559832686,
+        "dataset_bootstrap_ci95": [
+          -0.01896268940924303,
+          0.010907747928586092
+        ]
+      },
+      "maccs_mean_nearest_training": {
+        "mean_paired_change": -0.0058232268068894215,
+        "dataset_bootstrap_ci95": [
+          -0.024743517010062704,
+          0.013097063396283859
+        ]
+      },
+      "test_fraction_above_06": {
+        "mean_paired_change": 0.0026915785989988666,
+        "dataset_bootstrap_ci95": [
+          0.0004262574595055412,
+          0.0056349192906839304
+        ]
+      },
+      "target_wasserstein": {
+        "mean_paired_change": -0.07316543875404581,
+        "dataset_bootstrap_ci95": [
+          -0.21770297188556365,
+          0.028489438666993116
+        ]
+      },
+      "dominates_on_global_and_local": []
+    },
+    "new_local_1__vs__release_combined": {
+      "global_ratio": {
+        "mean_paired_change": -0.010315956734291948,
+        "dataset_bootstrap_ci95": [
+          -0.015606829977631792,
+          -0.005047259031744328
+        ]
+      },
+      "local_ramp_04": {
+        "mean_paired_change": 0.015216783726644334,
+        "dataset_bootstrap_ci95": [
+          0.008791445289747016,
+          0.023147868709870817
+        ]
+      },
+      "maccs_mean_nearest_training": {
+        "mean_paired_change": -0.010851083012726045,
+        "dataset_bootstrap_ci95": [
+          -0.02756356529978952,
+          0.00442998863362648
+        ]
+      },
+      "test_fraction_above_06": {
+        "mean_paired_change": 0.012160986863312366,
+        "dataset_bootstrap_ci95": [
+          0.0007936507936507938,
+          0.03249237884999475
+        ]
+      },
+      "target_wasserstein": {
+        "mean_paired_change": 0.10371686556797118,
+        "dataset_bootstrap_ci95": [
+          0.04609061188741772,
+          0.17116099389081563
+        ]
+      },
+      "dominates_on_global_and_local": []
+    },
+    "new_combined_strict__vs__release_plain": {
+      "global_ratio": {
+        "mean_paired_change": 0.029437163242929262,
+        "dataset_bootstrap_ci95": [
+          0.019821625302634968,
+          0.04002202836335669
+        ]
+      },
+      "local_ramp_04": {
+        "mean_paired_change": -0.07030004607375424,
+        "dataset_bootstrap_ci95": [
+          -0.11072007688534591,
+          -0.03252335444924693
+        ]
+      },
+      "maccs_mean_nearest_training": {
+        "mean_paired_change": -0.01778232630313829,
+        "dataset_bootstrap_ci95": [
+          -0.04174607278625333,
+          0.007649004391305188
+        ]
+      },
+      "test_fraction_above_06": {
+        "mean_paired_change": -0.08718172056084955,
+        "dataset_bootstrap_ci95": [
+          -0.14525365701836293,
+          -0.03312811834365656
+        ]
+      },
+      "target_wasserstein": {
+        "mean_paired_change": -0.06326325505078863,
+        "dataset_bootstrap_ci95": [
+          -0.14740406579221546,
+          0.017975652597623765
+        ]
+      },
+      "dominates_on_global_and_local": []
+    },
+    "new_combined_strict__vs__release_power3": {
+      "global_ratio": {
+        "mean_paired_change": 0.01434586457594196,
+        "dataset_bootstrap_ci95": [
+          0.004869595385818562,
+          0.024446501136835913
+        ]
+      },
+      "local_ramp_04": {
+        "mean_paired_change": -0.0401191426466618,
+        "dataset_bootstrap_ci95": [
+          -0.07221472109041457,
+          -0.014067615798488238
+        ]
+      },
+      "maccs_mean_nearest_training": {
+        "mean_paired_change": -0.009934292693931701,
+        "dataset_bootstrap_ci95": [
+          -0.023135020619229413,
+          0.003799429973874391
+        ]
+      },
+      "test_fraction_above_06": {
+        "mean_paired_change": -0.05001667715968323,
+        "dataset_bootstrap_ci95": [
+          -0.10188079293108376,
+          -0.008163454745498453
+        ]
+      },
+      "target_wasserstein": {
+        "mean_paired_change": 0.02194128221626931,
+        "dataset_bootstrap_ci95": [
+          -0.060294432546069865,
+          0.12471917805414216
+        ]
+      },
+      "dominates_on_global_and_local": [
+        "moleculenet_freesolv"
+      ]
+    },
+    "new_combined_strict__vs__release_groups": {
+      "global_ratio": {
+        "mean_paired_change": 0.011919033304120571,
+        "dataset_bootstrap_ci95": [
+          0.003543076121538082,
+          0.02119758632051304
+        ]
+      },
+      "local_ramp_04": {
+        "mean_paired_change": -0.01257024843064722,
+        "dataset_bootstrap_ci95": [
+          -0.028769807895105637,
+          -0.00018510745216251894
+        ]
+      },
+      "maccs_mean_nearest_training": {
+        "mean_paired_change": 0.004538953318577066,
+        "dataset_bootstrap_ci95": [
+          -0.021459130494153267,
+          0.0313398711543833
+        ]
+      },
+      "test_fraction_above_06": {
+        "mean_paired_change": 0.0015681193295054834,
+        "dataset_bootstrap_ci95": [
+          -0.0019181585677749361,
+          0.006622516556291386
+        ]
+      },
+      "target_wasserstein": {
+        "mean_paired_change": -0.10102989108561462,
+        "dataset_bootstrap_ci95": [
+          -0.21176182228574003,
+          -0.001601276950273597
+        ]
+      },
+      "dominates_on_global_and_local": []
+    },
+    "new_combined_strict__vs__release_combined": {
+      "global_ratio": {
+        "mean_paired_change": 0.0005237682866689325,
+        "dataset_bootstrap_ci95": [
+          0.0,
+          0.001486339631667652
+        ]
+      },
+      "local_ramp_04": {
+        "mean_paired_change": 0.004442717551980383,
+        "dataset_bootstrap_ci95": [
+          0.0,
+          0.01332815265594115
+        ]
+      },
+      "maccs_mean_nearest_training": {
+        "mean_paired_change": -0.0004889028872595569,
+        "dataset_bootstrap_ci95": [
+          -0.0012896858053617806,
+          0.0
+        ]
+      },
+      "test_fraction_above_06": {
+        "mean_paired_change": 0.011037527593818984,
+        "dataset_bootstrap_ci95": [
+          0.0,
+          0.03311258278145695
+        ]
+      },
+      "target_wasserstein": {
+        "mean_paired_change": 0.07585241323640234,
+        "dataset_bootstrap_ci95": [
+          0.0,
+          0.18597981812183248
+        ]
+      },
+      "dominates_on_global_and_local": [
+        "moleculenet_bbbp",
+        "moleculenet_esol",
+        "moleculenet_lipophilicity",
+        "moleculenet_tox21"
+      ]
+    }
+  },
+  "adaptive": {
+    "new_auto": {
+      "selection_pass": 15,
+      "independent_audit_pass": 15,
+      "total": 18,
+      "landmark_counts": [
+        256,
+        256,
+        256,
+        512,
+        512,
+        512,
+        128,
+        128,
+        128,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512
+      ],
+      "ranks": [
+        256,
+        256,
+        256,
+        512,
+        512,
+        512,
+        128,
+        128,
+        128,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512
+      ]
+    },
+    "new_auto_combined": {
+      "selection_pass": 3,
+      "independent_audit_pass": 2,
+      "total": 18,
+      "landmark_counts": [
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512
+      ],
+      "ranks": [
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512
+      ]
+    },
+    "new_auto_sampled": {
+      "selection_pass": 15,
+      "independent_audit_pass": 15,
+      "total": 18,
+      "landmark_counts": [
+        256,
+        256,
+        256,
+        512,
+        512,
+        512,
+        128,
+        128,
+        128,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512
+      ],
+      "ranks": [
+        256,
+        256,
+        256,
+        512,
+        512,
+        512,
+        128,
+        128,
+        128,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512,
+        512
+      ]
+    }
+  },
+  "interpretation": "Six development datasets, descriptive exploratory comparisons. Bootstrap resamples datasets, not seeds as independent datasets. No chronological or predictive-realism claim."
+}

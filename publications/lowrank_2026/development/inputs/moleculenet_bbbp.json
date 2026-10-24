@@ -1,0 +1,11 @@
+{
+  "dataset": "moleculenet_bbbp",
+  "n": 2039,
+  "task": "classification",
+  "feature_sha256": "f7fd79df31fb7d557667751c8b637f63953df2bc9d0c3e2aa1cd464b60acbb40",
+  "ids_sha256": "01669fff3d917cdc131449e2b2b097934d652b53d03dc822d11190dbfe712bf8",
+  "raw_csv_sha256": "d07a38487aeac5cee5508413e468043ef3097451d2a112701c2d60be9ec6b662",
+  "preparation_seconds": 6.54431833140552,
+  "feature_recipe": "ECFP-1024 radius 2; MACCS-167 used only for independent evaluation",
+  "rdkit_version": "2026.03.5"
+}

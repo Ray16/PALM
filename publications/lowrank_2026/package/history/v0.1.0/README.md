@@ -1,0 +1,1 @@
+These manifests describe the frozen v0.1.0 publication export at commit 9f7c34e1ded78b25b8f48cbb10dfb82f1d696cd3. They do not assert that development code is executable-equivalent to that export. The development benchmark retains independent current source hashes.
