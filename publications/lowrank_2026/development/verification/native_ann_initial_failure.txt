@@ -1,0 +1,12 @@
+moleculenet_bbbp tiled 0.163 tiled 1.0
+/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/numba/np/ufunc/parallel.py:373: NumbaWarning: The TBB threading layer requires TBB version 2021 update 6 or later i.e., TBB_INTERFACE_VERSION >= 12060. Found TBB_INTERFACE_VERSION = 12050. The TBB threading layer is disabled.
+  warnings.warn(problem)
+moleculenet_bbbp nndescent 30.839 nndescent 0.99169921875
+moleculenet_bbbp auto 0.116 tiled 1.0
+moleculenet_tox21 tiled 1.221 tiled 1.0
+/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/pynndescent/pynndescent_.py:1241: UserWarning: Failed to correctly find n_neighbors for some samples. Results may be less than ideal. Try re-running with different parameters.
+  warn(
+Traceback (most recent call last):
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting_lowrank_next/publications/lowrank_2026/development/neighbour_check.py", line 27, in <module>
+    raise RuntimeError("invalid native neighbour output")
+RuntimeError: invalid native neighbour output

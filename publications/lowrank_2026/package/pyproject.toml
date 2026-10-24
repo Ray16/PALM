@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lowrank-split"
-version = "0.1.0"
+version = "0.2.0.dev1"
 description = "Capacity-controlled similarity splitting via low-rank kernel factors"
 readme = "README.md"
 license = "MIT"
@@ -13,7 +13,7 @@ authors = [{ name = "Ray Zhu" }]
 keywords = ["dataset-splitting", "data-leakage", "train-test-split", "nystrom", "cheminformatics", "materials"]
 dependencies = [
     "numpy<2",
-    "scipy",
+    "scipy>=1.9",
     "scikit-learn",
     "pandas",
     # Required: the Nyström factor, objective, Lloyd/FM optimizer and diagnostics

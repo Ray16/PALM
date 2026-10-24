@@ -1,0 +1,11 @@
+{
+  "dataset": "moleculenet_esol",
+  "n": 1128,
+  "task": "regression",
+  "feature_sha256": "44f58c17cce56573438f28a3a7941d43d23f6f87a680f6563b7d6175d4cf6b43",
+  "ids_sha256": "f4df78f7d8908a77ce4a66efde07777e91804b3c0f784857b15a37245eb52dd6",
+  "raw_csv_sha256": "8c06a76f0c6487d29ab0f903e6a7a7139f189ab3c1178f159c8be8964602f189",
+  "preparation_seconds": 1.9757722727954388,
+  "feature_recipe": "ECFP-1024 radius 2; MACCS-167 used only for independent evaluation",
+  "rdkit_version": "2026.03.5"
+}

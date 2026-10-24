@@ -1,0 +1,15 @@
+{
+  "python": "3.12.12",
+  "host": "lambda2",
+  "platform": "Linux-5.15.0-177-generic-x86_64-with-glibc2.35",
+  "versions": {
+    "numpy": "1.26.4",
+    "scipy": "1.17.0",
+    "torch": "2.8.0",
+    "rdkit": "2026.3.5",
+    "pynndescent": "0.6.0",
+    "numba": "0.63.1",
+    "pytest": "9.1.1"
+  },
+  "compute": "CPU; CUDA hidden; two threads per worker; three benchmark workers"
+}
