@@ -124,7 +124,7 @@ def interpolate_to_random(labels, alpha, seed=0):
 
 
 def balanced_lloyd(B, splits, epsilon=0.05, n_iter=25, init_labels=None, seed=0,
-                   balance_slack=0.0):
+                   balance_slack=0.0, local=None):
     """Balanced-Lloyd minimization of the low-rank leakage in B-space.
 
     The legacy epsilon argument is retained for call compatibility and
@@ -145,6 +145,9 @@ def balanced_lloyd(B, splits, epsilon=0.05, n_iter=25, init_labels=None, seed=0,
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     Bt = torch.as_tensor(B, dtype=torch.float32, device=device)
+    if local is not None:
+        from .local import SparseTerm
+        local = SparseTerm(local, device)
     n, r = Bt.shape
     k = len(splits)
     sizes = target_sizes(n, splits)
@@ -165,6 +168,8 @@ def balanced_lloyd(B, splits, epsilon=0.05, n_iter=25, init_labels=None, seed=0,
         P = torch.zeros(k, r, device=device, dtype=Bt.dtype)
         P.index_add_(0, lab, Bt)
         scores = Bt @ P.T
+        if local is not None:
+            scores += local.block_mass(lab, k)
         scores[torch.arange(n, device=device), lab] -= self_sim   # exclude self
         new_lab = (corridor_assign(scores, sizes, caps, floors) if use_corridor
                    else balanced_assign(scores, sizes))
@@ -174,14 +179,18 @@ def balanced_lloyd(B, splits, epsilon=0.05, n_iter=25, init_labels=None, seed=0,
         new_P.index_add_(0, new_lab, Bt)
         # Total factor sum is invariant, so leakage decreases exactly when
         # sum_c ||P_c||^2 increases. Accumulate these small norms in float64.
-        if (new_P.double().square().sum() < P.double().square().sum()).item():
+        new_quality, old_quality = new_P.double().square().sum(), P.double().square().sum()
+        if local is not None:
+            new_quality -= 2 * local.cross(new_lab)
+            old_quality -= 2 * local.cross(lab)
+        if (new_quality < old_quality).item():
             break
         lab = new_lab
     return lab.cpu().numpy()
 
 
 def fm_polish(B, labels, splits: Sequence[float], epsilon: float = 0.05,
-              max_moves: Optional[int] = None, tol: float = 1e-6) -> Tuple[np.ndarray, int]:
+              max_moves: Optional[int] = None, tol: float = 1e-6, local=None) -> Tuple[np.ndarray, int]:
     """Monotone FM polish on the low-rank factor-space leakage. Returns ``(labels, n_moves)``.
 
     Single-entity moves inside the ``epsilon`` corridor. When the corridor is
@@ -201,9 +210,14 @@ def fm_polish(B, labels, splits: Sequence[float], epsilon: float = 0.05,
     P = torch.zeros(k, Bt.shape[1], device=device, dtype=Bt.dtype)
     P.index_add_(0, lab, Bt)
     S = Bt @ P.T
+    if local is not None:
+        from .local import SparseTerm
+        local = SparseTerm(local, device)
+        S += local.block_mass(lab, k)
 
     def sim_col(v):
-        return Bt @ Bt[v]
+        out = Bt @ Bt[v]
+        return out + local.column(v) if local is not None else out
 
     caps, floors = capacity_corridor(n, splits, epsilon)
     if np.array_equal(caps, floors):

@@ -9,6 +9,83 @@ from __future__ import annotations
 import numpy as np
 
 
+def audited_neighbours(X, metric, k=32, *, backend="auto", candidates=64,
+                       seed=0, n_jobs=1, audit_queries=32, minimum_recall=.98,
+                       strong_threshold=.4, row_block=256, reference_block=8192):
+    """Choose neighbours with explicit measured costs and sampled ANN recall.
+
+    Auto keeps exact search for <=4096 rows. Above that, a tiled exact-query pilot
+    projects full search cost. ANN is considered only for binary Tanimoto when
+    that projection exceeds one second. Its actual full construction time and
+    sampled index recall must beat the projected exact cost and recall floor.
+    A rejected ANN still counts toward total construction time. Cost projection
+    is a heuristic, and sampled recall is not an all-row recall guarantee.
+    """
+    import time
+    from .diagnostics import positive_integer
+    positive_integer("audit_queries", audit_queries)
+    positive_integer("k", k)
+    positive_integer("n_jobs", n_jobs)
+    if backend not in ("auto", "tiled", "nndescent"):
+        raise ValueError("backend must be auto, tiled or nndescent")
+    if not np.isfinite(minimum_recall) or not 0 <= minimum_recall <= 1:
+        raise ValueError("minimum_recall must be finite and in [0, 1]")
+    X = np.asarray(X)
+    started = time.perf_counter()
+    info = dict(requested_backend=backend, approximate=False,
+                index_recall=None, strong_recall=None, audit_queries=0,
+                projected_exact_seconds=None, ann_seconds=None,
+                selection_policy="conservative exact cutoff; measured pilot; ANN recall/cost gate")
+
+    def exact(reason):
+        result = tiled_neighbours(X, metric, k, row_block=row_block, reference_block=reference_block)
+        info.update(selected_backend="tiled", reason=reason, index_recall=1., strong_recall=1.,
+                    total_seconds=time.perf_counter() - started)
+        return result, info
+
+    if backend == "tiled" or (backend == "auto" and len(X) <= 4096):
+        return exact("explicit_exact" if backend == "tiled" else "small_dataset_exact")
+    compatible = metric == "tanimoto" and np.all((X == 0) | (X == 1))
+    if not compatible:
+        if backend == "nndescent":
+            raise ValueError("NN-Descent requires binary Tanimoto features")
+        return exact("ANN_not_compatible_with_representation")
+    queries = np.sort(np.random.default_rng(seed).choice(len(X), min(audit_queries, len(X)), replace=False))
+    start = time.perf_counter()
+    exact_i, exact_s = tiled_neighbours(X, metric, k, row_block=row_block,
+        reference_block=reference_block, queries=queries)
+    pilot_seconds = time.perf_counter() - start
+    projected = pilot_seconds * len(X) / len(queries)
+    info.update(audit_queries=len(queries), projected_exact_seconds=projected,
+                pilot_seconds=pilot_seconds, audit_seed=int(seed))
+    if backend == "auto" and projected <= 1.:
+        return exact("projected_exact_cost_below_one_second")
+    start = time.perf_counter()
+    try:
+        approximate = approximate_tanimoto_neighbours(X, k, candidates=candidates, seed=seed, n_jobs=n_jobs)
+    except ImportError:
+        if backend == "nndescent":
+            raise
+        return exact("optional_ANN_dependency_unavailable")
+    ann_seconds = time.perf_counter() - start
+    ai, av = approximate[0][queries], approximate[1][queries]
+    covered = np.array([[j in set(ai[r]) for j in exact_i[r]] for r in range(len(queries))])
+    strong = exact_s >= strong_threshold
+    recall = float(covered.mean()) if covered.size else 1.
+    strong_recall = float(covered[strong].mean()) if strong.any() else None
+    audit = dict(index_recall=recall, strong_recall=strong_recall,
+                 score_recall=float(np.isclose(av, exact_s, atol=1e-6).mean()) if av.size else 1.,
+                 ann_seconds=ann_seconds, recall_scope="sampled exact top-k queries; not full graph")
+    info["ann_audit"] = audit.copy()
+    if backend == "auto" and (recall < minimum_recall or
+            (strong_recall is not None and strong_recall < minimum_recall) or ann_seconds >= projected):
+        return exact("ANN_failed_sampled_recall_or_projected_cost_gate")
+    info.update(audit, selected_backend="nndescent", approximate=True,
+                reason="explicit_ANN" if backend == "nndescent" else "ANN_passed_sampled_recall_and_projected_cost",
+                total_seconds=time.perf_counter() - started)
+    return approximate, info
+
+
 def tiled_neighbours(X, metric, k=32, *, row_block=256, reference_block=8192,
                      device=None, queries=None):
     """Exact neighbours with bounded two-dimensional similarity tiles.

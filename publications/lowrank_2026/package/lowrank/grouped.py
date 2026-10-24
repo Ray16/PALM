@@ -195,7 +195,7 @@ class _State:
         self.lab[u] = b
 
 
-def _repair(B, G, w, lab, k, caps, floors, members):
+def _repair(B, G, w, lab, k, caps, floors, members, allow_break=True):
     """Restore the corridor: move the best-fitting item that fixes a violation; if no whole
     group fits, break the smallest multi-point group of the over-full block into singletons.
     Moves update the factor-space state incrementally (exact); only a break rebuilds it.
@@ -229,6 +229,8 @@ def _repair(B, G, w, lab, k, caps, floors, members):
         if best is not None:
             st.move(best[1], best[2])
             continue
+        if not allow_break:
+            break
         # No directly feasible whole-group move reduces the violation. Break a
         # smallest group in an overfull block (or a donor to an underfull one).
         sources = over if len(over) else donors
@@ -245,6 +247,59 @@ def _repair(B, G, w, lab, k, caps, floors, members):
         st = _State(G, w, lab, k)
         broken += 1
     return st.G, st.w, st.lab, members, broken
+
+
+class GroupInfeasibleError(ValueError):
+    """Whole-group retention and the specified capacities are proven incompatible."""
+
+
+class GroupFeasibilityUnresolved(RuntimeError):
+    """No feasible assignment found before the solver limit; not an infeasibility proof."""
+
+
+def _whole_group_assignment(weights, caps, floors, preferred, time_limit=5.):
+    """Find a feasible whole-group packing using a sparse binary MILP.
+
+    This solves capacity feasibility, not the quadratic partition objective.
+    Integer incumbents are checked independently before use, including on timeout.
+    """
+    import warnings
+    from scipy.optimize import Bounds, LinearConstraint, milp
+    from scipy.sparse import coo_matrix
+    w = np.asarray(weights, dtype=np.int64)
+    m, k = len(w), len(caps)
+    if w.max() > max(caps):
+        raise GroupInfeasibleError("a supplied group exceeds every fold capacity")
+    cols = np.arange(m * k)
+    rows = np.concatenate([np.repeat(np.arange(m), k),
+                           m + np.tile(np.arange(k), m)])
+    values = np.concatenate([np.ones(m * k), np.repeat(w, k)])
+    matrix = coo_matrix((values, (rows, np.tile(cols, 2))), shape=(m + k, m * k)).tocsc()
+    objective = np.ones((m, k))
+    objective[np.arange(m), preferred] = 0
+    # HiGHS exposes its thread cap through scipy's forwarded native options.
+    # Keep this fallback single threaded even when called on a large shared host.
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", message="Unrecognized options detected.*threads.*",
+                                category=RuntimeWarning)
+        result = milp(objective.ravel(), integrality=np.ones(m * k),
+                      bounds=Bounds(0., 1.),
+                      constraints=LinearConstraint(matrix, np.r_[np.ones(m), floors],
+                                                   np.r_[np.ones(m), caps]),
+                      options={"time_limit": time_limit, "threads": 1})
+    if result.x is not None:
+        values = result.x.reshape(m, k)
+        lab = values.argmax(1)
+        counts = np.bincount(lab, weights=w, minlength=k)
+        if (np.allclose(values.sum(1), 1, atol=1e-6) and
+                np.allclose(values, np.eye(k)[lab], atol=1e-6) and
+                ((counts >= floors) & (counts <= caps)).all()):
+            return lab
+    if result.status == 2:
+        raise GroupInfeasibleError("whole-group packing is infeasible at the requested fold capacities; "
+                                   "allow a size corridor or choose count_first explicitly")
+    raise GroupFeasibilityUnresolved(f"whole-group feasibility unresolved (solver status {result.status}): "
+                                     f"{result.message}")
 
 
 def _fm_groups(st: _State, caps, floors, tol=1e-6, max_moves=None, n_cand=8):
@@ -298,7 +353,8 @@ def _fm_groups(st: _State, caps, floors, tol=1e-6, max_moves=None, n_cand=8):
 
 
 def grouped_split(B, gid, splits: Sequence[float], epsilon: float, n_restarts: int = 4,
-                  n_iter: int = 25, seed: int = 0, fm: bool = True, init_labels=None):
+                  n_iter: int = 25, seed: int = 0, fm: bool = True, init_labels=None,
+                  group_policy="count_first", feasibility_seconds=5.):
     """Minimize factor-space leakage with groups and explicit capacity repair.
 
     Returns ``(labels (n,), info dict)``. ``epsilon`` is the two-sided size corridor
@@ -306,7 +362,15 @@ def grouped_split(B, gid, splits: Sequence[float], epsilon: float, n_restarts: i
     the unconstrained point-level solution) adds a warm-started restart: each group
     takes its members' majority label, then repair + Lloyd + FM as usual.
     """
+    if group_policy not in ("count_first", "strict"):
+        raise ValueError("group_policy must be count_first or strict")
+    if not np.isfinite(feasibility_seconds) or feasibility_seconds <= 0:
+        raise ValueError("feasibility_seconds must be finite and positive")
     B = np.asarray(B, dtype=np.float64)
+    gid = np.asarray(gid)
+    if gid.shape != (len(B),) or not np.issubdtype(gid.dtype, np.integer):
+        raise ValueError("one integer group id is required per factor row")
+    _, gid = np.unique(gid, return_inverse=True)
     n, k = B.shape[0], len(splits)
     m = int(gid.max()) + 1
     members = [[] for _ in range(m)]
@@ -319,6 +383,9 @@ def grouped_split(B, gid, splits: Sequence[float], epsilon: float, n_restarts: i
     caps, floors = caps.astype(np.int64), floors.astype(np.int64)
 
     best = None
+    feasibility_solves = 0
+    rejected_capacity_proposals = 0
+    strict = group_policy == "strict"
     starts = ([None] if init_labels is not None else []) + list(range(n_restarts))
     for r in starts:
         G, w, mem = G0.copy(), w0.copy(), list(members)
@@ -329,14 +396,28 @@ def grouped_split(B, gid, splits: Sequence[float], epsilon: float, n_restarts: i
         else:
             rng = np.random.default_rng(seed + r)
             lab = _weighted_peel(rng.random((m, k)), w, caps, floors)
-        G, w, lab, mem, broken = _repair(B, G, w, lab, k, caps, floors, mem)
+        G, w, lab, mem, broken = _repair(B, G, w, lab, k, caps, floors, mem, allow_break=not strict)
+        sizes = np.bincount(lab, weights=w, minlength=k)
+        if strict and not ((sizes >= floors) & (sizes <= caps)).all():
+            if best is not None:
+                lab = best[1].copy()
+            else:
+                lab = _whole_group_assignment(w, caps, floors, lab, time_limit=feasibility_seconds)
+                feasibility_solves += 1
         for _ in range(n_iter):                           # weighted balanced Lloyd
             st = _State(G, w, lab, k)
             old_G, old_w, old_mem, old_broken = G, w, mem, broken
             sc = st.M.copy()
             sc[np.arange(len(lab)), lab] -= st.self_sim
             new = _weighted_peel(sc, w, caps, floors)
-            G, w, new, mem, b2 = _repair(B, G, w, new, k, caps, floors, mem)
+            G, w, new, mem, b2 = _repair(B, G, w, new, k, caps, floors, mem, allow_break=not strict)
+            sizes = np.bincount(new, weights=w, minlength=k)
+            if strict and not ((sizes >= floors) & (sizes <= caps)).all():
+                # A valid incumbent already exists. Reject an invalid heuristic
+                # proposal rather than solving another packing MILP every round.
+                rejected_capacity_proposals += 1
+                G, w, mem, broken = old_G, old_w, old_mem, old_broken
+                break
             if _State(G, w, new, k).leakage() > st.leakage():
                 G, w, mem, broken = old_G, old_w, old_mem, old_broken
                 break
@@ -357,6 +438,15 @@ def grouped_split(B, gid, splits: Sequence[float], epsilon: float, n_restarts: i
     corridor_ok = bool(((sz <= caps) & (sz >= floors)).all())
     if not corridor_ok:
         raise RuntimeError("group balance repair failed to meet the requested size corridor")
+    minimum, maximum = np.full(m, k), np.full(m, -1)
+    np.minimum.at(minimum, gid, labels)
+    np.maximum.at(maximum, gid, labels)
+    intact = bool(np.array_equal(minimum, maximum))
+    if strict and not intact:
+        raise RuntimeError("strict group-preservation postcondition failed")
     return labels, dict(factor_leakage=obj, n_groups=m, largest_group=int(w0.max()),
                         grouped_points=int((w0[gid] > 1).sum()), broken_groups=int(broken),
-                        fm_moves=int(moves), warm_start_won=bool(warm), corridor_ok=corridor_ok)
+                        fm_moves=int(moves), warm_start_won=bool(warm), corridor_ok=corridor_ok,
+                        group_policy=group_policy, all_groups_preserved=bool(intact),
+                        feasibility_solves=feasibility_solves,
+                        rejected_capacity_proposals=rejected_capacity_proposals)
