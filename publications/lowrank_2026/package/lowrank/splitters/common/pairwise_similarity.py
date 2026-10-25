@@ -35,7 +35,12 @@ def validate_features(X, metric):
 
 
 def normalize_cosine(X):
-    return _get_torch().nn.functional.normalize(X, dim=1, eps=COSINE_EPS)
+    torch = _get_torch()
+    # Accumulate the norm in float64 so large finite float32 inputs do not
+    # overflow to an infinite norm and silently become zero vectors.
+    work = X.double()
+    norm = torch.linalg.vector_norm(work, dim=1, keepdim=True).clamp_min(COSINE_EPS)
+    return (work / norm).to(X.dtype)
 
 
 def aligned_similarity(A, B, metric):
@@ -98,5 +103,13 @@ def standardize_for_metric(Xt, metric: str):
         # Keep the historical sample scaling for n>1, while a single featured
         # record (possible on an n-D axis) must not produce NaN descriptors.
         correction = 1 if Xt.shape[0] > 1 else 0
-        return (Xt - Xt.mean(0)) / (Xt.std(0, correction=correction) + 1e-8)
+        # Scale before computing statistics to keep squared deviations finite.
+        # eps/scale preserves the original (std + eps) regularization in input units.
+        tiny = _get_torch().finfo(Xt.dtype).tiny
+        scale = Xt.abs().amax(0).clamp_min(tiny)
+        work = Xt / scale
+        denominator = (work.std(0, correction=correction) + 1e-8 / scale).clamp_min(
+            tiny
+        )
+        return (work - work.mean(0)) / denominator
     return Xt

@@ -88,7 +88,7 @@ def _kmeanspp_landmarks(Xt, n_landmarks, metric, seed):
 
 def _array_plan(n, d, r, block_size, memory_mb):
     # Conservative controlled-array model, NOT a hard process-RSS limit.
-    fixed = 8 * n * d + 4 * n * r + 64 * r * r + 16 * r * d + 64 * n
+    fixed = 16 * n * d + 4 * n * r + 64 * r * r + 16 * r * d + 64 * n
     per_row = 32 * r + 48 * d
     block = min(n, block_size)
     if memory_mb is not None:

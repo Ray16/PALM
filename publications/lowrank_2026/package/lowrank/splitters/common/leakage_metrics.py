@@ -350,10 +350,11 @@ def nn_leakage(
     """
     import torch
 
-    Xt = torch.nan_to_num(
-        torch.as_tensor(np.asarray(X), dtype=torch.float32, device=device)
-    )
-    ref = standardize_for_metric(Xt, metric)
+    from lowrank.diagnostics import prepare_reference, positive_integer
+
+    for name, value in (("k", k), ("block", block), ("n_perm", n_perm)):
+        positive_integer(name, value)
+    ref = prepare_reference(X, metric, device)
     labels = np.asarray(labels).astype(str)
     names, counts = np.unique(labels, return_counts=True)
     reference = (
@@ -364,13 +365,16 @@ def nn_leakage(
             "nn_leakage needs at least one held-out split besides the reference"
         )
 
-    if ramp is None:
+    estimated_ramp = ramp is None
+    if estimated_ramp:
         ramp = (
             NNL_TANIMOTO_RAMP
             if metric == "tanimoto"
             else _pair_sim_quantiles(ref, metric, NNL_QUANTILE_RAMP, seed=seed)
         )
     lo, hi = float(ramp[0]), float(ramp[1])
+    if not np.isfinite([lo, hi]).all() or hi < lo or (not estimated_ramp and hi == lo):
+        raise ValueError("ramp must have finite increasing bounds")
 
     def _score(lab):
         is_ref = lab == reference
@@ -391,7 +395,11 @@ def nn_leakage(
     held = labels[q_idx]
     out = {
         "nnl": nnl,
-        "nnl_rel": nnl / base if base > 0 else float("nan"),
+        "nnl_rel": nnl / base if base > 0 else None,
+        "relative_status": "estimated"
+        if base > 0
+        else "undefined_zero_reference_baseline",
+        "ramp_status": "degenerate_quantiles" if hi == lo else "defined",
         "nnl_random": base,
         "per_split": {
             str(n): float(h[held == n].mean()) for n in names if n != reference

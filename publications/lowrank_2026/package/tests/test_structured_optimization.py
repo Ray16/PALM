@@ -15,16 +15,20 @@ from lowrank.splitters.common.pairwise_similarity import pairwise_similarity
 from lowrank.diagnostics import prepare_reference
 
 
-def dense_cost(B, labels, W):
+def dense_cost(B, labels, W, R=None):
     S = np.asarray(B, dtype=np.float64) @ np.asarray(B, dtype=np.float64).T
-    return 0.5 * float(np.sum(S * W[labels[:, None], labels[None, :]]))
+    value = 0.5 * float(np.sum(S * W[labels[:, None], labels[None, :]]))
+    if R is not None:
+        value += 0.5 * float(R.toarray()[labels[:, None] != labels[None, :]].sum())
+    return value
 
 
 @pytest.mark.parametrize("as_sparse", [False, True])
 @pytest.mark.parametrize("weighted", [False, True])
 @pytest.mark.parametrize("epsilon", [0.0, 0.2])
+@pytest.mark.parametrize("with_local", [False, True])
 def test_factor_scores_and_optimizer_match_dense_weighted_reference(
-    as_sparse, weighted, epsilon
+    as_sparse, weighted, epsilon, with_local
 ):
     rng = np.random.default_rng(9)
     B = rng.random((30, 7)).astype(np.float32)
@@ -38,18 +42,33 @@ def test_factor_scores_and_optimizer_match_dense_weighted_reference(
     )
     weights = W if weighted else None
     F = sparse.csr_matrix(B) if as_sparse else B
+    if with_local:
+        values = rng.random((30, 30))
+        values[values < 0.8] = 0
+        values = 0.1 * (values + values.T)
+        np.fill_diagonal(values, 0)
+        R = sparse.csr_matrix(values)
+    else:
+        R = None
     assert factor_leakage(F, labels, 3, weights) == pytest.approx(
         dense_cost(B, labels, W), abs=1e-8
     )
     initial = labels.copy()
     lab = balanced_lloyd(
-        F, [1, 1, 1], init_labels=labels, balance_slack=epsilon, fold_weights=weights
+        F,
+        [1, 1, 1],
+        init_labels=labels,
+        balance_slack=epsilon,
+        fold_weights=weights,
+        local=R,
     )
-    assert dense_cost(B, lab, W) <= dense_cost(B, labels, W) + 1e-8
+    assert dense_cost(B, lab, W, R) <= dense_cost(B, labels, W, R) + 1e-8
     before = lab.copy()
-    final, _ = fm_polish(F, lab, [1, 1, 1], epsilon=epsilon, fold_weights=weights)
+    final, _ = fm_polish(
+        F, lab, [1, 1, 1], epsilon=epsilon, fold_weights=weights, local=R
+    )
     assert np.array_equal(before, lab) and np.array_equal(labels, initial)
-    assert dense_cost(B, final, W) <= dense_cost(B, lab, W) + 1e-8
+    assert dense_cost(B, final, W, R) <= dense_cost(B, lab, W, R) + 1e-8
     assert np.all(np.bincount(final, minlength=3) >= 10 * (1 - epsilon))
     assert np.all(np.bincount(final, minlength=3) <= 10 * (1 + epsilon))
 

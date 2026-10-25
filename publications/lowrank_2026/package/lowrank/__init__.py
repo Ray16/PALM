@@ -19,6 +19,7 @@ from .nd import LowRankNDSplitter
 from .target_gap import GapCalibrator, calibrate_gap, split_for_gap
 from .diagnostics import sampled_leakage
 from .grouped import GroupInfeasibleError, GroupFeasibilityUnresolved
+from .validation import chronological_reference
 
 # ``lowrank_leakage`` kept as an alias for the factor-space objective (historical
 # name used by the omol25 studies + test suite).
@@ -40,6 +41,7 @@ __all__ = [
     "split_for_gap",
     "GapCalibrator",
     "sampled_leakage",
+    "chronological_reference",
     "AccuracyError",
     "AccuracyWarning",
     "GroupInfeasibleError",

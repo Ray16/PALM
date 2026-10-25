@@ -49,7 +49,7 @@ def test_known_zero_kernel_has_an_exact_offdiagonal_certificate():
     assert result["exact"] and result["relative_pair_mae"]["estimate"] == 0
 
 
-@pytest.mark.parametrize("scale", [1e-30, 1e-10, 1.0, 1e10])
+@pytest.mark.parametrize("scale", [1e-30, 1e-10, 1.0, 1e10, 1e30])
 def test_cosine_aligned_and_dense_share_normalization_at_all_scales(scale):
     X = np.array([[scale, 0], [scale, 0], [0, scale]], dtype=np.float32)
     ref = prepare_reference(X, "cosine").double()
@@ -58,6 +58,37 @@ def test_cosine_aligned_and_dense_share_normalization_at_all_scales(scale):
     assert np.allclose(
         paired_similarity(ref, i, j, "cosine"), expected, rtol=1e-12, atol=1e-40
     )
+    ref32 = prepare_reference(X, "cosine")
+    dense32 = pairwise_similarity(ref32, ref32, "cosine").numpy()[i, j]
+    assert np.allclose(dense32, expected, rtol=2e-6, atol=1e-40)
+
+
+def test_neighbour_scoring_obeys_the_same_binary_and_finite_input_contract():
+    import json
+    from lowrank.splitters.common.leakage_metrics import nn_leakage
+    from lowrank.splitters.common.fiduccia_mattheyses import fiduccia_mattheyses_exact
+
+    bad = np.full((4, 8), 1.5, dtype=np.float32)
+    with pytest.raises(ValueError, match="binary"):
+        nn_leakage(bad, ["train", "train", "test", "test"], n_perm=1)
+    with pytest.raises(ValueError, match="binary"):
+        fiduccia_mattheyses_exact([0, 0, 1, 1], bad, [1, 1], "tanimoto")
+    zero = nn_leakage(np.eye(4), ["train", "train", "test", "test"], n_perm=1)
+    assert zero["nnl_rel"] is None
+    assert zero["relative_status"] == "undefined_zero_reference_baseline"
+    json.dumps(zero, allow_nan=False)
+
+
+@pytest.mark.parametrize("scale", [1.0, 1e30, 1e38])
+def test_euclidean_preparation_stays_finite_and_matches_float64_statistics(scale):
+    X = np.random.default_rng(4).uniform(-0.5, 0.5, size=(60, 7)).astype(
+        np.float32
+    ) * np.float32(scale)
+    X[:, 0] = np.float32(scale)
+    ref = prepare_reference(X, "euclidean").numpy()
+    work = X.astype(np.float64)
+    expected = (work - work.mean(0)) / (work.std(0, ddof=1) + 1e-8)
+    assert np.isfinite(ref).all() and np.allclose(ref, expected, atol=2e-6, rtol=2e-5)
 
 
 @pytest.mark.parametrize("value", [1.5, 2.0, -1.0])

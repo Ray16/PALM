@@ -94,7 +94,16 @@ class SplitResult:
 
 # ── metric/JSON helpers for param schemas ──────────────────────────────────
 
-_JSON_TYPES = {int: "integer", float: "number", bool: "boolean", str: "string"}
+_JSON_TYPES = {
+    int: "integer",
+    float: "number",
+    bool: "boolean",
+    str: "string",
+    dict: "object",
+    object: "object",
+    list: "array",
+    tuple: "array",
+}
 _JSON_TYPES_BY_NAME = {
     "int": "integer",
     "float": "number",
@@ -114,6 +123,10 @@ def _json_type(tp) -> str:
         return _JSON_TYPES.get(tp, "string")
     s = str(tp).replace("typing.", "")
     inner = s[len("Optional[") : -1] if s.startswith("Optional[") else s
+    if inner.startswith(("Dict[", "dict[", "Mapping[")) or inner in ("dict", "object"):
+        return "object"
+    if inner.startswith(("List[", "list[", "Sequence[", "Tuple[", "tuple[")):
+        return "array"
     return _JSON_TYPES_BY_NAME.get(inner, "string")
 
 
@@ -154,8 +167,14 @@ class BaseSplitter(ABC):
             for f in dataclasses.fields(cls.Params):
                 default = None if f.default is dataclasses.MISSING else f.default
                 kind = _json_type(f.type)
+                annotation = str(f.type).replace("typing.", "").replace(" ", "")
+                nullable = (
+                    default is None
+                    or annotation.startswith("Optional[")
+                    or "|None" in annotation
+                )
                 props[f.name] = {
-                    "type": [kind, "null"] if default is None else kind,
+                    "type": [kind, "null"] if nullable else kind,
                     "default": default,
                 }
         return {"type": "object", "properties": props}

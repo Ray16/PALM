@@ -15,6 +15,14 @@ from lowrank.splitters.common.leakage_metrics import scaled_lpi, macro_axis_lpi
 def test_public_defaults_refine_a_bounded_shortlist():
     assert LowRankSplitter.Params().refine_restarts == 2
     assert LowRankNDSplitter.Params().refine_restarts == 2
+    assert LowRankSplitter.param_schema()["properties"]["refine_restarts"]["type"] == [
+        "integer",
+        "null",
+    ]
+    assert LowRankNDSplitter.param_schema()["properties"]["axis_metrics"]["type"] == [
+        "object",
+        "null",
+    ]
     X = np.random.default_rng(5).random((40, 8)).astype(np.float32)
     result = split("lowrank", dict(enumerate(X)), leakage_diagnostic="none", rank=16)
     assert result.diagnostics["optimization"]["refined_restarts"] == 2
