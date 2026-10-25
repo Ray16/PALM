@@ -1,4 +1,7 @@
-# Next low-rank development pass
+# Previous development pass (0.2.0.dev1)
+
+This document records the prior pass at `14904f2`. The current delivery and
+verification are described in [CORRECTNESS_PASS.md](CORRECTNESS_PASS.md).
 
 Base: published commit `9f7c34e1ded78b25b8f48cbb10dfb82f1d696cd3` (the exact base is also
 recorded by Git; this development branch does not alter the frozen reproduction).

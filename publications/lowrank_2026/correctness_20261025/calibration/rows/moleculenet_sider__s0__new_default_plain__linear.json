@@ -1,0 +1,79 @@
+{
+  "name": "moleculenet_sider__s0__new_default_plain__linear",
+  "dataset": "moleculenet_sider",
+  "seed": 0,
+  "setting": "new_default_plain",
+  "model": "linear",
+  "status": "ok",
+  "assignment_sha256": "a4eed61b37dacc92ace829ae311e05a40b57be3a0f861513ac49e02f868a23db",
+  "cache_sha256": "7f4ca4ba3adb157cc30e1ae3b2ff13b9a55ea6a4968f066721061c278ba40ef0",
+  "n_test": 143,
+  "brier": 0.26400111210369664,
+  "prior_brier_difference": 0.0,
+  "calibration_in_large": -0.00725899291363713,
+  "ece10": 0.20434215635256153,
+  "bins": [
+    {
+      "bin": 0,
+      "n": 23,
+      "mean_probability": 0.05469157586162461,
+      "positive_fraction": 0.5652173913043478
+    },
+    {
+      "bin": 1,
+      "n": 31,
+      "mean_probability": 0.15000632025990548,
+      "positive_fraction": 0.1935483870967742
+    },
+    {
+      "bin": 2,
+      "n": 24,
+      "mean_probability": 0.2382773979156395,
+      "positive_fraction": 0.2916666666666667
+    },
+    {
+      "bin": 3,
+      "n": 9,
+      "mean_probability": 0.34171675790553235,
+      "positive_fraction": 0.2222222222222222
+    },
+    {
+      "bin": 4,
+      "n": 12,
+      "mean_probability": 0.44321196037303784,
+      "positive_fraction": 0.16666666666666666
+    },
+    {
+      "bin": 5,
+      "n": 4,
+      "mean_probability": 0.560939526154253,
+      "positive_fraction": 0.75
+    },
+    {
+      "bin": 6,
+      "n": 7,
+      "mean_probability": 0.6594806569459448,
+      "positive_fraction": 0.2857142857142857
+    },
+    {
+      "bin": 7,
+      "n": 13,
+      "mean_probability": 0.7529833040625729,
+      "positive_fraction": 0.46153846153846156
+    },
+    {
+      "bin": 8,
+      "n": 9,
+      "mean_probability": 0.8518528273178169,
+      "positive_fraction": 0.7777777777777778
+    },
+    {
+      "bin": 9,
+      "n": 11,
+      "mean_probability": 0.96596625845104,
+      "positive_fraction": 0.7272727272727273
+    }
+  ],
+  "fit_predict_seconds": 0.9441311694681644,
+  "interpretation": "descriptive; fixed ten equal-width bins; sample-size/distribution dependent"
+}

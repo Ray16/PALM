@@ -1,0 +1,155 @@
+{
+  "timestamp": "2026-10-25T11:27:40.469746",
+  "os": {
+    "system": "Linux",
+    "release": "5.15.0-177-generic",
+    "version": "#187-Ubuntu SMP Sat Apr 11 22:54:33 UTC 2026",
+    "machine": "x86_64",
+    "python_version": "3.12.12"
+  },
+  "cpu": {
+    "physical_cores": 40,
+    "logical_cores": 80,
+    "max_frequency_mhz": 3700.0,
+    "architecture": "x86_64",
+    "processor": "x86_64",
+    "current_frequency_mhz": 3661.5869
+  },
+  "memory": {
+    "total_gb": 503.53,
+    "available_gb": 478.51,
+    "used_gb": 25.01,
+    "percent_used": 5.0,
+    "swap_total_gb": 2.0,
+    "swap_available_gb": 0.0
+  },
+  "disk": {
+    "path": "/nfs/lambda_stor_01/homes/rzhu/data_splitting",
+    "total_gb": 409598.01,
+    "available_gb": 934.91,
+    "used_gb": 408663.1,
+    "percent_used": 99.8
+  },
+  "gpu": {
+    "nvidia_gpus": [
+      {
+        "index": 0,
+        "name": "Tesla V100-SXM2-32GB",
+        "memory_total_mb": 32768.0,
+        "memory_free_mb": 32491.0,
+        "driver_version": "550.163.01",
+        "compute_capability": "7.0",
+        "type": "NVIDIA",
+        "backend": "CUDA"
+      },
+      {
+        "index": 1,
+        "name": "Tesla V100-SXM2-32GB",
+        "memory_total_mb": 32768.0,
+        "memory_free_mb": 32491.0,
+        "driver_version": "550.163.01",
+        "compute_capability": "7.0",
+        "type": "NVIDIA",
+        "backend": "CUDA"
+      },
+      {
+        "index": 2,
+        "name": "Tesla V100-SXM2-32GB",
+        "memory_total_mb": 32768.0,
+        "memory_free_mb": 32489.0,
+        "driver_version": "550.163.01",
+        "compute_capability": "7.0",
+        "type": "NVIDIA",
+        "backend": "CUDA"
+      },
+      {
+        "index": 3,
+        "name": "Tesla V100-SXM2-32GB",
+        "memory_total_mb": 32768.0,
+        "memory_free_mb": 32491.0,
+        "driver_version": "550.163.01",
+        "compute_capability": "7.0",
+        "type": "NVIDIA",
+        "backend": "CUDA"
+      },
+      {
+        "index": 4,
+        "name": "Tesla V100-SXM2-32GB",
+        "memory_total_mb": 32768.0,
+        "memory_free_mb": 32491.0,
+        "driver_version": "550.163.01",
+        "compute_capability": "7.0",
+        "type": "NVIDIA",
+        "backend": "CUDA"
+      },
+      {
+        "index": 5,
+        "name": "Tesla V100-SXM2-32GB",
+        "memory_total_mb": 32768.0,
+        "memory_free_mb": 32491.0,
+        "driver_version": "550.163.01",
+        "compute_capability": "7.0",
+        "type": "NVIDIA",
+        "backend": "CUDA"
+      },
+      {
+        "index": 6,
+        "name": "Tesla V100-SXM2-32GB",
+        "memory_total_mb": 32768.0,
+        "memory_free_mb": 32491.0,
+        "driver_version": "550.163.01",
+        "compute_capability": "7.0",
+        "type": "NVIDIA",
+        "backend": "CUDA"
+      },
+      {
+        "index": 7,
+        "name": "Tesla V100-SXM2-32GB",
+        "memory_total_mb": 32768.0,
+        "memory_free_mb": 32491.0,
+        "driver_version": "550.163.01",
+        "compute_capability": "7.0",
+        "type": "NVIDIA",
+        "backend": "CUDA"
+      }
+    ],
+    "amd_gpus": [],
+    "apple_silicon": null,
+    "total_gpus": 8,
+    "available_backends": [
+      "CUDA"
+    ]
+  },
+  "recommendations": {
+    "parallel_processing": {
+      "strategy": "high_parallelism",
+      "suggested_workers": 78,
+      "libraries": [
+        "joblib",
+        "multiprocessing",
+        "dask"
+      ]
+    },
+    "memory_strategy": {
+      "strategy": "memory_abundant",
+      "note": "Can load most datasets into memory"
+    },
+    "gpu_acceleration": {
+      "available": true,
+      "backends": [
+        "CUDA"
+      ],
+      "suggested_libraries": [
+        "pytorch",
+        "tensorflow",
+        "jax",
+        "cupy",
+        "rapids"
+      ]
+    },
+    "large_data_handling": {
+      "strategy": "disk_abundant",
+      "note": "Sufficient space for large intermediate files"
+    }
+  }
+}

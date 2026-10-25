@@ -18,7 +18,7 @@ dependencies = [
     "pandas",
     # Required: the Nyström factor, objective, Lloyd/FM optimizer and diagnostics
     # are torch code. Uses CUDA when available, otherwise runs on CPU torch.
-    "torch",
+    "torch>=2.0",
 ]
 
 [project.optional-dependencies]

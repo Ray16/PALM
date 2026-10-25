@@ -1,6 +1,6 @@
 """Rank-revealing, tiled Nyström factorization with empirical rank selection.
 
-``rank='auto'`` increases landmarks until sampled entrywise residuals meet a
+``rank='auto'`` increases landmarks until the selected kernel/cut check meets a
 tolerance or a rank/array-budget limit is reached. An independent audit follows
 selection. Neither check is a uniform cut-error or optimization certificate.
 """

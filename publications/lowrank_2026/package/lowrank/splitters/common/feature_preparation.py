@@ -8,7 +8,7 @@ splitters, ``metrics.py`` and ``splitting.py``:
   matrix. Uses the internal ``"tanimoto"`` name (the splitters' convention);
   :func:`to_scipy_metric` maps it to scipy/sklearn's ``"jaccard"`` when needed.
 - :func:`feature_matrix_from_dict` — the ``{id: vector} -> (ids, X)`` preamble
-  every 1-D entry point repeats (sorted ids, float32, nan/inf scrubbed).
+  every 1-D entry point shares (sorted ids, finite float32 vectors).
 """
 
 from __future__ import annotations
@@ -60,7 +60,10 @@ def feature_matrix_from_dict(
     feature_data: Dict[Hashable, Sequence[float]],
     min_rows: int = 1,
 ) -> Tuple[List[Hashable], np.ndarray]:
-    """``{id: vector}`` -> ``(sorted_ids, X)`` with X float32, nan/inf scrubbed.
+    """``{id: vector}`` -> ``(sorted_ids, X)`` with finite float32 vectors.
+
+    Non-finite or inconsistent vectors raise. Imputation is the caller's explicit
+    preprocessing policy rather than a silent replacement with zeros.
 
     Args:
         feature_data: mapping of entity id -> feature vector.

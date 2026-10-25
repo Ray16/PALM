@@ -1,0 +1,21 @@
+{
+  "name": "cosine_100000_0_previous",
+  "kind": "cosine",
+  "n": 100000,
+  "seed": 0,
+  "implementation": "previous",
+  "cpu_affinity": [
+    30,
+    31
+  ],
+  "seconds": 1.31576132401824,
+  "factor_shape": [
+    100000,
+    16
+  ],
+  "factor_bytes": 6400000,
+  "maximum_checked_error": 5.4090440793075345e-08,
+  "backend": "nystrom",
+  "status": "ok",
+  "process_peak_rss_mb": 550.50390625
+}

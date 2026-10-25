@@ -1,5 +1,26 @@
 # Changes
 
+## Correctness review: 0.2.0.dev2
+
+- Support-aware exact checks and bounded empirical-Bernstein ratio intervals
+  replace zero-width normal intervals for rare similarity/leakage events.
+- Dense/aligned cosine kernels share stable normalization; large finite inputs
+  avoid norm overflow. Euclidean preprocessing avoids variance overflow.
+- Binary Tanimoto and finite feature contracts apply across factorization,
+  scoring, neighbours and exact refinement. Undefined relative scores use null.
+- Visible warn/raise/explicit-return policies for unestablished rank tolerance.
+- Cut-aligned selection audits the returned partition, including fold weights.
+  It reuses landmarks/kernel blocks and uses a larger default sampling count.
+- Candidate refinement precedes restart selection, with a two-candidate public
+  default and an explicit all-candidates option.
+- Exact sparse n-D identity factors and record-weighted feature deduplication
+  remove the dense records-by-identities allocation.
+- Exact cosine feature maps avoid unnecessary Nyström work when dimensions fit.
+- Symmetric fold-pair policies apply to optimization and weighted diagnostics.
+- Reusable exact-backend calibration decisions retain complete cost reporting.
+- A supplied-date/order helper preserves ties and returns exact matched counts;
+  synthetic helper tests are not presented as real chronological validation.
+
 ## Development: 0.2.0.dev1
 
 - Opt-in empirical adaptive rank with independent pair audit, explicit unmet

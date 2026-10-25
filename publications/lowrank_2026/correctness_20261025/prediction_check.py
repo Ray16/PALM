@@ -156,8 +156,10 @@ def launch(args):
     ]
     args.output.mkdir(parents=True, exist_ok=True)
     (args.output / "logs").mkdir(exist_ok=True)
-    cpus = ["6,7", "8,9", "10,11", "12,13", "14,15", "16,17"]
-    allocated = set(range(6, 18))
+    cpus = args.cpus
+    allocated = set(int(c) for pair in cpus for c in pair.split(","))
+    if len(allocated) != 2 * len(cpus):
+        raise RuntimeError("prediction workers require disjoint CPU pairs")
     for proc in psutil.process_iter(["cmdline"]):
         try:
             if (
@@ -168,7 +170,7 @@ def launch(args):
                 raise RuntimeError("CPU slots still occupied")
         except (psutil.NoSuchProcess, psutil.AccessDenied):
             pass
-    if os.getloadavg()[0] + 12 > os.cpu_count():
+    if os.getloadavg()[0] + len(allocated) > os.cpu_count():
         raise RuntimeError("insufficient CPU capacity")
     manifest = dict(
         jobs=jobs,
@@ -227,7 +229,7 @@ def launch(args):
                 raise RuntimeError("prediction check failed: " + job["name"])
             print("done", job["name"], flush=True)
 
-    with ThreadPoolExecutor(max_workers=6) as pool:
+    with ThreadPoolExecutor(max_workers=len(cpus)) as pool:
         futures = [pool.submit(worker, c) for c in cpus]
         for future in futures:
             future.result()
@@ -249,5 +251,10 @@ if __name__ == "__main__":
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--inputs", type=Path, required=True)
     p.add_argument("--index", type=int)
+    p.add_argument(
+        "--cpus",
+        nargs="+",
+        default=["12,13", "14,15", "16,17", "18,19", "21,22", "23,24"],
+    )
     args = p.parse_args()
     dict(case=case, launch=launch)[args.action](args)

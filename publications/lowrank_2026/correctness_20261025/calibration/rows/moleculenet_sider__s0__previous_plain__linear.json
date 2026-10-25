@@ -1,0 +1,79 @@
+{
+  "name": "moleculenet_sider__s0__previous_plain__linear",
+  "dataset": "moleculenet_sider",
+  "seed": 0,
+  "setting": "previous_plain",
+  "model": "linear",
+  "status": "ok",
+  "assignment_sha256": "845ac4112e40b2180a17cc603e1510a72a5f508ed3d8548ca3dc4f33b6e96dae",
+  "cache_sha256": "7f4ca4ba3adb157cc30e1ae3b2ff13b9a55ea6a4968f066721061c278ba40ef0",
+  "n_test": 143,
+  "brier": 0.2638224310688031,
+  "prior_brier_difference": 0.0,
+  "calibration_in_large": 0.06162905887317438,
+  "ece10": 0.20349557720613684,
+  "bins": [
+    {
+      "bin": 0,
+      "n": 12,
+      "mean_probability": 0.058624565044085135,
+      "positive_fraction": 0.6666666666666666
+    },
+    {
+      "bin": 1,
+      "n": 13,
+      "mean_probability": 0.16561916605108934,
+      "positive_fraction": 0.38461538461538464
+    },
+    {
+      "bin": 2,
+      "n": 26,
+      "mean_probability": 0.25212259015619526,
+      "positive_fraction": 0.23076923076923078
+    },
+    {
+      "bin": 3,
+      "n": 24,
+      "mean_probability": 0.3514244389755909,
+      "positive_fraction": 0.2916666666666667
+    },
+    {
+      "bin": 4,
+      "n": 12,
+      "mean_probability": 0.43692740915903744,
+      "positive_fraction": 0.08333333333333333
+    },
+    {
+      "bin": 5,
+      "n": 12,
+      "mean_probability": 0.5370472305393753,
+      "positive_fraction": 0.16666666666666666
+    },
+    {
+      "bin": 6,
+      "n": 4,
+      "mean_probability": 0.6549723730077511,
+      "positive_fraction": 0.5
+    },
+    {
+      "bin": 7,
+      "n": 13,
+      "mean_probability": 0.7595749180634116,
+      "positive_fraction": 0.6923076923076923
+    },
+    {
+      "bin": 8,
+      "n": 13,
+      "mean_probability": 0.8562291699330161,
+      "positive_fraction": 0.46153846153846156
+    },
+    {
+      "bin": 9,
+      "n": 14,
+      "mean_probability": 0.9752856634164265,
+      "positive_fraction": 0.8571428571428571
+    }
+  ],
+  "fit_predict_seconds": 3.5011045411229134,
+  "interpretation": "descriptive; fixed ten equal-width bins; sample-size/distribution dependent"
+}

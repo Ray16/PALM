@@ -1,0 +1,79 @@
+{
+  "name": "moleculenet_sider__s2__previous_combined__linear",
+  "dataset": "moleculenet_sider",
+  "seed": 2,
+  "setting": "previous_combined",
+  "model": "linear",
+  "status": "ok",
+  "assignment_sha256": "9459f13525eb3c97c644609c4b502445d2d5afc98d315f1cb2bdfc50f65bcbe8",
+  "cache_sha256": "7f4ca4ba3adb157cc30e1ae3b2ff13b9a55ea6a4968f066721061c278ba40ef0",
+  "n_test": 143,
+  "brier": 0.2615387434889997,
+  "prior_brier_difference": 0.0,
+  "calibration_in_large": 0.024381116117523527,
+  "ece10": 0.20692441207944273,
+  "bins": [
+    {
+      "bin": 0,
+      "n": 36,
+      "mean_probability": 0.04184109316552282,
+      "positive_fraction": 0.2777777777777778
+    },
+    {
+      "bin": 1,
+      "n": 16,
+      "mean_probability": 0.15640179742123908,
+      "positive_fraction": 0.375
+    },
+    {
+      "bin": 2,
+      "n": 20,
+      "mean_probability": 0.24697231130120617,
+      "positive_fraction": 0.3
+    },
+    {
+      "bin": 3,
+      "n": 13,
+      "mean_probability": 0.3573620881797567,
+      "positive_fraction": 0.23076923076923078
+    },
+    {
+      "bin": 4,
+      "n": 13,
+      "mean_probability": 0.435798890839869,
+      "positive_fraction": 0.3076923076923077
+    },
+    {
+      "bin": 5,
+      "n": 14,
+      "mean_probability": 0.5581677787946473,
+      "positive_fraction": 0.2857142857142857
+    },
+    {
+      "bin": 6,
+      "n": 14,
+      "mean_probability": 0.6546406068976592,
+      "positive_fraction": 0.35714285714285715
+    },
+    {
+      "bin": 7,
+      "n": 6,
+      "mean_probability": 0.730394723852816,
+      "positive_fraction": 0.3333333333333333
+    },
+    {
+      "bin": 8,
+      "n": 4,
+      "mean_probability": 0.8318664456048815,
+      "positive_fraction": 0.5
+    },
+    {
+      "bin": 9,
+      "n": 7,
+      "mean_probability": 0.9340144305141767,
+      "positive_fraction": 0.7142857142857143
+    }
+  ],
+  "fit_predict_seconds": 0.33469004929065704,
+  "interpretation": "descriptive; fixed ten equal-width bins; sample-size/distribution dependent"
+}

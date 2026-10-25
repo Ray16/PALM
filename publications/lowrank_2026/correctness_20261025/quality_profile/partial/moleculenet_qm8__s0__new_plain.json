@@ -1,0 +1,12 @@
+{
+  "status": "partial_assignment_only",
+  "case": "moleculenet_qm8__s0__new_plain",
+  "assignment_sha256": "2852b87a4ffef9c85ffe10e6db9c266560a052898823a9ddad920a6ab57bf539",
+  "retained_rows": 21786,
+  "fold_counts": [
+    17429,
+    2179,
+    2178
+  ],
+  "reason": "Assignment was written before the 600-second end-to-end timeout; scoring/row metadata were not recorded. Excluded from completed benchmark observations."
+}

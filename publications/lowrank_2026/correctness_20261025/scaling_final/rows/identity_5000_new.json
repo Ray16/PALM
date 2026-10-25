@@ -1,0 +1,20 @@
+{
+  "name": "identity_5000_new",
+  "kind": "identity",
+  "n": 5000,
+  "implementation": "new",
+  "cpu_affinity": [
+    34,
+    35
+  ],
+  "seconds": 0.0009448397904634476,
+  "storage_bytes": 60004,
+  "storage": "CSR",
+  "factor_shape": [
+    5000,
+    2500
+  ],
+  "dense_equivalent_bytes": 50000000,
+  "status": "ok",
+  "process_peak_rss_mb": 507.16015625
+}

@@ -135,8 +135,8 @@ def axis_features(records, fmap, axis, metric=None):
     - mixed: 0 (the values necessarily differ).
 
     ``metric=None`` auto-selects from the featured rows (:func:`choose_metric`), so
-    dense descriptors get euclidean rather than Tanimoto. Tanimoto is rejected on
-    negative-valued features (its self-similarity is not 1 there).
+    dense descriptors get euclidean rather than Tanimoto. Explicit Tanimoto needs
+    binary fingerprints; negative/count-valued and non-finite features raise.
     """
     from .feature_preparation import choose_metric
     from .pairwise_similarity import check_metric
@@ -324,7 +324,7 @@ def nn_leakage(
     return_per_point: bool = False,
     device: str = "cpu",
 ) -> Dict:
-    """Nearest-neighbour leakage: raw ``nnl`` in [0, 1], relative ``nnl_rel`` >= 0.
+    """Nearest-neighbour leakage with an explicitly nullable relative score.
 
     For every held-out row ``i`` (any split other than ``reference``), let
     ``s_i`` be the mean of its top-``k`` similarities to the reference split and
@@ -335,7 +335,9 @@ def nn_leakage(
 
     ``nnl_rel`` is 1 for a split as leaky as random and 0 when no held-out point
     has a reference neighbour above ``lo``; it is comparable across datasets and
-    split proportions; the relative value can exceed one. ``device`` defaults to
+    split proportions; the relative value can exceed one. A zero random-reference
+    baseline returns ``nnl_rel=None`` with an explicit status. Degenerate estimated
+    quantile ramps are flagged separately. ``device`` defaults to
     CPU; CUDA requires an explicit request. ``ramp=(lo, hi)`` defaults to :data:`NNL_TANIMOTO_RAMP`
     for tanimoto and to the :data:`NNL_QUANTILE_RAMP` quantiles of the pairwise
     similarity otherwise (estimated from at most 1024 by 8192 sampled pairs).

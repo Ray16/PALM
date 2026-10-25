@@ -1,0 +1,79 @@
+{
+  "name": "moleculenet_sider__s2__new_default_cut__linear",
+  "dataset": "moleculenet_sider",
+  "seed": 2,
+  "setting": "new_default_cut",
+  "model": "linear",
+  "status": "ok",
+  "assignment_sha256": "bed00d490efbabc6f3a8f534357d5e6c51814119dd621452c83f25c73a0c102c",
+  "cache_sha256": "7f4ca4ba3adb157cc30e1ae3b2ff13b9a55ea6a4968f066721061c278ba40ef0",
+  "n_test": 143,
+  "brier": 0.27112814783427386,
+  "prior_brier_difference": 0.0,
+  "calibration_in_large": 0.08614828662850682,
+  "ece10": 0.21275558330714828,
+  "bins": [
+    {
+      "bin": 0,
+      "n": 20,
+      "mean_probability": 0.04076091336776387,
+      "positive_fraction": 0.3
+    },
+    {
+      "bin": 1,
+      "n": 22,
+      "mean_probability": 0.13914792615611773,
+      "positive_fraction": 0.22727272727272727
+    },
+    {
+      "bin": 2,
+      "n": 19,
+      "mean_probability": 0.26690029708880403,
+      "positive_fraction": 0.3684210526315789
+    },
+    {
+      "bin": 3,
+      "n": 14,
+      "mean_probability": 0.35037038591417796,
+      "positive_fraction": 0.2857142857142857
+    },
+    {
+      "bin": 4,
+      "n": 24,
+      "mean_probability": 0.45201434899041565,
+      "positive_fraction": 0.25
+    },
+    {
+      "bin": 5,
+      "n": 7,
+      "mean_probability": 0.569402284883844,
+      "positive_fraction": 0.2857142857142857
+    },
+    {
+      "bin": 6,
+      "n": 14,
+      "mean_probability": 0.6538723251175933,
+      "positive_fraction": 0.42857142857142855
+    },
+    {
+      "bin": 7,
+      "n": 10,
+      "mean_probability": 0.7408060212406702,
+      "positive_fraction": 0.2
+    },
+    {
+      "bin": 8,
+      "n": 5,
+      "mean_probability": 0.8807520920626407,
+      "positive_fraction": 0.4
+    },
+    {
+      "bin": 9,
+      "n": 8,
+      "mean_probability": 0.9582809629097193,
+      "positive_fraction": 0.625
+    }
+  ],
+  "fit_predict_seconds": 0.7064166609197855,
+  "interpretation": "descriptive; fixed ten equal-width bins; sample-size/distribution dependent"
+}

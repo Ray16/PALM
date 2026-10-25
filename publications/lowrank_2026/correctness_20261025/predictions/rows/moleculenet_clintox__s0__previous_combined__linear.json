@@ -1,0 +1,26 @@
+{
+  "name": "moleculenet_clintox__s0__previous_combined__linear",
+  "dataset": "moleculenet_clintox",
+  "seed": 0,
+  "setting": "previous_combined",
+  "model": "linear",
+  "assignment_sha256": "62c90c264260eb279ec56c8c81f500af330313750f8fb2ab481fa17a105c1b12",
+  "split_source_sha256": "01ececd6c3e692c07150ef6de51afda07b7739c749e90b684b390fb65334e5a9",
+  "task": "classification",
+  "n_train_labels": 1184,
+  "n_test_labels": 148,
+  "cpu_affinity": [
+    16,
+    17
+  ],
+  "model_selection": "none; fixed defaults; training labels only",
+  "status": "ok",
+  "train_positive_fraction": 0.07601351351351351,
+  "test_positive_fraction": 0.04054054054054054,
+  "metrics": {
+    "auroc": 0.602112676056338,
+    "average_precision": 0.10082868183769858,
+    "brier": 0.039528861579528944
+  },
+  "fit_predict_seconds": 0.3197907581925392
+}

@@ -1,3 +1,11 @@
 run/rows/** linguist-generated=true
 run/manifest.json linguist-generated=true
 summary.json linguist-generated=true
+verified_run/rows/** linguist-generated=true
+quality_profile/rows/** linguist-generated=true
+quality_profile/partial/** linguist-generated=true
+scaling/rows/** linguist-generated=true
+scaling_final/rows/** linguist-generated=true
+predictions/rows/** linguist-generated=true
+calibration/rows/** linguist-generated=true
+*/manifest.json linguist-generated=true

@@ -1,158 +1,200 @@
 # lowrank-split
 
-Low-rank similarity splitting with specified fold sizes. Dense similarity is
-approximated by Nyström factors; integer powers and optional capped groups
-provide controls over global and local overlap. Lower similarity is not a
-guarantee of a realistic deployment test.
+Construct capacity-controlled data splits by optimizing a compressed similarity
+kernel. Fold sums replace a stored all-pairs matrix. Optional grouping controls
+local analogue transfer; strict supplied groups express domain requirements.
+Similarity separation is one property of an evaluation design: it does not by
+itself establish realistic deployment performance.
+
+This branch develops `0.2.0.dev2`. The published v0.1.0 reproduction and the
+running website remain separately pinned.
 
 ```python
 from lowrank import split, SplitSpec
 
-result = split("lowrank", feature_data,
-               SplitSpec([8, 1, 1], ["train", "val", "test"], seed=0),
-               score_exact_leakage=False)
+spec = SplitSpec([8, 1, 1], ["train", "val", "test"], seed=0)
+result = split("lowrank", feature_data, spec,
+               rank=256, leakage_diagnostic="auto")
 ```
 
-Default low-rank fold counts are exact; ratios rounding to an empty fold raise.
-Set `allowed_size_imbalance` explicitly to allow a corridor. Group preservation
-is conditional: caps, missing graph edges and capacity repair can split related
-entities. Diagnostics retain `broken_groups` rather than claim hard exclusion.
-Optional exact leakage diagnostics can dominate runtime and are disabled above.
+`feature_data` maps entity IDs to finite vectors of equal nonzero dimension.
+Impute missing values explicitly before splitting. Binary Tanimoto accepts only
+0/1 fingerprints; count-valued inputs raise. Empty binary fingerprints have
+similarity zero, including to another empty fingerprint. Dense and sampled
+kernels share cosine normalization, including its zero-row convention. Signed
+cosine values are permitted, but their normalized overlap is not a probability;
+nonpositive normalization mass produces an undefined diagnostic rather than a
+claim of zero leakage. Negative-mass n-D cosine axes raise explicitly.
 
-Install with `pip install .`; `.[molecules]` adds RDKit and `.[ann]` adds the
-approximate neighbour backend. PyTorch is required; it uses CUDA when visible
-and CPU otherwise. The NN metric defaults to CPU and accepts an explicit device.
+Default fold counts are exact. `allowed_size_imbalance` opens an explicitly
+requested corridor. Ratios that produce an empty fold raise. Four seeded Lloyd
+starts are generated; by default the two best candidates are refined before the
+winner is selected. `refine_restarts=1` limits effort, and `None` refines all
+candidates. Diagnostics record the selected seed and refinement work. Refinement
+checks the actual factor-space objective; it is a local heuristic, not a global
+optimality certificate.
 
-All support modules are under `lowrank.splitters`, `lowrank.datasets`,
-`lowrank.features` and `lowrank.eval`. The wheel installs no top-level package
-named `datasets`, `features`, `eval` or `splitters`.
-
-Dataset loaders are optional research helpers. Public raw datasets and the
-manuscript's frozen reproduction sources are distributed separately; this
-package does not bundle input datasets or author publication identifiers.
-
-## Development: adaptive and audited splitting
-
-This branch develops the next version; the published v0.1.0 reproduction and
-running website are preserved. New capabilities are opt-in. Fixed rank 256,
-count-first grouping and the legacy exact-scoring flag remain available.
+## Audited rank selection
 
 ```python
-result = split("lowrank", feature_data,
-               SplitSpec([8, 1, 1], ["train", "val", "test"], seed=0),
-               rank="auto", rank_min=32, rank_max=512,
-               rank_tolerance=0.05, factor_memory_mb=1024,
-               leakage_diagnostic="auto")
+result = split("lowrank", feature_data, spec,
+               rank="auto", rank_check="cut_error",
+               rank_min=32, rank_max=512,
+               rank_tolerance=0.05, on_rank_failure="raise",
+               factor_memory_mb=1024,
+               leakage_diagnostic="sampled")
 audit = result.diagnostics["factorization"]
 ```
 
-Rank increases geometrically until the upper end of an approximate 95% interval
-for sampled entrywise error meets the tolerance, or the rank/array budget is
-exhausted. Error is mean absolute residual divided by mean absolute powered
-kernel similarity on uniformly sampled off-diagonal pairs. A separate pair
-sample audits the selected factor. `selection_tolerance_met`,
-`audit_tolerance_met` and `stop_reason` expose failures; a factor is still returned
-when a rank limit prevents meeting the tolerance. An independent audit failure
-is reported without tuning further on that audit sample.
+`cut_error` checks the powered-kernel cut of the partition actually returned,
+including declared fold-pair weights. Error is divided by the kernel's total
+absolute off-diagonal mass; it is **not** relative error in the cut value itself.
+`pair_mae` checks entrywise mean absolute error with the same normalization.
+Neither criterion certifies predictive realism or optimizer optimality.
 
-These Monte Carlo checks are not a uniform bound on cut error or a proof of
-optimal partitions. Entrywise fidelity can require more rank than useful split
-quality. Automatic selection adds work and can be slower than fixed rank;
-sharpened kernels often need a larger budget. Select tolerance and budgets before
-examining final model test performance.
+The cut criterion samples 32,768 pairs by default; entrywise checks sample 2,048.
+A larger sampling count can establish fidelity at a lower rank more cheaply
+than increasing rank. `rank_probe_pairs` overrides the sampling count. Small
+pair populations may instead be enumerated exactly, up to 65,536 evaluations.
+Known zero rows are excluded only when their contributions are analytically
+zero. Unsampled rare similarity mass is not declared absent.
 
-The factorizer uses distinct landmark indices, a float64 landmark eigensystem
-and relative numerical-rank truncation. Duplicate/zero kernels may return fewer
-columns than requested, including a zero-column factor for a zero kernel. It
-evaluates point-to-landmark kernels in row tiles. `factor_memory_mb` constrains a
-conservative model of factorization arrays, not total process RSS; it excludes
-framework overhead, caller-owned inputs and subsequent optimization. Fixed ranks
-raise `MemoryError` if this model cannot fit. Auto rank does not silently lower
-`rank_min` to satisfy the budget.
+Sampled intervals use bounded empirical Bernstein mean bounds and a union bound
+for numerator/denominator uncertainty. Selection also accounts for its finite
+rank grid. An independent pair sample audits the selected factor/partition.
+Intervals describe sampling uncertainty conditional on the supplied data, not
+uncertainty about future experiments. A weak denominator yields an explicit
+insufficient-information state. The legacy `ci95` key can hold a more
+conservative selection interval; its actual confidence is recorded.
 
-`leakage_diagnostic="auto"` computes an exact original-kernel score through 2000
-rows and a bounded sampled estimate above that. `"sampled"`, `"exact"` and
-`"none"` select explicitly. Sampled results are stored in `leakage_sampled` with
-Monte Carlo standard error and an approximate 95% interval; they never populate
-the exact `leakage` field. The interval does not measure uncertainty about new
-datasets. Negligible/nonpositive sampled total mass is explicitly undefined.
-Without this option, `score_exact_leakage` retains its old behavior.
+`selection_tolerance_met`, `audit_tolerance_met` and `stop_reason` retain the
+outcome. The default failure policy warns, including when the standalone
+`nystrom_features` call omits `return_info`. `"raise"` raises `AccuracyError`;
+`"return"` is an explicit choice to collect a failed/unestablished check for
+research. A rank ceiling can prevent establishing the requested tolerance.
 
-## Explicit group contracts
+The Nyström path reuses one landmark sequence and previously computed landmark
+kernel blocks as rank grows. Zero kernel rows do not consume landmarks. It uses
+a float64 landmark eigensystem and relative numerical-rank truncation rather
+than amplifying null directions. Point-to-landmark products are tiled.
+
+`factor_backend="auto"` uses normalized input features as an exact cosine feature
+map when power is one and their dimension fits the requested rank. This avoids
+unnecessary landmark construction; other cases retain Nyström. Exact here
+means the feature-map identity at working numerical precision.
+
+`factor_memory_mb` limits a conservative model of factorization arrays. It is
+not a process-RSS limit and excludes framework overhead and subsequent optimizer
+work. Fixed ranks that cannot fit raise; automatic selection never silently
+lowers the requested minimum to meet the budget.
+
+## Explicit grouping and fold policy
 
 ```python
-# Every entity must occur once in this id -> group mapping.
 result = split("lowrank", feature_data, spec,
                groups=entity_to_series, group_policy="strict",
-               allowed_size_imbalance=0.0, leakage_diagnostic="sampled")
+               allowed_size_imbalance=0.0,
+               leakage_diagnostic="auto")
 ```
 
-`group_policy="count_first"` retains the existing capacity repair, allowing group
-dissolution and reporting `broken_groups`. `"strict"` forbids dissolution and
-checks preservation of every supplied or constructed group. Whole-group packing
-uses a bounded, single-threaded binary MILP fallback when greedy repair cannot
-find a feasible assignment. This solves capacity feasibility; it does not certify
-the globally optimal similarity cut. `GroupInfeasibleError` is a proof of
-incompatible requirements; `GroupFeasibilityUnresolved` means no feasible packing
-was found within the solver limit. A valid integer incumbent can be used on
-timeout after independent checks. Increase `group_feasibility_seconds` explicitly
-for a longer search.
+Supply a complete entity-ID-to-group mapping, or request constructed groups with
+`must_link=threshold`. `group_policy="count_first"` permits capacity repair to
+dissolve groups and reports `broken_groups`. `"strict"` preserves every supplied
+or constructed group. A bounded single-threaded MILP fallback checks whole-group
+capacity feasibility when greedy repair fails. `GroupInfeasibleError` means the
+requirements are proven incompatible; `GroupFeasibilityUnresolved` means no
+packing was established within the search limit. An independently checked
+integer incumbent can be accepted on timeout.
 
-For groups that cannot meet exact counts, an explicitly supplied
-`allowed_size_imbalance` opens a corridor while keeping strict groups intact.
-The algorithm never widens that corridor automatically. Capped top-k groups are
-still only groups of selected edges: strict preservation of them does not certify
-that **every** pair above a threshold remains together. Supplied groups and
-`must_link` are alternatives, and randomizing individual labels with
-`hardness < 1` is rejected when either form of grouping is active.
-
-## Experimental global and local objective
+An explicit size corridor can make whole-group packing feasible. It is never
+widened automatically. Constructed groups depend on caps and the selected top-k
+edges: preserving them does not guarantee that every pair above a similarity
+threshold is kept together. Individual-label randomization with `hardness < 1`
+is rejected when grouping is enabled.
 
 ```python
-result = split("lowrank", feature_data, spec, rank=256,
-               local_weight=0.25, local_threshold=0.4, local_k=32,
-               local_backend="tiled", leakage_diagnostic="sampled")
+# Order follows spec.names. This example emphasizes train/test overlap.
+weights = [[0, 1, 2], [1, 0, 0.25], [2, 0.25, 0]]
+result = split("lowrank", feature_data, spec, fold_weights=weights)
 ```
 
-This experimental variant minimizes the factor-space global cut divided by its
-total off-diagonal mass, plus `local_weight` times a normalized cut on an ordinary
-pairwise union k-NN graph. Positive local weights follow the ramp
-`max(0, (similarity - threshold)/(1 - threshold))`. It has no hyperedges and no
-signed residual correction. Guarded Lloyd updates and capacity-preserving
-move/swap refinement include both terms. Graph construction is additional work;
-no speed or quality improvement is assumed. This variant currently rejects
-combination with `groups`/`must_link`; compare it against the established
-powered/grouped setting rather than assuming it supersedes grouping.
+Fold-pair weights must be finite, symmetric, nonnegative and zero-diagonal,
+with at least one positive pair. They apply consistently to optimization and
+weighted diagnostics. Ordinary overlap remains separately reported, so scores
+from different policies are not presented as the same objective. Weights should
+express the intended evaluation boundary before examining model test outcomes.
 
-The development comparison fixes threshold 0.4 and k=32 to match the existing
-grouping configuration. After each component is normalized by its total mass,
-weight 1 gives equal emphasis and weight 0.25 tests a smaller local contribution.
-These two weights were fixed before benchmarking, not selected from model test
-outcomes.
+## Scoring and neighbour construction
 
-The local objective requires positive global factor mass. An empty local graph
-is reported as `no_positive_edges_in_graph`, not as proof that analogues are
-absent from the data. `local_objective` records both objective components,
-normalization, graph construction and experimental status.
+`leakage_diagnostic="auto"` uses an exact original-kernel score through 2,000 rows
+and support-aware diagnostics above that. Explicit modes are `"exact"`,
+`"sampled"` and `"none"`. The historical `score_exact_leakage` flag still works
+when the new option is omitted. Sample-based results appear in `leakage_sampled`
+with actual sample count, interval, status and an `exact` flag; the known small
+population path can be exact. Undefined mass is retained explicitly.
 
-## Audited neighbour backend selection
+Use exact tiled neighbours for validated CPU fingerprint workloads.
+`must_link_backend="auto"` / `local_backend="auto"` can perform a cost/recall
+calibration. Sampled ANN recall is not a full-graph guarantee. Missing, repeated
+or self-neighbour candidate rows are repaired with exact tiled queries. All
+construction and rejected calibration costs count toward runtime.
 
-For `must_link_backend="auto"` or `local_backend="auto"`, small datasets retain
-exact tiled search. Larger binary-Tanimoto workloads use an exact-query timing
-pilot; when projected exact cost exceeds one second, optional NN-Descent is
-evaluated. Auto accepts it only if measured full construction is faster than that
-projection and sampled top-k recall meets `neighbour_minimum_recall` (default
-0.98). It separately measures recall for strong edges. Rejected ANN work remains
-included in `total_seconds`. Timing projection is heuristic; sampled recall is
-not an all-row guarantee. Explicit `nndescent` retains approximate output and
-reports its audit even when recall is below the auto threshold. All returned ANN
-edge weights are recomputed exactly. Deficient candidate rows are repaired by
-exact tiled queries, with their cost included in construction. Other
-representations retain exact search. Auto calibration can itself be expensive;
-use a validated explicit backend for repeated work on a known workload.
+An in-process bounded cache reuses exact-backend decisions for identical inputs,
+parameters, dependency versions and resources for up to one hour. Raw features
+are not stored in that cache. Approximate results continue to receive a recall
+audit. A known explicit backend avoids repeated calibration work across separate
+worker processes.
 
-See [DEVELOPMENT.md](DEVELOPMENT.md) and the sibling `development/` directory for
-the fixed benchmark protocol, source identities, tests and measured findings.
-The new configuration fields above apply to the 1-D splitter; existing n-D
-splitting benefits from the common numerical factorization changes and retains
-its existing public interface.
+## Multi-component data
+
+The `lowrank_nd` input remains `(records, axis_feature_maps)`. Identity factors
+are CSR, so storage follows nonzeros rather than records times distinct
+identities. Prepared feature rows are deduplicated before factorization while
+preserving record-weighted standardization. The common optimizer handles sparse
+fold sums and similarity columns without a dense pairwise matrix. n-D sparse
+optimization currently runs on CPU. Per-axis storage and factorization metadata
+are returned.
+
+Record-level splitting jointly controls the declared axes. It does not provide
+a hard cold-start exclusion contract for every component.
+
+## Experimental local objective
+
+`local_weight > 0` adds a normalized positive pairwise-neighbour penalty to the
+global factor cut. It remains opt-in and currently rejects combination with
+`groups`/`must_link`. The existing powered/grouped setting remains a strong local
+separation control. The penalty does not consistently outperform it.
+
+Development uses threshold 0.4 and k=32 to match existing grouping controls.
+Weights 1 and 0.25 respectively test equal and smaller local emphasis after
+normalization. They were fixed before measurement. An empty local graph is
+reported explicitly; it does not prove absence of all analogues.
+
+## Real chronological references
+
+```python
+from lowrank import chronological_reference
+
+ordered_assignment, matched_spec = chronological_reference(
+    ids, actual_experiment_dates, [train_cutoff, validation_cutoff])
+matched_split = split("lowrank", feature_data, matched_spec)
+```
+
+The helper requires complete actual dates/test order and predeclared cutoffs.
+Tied order values stay together. Fold sizes follow those cutoffs, and the
+returned specification lets other methods match the resulting counts. It
+rejects mixed numeric/date order, nonfinite order, mixed naive/aware timestamps
+and empty folds. It does not infer dates from publication years or simulate
+chronology. Real prospective validation still requires real dated outcomes.
+
+## Installation and evidence
+
+Install with `pip install .`; `.[molecules]` adds RDKit and `.[ann]` adds optional
+NN-Descent. PyTorch uses visible CUDA for supported dense operations and CPU
+otherwise. Benchmark/cluster jobs must configure resources explicitly. All
+support packages are namespaced under `lowrank.*`; no generic top-level package
+named `datasets`, `features`, `eval` or `splitters` is installed.
+
+See `CORRECTNESS_PASS.md` and the sibling `correctness_20261025/` directory for
+regressions, fixed benchmark protocols, measured trade-offs and limitations.
+The older development and publication studies remain preserved separately.

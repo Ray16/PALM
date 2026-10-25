@@ -1,0 +1,11 @@
+{
+  "dataset": "moleculenet_lipophilicity",
+  "n": 4200,
+  "task": "regression",
+  "feature_sha256": "14d82b44905e1a9718e5af14c04454f2a3f5eac5e7c5170d84cfebb9d4b9407c",
+  "cache_sha256": "5ef3c5411f7d7edd74fa420157f474d2690c4b924324dcc75550cc543016e70f",
+  "raw_csv_sha256": "aed41590cb30609d51d8e08ad3ff06495a76e80e211358801f596b10da69bacd",
+  "preparation_seconds": 6.673238383606076,
+  "recipe": "ECFP-1024 radius 2; MACCS-167 only for evaluation",
+  "additional_validation": false
+}

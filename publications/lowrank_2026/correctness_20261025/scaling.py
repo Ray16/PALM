@@ -185,6 +185,7 @@ def launch(args):
     jobs.append(
         dict(name="calibration_reuse", kind="calibration", implementation="new")
     )
+    jobs = [job for job in jobs if job["kind"] in args.kinds]
     implementations = dict(
         previous=str(args.previous.resolve()), new=str(args.new.resolve())
     )
@@ -205,7 +206,8 @@ def launch(args):
     if path.exists() and json.loads(path.read_text()) != manifest:
         raise RuntimeError("manifest drift")
     benchmark.atomic(path, manifest)
-    cpus = ["40,41", "42,43", "44,45"]
+    cpus = args.cpus
+    allocated = set(int(c) for pair in cpus for c in pair.split(","))
     occupied = set()
     for proc in psutil.process_iter(["cmdline"]):
         try:
@@ -213,7 +215,7 @@ def launch(args):
                 occupied.update(proc.cpu_affinity())
         except (psutil.NoSuchProcess, psutil.AccessDenied):
             pass
-    if occupied & set(range(40, 46)) or os.getloadavg()[0] + 6 > os.cpu_count():
+    if occupied & allocated or os.getloadavg()[0] + len(allocated) > os.cpu_count():
         raise RuntimeError("CPU capacity unavailable")
     pending = list(enumerate(jobs))
     import threading
@@ -260,7 +262,7 @@ def launch(args):
                 raise RuntimeError("scaling case failed: " + job["name"])
             print("done", job["name"], flush=True)
 
-    with ThreadPoolExecutor(max_workers=3) as pool:
+    with ThreadPoolExecutor(max_workers=len(cpus)) as pool:
         futures = [pool.submit(worker, c) for c in cpus]
         for future in futures:
             future.result()
@@ -281,5 +283,12 @@ if __name__ == "__main__":
     p.add_argument("--new", type=Path)
     p.add_argument("--previous", type=Path)
     p.add_argument("--index", type=int)
+    p.add_argument(
+        "--kinds",
+        nargs="+",
+        choices=["cosine", "identity", "rank_budget", "calibration"],
+        default=["cosine", "identity", "calibration"],
+    )
+    p.add_argument("--cpus", nargs="+", default=["30,31", "32,33", "34,35"])
     args = p.parse_args()
     dict(case=case, launch=launch)[args.action](args)

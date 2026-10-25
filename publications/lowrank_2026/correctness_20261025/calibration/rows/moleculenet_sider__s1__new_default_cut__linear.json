@@ -1,0 +1,79 @@
+{
+  "name": "moleculenet_sider__s1__new_default_cut__linear",
+  "dataset": "moleculenet_sider",
+  "seed": 1,
+  "setting": "new_default_cut",
+  "model": "linear",
+  "status": "ok",
+  "assignment_sha256": "481de12e619473ec913389d71ca1092ff128e2968c56e277ec99a8951d8963d7",
+  "cache_sha256": "7f4ca4ba3adb157cc30e1ae3b2ff13b9a55ea6a4968f066721061c278ba40ef0",
+  "n_test": 143,
+  "brier": 0.24473846522201545,
+  "prior_brier_difference": 0.0,
+  "calibration_in_large": -0.05239521999784813,
+  "ece10": 0.17057025659825842,
+  "bins": [
+    {
+      "bin": 0,
+      "n": 44,
+      "mean_probability": 0.061968111446662213,
+      "positive_fraction": 0.3409090909090909
+    },
+    {
+      "bin": 1,
+      "n": 27,
+      "mean_probability": 0.1323653279849895,
+      "positive_fraction": 0.2222222222222222
+    },
+    {
+      "bin": 2,
+      "n": 14,
+      "mean_probability": 0.25153811143682653,
+      "positive_fraction": 0.2857142857142857
+    },
+    {
+      "bin": 3,
+      "n": 11,
+      "mean_probability": 0.34693135185975127,
+      "positive_fraction": 0.2727272727272727
+    },
+    {
+      "bin": 4,
+      "n": 6,
+      "mean_probability": 0.4522647847266969,
+      "positive_fraction": 0.3333333333333333
+    },
+    {
+      "bin": 5,
+      "n": 6,
+      "mean_probability": 0.5393290173358256,
+      "positive_fraction": 0.6666666666666666
+    },
+    {
+      "bin": 6,
+      "n": 4,
+      "mean_probability": 0.650104672673866,
+      "positive_fraction": 0.25
+    },
+    {
+      "bin": 7,
+      "n": 11,
+      "mean_probability": 0.7420915980050272,
+      "positive_fraction": 0.6363636363636364
+    },
+    {
+      "bin": 8,
+      "n": 10,
+      "mean_probability": 0.8426066849472399,
+      "positive_fraction": 0.6
+    },
+    {
+      "bin": 9,
+      "n": 10,
+      "mean_probability": 0.9730188419888727,
+      "positive_fraction": 0.8
+    }
+  ],
+  "fit_predict_seconds": 3.076581012457609,
+  "interpretation": "descriptive; fixed ten equal-width bins; sample-size/distribution dependent"
+}

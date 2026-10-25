@@ -1,0 +1,26 @@
+{
+  "name": "moleculenet_sider__s0__new_default_weighted__linear",
+  "dataset": "moleculenet_sider",
+  "seed": 0,
+  "setting": "new_default_weighted",
+  "model": "linear",
+  "assignment_sha256": "0a113b6e239907b8dc5928bea274408232a191f1eb7c13ed0182bb53f2a4df1b",
+  "split_source_sha256": "da556ca191800768c6d7583f3c06a513a5b2cfc36bdf55980162b156f4913709",
+  "task": "classification",
+  "n_train_labels": 1141,
+  "n_test_labels": 143,
+  "cpu_affinity": [
+    12,
+    13
+  ],
+  "model_selection": "none; fixed defaults; training labels only",
+  "status": "ok",
+  "train_positive_fraction": 0.5635407537248028,
+  "test_positive_fraction": 0.27972027972027974,
+  "metrics": {
+    "auroc": 0.5020631067961165,
+    "average_precision": 0.33744853667447233,
+    "brier": 0.3052346828878275
+  },
+  "fit_predict_seconds": 0.29937978461384773
+}

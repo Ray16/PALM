@@ -9,24 +9,6 @@
       "params": {}
     },
     {
-      "name": "moleculenet_freesolv__s0__new_plain",
-      "dataset": "moleculenet_freesolv",
-      "seed": 0,
-      "setting": "new_plain",
-      "implementation": "new",
-      "params": {}
-    },
-    {
-      "name": "moleculenet_freesolv__s0__new_budget1",
-      "dataset": "moleculenet_freesolv",
-      "seed": 0,
-      "setting": "new_budget1",
-      "implementation": "new",
-      "params": {
-        "refine_restarts": 1
-      }
-    },
-    {
       "name": "moleculenet_freesolv__s0__previous_combined",
       "dataset": "moleculenet_freesolv",
       "seed": 0,
@@ -38,10 +20,18 @@
       }
     },
     {
-      "name": "moleculenet_freesolv__s0__new_combined",
+      "name": "moleculenet_freesolv__s0__new_default_plain",
       "dataset": "moleculenet_freesolv",
       "seed": 0,
-      "setting": "new_combined",
+      "setting": "new_default_plain",
+      "implementation": "new",
+      "params": {}
+    },
+    {
+      "name": "moleculenet_freesolv__s0__new_default_combined",
+      "dataset": "moleculenet_freesolv",
+      "seed": 0,
+      "setting": "new_default_combined",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -49,10 +39,10 @@
       }
     },
     {
-      "name": "moleculenet_freesolv__s0__new_strict",
+      "name": "moleculenet_freesolv__s0__new_default_strict",
       "dataset": "moleculenet_freesolv",
       "seed": 0,
-      "setting": "new_strict",
+      "setting": "new_default_strict",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -61,41 +51,22 @@
       }
     },
     {
-      "name": "moleculenet_freesolv__s0__new_auto_pair",
+      "name": "moleculenet_freesolv__s0__new_default_cut",
       "dataset": "moleculenet_freesolv",
       "seed": 0,
-      "setting": "new_auto_pair",
+      "setting": "new_default_cut",
       "implementation": "new",
       "params": {
         "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1
+        "rank_check": "cut_error",
+        "on_rank_failure": "return"
       }
     },
     {
-      "name": "moleculenet_freesolv__s0__new_auto_cut",
+      "name": "moleculenet_freesolv__s0__new_default_weighted",
       "dataset": "moleculenet_freesolv",
       "seed": 0,
-      "setting": "new_auto_cut",
-      "implementation": "new",
-      "params": {
-        "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1,
-        "rank_check": "cut_error"
-      }
-    },
-    {
-      "name": "moleculenet_freesolv__s0__new_weighted",
-      "dataset": "moleculenet_freesolv",
-      "seed": 0,
-      "setting": "new_weighted",
+      "setting": "new_default_weighted",
       "implementation": "new",
       "params": {
         "fold_weights": [
@@ -126,24 +97,6 @@
       "params": {}
     },
     {
-      "name": "moleculenet_freesolv__s1__new_plain",
-      "dataset": "moleculenet_freesolv",
-      "seed": 1,
-      "setting": "new_plain",
-      "implementation": "new",
-      "params": {}
-    },
-    {
-      "name": "moleculenet_freesolv__s1__new_budget1",
-      "dataset": "moleculenet_freesolv",
-      "seed": 1,
-      "setting": "new_budget1",
-      "implementation": "new",
-      "params": {
-        "refine_restarts": 1
-      }
-    },
-    {
       "name": "moleculenet_freesolv__s1__previous_combined",
       "dataset": "moleculenet_freesolv",
       "seed": 1,
@@ -155,10 +108,18 @@
       }
     },
     {
-      "name": "moleculenet_freesolv__s1__new_combined",
+      "name": "moleculenet_freesolv__s1__new_default_plain",
       "dataset": "moleculenet_freesolv",
       "seed": 1,
-      "setting": "new_combined",
+      "setting": "new_default_plain",
+      "implementation": "new",
+      "params": {}
+    },
+    {
+      "name": "moleculenet_freesolv__s1__new_default_combined",
+      "dataset": "moleculenet_freesolv",
+      "seed": 1,
+      "setting": "new_default_combined",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -166,10 +127,10 @@
       }
     },
     {
-      "name": "moleculenet_freesolv__s1__new_strict",
+      "name": "moleculenet_freesolv__s1__new_default_strict",
       "dataset": "moleculenet_freesolv",
       "seed": 1,
-      "setting": "new_strict",
+      "setting": "new_default_strict",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -178,41 +139,22 @@
       }
     },
     {
-      "name": "moleculenet_freesolv__s1__new_auto_pair",
+      "name": "moleculenet_freesolv__s1__new_default_cut",
       "dataset": "moleculenet_freesolv",
       "seed": 1,
-      "setting": "new_auto_pair",
+      "setting": "new_default_cut",
       "implementation": "new",
       "params": {
         "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1
+        "rank_check": "cut_error",
+        "on_rank_failure": "return"
       }
     },
     {
-      "name": "moleculenet_freesolv__s1__new_auto_cut",
+      "name": "moleculenet_freesolv__s1__new_default_weighted",
       "dataset": "moleculenet_freesolv",
       "seed": 1,
-      "setting": "new_auto_cut",
-      "implementation": "new",
-      "params": {
-        "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1,
-        "rank_check": "cut_error"
-      }
-    },
-    {
-      "name": "moleculenet_freesolv__s1__new_weighted",
-      "dataset": "moleculenet_freesolv",
-      "seed": 1,
-      "setting": "new_weighted",
+      "setting": "new_default_weighted",
       "implementation": "new",
       "params": {
         "fold_weights": [
@@ -243,24 +185,6 @@
       "params": {}
     },
     {
-      "name": "moleculenet_freesolv__s2__new_plain",
-      "dataset": "moleculenet_freesolv",
-      "seed": 2,
-      "setting": "new_plain",
-      "implementation": "new",
-      "params": {}
-    },
-    {
-      "name": "moleculenet_freesolv__s2__new_budget1",
-      "dataset": "moleculenet_freesolv",
-      "seed": 2,
-      "setting": "new_budget1",
-      "implementation": "new",
-      "params": {
-        "refine_restarts": 1
-      }
-    },
-    {
       "name": "moleculenet_freesolv__s2__previous_combined",
       "dataset": "moleculenet_freesolv",
       "seed": 2,
@@ -272,10 +196,18 @@
       }
     },
     {
-      "name": "moleculenet_freesolv__s2__new_combined",
+      "name": "moleculenet_freesolv__s2__new_default_plain",
       "dataset": "moleculenet_freesolv",
       "seed": 2,
-      "setting": "new_combined",
+      "setting": "new_default_plain",
+      "implementation": "new",
+      "params": {}
+    },
+    {
+      "name": "moleculenet_freesolv__s2__new_default_combined",
+      "dataset": "moleculenet_freesolv",
+      "seed": 2,
+      "setting": "new_default_combined",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -283,10 +215,10 @@
       }
     },
     {
-      "name": "moleculenet_freesolv__s2__new_strict",
+      "name": "moleculenet_freesolv__s2__new_default_strict",
       "dataset": "moleculenet_freesolv",
       "seed": 2,
-      "setting": "new_strict",
+      "setting": "new_default_strict",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -295,41 +227,22 @@
       }
     },
     {
-      "name": "moleculenet_freesolv__s2__new_auto_pair",
+      "name": "moleculenet_freesolv__s2__new_default_cut",
       "dataset": "moleculenet_freesolv",
       "seed": 2,
-      "setting": "new_auto_pair",
+      "setting": "new_default_cut",
       "implementation": "new",
       "params": {
         "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1
+        "rank_check": "cut_error",
+        "on_rank_failure": "return"
       }
     },
     {
-      "name": "moleculenet_freesolv__s2__new_auto_cut",
+      "name": "moleculenet_freesolv__s2__new_default_weighted",
       "dataset": "moleculenet_freesolv",
       "seed": 2,
-      "setting": "new_auto_cut",
-      "implementation": "new",
-      "params": {
-        "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1,
-        "rank_check": "cut_error"
-      }
-    },
-    {
-      "name": "moleculenet_freesolv__s2__new_weighted",
-      "dataset": "moleculenet_freesolv",
-      "seed": 2,
-      "setting": "new_weighted",
+      "setting": "new_default_weighted",
       "implementation": "new",
       "params": {
         "fold_weights": [
@@ -360,24 +273,6 @@
       "params": {}
     },
     {
-      "name": "moleculenet_esol__s0__new_plain",
-      "dataset": "moleculenet_esol",
-      "seed": 0,
-      "setting": "new_plain",
-      "implementation": "new",
-      "params": {}
-    },
-    {
-      "name": "moleculenet_esol__s0__new_budget1",
-      "dataset": "moleculenet_esol",
-      "seed": 0,
-      "setting": "new_budget1",
-      "implementation": "new",
-      "params": {
-        "refine_restarts": 1
-      }
-    },
-    {
       "name": "moleculenet_esol__s0__previous_combined",
       "dataset": "moleculenet_esol",
       "seed": 0,
@@ -389,10 +284,18 @@
       }
     },
     {
-      "name": "moleculenet_esol__s0__new_combined",
+      "name": "moleculenet_esol__s0__new_default_plain",
       "dataset": "moleculenet_esol",
       "seed": 0,
-      "setting": "new_combined",
+      "setting": "new_default_plain",
+      "implementation": "new",
+      "params": {}
+    },
+    {
+      "name": "moleculenet_esol__s0__new_default_combined",
+      "dataset": "moleculenet_esol",
+      "seed": 0,
+      "setting": "new_default_combined",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -400,10 +303,10 @@
       }
     },
     {
-      "name": "moleculenet_esol__s0__new_strict",
+      "name": "moleculenet_esol__s0__new_default_strict",
       "dataset": "moleculenet_esol",
       "seed": 0,
-      "setting": "new_strict",
+      "setting": "new_default_strict",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -412,41 +315,22 @@
       }
     },
     {
-      "name": "moleculenet_esol__s0__new_auto_pair",
+      "name": "moleculenet_esol__s0__new_default_cut",
       "dataset": "moleculenet_esol",
       "seed": 0,
-      "setting": "new_auto_pair",
+      "setting": "new_default_cut",
       "implementation": "new",
       "params": {
         "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1
+        "rank_check": "cut_error",
+        "on_rank_failure": "return"
       }
     },
     {
-      "name": "moleculenet_esol__s0__new_auto_cut",
+      "name": "moleculenet_esol__s0__new_default_weighted",
       "dataset": "moleculenet_esol",
       "seed": 0,
-      "setting": "new_auto_cut",
-      "implementation": "new",
-      "params": {
-        "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1,
-        "rank_check": "cut_error"
-      }
-    },
-    {
-      "name": "moleculenet_esol__s0__new_weighted",
-      "dataset": "moleculenet_esol",
-      "seed": 0,
-      "setting": "new_weighted",
+      "setting": "new_default_weighted",
       "implementation": "new",
       "params": {
         "fold_weights": [
@@ -477,24 +361,6 @@
       "params": {}
     },
     {
-      "name": "moleculenet_esol__s1__new_plain",
-      "dataset": "moleculenet_esol",
-      "seed": 1,
-      "setting": "new_plain",
-      "implementation": "new",
-      "params": {}
-    },
-    {
-      "name": "moleculenet_esol__s1__new_budget1",
-      "dataset": "moleculenet_esol",
-      "seed": 1,
-      "setting": "new_budget1",
-      "implementation": "new",
-      "params": {
-        "refine_restarts": 1
-      }
-    },
-    {
       "name": "moleculenet_esol__s1__previous_combined",
       "dataset": "moleculenet_esol",
       "seed": 1,
@@ -506,10 +372,18 @@
       }
     },
     {
-      "name": "moleculenet_esol__s1__new_combined",
+      "name": "moleculenet_esol__s1__new_default_plain",
       "dataset": "moleculenet_esol",
       "seed": 1,
-      "setting": "new_combined",
+      "setting": "new_default_plain",
+      "implementation": "new",
+      "params": {}
+    },
+    {
+      "name": "moleculenet_esol__s1__new_default_combined",
+      "dataset": "moleculenet_esol",
+      "seed": 1,
+      "setting": "new_default_combined",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -517,10 +391,10 @@
       }
     },
     {
-      "name": "moleculenet_esol__s1__new_strict",
+      "name": "moleculenet_esol__s1__new_default_strict",
       "dataset": "moleculenet_esol",
       "seed": 1,
-      "setting": "new_strict",
+      "setting": "new_default_strict",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -529,41 +403,22 @@
       }
     },
     {
-      "name": "moleculenet_esol__s1__new_auto_pair",
+      "name": "moleculenet_esol__s1__new_default_cut",
       "dataset": "moleculenet_esol",
       "seed": 1,
-      "setting": "new_auto_pair",
+      "setting": "new_default_cut",
       "implementation": "new",
       "params": {
         "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1
+        "rank_check": "cut_error",
+        "on_rank_failure": "return"
       }
     },
     {
-      "name": "moleculenet_esol__s1__new_auto_cut",
+      "name": "moleculenet_esol__s1__new_default_weighted",
       "dataset": "moleculenet_esol",
       "seed": 1,
-      "setting": "new_auto_cut",
-      "implementation": "new",
-      "params": {
-        "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1,
-        "rank_check": "cut_error"
-      }
-    },
-    {
-      "name": "moleculenet_esol__s1__new_weighted",
-      "dataset": "moleculenet_esol",
-      "seed": 1,
-      "setting": "new_weighted",
+      "setting": "new_default_weighted",
       "implementation": "new",
       "params": {
         "fold_weights": [
@@ -594,24 +449,6 @@
       "params": {}
     },
     {
-      "name": "moleculenet_esol__s2__new_plain",
-      "dataset": "moleculenet_esol",
-      "seed": 2,
-      "setting": "new_plain",
-      "implementation": "new",
-      "params": {}
-    },
-    {
-      "name": "moleculenet_esol__s2__new_budget1",
-      "dataset": "moleculenet_esol",
-      "seed": 2,
-      "setting": "new_budget1",
-      "implementation": "new",
-      "params": {
-        "refine_restarts": 1
-      }
-    },
-    {
       "name": "moleculenet_esol__s2__previous_combined",
       "dataset": "moleculenet_esol",
       "seed": 2,
@@ -623,10 +460,18 @@
       }
     },
     {
-      "name": "moleculenet_esol__s2__new_combined",
+      "name": "moleculenet_esol__s2__new_default_plain",
       "dataset": "moleculenet_esol",
       "seed": 2,
-      "setting": "new_combined",
+      "setting": "new_default_plain",
+      "implementation": "new",
+      "params": {}
+    },
+    {
+      "name": "moleculenet_esol__s2__new_default_combined",
+      "dataset": "moleculenet_esol",
+      "seed": 2,
+      "setting": "new_default_combined",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -634,10 +479,10 @@
       }
     },
     {
-      "name": "moleculenet_esol__s2__new_strict",
+      "name": "moleculenet_esol__s2__new_default_strict",
       "dataset": "moleculenet_esol",
       "seed": 2,
-      "setting": "new_strict",
+      "setting": "new_default_strict",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -646,41 +491,22 @@
       }
     },
     {
-      "name": "moleculenet_esol__s2__new_auto_pair",
+      "name": "moleculenet_esol__s2__new_default_cut",
       "dataset": "moleculenet_esol",
       "seed": 2,
-      "setting": "new_auto_pair",
+      "setting": "new_default_cut",
       "implementation": "new",
       "params": {
         "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1
+        "rank_check": "cut_error",
+        "on_rank_failure": "return"
       }
     },
     {
-      "name": "moleculenet_esol__s2__new_auto_cut",
+      "name": "moleculenet_esol__s2__new_default_weighted",
       "dataset": "moleculenet_esol",
       "seed": 2,
-      "setting": "new_auto_cut",
-      "implementation": "new",
-      "params": {
-        "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1,
-        "rank_check": "cut_error"
-      }
-    },
-    {
-      "name": "moleculenet_esol__s2__new_weighted",
-      "dataset": "moleculenet_esol",
-      "seed": 2,
-      "setting": "new_weighted",
+      "setting": "new_default_weighted",
       "implementation": "new",
       "params": {
         "fold_weights": [
@@ -711,24 +537,6 @@
       "params": {}
     },
     {
-      "name": "moleculenet_bace__s0__new_plain",
-      "dataset": "moleculenet_bace",
-      "seed": 0,
-      "setting": "new_plain",
-      "implementation": "new",
-      "params": {}
-    },
-    {
-      "name": "moleculenet_bace__s0__new_budget1",
-      "dataset": "moleculenet_bace",
-      "seed": 0,
-      "setting": "new_budget1",
-      "implementation": "new",
-      "params": {
-        "refine_restarts": 1
-      }
-    },
-    {
       "name": "moleculenet_bace__s0__previous_combined",
       "dataset": "moleculenet_bace",
       "seed": 0,
@@ -740,10 +548,18 @@
       }
     },
     {
-      "name": "moleculenet_bace__s0__new_combined",
+      "name": "moleculenet_bace__s0__new_default_plain",
       "dataset": "moleculenet_bace",
       "seed": 0,
-      "setting": "new_combined",
+      "setting": "new_default_plain",
+      "implementation": "new",
+      "params": {}
+    },
+    {
+      "name": "moleculenet_bace__s0__new_default_combined",
+      "dataset": "moleculenet_bace",
+      "seed": 0,
+      "setting": "new_default_combined",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -751,10 +567,10 @@
       }
     },
     {
-      "name": "moleculenet_bace__s0__new_strict",
+      "name": "moleculenet_bace__s0__new_default_strict",
       "dataset": "moleculenet_bace",
       "seed": 0,
-      "setting": "new_strict",
+      "setting": "new_default_strict",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -763,41 +579,22 @@
       }
     },
     {
-      "name": "moleculenet_bace__s0__new_auto_pair",
+      "name": "moleculenet_bace__s0__new_default_cut",
       "dataset": "moleculenet_bace",
       "seed": 0,
-      "setting": "new_auto_pair",
+      "setting": "new_default_cut",
       "implementation": "new",
       "params": {
         "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1
+        "rank_check": "cut_error",
+        "on_rank_failure": "return"
       }
     },
     {
-      "name": "moleculenet_bace__s0__new_auto_cut",
+      "name": "moleculenet_bace__s0__new_default_weighted",
       "dataset": "moleculenet_bace",
       "seed": 0,
-      "setting": "new_auto_cut",
-      "implementation": "new",
-      "params": {
-        "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1,
-        "rank_check": "cut_error"
-      }
-    },
-    {
-      "name": "moleculenet_bace__s0__new_weighted",
-      "dataset": "moleculenet_bace",
-      "seed": 0,
-      "setting": "new_weighted",
+      "setting": "new_default_weighted",
       "implementation": "new",
       "params": {
         "fold_weights": [
@@ -828,24 +625,6 @@
       "params": {}
     },
     {
-      "name": "moleculenet_bace__s1__new_plain",
-      "dataset": "moleculenet_bace",
-      "seed": 1,
-      "setting": "new_plain",
-      "implementation": "new",
-      "params": {}
-    },
-    {
-      "name": "moleculenet_bace__s1__new_budget1",
-      "dataset": "moleculenet_bace",
-      "seed": 1,
-      "setting": "new_budget1",
-      "implementation": "new",
-      "params": {
-        "refine_restarts": 1
-      }
-    },
-    {
       "name": "moleculenet_bace__s1__previous_combined",
       "dataset": "moleculenet_bace",
       "seed": 1,
@@ -857,10 +636,18 @@
       }
     },
     {
-      "name": "moleculenet_bace__s1__new_combined",
+      "name": "moleculenet_bace__s1__new_default_plain",
       "dataset": "moleculenet_bace",
       "seed": 1,
-      "setting": "new_combined",
+      "setting": "new_default_plain",
+      "implementation": "new",
+      "params": {}
+    },
+    {
+      "name": "moleculenet_bace__s1__new_default_combined",
+      "dataset": "moleculenet_bace",
+      "seed": 1,
+      "setting": "new_default_combined",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -868,10 +655,10 @@
       }
     },
     {
-      "name": "moleculenet_bace__s1__new_strict",
+      "name": "moleculenet_bace__s1__new_default_strict",
       "dataset": "moleculenet_bace",
       "seed": 1,
-      "setting": "new_strict",
+      "setting": "new_default_strict",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -880,41 +667,22 @@
       }
     },
     {
-      "name": "moleculenet_bace__s1__new_auto_pair",
+      "name": "moleculenet_bace__s1__new_default_cut",
       "dataset": "moleculenet_bace",
       "seed": 1,
-      "setting": "new_auto_pair",
+      "setting": "new_default_cut",
       "implementation": "new",
       "params": {
         "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1
+        "rank_check": "cut_error",
+        "on_rank_failure": "return"
       }
     },
     {
-      "name": "moleculenet_bace__s1__new_auto_cut",
+      "name": "moleculenet_bace__s1__new_default_weighted",
       "dataset": "moleculenet_bace",
       "seed": 1,
-      "setting": "new_auto_cut",
-      "implementation": "new",
-      "params": {
-        "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1,
-        "rank_check": "cut_error"
-      }
-    },
-    {
-      "name": "moleculenet_bace__s1__new_weighted",
-      "dataset": "moleculenet_bace",
-      "seed": 1,
-      "setting": "new_weighted",
+      "setting": "new_default_weighted",
       "implementation": "new",
       "params": {
         "fold_weights": [
@@ -945,24 +713,6 @@
       "params": {}
     },
     {
-      "name": "moleculenet_bace__s2__new_plain",
-      "dataset": "moleculenet_bace",
-      "seed": 2,
-      "setting": "new_plain",
-      "implementation": "new",
-      "params": {}
-    },
-    {
-      "name": "moleculenet_bace__s2__new_budget1",
-      "dataset": "moleculenet_bace",
-      "seed": 2,
-      "setting": "new_budget1",
-      "implementation": "new",
-      "params": {
-        "refine_restarts": 1
-      }
-    },
-    {
       "name": "moleculenet_bace__s2__previous_combined",
       "dataset": "moleculenet_bace",
       "seed": 2,
@@ -974,10 +724,18 @@
       }
     },
     {
-      "name": "moleculenet_bace__s2__new_combined",
+      "name": "moleculenet_bace__s2__new_default_plain",
       "dataset": "moleculenet_bace",
       "seed": 2,
-      "setting": "new_combined",
+      "setting": "new_default_plain",
+      "implementation": "new",
+      "params": {}
+    },
+    {
+      "name": "moleculenet_bace__s2__new_default_combined",
+      "dataset": "moleculenet_bace",
+      "seed": 2,
+      "setting": "new_default_combined",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -985,10 +743,10 @@
       }
     },
     {
-      "name": "moleculenet_bace__s2__new_strict",
+      "name": "moleculenet_bace__s2__new_default_strict",
       "dataset": "moleculenet_bace",
       "seed": 2,
-      "setting": "new_strict",
+      "setting": "new_default_strict",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -997,41 +755,22 @@
       }
     },
     {
-      "name": "moleculenet_bace__s2__new_auto_pair",
+      "name": "moleculenet_bace__s2__new_default_cut",
       "dataset": "moleculenet_bace",
       "seed": 2,
-      "setting": "new_auto_pair",
+      "setting": "new_default_cut",
       "implementation": "new",
       "params": {
         "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1
+        "rank_check": "cut_error",
+        "on_rank_failure": "return"
       }
     },
     {
-      "name": "moleculenet_bace__s2__new_auto_cut",
+      "name": "moleculenet_bace__s2__new_default_weighted",
       "dataset": "moleculenet_bace",
       "seed": 2,
-      "setting": "new_auto_cut",
-      "implementation": "new",
-      "params": {
-        "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1,
-        "rank_check": "cut_error"
-      }
-    },
-    {
-      "name": "moleculenet_bace__s2__new_weighted",
-      "dataset": "moleculenet_bace",
-      "seed": 2,
-      "setting": "new_weighted",
+      "setting": "new_default_weighted",
       "implementation": "new",
       "params": {
         "fold_weights": [
@@ -1062,24 +801,6 @@
       "params": {}
     },
     {
-      "name": "moleculenet_bbbp__s0__new_plain",
-      "dataset": "moleculenet_bbbp",
-      "seed": 0,
-      "setting": "new_plain",
-      "implementation": "new",
-      "params": {}
-    },
-    {
-      "name": "moleculenet_bbbp__s0__new_budget1",
-      "dataset": "moleculenet_bbbp",
-      "seed": 0,
-      "setting": "new_budget1",
-      "implementation": "new",
-      "params": {
-        "refine_restarts": 1
-      }
-    },
-    {
       "name": "moleculenet_bbbp__s0__previous_combined",
       "dataset": "moleculenet_bbbp",
       "seed": 0,
@@ -1091,10 +812,18 @@
       }
     },
     {
-      "name": "moleculenet_bbbp__s0__new_combined",
+      "name": "moleculenet_bbbp__s0__new_default_plain",
       "dataset": "moleculenet_bbbp",
       "seed": 0,
-      "setting": "new_combined",
+      "setting": "new_default_plain",
+      "implementation": "new",
+      "params": {}
+    },
+    {
+      "name": "moleculenet_bbbp__s0__new_default_combined",
+      "dataset": "moleculenet_bbbp",
+      "seed": 0,
+      "setting": "new_default_combined",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -1102,10 +831,10 @@
       }
     },
     {
-      "name": "moleculenet_bbbp__s0__new_strict",
+      "name": "moleculenet_bbbp__s0__new_default_strict",
       "dataset": "moleculenet_bbbp",
       "seed": 0,
-      "setting": "new_strict",
+      "setting": "new_default_strict",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -1114,41 +843,22 @@
       }
     },
     {
-      "name": "moleculenet_bbbp__s0__new_auto_pair",
+      "name": "moleculenet_bbbp__s0__new_default_cut",
       "dataset": "moleculenet_bbbp",
       "seed": 0,
-      "setting": "new_auto_pair",
+      "setting": "new_default_cut",
       "implementation": "new",
       "params": {
         "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1
+        "rank_check": "cut_error",
+        "on_rank_failure": "return"
       }
     },
     {
-      "name": "moleculenet_bbbp__s0__new_auto_cut",
+      "name": "moleculenet_bbbp__s0__new_default_weighted",
       "dataset": "moleculenet_bbbp",
       "seed": 0,
-      "setting": "new_auto_cut",
-      "implementation": "new",
-      "params": {
-        "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1,
-        "rank_check": "cut_error"
-      }
-    },
-    {
-      "name": "moleculenet_bbbp__s0__new_weighted",
-      "dataset": "moleculenet_bbbp",
-      "seed": 0,
-      "setting": "new_weighted",
+      "setting": "new_default_weighted",
       "implementation": "new",
       "params": {
         "fold_weights": [
@@ -1179,24 +889,6 @@
       "params": {}
     },
     {
-      "name": "moleculenet_bbbp__s1__new_plain",
-      "dataset": "moleculenet_bbbp",
-      "seed": 1,
-      "setting": "new_plain",
-      "implementation": "new",
-      "params": {}
-    },
-    {
-      "name": "moleculenet_bbbp__s1__new_budget1",
-      "dataset": "moleculenet_bbbp",
-      "seed": 1,
-      "setting": "new_budget1",
-      "implementation": "new",
-      "params": {
-        "refine_restarts": 1
-      }
-    },
-    {
       "name": "moleculenet_bbbp__s1__previous_combined",
       "dataset": "moleculenet_bbbp",
       "seed": 1,
@@ -1208,10 +900,18 @@
       }
     },
     {
-      "name": "moleculenet_bbbp__s1__new_combined",
+      "name": "moleculenet_bbbp__s1__new_default_plain",
       "dataset": "moleculenet_bbbp",
       "seed": 1,
-      "setting": "new_combined",
+      "setting": "new_default_plain",
+      "implementation": "new",
+      "params": {}
+    },
+    {
+      "name": "moleculenet_bbbp__s1__new_default_combined",
+      "dataset": "moleculenet_bbbp",
+      "seed": 1,
+      "setting": "new_default_combined",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -1219,10 +919,10 @@
       }
     },
     {
-      "name": "moleculenet_bbbp__s1__new_strict",
+      "name": "moleculenet_bbbp__s1__new_default_strict",
       "dataset": "moleculenet_bbbp",
       "seed": 1,
-      "setting": "new_strict",
+      "setting": "new_default_strict",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -1231,41 +931,22 @@
       }
     },
     {
-      "name": "moleculenet_bbbp__s1__new_auto_pair",
+      "name": "moleculenet_bbbp__s1__new_default_cut",
       "dataset": "moleculenet_bbbp",
       "seed": 1,
-      "setting": "new_auto_pair",
+      "setting": "new_default_cut",
       "implementation": "new",
       "params": {
         "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1
+        "rank_check": "cut_error",
+        "on_rank_failure": "return"
       }
     },
     {
-      "name": "moleculenet_bbbp__s1__new_auto_cut",
+      "name": "moleculenet_bbbp__s1__new_default_weighted",
       "dataset": "moleculenet_bbbp",
       "seed": 1,
-      "setting": "new_auto_cut",
-      "implementation": "new",
-      "params": {
-        "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1,
-        "rank_check": "cut_error"
-      }
-    },
-    {
-      "name": "moleculenet_bbbp__s1__new_weighted",
-      "dataset": "moleculenet_bbbp",
-      "seed": 1,
-      "setting": "new_weighted",
+      "setting": "new_default_weighted",
       "implementation": "new",
       "params": {
         "fold_weights": [
@@ -1296,24 +977,6 @@
       "params": {}
     },
     {
-      "name": "moleculenet_bbbp__s2__new_plain",
-      "dataset": "moleculenet_bbbp",
-      "seed": 2,
-      "setting": "new_plain",
-      "implementation": "new",
-      "params": {}
-    },
-    {
-      "name": "moleculenet_bbbp__s2__new_budget1",
-      "dataset": "moleculenet_bbbp",
-      "seed": 2,
-      "setting": "new_budget1",
-      "implementation": "new",
-      "params": {
-        "refine_restarts": 1
-      }
-    },
-    {
       "name": "moleculenet_bbbp__s2__previous_combined",
       "dataset": "moleculenet_bbbp",
       "seed": 2,
@@ -1325,10 +988,18 @@
       }
     },
     {
-      "name": "moleculenet_bbbp__s2__new_combined",
+      "name": "moleculenet_bbbp__s2__new_default_plain",
       "dataset": "moleculenet_bbbp",
       "seed": 2,
-      "setting": "new_combined",
+      "setting": "new_default_plain",
+      "implementation": "new",
+      "params": {}
+    },
+    {
+      "name": "moleculenet_bbbp__s2__new_default_combined",
+      "dataset": "moleculenet_bbbp",
+      "seed": 2,
+      "setting": "new_default_combined",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -1336,10 +1007,10 @@
       }
     },
     {
-      "name": "moleculenet_bbbp__s2__new_strict",
+      "name": "moleculenet_bbbp__s2__new_default_strict",
       "dataset": "moleculenet_bbbp",
       "seed": 2,
-      "setting": "new_strict",
+      "setting": "new_default_strict",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -1348,41 +1019,22 @@
       }
     },
     {
-      "name": "moleculenet_bbbp__s2__new_auto_pair",
+      "name": "moleculenet_bbbp__s2__new_default_cut",
       "dataset": "moleculenet_bbbp",
       "seed": 2,
-      "setting": "new_auto_pair",
+      "setting": "new_default_cut",
       "implementation": "new",
       "params": {
         "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1
+        "rank_check": "cut_error",
+        "on_rank_failure": "return"
       }
     },
     {
-      "name": "moleculenet_bbbp__s2__new_auto_cut",
+      "name": "moleculenet_bbbp__s2__new_default_weighted",
       "dataset": "moleculenet_bbbp",
       "seed": 2,
-      "setting": "new_auto_cut",
-      "implementation": "new",
-      "params": {
-        "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1,
-        "rank_check": "cut_error"
-      }
-    },
-    {
-      "name": "moleculenet_bbbp__s2__new_weighted",
-      "dataset": "moleculenet_bbbp",
-      "seed": 2,
-      "setting": "new_weighted",
+      "setting": "new_default_weighted",
       "implementation": "new",
       "params": {
         "fold_weights": [
@@ -1413,24 +1065,6 @@
       "params": {}
     },
     {
-      "name": "moleculenet_lipophilicity__s0__new_plain",
-      "dataset": "moleculenet_lipophilicity",
-      "seed": 0,
-      "setting": "new_plain",
-      "implementation": "new",
-      "params": {}
-    },
-    {
-      "name": "moleculenet_lipophilicity__s0__new_budget1",
-      "dataset": "moleculenet_lipophilicity",
-      "seed": 0,
-      "setting": "new_budget1",
-      "implementation": "new",
-      "params": {
-        "refine_restarts": 1
-      }
-    },
-    {
       "name": "moleculenet_lipophilicity__s0__previous_combined",
       "dataset": "moleculenet_lipophilicity",
       "seed": 0,
@@ -1442,10 +1076,18 @@
       }
     },
     {
-      "name": "moleculenet_lipophilicity__s0__new_combined",
+      "name": "moleculenet_lipophilicity__s0__new_default_plain",
       "dataset": "moleculenet_lipophilicity",
       "seed": 0,
-      "setting": "new_combined",
+      "setting": "new_default_plain",
+      "implementation": "new",
+      "params": {}
+    },
+    {
+      "name": "moleculenet_lipophilicity__s0__new_default_combined",
+      "dataset": "moleculenet_lipophilicity",
+      "seed": 0,
+      "setting": "new_default_combined",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -1453,10 +1095,10 @@
       }
     },
     {
-      "name": "moleculenet_lipophilicity__s0__new_strict",
+      "name": "moleculenet_lipophilicity__s0__new_default_strict",
       "dataset": "moleculenet_lipophilicity",
       "seed": 0,
-      "setting": "new_strict",
+      "setting": "new_default_strict",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -1465,41 +1107,22 @@
       }
     },
     {
-      "name": "moleculenet_lipophilicity__s0__new_auto_pair",
+      "name": "moleculenet_lipophilicity__s0__new_default_cut",
       "dataset": "moleculenet_lipophilicity",
       "seed": 0,
-      "setting": "new_auto_pair",
+      "setting": "new_default_cut",
       "implementation": "new",
       "params": {
         "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1
+        "rank_check": "cut_error",
+        "on_rank_failure": "return"
       }
     },
     {
-      "name": "moleculenet_lipophilicity__s0__new_auto_cut",
+      "name": "moleculenet_lipophilicity__s0__new_default_weighted",
       "dataset": "moleculenet_lipophilicity",
       "seed": 0,
-      "setting": "new_auto_cut",
-      "implementation": "new",
-      "params": {
-        "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1,
-        "rank_check": "cut_error"
-      }
-    },
-    {
-      "name": "moleculenet_lipophilicity__s0__new_weighted",
-      "dataset": "moleculenet_lipophilicity",
-      "seed": 0,
-      "setting": "new_weighted",
+      "setting": "new_default_weighted",
       "implementation": "new",
       "params": {
         "fold_weights": [
@@ -1530,24 +1153,6 @@
       "params": {}
     },
     {
-      "name": "moleculenet_lipophilicity__s1__new_plain",
-      "dataset": "moleculenet_lipophilicity",
-      "seed": 1,
-      "setting": "new_plain",
-      "implementation": "new",
-      "params": {}
-    },
-    {
-      "name": "moleculenet_lipophilicity__s1__new_budget1",
-      "dataset": "moleculenet_lipophilicity",
-      "seed": 1,
-      "setting": "new_budget1",
-      "implementation": "new",
-      "params": {
-        "refine_restarts": 1
-      }
-    },
-    {
       "name": "moleculenet_lipophilicity__s1__previous_combined",
       "dataset": "moleculenet_lipophilicity",
       "seed": 1,
@@ -1559,10 +1164,18 @@
       }
     },
     {
-      "name": "moleculenet_lipophilicity__s1__new_combined",
+      "name": "moleculenet_lipophilicity__s1__new_default_plain",
       "dataset": "moleculenet_lipophilicity",
       "seed": 1,
-      "setting": "new_combined",
+      "setting": "new_default_plain",
+      "implementation": "new",
+      "params": {}
+    },
+    {
+      "name": "moleculenet_lipophilicity__s1__new_default_combined",
+      "dataset": "moleculenet_lipophilicity",
+      "seed": 1,
+      "setting": "new_default_combined",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -1570,10 +1183,10 @@
       }
     },
     {
-      "name": "moleculenet_lipophilicity__s1__new_strict",
+      "name": "moleculenet_lipophilicity__s1__new_default_strict",
       "dataset": "moleculenet_lipophilicity",
       "seed": 1,
-      "setting": "new_strict",
+      "setting": "new_default_strict",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -1582,41 +1195,22 @@
       }
     },
     {
-      "name": "moleculenet_lipophilicity__s1__new_auto_pair",
+      "name": "moleculenet_lipophilicity__s1__new_default_cut",
       "dataset": "moleculenet_lipophilicity",
       "seed": 1,
-      "setting": "new_auto_pair",
+      "setting": "new_default_cut",
       "implementation": "new",
       "params": {
         "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1
+        "rank_check": "cut_error",
+        "on_rank_failure": "return"
       }
     },
     {
-      "name": "moleculenet_lipophilicity__s1__new_auto_cut",
+      "name": "moleculenet_lipophilicity__s1__new_default_weighted",
       "dataset": "moleculenet_lipophilicity",
       "seed": 1,
-      "setting": "new_auto_cut",
-      "implementation": "new",
-      "params": {
-        "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1,
-        "rank_check": "cut_error"
-      }
-    },
-    {
-      "name": "moleculenet_lipophilicity__s1__new_weighted",
-      "dataset": "moleculenet_lipophilicity",
-      "seed": 1,
-      "setting": "new_weighted",
+      "setting": "new_default_weighted",
       "implementation": "new",
       "params": {
         "fold_weights": [
@@ -1647,24 +1241,6 @@
       "params": {}
     },
     {
-      "name": "moleculenet_lipophilicity__s2__new_plain",
-      "dataset": "moleculenet_lipophilicity",
-      "seed": 2,
-      "setting": "new_plain",
-      "implementation": "new",
-      "params": {}
-    },
-    {
-      "name": "moleculenet_lipophilicity__s2__new_budget1",
-      "dataset": "moleculenet_lipophilicity",
-      "seed": 2,
-      "setting": "new_budget1",
-      "implementation": "new",
-      "params": {
-        "refine_restarts": 1
-      }
-    },
-    {
       "name": "moleculenet_lipophilicity__s2__previous_combined",
       "dataset": "moleculenet_lipophilicity",
       "seed": 2,
@@ -1676,10 +1252,18 @@
       }
     },
     {
-      "name": "moleculenet_lipophilicity__s2__new_combined",
+      "name": "moleculenet_lipophilicity__s2__new_default_plain",
       "dataset": "moleculenet_lipophilicity",
       "seed": 2,
-      "setting": "new_combined",
+      "setting": "new_default_plain",
+      "implementation": "new",
+      "params": {}
+    },
+    {
+      "name": "moleculenet_lipophilicity__s2__new_default_combined",
+      "dataset": "moleculenet_lipophilicity",
+      "seed": 2,
+      "setting": "new_default_combined",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -1687,10 +1271,10 @@
       }
     },
     {
-      "name": "moleculenet_lipophilicity__s2__new_strict",
+      "name": "moleculenet_lipophilicity__s2__new_default_strict",
       "dataset": "moleculenet_lipophilicity",
       "seed": 2,
-      "setting": "new_strict",
+      "setting": "new_default_strict",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -1699,41 +1283,22 @@
       }
     },
     {
-      "name": "moleculenet_lipophilicity__s2__new_auto_pair",
+      "name": "moleculenet_lipophilicity__s2__new_default_cut",
       "dataset": "moleculenet_lipophilicity",
       "seed": 2,
-      "setting": "new_auto_pair",
+      "setting": "new_default_cut",
       "implementation": "new",
       "params": {
         "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1
+        "rank_check": "cut_error",
+        "on_rank_failure": "return"
       }
     },
     {
-      "name": "moleculenet_lipophilicity__s2__new_auto_cut",
+      "name": "moleculenet_lipophilicity__s2__new_default_weighted",
       "dataset": "moleculenet_lipophilicity",
       "seed": 2,
-      "setting": "new_auto_cut",
-      "implementation": "new",
-      "params": {
-        "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1,
-        "rank_check": "cut_error"
-      }
-    },
-    {
-      "name": "moleculenet_lipophilicity__s2__new_weighted",
-      "dataset": "moleculenet_lipophilicity",
-      "seed": 2,
-      "setting": "new_weighted",
+      "setting": "new_default_weighted",
       "implementation": "new",
       "params": {
         "fold_weights": [
@@ -1764,24 +1329,6 @@
       "params": {}
     },
     {
-      "name": "moleculenet_tox21__s0__new_plain",
-      "dataset": "moleculenet_tox21",
-      "seed": 0,
-      "setting": "new_plain",
-      "implementation": "new",
-      "params": {}
-    },
-    {
-      "name": "moleculenet_tox21__s0__new_budget1",
-      "dataset": "moleculenet_tox21",
-      "seed": 0,
-      "setting": "new_budget1",
-      "implementation": "new",
-      "params": {
-        "refine_restarts": 1
-      }
-    },
-    {
       "name": "moleculenet_tox21__s0__previous_combined",
       "dataset": "moleculenet_tox21",
       "seed": 0,
@@ -1793,10 +1340,18 @@
       }
     },
     {
-      "name": "moleculenet_tox21__s0__new_combined",
+      "name": "moleculenet_tox21__s0__new_default_plain",
       "dataset": "moleculenet_tox21",
       "seed": 0,
-      "setting": "new_combined",
+      "setting": "new_default_plain",
+      "implementation": "new",
+      "params": {}
+    },
+    {
+      "name": "moleculenet_tox21__s0__new_default_combined",
+      "dataset": "moleculenet_tox21",
+      "seed": 0,
+      "setting": "new_default_combined",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -1804,10 +1359,10 @@
       }
     },
     {
-      "name": "moleculenet_tox21__s0__new_strict",
+      "name": "moleculenet_tox21__s0__new_default_strict",
       "dataset": "moleculenet_tox21",
       "seed": 0,
-      "setting": "new_strict",
+      "setting": "new_default_strict",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -1816,41 +1371,22 @@
       }
     },
     {
-      "name": "moleculenet_tox21__s0__new_auto_pair",
+      "name": "moleculenet_tox21__s0__new_default_cut",
       "dataset": "moleculenet_tox21",
       "seed": 0,
-      "setting": "new_auto_pair",
+      "setting": "new_default_cut",
       "implementation": "new",
       "params": {
         "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1
+        "rank_check": "cut_error",
+        "on_rank_failure": "return"
       }
     },
     {
-      "name": "moleculenet_tox21__s0__new_auto_cut",
+      "name": "moleculenet_tox21__s0__new_default_weighted",
       "dataset": "moleculenet_tox21",
       "seed": 0,
-      "setting": "new_auto_cut",
-      "implementation": "new",
-      "params": {
-        "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1,
-        "rank_check": "cut_error"
-      }
-    },
-    {
-      "name": "moleculenet_tox21__s0__new_weighted",
-      "dataset": "moleculenet_tox21",
-      "seed": 0,
-      "setting": "new_weighted",
+      "setting": "new_default_weighted",
       "implementation": "new",
       "params": {
         "fold_weights": [
@@ -1881,24 +1417,6 @@
       "params": {}
     },
     {
-      "name": "moleculenet_tox21__s1__new_plain",
-      "dataset": "moleculenet_tox21",
-      "seed": 1,
-      "setting": "new_plain",
-      "implementation": "new",
-      "params": {}
-    },
-    {
-      "name": "moleculenet_tox21__s1__new_budget1",
-      "dataset": "moleculenet_tox21",
-      "seed": 1,
-      "setting": "new_budget1",
-      "implementation": "new",
-      "params": {
-        "refine_restarts": 1
-      }
-    },
-    {
       "name": "moleculenet_tox21__s1__previous_combined",
       "dataset": "moleculenet_tox21",
       "seed": 1,
@@ -1910,10 +1428,18 @@
       }
     },
     {
-      "name": "moleculenet_tox21__s1__new_combined",
+      "name": "moleculenet_tox21__s1__new_default_plain",
       "dataset": "moleculenet_tox21",
       "seed": 1,
-      "setting": "new_combined",
+      "setting": "new_default_plain",
+      "implementation": "new",
+      "params": {}
+    },
+    {
+      "name": "moleculenet_tox21__s1__new_default_combined",
+      "dataset": "moleculenet_tox21",
+      "seed": 1,
+      "setting": "new_default_combined",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -1921,10 +1447,10 @@
       }
     },
     {
-      "name": "moleculenet_tox21__s1__new_strict",
+      "name": "moleculenet_tox21__s1__new_default_strict",
       "dataset": "moleculenet_tox21",
       "seed": 1,
-      "setting": "new_strict",
+      "setting": "new_default_strict",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -1933,41 +1459,22 @@
       }
     },
     {
-      "name": "moleculenet_tox21__s1__new_auto_pair",
+      "name": "moleculenet_tox21__s1__new_default_cut",
       "dataset": "moleculenet_tox21",
       "seed": 1,
-      "setting": "new_auto_pair",
+      "setting": "new_default_cut",
       "implementation": "new",
       "params": {
         "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1
+        "rank_check": "cut_error",
+        "on_rank_failure": "return"
       }
     },
     {
-      "name": "moleculenet_tox21__s1__new_auto_cut",
+      "name": "moleculenet_tox21__s1__new_default_weighted",
       "dataset": "moleculenet_tox21",
       "seed": 1,
-      "setting": "new_auto_cut",
-      "implementation": "new",
-      "params": {
-        "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1,
-        "rank_check": "cut_error"
-      }
-    },
-    {
-      "name": "moleculenet_tox21__s1__new_weighted",
-      "dataset": "moleculenet_tox21",
-      "seed": 1,
-      "setting": "new_weighted",
+      "setting": "new_default_weighted",
       "implementation": "new",
       "params": {
         "fold_weights": [
@@ -1998,24 +1505,6 @@
       "params": {}
     },
     {
-      "name": "moleculenet_tox21__s2__new_plain",
-      "dataset": "moleculenet_tox21",
-      "seed": 2,
-      "setting": "new_plain",
-      "implementation": "new",
-      "params": {}
-    },
-    {
-      "name": "moleculenet_tox21__s2__new_budget1",
-      "dataset": "moleculenet_tox21",
-      "seed": 2,
-      "setting": "new_budget1",
-      "implementation": "new",
-      "params": {
-        "refine_restarts": 1
-      }
-    },
-    {
       "name": "moleculenet_tox21__s2__previous_combined",
       "dataset": "moleculenet_tox21",
       "seed": 2,
@@ -2027,10 +1516,18 @@
       }
     },
     {
-      "name": "moleculenet_tox21__s2__new_combined",
+      "name": "moleculenet_tox21__s2__new_default_plain",
       "dataset": "moleculenet_tox21",
       "seed": 2,
-      "setting": "new_combined",
+      "setting": "new_default_plain",
+      "implementation": "new",
+      "params": {}
+    },
+    {
+      "name": "moleculenet_tox21__s2__new_default_combined",
+      "dataset": "moleculenet_tox21",
+      "seed": 2,
+      "setting": "new_default_combined",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -2038,10 +1535,10 @@
       }
     },
     {
-      "name": "moleculenet_tox21__s2__new_strict",
+      "name": "moleculenet_tox21__s2__new_default_strict",
       "dataset": "moleculenet_tox21",
       "seed": 2,
-      "setting": "new_strict",
+      "setting": "new_default_strict",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -2050,41 +1547,22 @@
       }
     },
     {
-      "name": "moleculenet_tox21__s2__new_auto_pair",
+      "name": "moleculenet_tox21__s2__new_default_cut",
       "dataset": "moleculenet_tox21",
       "seed": 2,
-      "setting": "new_auto_pair",
+      "setting": "new_default_cut",
       "implementation": "new",
       "params": {
         "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1
+        "rank_check": "cut_error",
+        "on_rank_failure": "return"
       }
     },
     {
-      "name": "moleculenet_tox21__s2__new_auto_cut",
+      "name": "moleculenet_tox21__s2__new_default_weighted",
       "dataset": "moleculenet_tox21",
       "seed": 2,
-      "setting": "new_auto_cut",
-      "implementation": "new",
-      "params": {
-        "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1,
-        "rank_check": "cut_error"
-      }
-    },
-    {
-      "name": "moleculenet_tox21__s2__new_weighted",
-      "dataset": "moleculenet_tox21",
-      "seed": 2,
-      "setting": "new_weighted",
+      "setting": "new_default_weighted",
       "implementation": "new",
       "params": {
         "fold_weights": [
@@ -2115,24 +1593,6 @@
       "params": {}
     },
     {
-      "name": "moleculenet_clintox__s0__new_plain",
-      "dataset": "moleculenet_clintox",
-      "seed": 0,
-      "setting": "new_plain",
-      "implementation": "new",
-      "params": {}
-    },
-    {
-      "name": "moleculenet_clintox__s0__new_budget1",
-      "dataset": "moleculenet_clintox",
-      "seed": 0,
-      "setting": "new_budget1",
-      "implementation": "new",
-      "params": {
-        "refine_restarts": 1
-      }
-    },
-    {
       "name": "moleculenet_clintox__s0__previous_combined",
       "dataset": "moleculenet_clintox",
       "seed": 0,
@@ -2144,10 +1604,18 @@
       }
     },
     {
-      "name": "moleculenet_clintox__s0__new_combined",
+      "name": "moleculenet_clintox__s0__new_default_plain",
       "dataset": "moleculenet_clintox",
       "seed": 0,
-      "setting": "new_combined",
+      "setting": "new_default_plain",
+      "implementation": "new",
+      "params": {}
+    },
+    {
+      "name": "moleculenet_clintox__s0__new_default_combined",
+      "dataset": "moleculenet_clintox",
+      "seed": 0,
+      "setting": "new_default_combined",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -2155,10 +1623,10 @@
       }
     },
     {
-      "name": "moleculenet_clintox__s0__new_strict",
+      "name": "moleculenet_clintox__s0__new_default_strict",
       "dataset": "moleculenet_clintox",
       "seed": 0,
-      "setting": "new_strict",
+      "setting": "new_default_strict",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -2167,41 +1635,22 @@
       }
     },
     {
-      "name": "moleculenet_clintox__s0__new_auto_pair",
+      "name": "moleculenet_clintox__s0__new_default_cut",
       "dataset": "moleculenet_clintox",
       "seed": 0,
-      "setting": "new_auto_pair",
+      "setting": "new_default_cut",
       "implementation": "new",
       "params": {
         "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1
+        "rank_check": "cut_error",
+        "on_rank_failure": "return"
       }
     },
     {
-      "name": "moleculenet_clintox__s0__new_auto_cut",
+      "name": "moleculenet_clintox__s0__new_default_weighted",
       "dataset": "moleculenet_clintox",
       "seed": 0,
-      "setting": "new_auto_cut",
-      "implementation": "new",
-      "params": {
-        "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1,
-        "rank_check": "cut_error"
-      }
-    },
-    {
-      "name": "moleculenet_clintox__s0__new_weighted",
-      "dataset": "moleculenet_clintox",
-      "seed": 0,
-      "setting": "new_weighted",
+      "setting": "new_default_weighted",
       "implementation": "new",
       "params": {
         "fold_weights": [
@@ -2232,24 +1681,6 @@
       "params": {}
     },
     {
-      "name": "moleculenet_clintox__s1__new_plain",
-      "dataset": "moleculenet_clintox",
-      "seed": 1,
-      "setting": "new_plain",
-      "implementation": "new",
-      "params": {}
-    },
-    {
-      "name": "moleculenet_clintox__s1__new_budget1",
-      "dataset": "moleculenet_clintox",
-      "seed": 1,
-      "setting": "new_budget1",
-      "implementation": "new",
-      "params": {
-        "refine_restarts": 1
-      }
-    },
-    {
       "name": "moleculenet_clintox__s1__previous_combined",
       "dataset": "moleculenet_clintox",
       "seed": 1,
@@ -2261,10 +1692,18 @@
       }
     },
     {
-      "name": "moleculenet_clintox__s1__new_combined",
+      "name": "moleculenet_clintox__s1__new_default_plain",
       "dataset": "moleculenet_clintox",
       "seed": 1,
-      "setting": "new_combined",
+      "setting": "new_default_plain",
+      "implementation": "new",
+      "params": {}
+    },
+    {
+      "name": "moleculenet_clintox__s1__new_default_combined",
+      "dataset": "moleculenet_clintox",
+      "seed": 1,
+      "setting": "new_default_combined",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -2272,10 +1711,10 @@
       }
     },
     {
-      "name": "moleculenet_clintox__s1__new_strict",
+      "name": "moleculenet_clintox__s1__new_default_strict",
       "dataset": "moleculenet_clintox",
       "seed": 1,
-      "setting": "new_strict",
+      "setting": "new_default_strict",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -2284,41 +1723,22 @@
       }
     },
     {
-      "name": "moleculenet_clintox__s1__new_auto_pair",
+      "name": "moleculenet_clintox__s1__new_default_cut",
       "dataset": "moleculenet_clintox",
       "seed": 1,
-      "setting": "new_auto_pair",
+      "setting": "new_default_cut",
       "implementation": "new",
       "params": {
         "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1
+        "rank_check": "cut_error",
+        "on_rank_failure": "return"
       }
     },
     {
-      "name": "moleculenet_clintox__s1__new_auto_cut",
+      "name": "moleculenet_clintox__s1__new_default_weighted",
       "dataset": "moleculenet_clintox",
       "seed": 1,
-      "setting": "new_auto_cut",
-      "implementation": "new",
-      "params": {
-        "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1,
-        "rank_check": "cut_error"
-      }
-    },
-    {
-      "name": "moleculenet_clintox__s1__new_weighted",
-      "dataset": "moleculenet_clintox",
-      "seed": 1,
-      "setting": "new_weighted",
+      "setting": "new_default_weighted",
       "implementation": "new",
       "params": {
         "fold_weights": [
@@ -2349,24 +1769,6 @@
       "params": {}
     },
     {
-      "name": "moleculenet_clintox__s2__new_plain",
-      "dataset": "moleculenet_clintox",
-      "seed": 2,
-      "setting": "new_plain",
-      "implementation": "new",
-      "params": {}
-    },
-    {
-      "name": "moleculenet_clintox__s2__new_budget1",
-      "dataset": "moleculenet_clintox",
-      "seed": 2,
-      "setting": "new_budget1",
-      "implementation": "new",
-      "params": {
-        "refine_restarts": 1
-      }
-    },
-    {
       "name": "moleculenet_clintox__s2__previous_combined",
       "dataset": "moleculenet_clintox",
       "seed": 2,
@@ -2378,10 +1780,18 @@
       }
     },
     {
-      "name": "moleculenet_clintox__s2__new_combined",
+      "name": "moleculenet_clintox__s2__new_default_plain",
       "dataset": "moleculenet_clintox",
       "seed": 2,
-      "setting": "new_combined",
+      "setting": "new_default_plain",
+      "implementation": "new",
+      "params": {}
+    },
+    {
+      "name": "moleculenet_clintox__s2__new_default_combined",
+      "dataset": "moleculenet_clintox",
+      "seed": 2,
+      "setting": "new_default_combined",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -2389,10 +1799,10 @@
       }
     },
     {
-      "name": "moleculenet_clintox__s2__new_strict",
+      "name": "moleculenet_clintox__s2__new_default_strict",
       "dataset": "moleculenet_clintox",
       "seed": 2,
-      "setting": "new_strict",
+      "setting": "new_default_strict",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -2401,41 +1811,22 @@
       }
     },
     {
-      "name": "moleculenet_clintox__s2__new_auto_pair",
+      "name": "moleculenet_clintox__s2__new_default_cut",
       "dataset": "moleculenet_clintox",
       "seed": 2,
-      "setting": "new_auto_pair",
+      "setting": "new_default_cut",
       "implementation": "new",
       "params": {
         "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1
+        "rank_check": "cut_error",
+        "on_rank_failure": "return"
       }
     },
     {
-      "name": "moleculenet_clintox__s2__new_auto_cut",
+      "name": "moleculenet_clintox__s2__new_default_weighted",
       "dataset": "moleculenet_clintox",
       "seed": 2,
-      "setting": "new_auto_cut",
-      "implementation": "new",
-      "params": {
-        "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1,
-        "rank_check": "cut_error"
-      }
-    },
-    {
-      "name": "moleculenet_clintox__s2__new_weighted",
-      "dataset": "moleculenet_clintox",
-      "seed": 2,
-      "setting": "new_weighted",
+      "setting": "new_default_weighted",
       "implementation": "new",
       "params": {
         "fold_weights": [
@@ -2466,24 +1857,6 @@
       "params": {}
     },
     {
-      "name": "moleculenet_sider__s0__new_plain",
-      "dataset": "moleculenet_sider",
-      "seed": 0,
-      "setting": "new_plain",
-      "implementation": "new",
-      "params": {}
-    },
-    {
-      "name": "moleculenet_sider__s0__new_budget1",
-      "dataset": "moleculenet_sider",
-      "seed": 0,
-      "setting": "new_budget1",
-      "implementation": "new",
-      "params": {
-        "refine_restarts": 1
-      }
-    },
-    {
       "name": "moleculenet_sider__s0__previous_combined",
       "dataset": "moleculenet_sider",
       "seed": 0,
@@ -2495,10 +1868,18 @@
       }
     },
     {
-      "name": "moleculenet_sider__s0__new_combined",
+      "name": "moleculenet_sider__s0__new_default_plain",
       "dataset": "moleculenet_sider",
       "seed": 0,
-      "setting": "new_combined",
+      "setting": "new_default_plain",
+      "implementation": "new",
+      "params": {}
+    },
+    {
+      "name": "moleculenet_sider__s0__new_default_combined",
+      "dataset": "moleculenet_sider",
+      "seed": 0,
+      "setting": "new_default_combined",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -2506,10 +1887,10 @@
       }
     },
     {
-      "name": "moleculenet_sider__s0__new_strict",
+      "name": "moleculenet_sider__s0__new_default_strict",
       "dataset": "moleculenet_sider",
       "seed": 0,
-      "setting": "new_strict",
+      "setting": "new_default_strict",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -2518,41 +1899,22 @@
       }
     },
     {
-      "name": "moleculenet_sider__s0__new_auto_pair",
+      "name": "moleculenet_sider__s0__new_default_cut",
       "dataset": "moleculenet_sider",
       "seed": 0,
-      "setting": "new_auto_pair",
+      "setting": "new_default_cut",
       "implementation": "new",
       "params": {
         "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1
+        "rank_check": "cut_error",
+        "on_rank_failure": "return"
       }
     },
     {
-      "name": "moleculenet_sider__s0__new_auto_cut",
+      "name": "moleculenet_sider__s0__new_default_weighted",
       "dataset": "moleculenet_sider",
       "seed": 0,
-      "setting": "new_auto_cut",
-      "implementation": "new",
-      "params": {
-        "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1,
-        "rank_check": "cut_error"
-      }
-    },
-    {
-      "name": "moleculenet_sider__s0__new_weighted",
-      "dataset": "moleculenet_sider",
-      "seed": 0,
-      "setting": "new_weighted",
+      "setting": "new_default_weighted",
       "implementation": "new",
       "params": {
         "fold_weights": [
@@ -2583,24 +1945,6 @@
       "params": {}
     },
     {
-      "name": "moleculenet_sider__s1__new_plain",
-      "dataset": "moleculenet_sider",
-      "seed": 1,
-      "setting": "new_plain",
-      "implementation": "new",
-      "params": {}
-    },
-    {
-      "name": "moleculenet_sider__s1__new_budget1",
-      "dataset": "moleculenet_sider",
-      "seed": 1,
-      "setting": "new_budget1",
-      "implementation": "new",
-      "params": {
-        "refine_restarts": 1
-      }
-    },
-    {
       "name": "moleculenet_sider__s1__previous_combined",
       "dataset": "moleculenet_sider",
       "seed": 1,
@@ -2612,10 +1956,18 @@
       }
     },
     {
-      "name": "moleculenet_sider__s1__new_combined",
+      "name": "moleculenet_sider__s1__new_default_plain",
       "dataset": "moleculenet_sider",
       "seed": 1,
-      "setting": "new_combined",
+      "setting": "new_default_plain",
+      "implementation": "new",
+      "params": {}
+    },
+    {
+      "name": "moleculenet_sider__s1__new_default_combined",
+      "dataset": "moleculenet_sider",
+      "seed": 1,
+      "setting": "new_default_combined",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -2623,10 +1975,10 @@
       }
     },
     {
-      "name": "moleculenet_sider__s1__new_strict",
+      "name": "moleculenet_sider__s1__new_default_strict",
       "dataset": "moleculenet_sider",
       "seed": 1,
-      "setting": "new_strict",
+      "setting": "new_default_strict",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -2635,41 +1987,22 @@
       }
     },
     {
-      "name": "moleculenet_sider__s1__new_auto_pair",
+      "name": "moleculenet_sider__s1__new_default_cut",
       "dataset": "moleculenet_sider",
       "seed": 1,
-      "setting": "new_auto_pair",
+      "setting": "new_default_cut",
       "implementation": "new",
       "params": {
         "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1
+        "rank_check": "cut_error",
+        "on_rank_failure": "return"
       }
     },
     {
-      "name": "moleculenet_sider__s1__new_auto_cut",
+      "name": "moleculenet_sider__s1__new_default_weighted",
       "dataset": "moleculenet_sider",
       "seed": 1,
-      "setting": "new_auto_cut",
-      "implementation": "new",
-      "params": {
-        "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1,
-        "rank_check": "cut_error"
-      }
-    },
-    {
-      "name": "moleculenet_sider__s1__new_weighted",
-      "dataset": "moleculenet_sider",
-      "seed": 1,
-      "setting": "new_weighted",
+      "setting": "new_default_weighted",
       "implementation": "new",
       "params": {
         "fold_weights": [
@@ -2700,24 +2033,6 @@
       "params": {}
     },
     {
-      "name": "moleculenet_sider__s2__new_plain",
-      "dataset": "moleculenet_sider",
-      "seed": 2,
-      "setting": "new_plain",
-      "implementation": "new",
-      "params": {}
-    },
-    {
-      "name": "moleculenet_sider__s2__new_budget1",
-      "dataset": "moleculenet_sider",
-      "seed": 2,
-      "setting": "new_budget1",
-      "implementation": "new",
-      "params": {
-        "refine_restarts": 1
-      }
-    },
-    {
       "name": "moleculenet_sider__s2__previous_combined",
       "dataset": "moleculenet_sider",
       "seed": 2,
@@ -2729,10 +2044,18 @@
       }
     },
     {
-      "name": "moleculenet_sider__s2__new_combined",
+      "name": "moleculenet_sider__s2__new_default_plain",
       "dataset": "moleculenet_sider",
       "seed": 2,
-      "setting": "new_combined",
+      "setting": "new_default_plain",
+      "implementation": "new",
+      "params": {}
+    },
+    {
+      "name": "moleculenet_sider__s2__new_default_combined",
+      "dataset": "moleculenet_sider",
+      "seed": 2,
+      "setting": "new_default_combined",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -2740,10 +2063,10 @@
       }
     },
     {
-      "name": "moleculenet_sider__s2__new_strict",
+      "name": "moleculenet_sider__s2__new_default_strict",
       "dataset": "moleculenet_sider",
       "seed": 2,
-      "setting": "new_strict",
+      "setting": "new_default_strict",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -2752,41 +2075,22 @@
       }
     },
     {
-      "name": "moleculenet_sider__s2__new_auto_pair",
+      "name": "moleculenet_sider__s2__new_default_cut",
       "dataset": "moleculenet_sider",
       "seed": 2,
-      "setting": "new_auto_pair",
+      "setting": "new_default_cut",
       "implementation": "new",
       "params": {
         "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1
+        "rank_check": "cut_error",
+        "on_rank_failure": "return"
       }
     },
     {
-      "name": "moleculenet_sider__s2__new_auto_cut",
+      "name": "moleculenet_sider__s2__new_default_weighted",
       "dataset": "moleculenet_sider",
       "seed": 2,
-      "setting": "new_auto_cut",
-      "implementation": "new",
-      "params": {
-        "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1,
-        "rank_check": "cut_error"
-      }
-    },
-    {
-      "name": "moleculenet_sider__s2__new_weighted",
-      "dataset": "moleculenet_sider",
-      "seed": 2,
-      "setting": "new_weighted",
+      "setting": "new_default_weighted",
       "implementation": "new",
       "params": {
         "fold_weights": [
@@ -2817,24 +2121,6 @@
       "params": {}
     },
     {
-      "name": "moleculenet_qm8__s0__new_plain",
-      "dataset": "moleculenet_qm8",
-      "seed": 0,
-      "setting": "new_plain",
-      "implementation": "new",
-      "params": {}
-    },
-    {
-      "name": "moleculenet_qm8__s0__new_budget1",
-      "dataset": "moleculenet_qm8",
-      "seed": 0,
-      "setting": "new_budget1",
-      "implementation": "new",
-      "params": {
-        "refine_restarts": 1
-      }
-    },
-    {
       "name": "moleculenet_qm8__s0__previous_combined",
       "dataset": "moleculenet_qm8",
       "seed": 0,
@@ -2846,10 +2132,18 @@
       }
     },
     {
-      "name": "moleculenet_qm8__s0__new_combined",
+      "name": "moleculenet_qm8__s0__new_default_plain",
       "dataset": "moleculenet_qm8",
       "seed": 0,
-      "setting": "new_combined",
+      "setting": "new_default_plain",
+      "implementation": "new",
+      "params": {}
+    },
+    {
+      "name": "moleculenet_qm8__s0__new_default_combined",
+      "dataset": "moleculenet_qm8",
+      "seed": 0,
+      "setting": "new_default_combined",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -2857,10 +2151,10 @@
       }
     },
     {
-      "name": "moleculenet_qm8__s0__new_strict",
+      "name": "moleculenet_qm8__s0__new_default_strict",
       "dataset": "moleculenet_qm8",
       "seed": 0,
-      "setting": "new_strict",
+      "setting": "new_default_strict",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -2869,41 +2163,22 @@
       }
     },
     {
-      "name": "moleculenet_qm8__s0__new_auto_pair",
+      "name": "moleculenet_qm8__s0__new_default_cut",
       "dataset": "moleculenet_qm8",
       "seed": 0,
-      "setting": "new_auto_pair",
+      "setting": "new_default_cut",
       "implementation": "new",
       "params": {
         "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1
+        "rank_check": "cut_error",
+        "on_rank_failure": "return"
       }
     },
     {
-      "name": "moleculenet_qm8__s0__new_auto_cut",
+      "name": "moleculenet_qm8__s0__new_default_weighted",
       "dataset": "moleculenet_qm8",
       "seed": 0,
-      "setting": "new_auto_cut",
-      "implementation": "new",
-      "params": {
-        "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1,
-        "rank_check": "cut_error"
-      }
-    },
-    {
-      "name": "moleculenet_qm8__s0__new_weighted",
-      "dataset": "moleculenet_qm8",
-      "seed": 0,
-      "setting": "new_weighted",
+      "setting": "new_default_weighted",
       "implementation": "new",
       "params": {
         "fold_weights": [
@@ -2934,24 +2209,6 @@
       "params": {}
     },
     {
-      "name": "moleculenet_qm8__s1__new_plain",
-      "dataset": "moleculenet_qm8",
-      "seed": 1,
-      "setting": "new_plain",
-      "implementation": "new",
-      "params": {}
-    },
-    {
-      "name": "moleculenet_qm8__s1__new_budget1",
-      "dataset": "moleculenet_qm8",
-      "seed": 1,
-      "setting": "new_budget1",
-      "implementation": "new",
-      "params": {
-        "refine_restarts": 1
-      }
-    },
-    {
       "name": "moleculenet_qm8__s1__previous_combined",
       "dataset": "moleculenet_qm8",
       "seed": 1,
@@ -2963,10 +2220,18 @@
       }
     },
     {
-      "name": "moleculenet_qm8__s1__new_combined",
+      "name": "moleculenet_qm8__s1__new_default_plain",
       "dataset": "moleculenet_qm8",
       "seed": 1,
-      "setting": "new_combined",
+      "setting": "new_default_plain",
+      "implementation": "new",
+      "params": {}
+    },
+    {
+      "name": "moleculenet_qm8__s1__new_default_combined",
+      "dataset": "moleculenet_qm8",
+      "seed": 1,
+      "setting": "new_default_combined",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -2974,10 +2239,10 @@
       }
     },
     {
-      "name": "moleculenet_qm8__s1__new_strict",
+      "name": "moleculenet_qm8__s1__new_default_strict",
       "dataset": "moleculenet_qm8",
       "seed": 1,
-      "setting": "new_strict",
+      "setting": "new_default_strict",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -2986,41 +2251,22 @@
       }
     },
     {
-      "name": "moleculenet_qm8__s1__new_auto_pair",
+      "name": "moleculenet_qm8__s1__new_default_cut",
       "dataset": "moleculenet_qm8",
       "seed": 1,
-      "setting": "new_auto_pair",
+      "setting": "new_default_cut",
       "implementation": "new",
       "params": {
         "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1
+        "rank_check": "cut_error",
+        "on_rank_failure": "return"
       }
     },
     {
-      "name": "moleculenet_qm8__s1__new_auto_cut",
+      "name": "moleculenet_qm8__s1__new_default_weighted",
       "dataset": "moleculenet_qm8",
       "seed": 1,
-      "setting": "new_auto_cut",
-      "implementation": "new",
-      "params": {
-        "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1,
-        "rank_check": "cut_error"
-      }
-    },
-    {
-      "name": "moleculenet_qm8__s1__new_weighted",
-      "dataset": "moleculenet_qm8",
-      "seed": 1,
-      "setting": "new_weighted",
+      "setting": "new_default_weighted",
       "implementation": "new",
       "params": {
         "fold_weights": [
@@ -3051,24 +2297,6 @@
       "params": {}
     },
     {
-      "name": "moleculenet_qm8__s2__new_plain",
-      "dataset": "moleculenet_qm8",
-      "seed": 2,
-      "setting": "new_plain",
-      "implementation": "new",
-      "params": {}
-    },
-    {
-      "name": "moleculenet_qm8__s2__new_budget1",
-      "dataset": "moleculenet_qm8",
-      "seed": 2,
-      "setting": "new_budget1",
-      "implementation": "new",
-      "params": {
-        "refine_restarts": 1
-      }
-    },
-    {
       "name": "moleculenet_qm8__s2__previous_combined",
       "dataset": "moleculenet_qm8",
       "seed": 2,
@@ -3080,10 +2308,18 @@
       }
     },
     {
-      "name": "moleculenet_qm8__s2__new_combined",
+      "name": "moleculenet_qm8__s2__new_default_plain",
       "dataset": "moleculenet_qm8",
       "seed": 2,
-      "setting": "new_combined",
+      "setting": "new_default_plain",
+      "implementation": "new",
+      "params": {}
+    },
+    {
+      "name": "moleculenet_qm8__s2__new_default_combined",
+      "dataset": "moleculenet_qm8",
+      "seed": 2,
+      "setting": "new_default_combined",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -3091,10 +2327,10 @@
       }
     },
     {
-      "name": "moleculenet_qm8__s2__new_strict",
+      "name": "moleculenet_qm8__s2__new_default_strict",
       "dataset": "moleculenet_qm8",
       "seed": 2,
-      "setting": "new_strict",
+      "setting": "new_default_strict",
       "implementation": "new",
       "params": {
         "kernel_power": 3,
@@ -3103,41 +2339,22 @@
       }
     },
     {
-      "name": "moleculenet_qm8__s2__new_auto_pair",
+      "name": "moleculenet_qm8__s2__new_default_cut",
       "dataset": "moleculenet_qm8",
       "seed": 2,
-      "setting": "new_auto_pair",
+      "setting": "new_default_cut",
       "implementation": "new",
       "params": {
         "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1
+        "rank_check": "cut_error",
+        "on_rank_failure": "return"
       }
     },
     {
-      "name": "moleculenet_qm8__s2__new_auto_cut",
+      "name": "moleculenet_qm8__s2__new_default_weighted",
       "dataset": "moleculenet_qm8",
       "seed": 2,
-      "setting": "new_auto_cut",
-      "implementation": "new",
-      "params": {
-        "rank": "auto",
-        "rank_min": 32,
-        "rank_max": 512,
-        "rank_tolerance": 0.05,
-        "on_rank_failure": "return",
-        "refine_restarts": 1,
-        "rank_check": "cut_error"
-      }
-    },
-    {
-      "name": "moleculenet_qm8__s2__new_weighted",
-      "dataset": "moleculenet_qm8",
-      "seed": 2,
-      "setting": "new_weighted",
+      "setting": "new_default_weighted",
       "implementation": "new",
       "params": {
         "fold_weights": [
@@ -3162,7 +2379,7 @@
   ],
   "implementations": {
     "previous": "/nfs/lambda_stor_01/homes/rzhu/data_splitting_lowrank_next/publications/lowrank_2026/package",
-    "new": "/nfs/lambda_stor_01/homes/rzhu/data_splitting_lowrank_correctness/publications/lowrank_2026/package"
+    "new": "/nfs/lambda_stor_01/homes/rzhu/data_splitting_lowrank_reviewed/publications/lowrank_2026/package"
   },
   "sources": {
     "previous": {
@@ -3233,12 +2450,12 @@
         "lowrank/features/utils.py": "cccafc305689a355cc66800e39f674581c927ec039e1089b88d9948fbaf0e5d1",
         "lowrank/grouped.py": "1e2da2e3e226c11ef4bba3a9750edcafb22ad641ac4ffeb4a07bc0a83c9a5465",
         "lowrank/local.py": "5d1464db8b25dc58559655f355176c89bab472bfd754606f5df871439cb3a038",
-        "lowrank/nd.py": "6f885b7587b7ad3a9dc76a8f47357e93122c99069c4db1fdf45c1df0abf5f75e",
+        "lowrank/nd.py": "cab9e45085d7b8d6b7cf51dd1258e2e2739799212dd57e77370fb2c7a1f6d3c3",
         "lowrank/neighbours.py": "039ae4b57fed62f153a3ce0b3ae208a679d363f378bb5ae0ba54e510fcda6037",
-        "lowrank/nystrom.py": "bbac48b9969e0d325809ef53f046f20d6014dd87025d69c2db0a042121d3fa57",
+        "lowrank/nystrom.py": "74f05164d6e1c970b3766abaf687b7dfdbb428a83df3cf9803a2b37e5bfb7b62",
         "lowrank/objective.py": "d640f89163b27845ddaf1dae5a4ed738ffe04188b48ac63cd1feaab54effa77b",
         "lowrank/optimize.py": "0c37e265dc8a7b5545a3b50d2835ecc5e23b9c1e3b88a3eb965a8dc941a86449",
-        "lowrank/splitter.py": "f725b4b85e9ba6f676351d344033f67cbb31cf9bcc3007d5c54069b9d1ff5315",
+        "lowrank/splitter.py": "f0d577b35036647fd0d69aa3da5bbbcab76b36a773b4157f9f5b68eb787d1b81",
         "lowrank/splitters/__init__.py": "39b136c0d90353b751dc0c09b999f509a9d00aa5d8e7197a067fdca45042cadc",
         "lowrank/splitters/__main__.py": "6e142eb5f1528b9a3a1aecc1e26f934d7dc00cb4724a77d47cec7697100eadc0",
         "lowrank/splitters/base.py": "a90748c81be60c62e9827fe7cebe150e11345921a5357c10c9a85d8516c1f857",
@@ -3247,7 +2464,7 @@
         "lowrank/splitters/common/balanced_assignment.py": "d8a0d3114a5ecb30b3f77413701fe7a0482b971bbb8de0e6a8f5383ab090927a",
         "lowrank/splitters/common/feature_preparation.py": "61b40c9c306bb66fc7d3874f1755bcc53f814b583e3ac1870aa73069442dd3b0",
         "lowrank/splitters/common/fiduccia_mattheyses.py": "f9e010a6b1545ff8953a2fadc337d8de04ef8d334eff0a30e3b08281c4495803",
-        "lowrank/splitters/common/leakage_metrics.py": "c216a2f7c5ae1c0c1ba4061bcd193ef9557434abc8d4ac568932a9eba1c8f0f4",
+        "lowrank/splitters/common/leakage_metrics.py": "c95c616fa8352aec33bcda252e9555bc914022ad62d808f0e123cc85ad68ea72",
         "lowrank/splitters/common/pairwise_similarity.py": "2a79da4641ab518c522fe88ce0ea1c8b71989e605e8a1df2d90acb9268485dd5",
         "lowrank/splitters/common/split_naming.py": "6aee2404577ebc7d27bc3576f6d8cb65ae332239282fcfb1a002999a71d05ce0",
         "lowrank/splitters/dispatch.py": "d1a89bdcdf5571c6fd340df77a08b700cd5930df43a803187bf1ebd8b4fdec5e",
@@ -3256,38 +2473,38 @@
         "lowrank/splitters/registry.py": "3e3798b039a9473b20d2fde9f3aca64e92250b347a3aeebf3f873406b25c4bc4",
         "lowrank/target_gap.py": "52b55d8bd2b2b8c9a522d1af1e18e4c5459de6334d4cc2a0166dda18ce079b81"
       },
-      "sha256": "e296eb206981221919c24cccfedd72bc599c11d711cfdf4631fcbb1dff37cc33"
+      "sha256": "da556ca191800768c6d7583f3c06a513a5b2cfc36bdf55980162b156f4913709"
     }
   },
-  "runner_sha256": "bc2db16aca86c1ee8401611850b8f5ae188b5f9284f8a7f42fe94ff79d5b7709",
+  "runner_sha256": "cbb0c3c333c1675086f7e02ecfbc27c0a5c02a2428bf1bfc09a2edb579e1b00d",
   "scorer_sha256": "bc03deefbca6464d5d45fd5fb2db4649bed49e50ad4ed39be68b3642341d1555",
   "cpu_sets": [
     [
-      64,
-      65
+      12,
+      13
     ],
     [
-      66,
-      67
+      14,
+      15
     ],
     [
-      68,
-      69
+      16,
+      17
     ],
     [
-      70,
-      71
+      18,
+      19
     ],
     [
-      72,
-      73
+      21,
+      22
     ],
     [
-      74,
-      75
+      23,
+      24
     ]
   ],
   "host": "lambda2",
   "threads": 2,
-  "protocol": "Nine fixed settings, nine full datasets, three seeds; previous six plus three additional validation datasets. One refined restart per rank trial in both rank ablations. Weighted setting is a declared policy example, not a tuned winner. No hypergraph baseline, model-outcome tuning or chronological claim."
+  "protocol": "Seven fixed settings, nine full datasets, three seeds; previous six plus three additional validation datasets. Two refined restarts by default; default cut checks use 32768 pairs. Weighted setting is a declared policy example, not a tuned winner. No hypergraph baseline, model-outcome tuning or chronological claim."
 }

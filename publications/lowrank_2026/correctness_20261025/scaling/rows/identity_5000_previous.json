@@ -1,0 +1,20 @@
+{
+  "name": "identity_5000_previous",
+  "kind": "identity",
+  "n": 5000,
+  "implementation": "previous",
+  "cpu_affinity": [
+    40,
+    41
+  ],
+  "seconds": 0.013215634971857071,
+  "storage_bytes": 50000000,
+  "storage": "dense",
+  "factor_shape": [
+    5000,
+    2500
+  ],
+  "dense_equivalent_bytes": 50000000,
+  "status": "ok",
+  "process_peak_rss_mb": 528.25390625
+}

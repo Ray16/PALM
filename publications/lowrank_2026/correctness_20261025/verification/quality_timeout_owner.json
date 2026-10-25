@@ -1,0 +1,11 @@
+{
+  "host": "lambda2",
+  "pid": 2459571,
+  "process_start": 1792948867.86,
+  "cpus": [
+    70,
+    71
+  ],
+  "child_pid": 2473094,
+  "child_start": 1792949060.4
+}

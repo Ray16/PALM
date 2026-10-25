@@ -1,0 +1,21 @@
+{
+  "name": "cosine_100000_1_new",
+  "kind": "cosine",
+  "n": 100000,
+  "seed": 1,
+  "implementation": "new",
+  "cpu_affinity": [
+    40,
+    41
+  ],
+  "seconds": 0.015928881242871284,
+  "factor_shape": [
+    100000,
+    16
+  ],
+  "factor_bytes": 6400000,
+  "maximum_checked_error": 1.259962080224497e-07,
+  "backend": "exact_cosine",
+  "status": "ok",
+  "process_peak_rss_mb": 532.7109375
+}

@@ -1,0 +1,26 @@
+{
+  "name": "moleculenet_sider__s1__previous_plain__forest",
+  "dataset": "moleculenet_sider",
+  "seed": 1,
+  "setting": "previous_plain",
+  "model": "forest",
+  "assignment_sha256": "f5a85a5b5c5bb15f319d0c340cf312e0410d153d640183a633a8b1436f729f46",
+  "split_source_sha256": "01ececd6c3e692c07150ef6de51afda07b7739c749e90b684b390fb65334e5a9",
+  "task": "classification",
+  "n_train_labels": 1141,
+  "n_test_labels": 143,
+  "cpu_affinity": [
+    12,
+    13
+  ],
+  "model_selection": "none; fixed defaults; training labels only",
+  "status": "ok",
+  "train_positive_fraction": 0.5609114811568799,
+  "test_positive_fraction": 0.32167832167832167,
+  "metrics": {
+    "auroc": 0.5480726131779471,
+    "average_precision": 0.330791337046666,
+    "brier": 0.2788299347137238
+  },
+  "fit_predict_seconds": 0.6481677535921335
+}

@@ -1,0 +1,10 @@
+{
+  "documentation_only_files": [
+    "lowrank/nystrom.py",
+    "lowrank/splitters/common/feature_preparation.py",
+    "lowrank/splitters/common/leakage_metrics.py"
+  ],
+  "unused_date_helper_delta": "matched specification epsilon tightened to zero",
+  "affects_scaling_cases": false,
+  "kernel_factor_optimizer_executable_code_unchanged": true
+}

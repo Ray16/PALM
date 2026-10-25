@@ -1,0 +1,11 @@
+{
+  "dataset": "moleculenet_qm8",
+  "n": 21786,
+  "task": "regression",
+  "feature_sha256": "9b1eab7f9648bbf5bb076ade7895cb7f0db1c03699cdd5b1a8144d43ff511b79",
+  "cache_sha256": "344c7636c67a899598601e2acf3fd6a62d176821a5b433e600216fa5cb6d7e27",
+  "raw_csv_sha256": "3e70e56805edb2f0796b64f96af9b53dd8cca408d775612d47123f7d2da7d61d",
+  "preparation_seconds": 13.628672875463963,
+  "recipe": "ECFP-1024 radius 2; MACCS-167 only for evaluation",
+  "additional_validation": true
+}

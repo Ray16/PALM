@@ -1,0 +1,56 @@
+{
+  "name": "calibration_reuse",
+  "kind": "calibration",
+  "implementation": "new",
+  "cpu_affinity": [
+    30,
+    31
+  ],
+  "records": [
+    {
+      "seconds": 31.96508558280766,
+      "diagnostics": {
+        "requested_backend": "auto",
+        "approximate": false,
+        "index_recall": 1.0,
+        "strong_recall": 1.0,
+        "audit_queries": 64,
+        "projected_exact_seconds": 8.969944690237753,
+        "ann_seconds": null,
+        "selection_policy": "conservative exact cutoff; measured pilot; ANN recall/cost gate",
+        "calibration_cache_hit": false,
+        "pilot_seconds": 0.0733831599354744,
+        "audit_seed": 0,
+        "ann_audit": {
+          "index_recall": 0.98779296875,
+          "strong_recall": 0.9883040935672515,
+          "score_recall": 1.0,
+          "ann_seconds": 30.804446505382657,
+          "recall_scope": "sampled exact top-k queries; not full graph"
+        },
+        "selected_backend": "tiled",
+        "reason": "ANN_failed_sampled_recall_or_projected_cost_gate",
+        "total_seconds": 31.96435336768627
+      }
+    },
+    {
+      "seconds": 1.0525199361145496,
+      "diagnostics": {
+        "requested_backend": "auto",
+        "approximate": false,
+        "index_recall": 1.0,
+        "strong_recall": 1.0,
+        "audit_queries": 0,
+        "projected_exact_seconds": null,
+        "ann_seconds": null,
+        "selection_policy": "conservative exact cutoff; measured pilot; ANN recall/cost gate",
+        "calibration_cache_hit": true,
+        "selected_backend": "tiled",
+        "reason": "reused_exact_calibration_for_identical_input_and_resources",
+        "total_seconds": 1.051709271967411
+      }
+    }
+  ],
+  "status": "ok",
+  "process_peak_rss_mb": 1106.62109375
+}
