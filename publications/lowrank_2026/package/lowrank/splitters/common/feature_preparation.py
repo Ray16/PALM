@@ -74,5 +74,8 @@ def feature_matrix_from_dict(
     if n < min_rows:
         raise ValueError(f"Too few entities ({n}) for the requested split ({min_rows})")
     X = np.asarray([feature_data[i] for i in ids], dtype=np.float32)
-    X = np.nan_to_num(X, nan=0.0, posinf=0.0, neginf=0.0)
+    if X.ndim != 2 or not X.shape[1] or not np.isfinite(X).all():
+        raise ValueError(
+            "features must be finite vectors of equal nonzero dimension; impute missing values explicitly"
+        )
     return ids, X
