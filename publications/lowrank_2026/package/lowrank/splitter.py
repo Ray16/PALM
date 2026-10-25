@@ -127,7 +127,7 @@ class LowRankSplitter(BaseSplitter):
         rank_min: int = 32
         rank_max: int = 512
         rank_tolerance: float = 0.05
-        rank_probe_pairs: int = 2048
+        rank_probe_pairs: Optional[int] = None
         factor_block_size: int = 2048
         factor_memory_mb: Optional[float] = None
         eigen_rtol: float = 1e-8
@@ -191,7 +191,7 @@ class LowRankSplitter(BaseSplitter):
         local_backend: str = "tiled"  # tiled | nndescent | auto
         neighbour_audit_queries: int = 32
         neighbour_minimum_recall: float = 0.98
-        refine_restarts: Optional[int] = None
+        refine_restarts: Optional[int] = 2
         fold_weights: Optional[object] = None
         rank_check: str = "pair_mae"
         on_rank_failure: str = "warn"
@@ -231,7 +231,11 @@ class LowRankSplitter(BaseSplitter):
             mode = "exact" if len(X) <= 2000 else "sampled"
         result = {"leakage": None, "leakage_diagnostic": mode}
         if mode == "exact":
-            result["leakage"] = round(scaled_lpi(X, labels, metric=metric), 6)
+            value = scaled_lpi(X, labels, metric=metric)
+            result["leakage"] = round(value, 6) if value is not None else None
+            result["leakage_status"] = (
+                "exact" if value is not None else "undefined_nonpositive_kernel_mass"
+            )
             if p.fold_weights is not None:
                 result["weighted_leakage"] = scaled_lpi(
                     X, labels, metric=metric, fold_weights=p.fold_weights

@@ -125,7 +125,7 @@ def nystrom_features(
     rank_min=32,
     rank_max=512,
     rank_tolerance=0.05,
-    rank_probe_pairs=2048,
+    rank_probe_pairs=None,
     block_size=2048,
     factor_memory_mb=None,
     eigen_rtol=1e-8,
@@ -155,6 +155,8 @@ def nystrom_features(
         raise ValueError("factor_backend must be nystrom or auto")
     if rank_check not in ("pair_mae", "cut_error"):
         raise ValueError("rank_check must be pair_mae or cut_error")
+    if rank_probe_pairs is None:
+        rank_probe_pairs = 32768 if rank_check == "cut_error" else 2048
     if rank_check == "cut_error" and cut_labels is None and _partitioner is None:
         raise ValueError(
             "cut_error requires a supplied partition or the splitter's partition optimizer"
@@ -300,6 +302,7 @@ def nystrom_features(
             adaptive=auto,
             factor_backend="exact_cosine" if direct else "nystrom",
             rank_check=rank_check,
+            probe_pair_budget=int(rank_probe_pairs),
             selection_reuses_landmarks=not direct,
         )
         if not auto:

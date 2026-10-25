@@ -1,6 +1,6 @@
 """Prespecified, resumable comparison against the preceding development version.
 
-Nine datasets, three seeds, nine fixed configurations. Six fresh CPU subprocesses
+Nine datasets, three seeds, seven fixed configurations. Six fresh CPU subprocesses
 can run concurrently with disjoint two-core affinities. No hypergraph baseline,
 test-outcome tuning, or claim of observed chronological generalization.
 """
@@ -38,38 +38,18 @@ DATASETS = [
 WEIGHTS = [[0.0, 1.0, 2.0], [1.0, 0.0, 0.25], [2.0, 0.25, 0.0]]
 SETTINGS = {
     "previous_plain": ("previous", {}),
-    "new_plain": ("new", {}),
-    "new_budget1": ("new", {"refine_restarts": 1}),
     "previous_combined": ("previous", {"kernel_power": 3, "must_link": 0.4}),
-    "new_combined": ("new", {"kernel_power": 3, "must_link": 0.4}),
-    "new_strict": (
+    "new_default_plain": ("new", {}),
+    "new_default_combined": ("new", {"kernel_power": 3, "must_link": 0.4}),
+    "new_default_strict": (
         "new",
         {"kernel_power": 3, "must_link": 0.4, "group_policy": "strict"},
     ),
-    "new_auto_pair": (
+    "new_default_cut": (
         "new",
-        {
-            "rank": "auto",
-            "rank_min": 32,
-            "rank_max": 512,
-            "rank_tolerance": 0.05,
-            "on_rank_failure": "return",
-            "refine_restarts": 1,
-        },
+        {"rank": "auto", "rank_check": "cut_error", "on_rank_failure": "return"},
     ),
-    "new_auto_cut": (
-        "new",
-        {
-            "rank": "auto",
-            "rank_min": 32,
-            "rank_max": 512,
-            "rank_tolerance": 0.05,
-            "on_rank_failure": "return",
-            "refine_restarts": 1,
-            "rank_check": "cut_error",
-        },
-    ),
-    "new_weighted": ("new", {"fold_weights": WEIGHTS}),
+    "new_default_weighted": ("new", {"fold_weights": WEIGHTS}),
 }
 
 
@@ -319,8 +299,8 @@ def launch(args):
         cpu_sets=[sorted(c) for c in cpus],
         host=socket.gethostname(),
         threads=2,
-        protocol="Nine fixed settings, nine full datasets, three seeds; previous six plus three additional validation datasets. "
-        "One refined restart per rank trial in both rank ablations. Weighted setting is a declared policy example, "
+        protocol="Seven fixed settings, nine full datasets, three seeds; previous six plus three additional validation datasets. "
+        "Two refined restarts by default; default cut checks use 32768 pairs. Weighted setting is a declared policy example, "
         "not a tuned winner. No hypergraph baseline, model-outcome tuning or chronological claim.",
     )
     path = args.output / "manifest.json"
@@ -443,7 +423,7 @@ if __name__ == "__main__":
     p.add_argument(
         "--cpus",
         nargs="+",
-        default=["64,65", "66,67", "68,69", "70,71", "72,73", "74,75"],
+        default=["6,7", "8,9", "10,11", "12,13", "14,15", "16,17"],
     )
     args = p.parse_args()
     (args.output / "cache").mkdir(parents=True, exist_ok=True)

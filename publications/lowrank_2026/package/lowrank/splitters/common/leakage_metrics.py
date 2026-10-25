@@ -21,7 +21,7 @@ Lower is better; 0 = no cross-split similarity. This matches DataSAIL's
 
 from __future__ import annotations
 
-from typing import Dict, Sequence, Tuple
+from typing import Dict, Optional, Sequence, Tuple
 
 import numpy as np
 
@@ -34,11 +34,12 @@ def scaled_lpi(
     metric: str = "tanimoto",
     block: int = 4096,
     fold_weights=None,
-) -> float:
+) -> Optional[float]:
     """Scaled L(pi) over the pairwise ``metric`` similarity of feature rows ``X``.
 
     ``labels`` is any per-row split id (ints or strings); the diagonal is
-    excluded. Returns the leakage ratio in [0, 1].
+    excluded. Non-negative unweighted kernels yield a ratio in [0, 1]. Signed
+    cosine and fold weights need not; nonpositive normalization mass is undefined.
     """
     import torch
 
@@ -81,7 +82,7 @@ def scaled_lpi(
         )
         leak += (sim * cross).sum(dtype=torch.float64)
     denom = total - diag  # drop self-similarity
-    return float((leak / denom).item()) if float(denom) > 0 else 0.0
+    return float((leak / denom).item()) if float(denom) > 0 else None
 
 
 def scaled_lpi_smiles(
@@ -256,6 +257,10 @@ def macro_axis_lpi(
                 fl += (sim * cross).sum(dtype=torch.float64)
             total += float(ft)
             leak += float(fl)
+        if metric == "cosine" and total < -1e-12:
+            raise ValueError(
+                f"axis {axis!r}: signed cosine has nonpositive normalization mass"
+            )
         per_axis[axis] = leak / total if total > 0 else 0.0
 
     macro = float(np.mean(list(per_axis.values()))) if per_axis else 0.0

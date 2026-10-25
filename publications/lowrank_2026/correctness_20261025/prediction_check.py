@@ -20,9 +20,9 @@ DATASETS = ["moleculenet_clintox", "moleculenet_sider", "moleculenet_qm8"]
 SETTINGS = [
     "previous_plain",
     "previous_combined",
-    "new_plain",
-    "new_auto_cut",
-    "new_weighted",
+    "new_default_plain",
+    "new_default_cut",
+    "new_default_weighted",
 ]
 
 
@@ -156,8 +156,8 @@ def launch(args):
     ]
     args.output.mkdir(parents=True, exist_ok=True)
     (args.output / "logs").mkdir(exist_ok=True)
-    cpus = ["64,65", "66,67", "68,69", "70,71", "72,73", "74,75"]
-    allocated = set(range(64, 76))
+    cpus = ["6,7", "8,9", "10,11", "12,13", "14,15", "16,17"]
+    allocated = set(range(6, 18))
     for proc in psutil.process_iter(["cmdline"]):
         try:
             if (

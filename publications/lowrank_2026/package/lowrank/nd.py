@@ -140,6 +140,10 @@ def _build_nd_factor(
             continue
         B_a = sparse.hstack(parts, format="csr")
         total = _offdiag_mass(B_a)
+        if metric == "cosine" and total < -1e-12:
+            raise ValueError(
+                f"axis {axis!r}: signed cosine has nonpositive normalization mass; choose a non-negative kernel"
+            )
         if total <= 1e-12:  # no similarity on this axis
             continue
         blocks.append(B_a * np.float32(1.0 / np.sqrt(total)))
@@ -180,7 +184,7 @@ class LowRankNDSplitter(BaseSplitter):
         # fingerprints, standardized euclidean for dense descriptors)
         axis_metrics: Optional[Dict[str, str]] = None
         score_exact_leakage: bool = True
-        refine_restarts: Optional[int] = None
+        refine_restarts: Optional[int] = 2
         fold_weights: Optional[object] = None
         factor_backend: str = "nystrom"
         on_rank_failure: str = "warn"
