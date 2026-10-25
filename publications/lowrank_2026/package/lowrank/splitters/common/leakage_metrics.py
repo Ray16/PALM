@@ -62,7 +62,7 @@ def scaled_lpi(
                 "weighted scores require integer labels aligned to fold_weights"
             )
         weights_t = torch.as_tensor(W, device=device)
-    lab_t = torch.as_tensor(lab, device=device)
+    lab_t = torch.as_tensor(lab, dtype=torch.long, device=device)
     n = Xt.shape[0]
 
     total = torch.zeros((), device=device, dtype=torch.float64)
@@ -234,7 +234,7 @@ def macro_axis_lpi(
         if F is not None and has.any():
             Xt = torch.as_tensor(F[has], device=device)
             ref = standardize_for_metric(Xt, metric)
-            lab_t = torch.as_tensor(lab[has], device=device)
+            lab_t = torch.as_tensor(lab[has], dtype=torch.long, device=device)
             m = ref.shape[0]
             ft = torch.zeros((), device=device, dtype=torch.float64)
             fl = torch.zeros((), device=device, dtype=torch.float64)

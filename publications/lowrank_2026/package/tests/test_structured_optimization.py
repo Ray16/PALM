@@ -121,9 +121,10 @@ def test_weighted_strict_groups_keep_counts_and_report_actual_objective():
     assert info["factor_leakage"] == pytest.approx(dense_cost(B, labels, W), abs=1e-8)
 
 
-def test_weighted_exact_scorers_use_declared_integer_fold_order():
+@pytest.mark.parametrize("label_dtype", [np.uint8, np.int32, np.int64])
+def test_weighted_exact_scorers_use_declared_integer_fold_order(label_dtype):
     X = np.eye(4, dtype=np.float32)[np.arange(40) % 4]
-    labels = np.arange(40) % 3
+    labels = (np.arange(40) % 3).astype(label_dtype)
     W = np.array([[0, 2, 0.5], [2, 0, 1], [0.5, 1, 0.0]])
     S = (X @ X.T).astype(np.float64)
     np.fill_diagonal(S, 0)
