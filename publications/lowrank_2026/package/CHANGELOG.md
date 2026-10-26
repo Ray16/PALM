@@ -1,5 +1,13 @@
 # Changes
 
+## Joint accuracy/cost policy: 0.2.0.dev3
+
+- Optional joint rank/probe allocation distinguishes established approximation
+  error from uncertainty, with finite-grid selection coverage and an independent
+  final audit. The fixed-probe default is preserved.
+- Explicit probe maxima, allocation history, actual pair-evaluation counts and
+  visible budget failures support accuracy/cost comparisons. See JOINT_BUDGET.md.
+
 ## Correctness review: 0.2.0.dev2
 
 - Support-aware exact checks and bounded empirical-Bernstein ratio intervals

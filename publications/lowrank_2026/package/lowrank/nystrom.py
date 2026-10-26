@@ -126,6 +126,8 @@ def nystrom_features(
     rank_max=512,
     rank_tolerance=0.05,
     rank_probe_pairs=None,
+    rank_probe_policy="fixed",
+    rank_probe_max_pairs=None,
     block_size=2048,
     factor_memory_mb=None,
     eigen_rtol=1e-8,
@@ -146,6 +148,15 @@ def nystrom_features(
     ``factor_memory_mb`` bounds a conservative estimate of controlled arrays,
     excluding caller-owned inputs, framework overhead and downstream optimization.
     Fixed ranks fail when they cannot fit; auto stops at its affordable limit.
+
+    For auto rank, ``rank_probe_policy="adaptive"`` allocates a finite grid of
+    rank and pair-count checks. It doubles pair count when the interval straddles
+    the tolerance, and grows rank when error is established or probes are at
+    their declared maximum. Selection and independent final audit together have
+    at least 95% coverage, conditional on the kernel/sample bounds. This audits
+    factor fidelity for the stated criterion, not optimizer suboptimality.
+    The legacy ``ci95`` field contains intervals at the reported ``confidence``;
+    selection intervals are wider to account for repeated checks.
     """
     import torch
 
@@ -155,8 +166,26 @@ def nystrom_features(
         raise ValueError("factor_backend must be nystrom or auto")
     if rank_check not in ("pair_mae", "cut_error"):
         raise ValueError("rank_check must be pair_mae or cut_error")
+    if rank_probe_policy not in ("fixed", "adaptive"):
+        raise ValueError("rank_probe_policy must be fixed or adaptive")
     if rank_probe_pairs is None:
-        rank_probe_pairs = 32768 if rank_check == "cut_error" else 2048
+        rank_probe_pairs = (
+            32768
+            if rank_check == "cut_error" and rank_probe_policy == "fixed"
+            else 2048
+        )
+    positive_integer("rank_probe_pairs", rank_probe_pairs)
+    if rank_probe_max_pairs is None:
+        rank_probe_max_pairs = (
+            max(32768, rank_probe_pairs)
+            if rank_probe_policy == "adaptive"
+            else rank_probe_pairs
+        )
+    positive_integer("rank_probe_max_pairs", rank_probe_max_pairs)
+    if rank_probe_max_pairs < rank_probe_pairs:
+        raise ValueError("rank_probe_max_pairs must not be below rank_probe_pairs")
+    if rank_probe_policy == "fixed" and rank_probe_max_pairs != rank_probe_pairs:
+        raise ValueError("a different maximum probe count requires adaptive policy")
     if rank_check == "cut_error" and cut_labels is None and _partitioner is None:
         raise ValueError(
             "cut_error requires a supplied partition or the splitter's partition optimizer"
@@ -231,6 +260,14 @@ def nystrom_features(
     if direct:
         count = d
     stages = 1 + max(0, int(np.ceil(np.log2(max(1, maximum) / max(1, count)))))
+    probe_stages = 1 + int(np.ceil(np.log2(rank_probe_max_pairs / rank_probe_pairs)))
+    joint = rank_probe_policy == "adaptive"
+    # A finite, declared rank x sample-count grid permits data-dependent
+    # allocation without treating a selected fixed-sample interval as anytime.
+    # Adaptive mode spends .025 on all selection checks and .025 on the
+    # independent final audit, giving at least .95 joint coverage by union bound.
+    selection_confidence = 1 - (0.025 if joint else 0.05) / (stages * probe_stages)
+    probe_pairs = rank_probe_pairs
     history = []
     cached_W = None
     while True:
@@ -303,41 +340,71 @@ def nystrom_features(
             factor_backend="exact_cosine" if direct else "nystrom",
             rank_check=rank_check,
             probe_pair_budget=int(rank_probe_pairs),
+            probe_policy=rank_probe_policy,
+            maximum_probe_pairs=int(rank_probe_max_pairs),
+            selection_grid_checks=int(stages * probe_stages),
+            selection_confidence=float(selection_confidence),
+            joint_selection_audit_confidence=0.95 if joint else None,
             selection_reuses_landmarks=not direct,
         )
         if not auto:
             break
         labels = _partitioner(B, metric) if _partitioner is not None else cut_labels
-        probe = factor_pair_error(
-            B,
-            Xt,
-            metric,
-            pairs=rank_probe_pairs,
-            seed=seed + 104729,
-            kernel_power=kernel_power,
-            block_size=rows,
-            confidence=1 - 0.05 / stages,
-            labels=labels if rank_check == "cut_error" else None,
-            fold_weights=fold_weights,
-        )
-        history.append(
-            dict(
-                landmark_count=info["landmark_count"],
-                effective_rank=B.shape[1],
-                **probe,
+        while True:
+            probe = factor_pair_error(
+                B,
+                Xt,
+                metric,
+                pairs=probe_pairs,
+                seed=seed + 104729,
+                kernel_power=kernel_power,
+                block_size=rows,
+                confidence=selection_confidence,
+                labels=labels if rank_check == "cut_error" else None,
+                fold_weights=fold_weights,
             )
-        )
-        summary = probe["relative_pair_mae"]
-        passed = summary["ci95"] is not None and summary["ci95"][1] <= rank_tolerance
+            summary = probe["relative_pair_mae"]
+            interval = summary["ci95"]
+            passed = interval is not None and interval[1] <= rank_tolerance
+            error_established = interval is not None and interval[0] > rank_tolerance
+            more_probes = (
+                joint
+                and not passed
+                and not error_established
+                and not probe["exact"]
+                and probe_pairs < rank_probe_max_pairs
+            )
+            history.append(
+                dict(
+                    landmark_count=info["landmark_count"],
+                    effective_rank=B.shape[1],
+                    requested_pairs=int(probe_pairs),
+                    decision="accept"
+                    if passed
+                    else "increase_probes"
+                    if more_probes
+                    else "increase_rank"
+                    if count < maximum and not direct
+                    else "budget_exhausted",
+                    **probe,
+                )
+            )
+            if not more_probes:
+                break
+            probe_pairs = min(2 * probe_pairs, rank_probe_max_pairs)
         if passed or count == maximum or direct:
             info.update(
                 selection_history=history,
                 selection_tolerance_met=bool(passed),
                 rank_tolerance=float(rank_tolerance),
+                selected_probe_pairs=int(probe_pairs),
+                selection_pair_evaluations=sum(h["sample_pairs"] for h in history),
                 stop_reason="sample_tolerance"
                 if passed
                 else "exact_feature_map"
                 if direct
+                else "rank_probe_or_memory_limit"
+                if joint
                 else "rank_or_memory_limit",
             )
             break
@@ -348,10 +415,11 @@ def nystrom_features(
             B,
             Xt,
             metric,
-            pairs=rank_probe_pairs,
+            pairs=probe_pairs,
             seed=seed + 130363,
             kernel_power=kernel_power,
             block_size=info["row_block_size"],
+            confidence=0.975 if joint else 0.95,
             labels=labels if rank_check == "cut_error" else None,
             fold_weights=fold_weights,
         )

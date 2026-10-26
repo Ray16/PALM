@@ -128,6 +128,8 @@ class LowRankSplitter(BaseSplitter):
         rank_max: int = 512
         rank_tolerance: float = 0.05
         rank_probe_pairs: Optional[int] = None
+        rank_probe_policy: str = "fixed"
+        rank_probe_max_pairs: Optional[int] = None
         factor_block_size: int = 2048
         factor_memory_mb: Optional[float] = None
         eigen_rtol: float = 1e-8
@@ -212,6 +214,7 @@ class LowRankSplitter(BaseSplitter):
         }
         for field, choices in (
             ("rank_check", ["pair_mae", "cut_error"]),
+            ("rank_probe_policy", ["fixed", "adaptive"]),
             ("on_rank_failure", ["warn", "raise", "return"]),
             ("factor_backend", ["nystrom", "auto"]),
         ):
@@ -459,6 +462,8 @@ class LowRankSplitter(BaseSplitter):
             rank_max=p.rank_max,
             rank_tolerance=p.rank_tolerance,
             rank_probe_pairs=p.rank_probe_pairs,
+            rank_probe_policy=p.rank_probe_policy,
+            rank_probe_max_pairs=p.rank_probe_max_pairs,
             block_size=p.factor_block_size,
             factor_memory_mb=p.factor_memory_mb,
             eigen_rtol=p.eigen_rtol,
