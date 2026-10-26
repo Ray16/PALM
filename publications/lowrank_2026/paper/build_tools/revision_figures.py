@@ -127,7 +127,8 @@ def rank_sensitivity():
 
 
 def concept():
-    fig, axes = plt.subplots(3, 2, figsize=(6.5, 6.5), layout="constrained",
+    from matplotlib.patches import Circle
+    fig, axes = plt.subplots(3, 2, figsize=(6.5, 7.2), layout="constrained",
                              gridspec_kw={"width_ratios": [1, 1.7]})
     fig.supxlabel("Fold sum p(c) = Σ B(i) for i in fold c\n"
                   "Cut = ½ [ ‖Σ p(c)‖² − Σ ‖p(c)‖² ]", fontsize=18)
@@ -135,14 +136,28 @@ def concept():
     B = rng.uniform(.1, 1, (15, 3))
     S = B @ B.T
     S /= S.max()
-    cluster = np.where(np.arange(15)[:, None] // 5 == np.arange(15)[None, :] // 5, S, 0.)
-    keep = np.argsort(S, axis=1)[:, -3:]
+    coarsened = np.array([[S[5*a:5*a+5, 5*b:5*b+5].mean() for b in range(3)] for a in range(3)])
+    nodes = np.array([[.15, .2], [.85, .2], [.5, .8]])
+    ax = axes[0, 0]
+    for a in range(3):
+        for b in range(a+1, 3):
+            ax.plot(nodes[[a,b], 0], nodes[[a,b], 1], color="#0072B2", lw=6*coarsened[a,b], zorder=1)
+    for i, (x,y) in enumerate(nodes):
+        ax.add_patch(Circle((x,y), .12, facecolor="#D9EDF7", edgecolor="#0072B2", lw=2, zorder=2))
+        ax.text(x,y,str(i+1), ha="center", va="center", fontsize=18, zorder=3)
+    ax.set(xlim=(-.05,1.05), ylim=(0,1))
+    ax.set_aspect("equal")
+    candidate = S.copy()
+    np.fill_diagonal(candidate, -np.inf)
+    keep = np.argsort(candidate, axis=1)[:, -3:]
     sparse = np.zeros_like(S)
     np.put_along_axis(sparse, keep, np.take_along_axis(S, keep, axis=1), axis=1)
-    for row, matrix, title, text in [(0, cluster, "Cluster", "Keep dense blocks"),
-            (1, sparse, "Sparsify", "Keep nearby pairs"),
-            (2, S, "Compress", "Approximate all pairs")]:
-        axes[row, 0].imshow(matrix, cmap="Blues", vmin=0, vmax=1)
+    sparse = np.maximum(sparse, sparse.T)
+    for row, matrix, title, text in [(0, None, "Coarsen", "Weighted supernodes\nand inter-group edges"),
+            (1, sparse, "Sparsify", "Select nearby pairs"),
+            (2, B, "Compress", "Shared coordinates\napproximate all pairs")]:
+        if matrix is not None:
+            axes[row, 0].imshow(matrix, cmap="Blues", vmin=0, vmax=1)
         axes[row, 0].set_axis_off()
         axes[row, 1].set_axis_off()
         axes[row, 1].text(0, .65, title, fontsize=18, weight="bold")

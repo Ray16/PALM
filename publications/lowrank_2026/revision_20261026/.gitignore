@@ -2,3 +2,5 @@ run/cache/
 run/logs/
 run/claims/
 __pycache__/
+scaling/cpu_run/claims/
+scaling/cpu_run/logs/

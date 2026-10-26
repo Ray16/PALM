@@ -33,12 +33,10 @@ constraints control the returned fold counts. On six molecular datasets, the
 largest measured rank-256 cut error for the ordinary kernel is
 \PlainFidelityError{} of its off-diagonal similarity mass. The plain method
 partitions two million molecular fingerprints in \ScalePlainLargeSeconds{}
-seconds on an H100 NVL. Kernel powers and capped groups add control over
+seconds on an H100 NVL with a 1\% fold-size corridor. Kernel powers and capped groups add control over
 close-analogue contamination, allowing a trade-off between global and local
-overlap. Across four cases with exactly matched fold counts, the combined
-setting takes \RuntimeCombinedMinSeconds{}--\RuntimeCombinedMaxSeconds{}
-CPU seconds, compared with \RuntimeDataSailMinSeconds{}--\RuntimeDataSailMaxSeconds{}
-for DataSAIL, with dataset-dependent quality differences. Independent fingerprints
+overlap. Comparisons with DataSAIL and an ordinary graph partitioner show
+dataset-dependent quality--cost trade-offs. Independent fingerprints
 and ten external bioactivity assays establish the scope of this control:
 separation depends on the representation, and strong chemical-series holdouts
 can induce target shift and chance-level prediction. Low rank provides a
@@ -113,8 +111,11 @@ similarity-aware generalization tests at controlled fold sizes.
 \centering
 \includegraphics[width=6.5in]{revision/concept.pdf}
 \caption{Three approaches to representing similarity for splitting. The
-schematic illustrates clustering into blocks, truncating to nearby pairwise
-edges, and low-rank compression of all pairs. Compression supplies the
+schematic illustrates coarsening into weighted supernodes with inter-group
+connections, selecting nearby pairwise edges, and representing similarities
+through shared low-rank coordinates. Coarsening can retain inter-cluster
+similarity; it does not imply removing every connection between clusters.
+Compression supplies the
 block-sum cut identity in Equation~\ref{eq:factor}; power and grouping then
 control the global--local trade-off. The matrices are illustrative.}
 \label{fig:overview}
@@ -348,9 +349,9 @@ The full-size benchmark covers eleven MoleculeNet datasets and two
 composition-based materials datasets, QMOF and a Materials Project snapshot
 \citep{rosen2021qmof,jain2013materials}.
 Molecular features are radius-two Morgan fingerprints with 1024 bits and Tanimoto
-similarity \citep{ralai2005}. Materials features combine MAGPIE-style elemental statistics,
+similarity \citep{rogers2010fingerprints,ralai2005}. Materials features combine MAGPIE-style elemental statistics,
 electronic, bonding and stoichiometric descriptors with a standardized Euclidean
-similarity $1/(1+\|x_i-x_j\|)$ \citep{rogers2010fingerprints,ward2016materials}. All feature construction and retained row identities
+similarity $1/(1+\|x_i-x_j\|)$ \citep{ward2016materials}. All feature construction and retained row identities
 are recorded. For multitask sources, the study uses one declared target, rather
 than claiming an evaluation across all tasks. The materials datasets provide a
 representation-specific generality check, reported in the supplement.

@@ -1,0 +1,19 @@
+{
+  "pid": 1517968,
+  "host": "lambda2",
+  "start_ticks": "1385058530",
+  "cpus": [
+    [
+      22,
+      23
+    ],
+    [
+      24,
+      25
+    ]
+  ],
+  "manifest_sha256": "1d3c07ecbeca437b607c59df8e4e8a231cd2d9fd83cdda72797f168a1aca3191",
+  "worker_sha256": "a5887c339a5e3e12519e01f7696b68360e6c439445e76b307dfd73485755755e",
+  "worker_path": "/nfs/lambda_stor_01/homes/rzhu/data_splitting_lowrank_systematic/publications/lowrank_2026/revision_20261026/scaling/priority_worker.py",
+  "policy": "Prioritize pending relaxed plain cases; unchanged producer and timeout, atomic shared claims; no duplicate work."
+}

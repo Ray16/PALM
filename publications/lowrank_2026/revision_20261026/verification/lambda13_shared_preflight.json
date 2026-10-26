@@ -1,0 +1,17 @@
+{
+  "host": "lambda13",
+  "python": "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/bin/python",
+  "ok": true,
+  "errors": [],
+  "online_cpus": 384,
+  "load": 23.67822265625,
+  "affinity": [
+    383
+  ],
+  "available_ram_mib": 1468813.64453125,
+  "modules": {
+    "numpy": "1.26.4",
+    "scipy": "1.17.0",
+    "torch": "2.8.0+cu128"
+  }
+}

@@ -88,7 +88,7 @@ is presented as a completed thirteen-dataset result.}
 \subsection{Computational scaling differs between settings}
 
 On an H100 NVL, plain low rank partitions two million 2048-bit ChEMBL
-fingerprints in \ScalePlainLargeSeconds{} seconds, with
+fingerprints in \ScalePlainLargeSeconds{} seconds at size tolerance 0.01, with
 \ScalePlainLargeMemory{} GiB of peak GPU allocation. The measurement includes
 the public split call's factor construction, four restarts and refinement,
 after a small warm-up; loading features and evaluating leakage are outside

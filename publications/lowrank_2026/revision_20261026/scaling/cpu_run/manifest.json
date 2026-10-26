@@ -1,0 +1,192 @@
+{
+  "jobs": [
+    {
+      "name": "plain__n10000__eps0.0__s0",
+      "n": 10000,
+      "epsilon": 0.0,
+      "seed": 0,
+      "method": "plain"
+    },
+    {
+      "name": "plain__n10000__eps0.01__s0",
+      "n": 10000,
+      "epsilon": 0.01,
+      "seed": 0,
+      "method": "plain"
+    },
+    {
+      "name": "plain__n100000__eps0.0__s0",
+      "n": 100000,
+      "epsilon": 0.0,
+      "seed": 0,
+      "method": "plain"
+    },
+    {
+      "name": "plain__n100000__eps0.0__s1",
+      "n": 100000,
+      "epsilon": 0.0,
+      "seed": 1,
+      "method": "plain"
+    },
+    {
+      "name": "plain__n100000__eps0.0__s2",
+      "n": 100000,
+      "epsilon": 0.0,
+      "seed": 2,
+      "method": "plain"
+    },
+    {
+      "name": "plain__n100000__eps0.01__s0",
+      "n": 100000,
+      "epsilon": 0.01,
+      "seed": 0,
+      "method": "plain"
+    },
+    {
+      "name": "plain__n100000__eps0.01__s1",
+      "n": 100000,
+      "epsilon": 0.01,
+      "seed": 1,
+      "method": "plain"
+    },
+    {
+      "name": "plain__n100000__eps0.01__s2",
+      "n": 100000,
+      "epsilon": 0.01,
+      "seed": 2,
+      "method": "plain"
+    },
+    {
+      "name": "plain__n1000000__eps0.0__s0",
+      "n": 1000000,
+      "epsilon": 0.0,
+      "seed": 0,
+      "method": "plain"
+    },
+    {
+      "name": "plain__n1000000__eps0.01__s0",
+      "n": 1000000,
+      "epsilon": 0.01,
+      "seed": 0,
+      "method": "plain"
+    },
+    {
+      "name": "plain__n2000000__eps0.0__s0",
+      "n": 2000000,
+      "epsilon": 0.0,
+      "seed": 0,
+      "method": "plain"
+    },
+    {
+      "name": "plain__n2000000__eps0.0__s1",
+      "n": 2000000,
+      "epsilon": 0.0,
+      "seed": 1,
+      "method": "plain"
+    },
+    {
+      "name": "plain__n2000000__eps0.0__s2",
+      "n": 2000000,
+      "epsilon": 0.0,
+      "seed": 2,
+      "method": "plain"
+    },
+    {
+      "name": "plain__n2000000__eps0.01__s0",
+      "n": 2000000,
+      "epsilon": 0.01,
+      "seed": 0,
+      "method": "plain"
+    },
+    {
+      "name": "plain__n2000000__eps0.01__s1",
+      "n": 2000000,
+      "epsilon": 0.01,
+      "seed": 1,
+      "method": "plain"
+    },
+    {
+      "name": "plain__n2000000__eps0.01__s2",
+      "n": 2000000,
+      "epsilon": 0.01,
+      "seed": 2,
+      "method": "plain"
+    },
+    {
+      "name": "combined__n10000__eps0.0__s0",
+      "n": 10000,
+      "epsilon": 0.0,
+      "seed": 0,
+      "method": "combined"
+    },
+    {
+      "name": "combined__n10000__eps0.01__s0",
+      "n": 10000,
+      "epsilon": 0.01,
+      "seed": 0,
+      "method": "combined"
+    }
+  ],
+  "sources": {
+    "package/lowrank/__init__.py": "f1ed53067acbf85417c089850a4a70cb0bcb60b62342303c91ddbbb8c8245855",
+    "package/lowrank/datasets/__init__.py": "d21d46b4a8c44886376021bdc81c1d926b733c114567e3e80f479f53cc4791a5",
+    "package/lowrank/datasets/featurize.py": "9d67244c115ec8fbaecacb3310e192057a016115b0dfa02ccf913e3bfc5fb6fc",
+    "package/lowrank/datasets/reactions.py": "d337ed1e3560f2625f9be54902cfdb358436196efd05a51d34c02fdbf0af8884",
+    "package/lowrank/datasets/routing.py": "7f796c7327fcb9fbfee8b2471dd467afd001c3f379bf8e30047a303d4b9649f5",
+    "package/lowrank/datasets/sources.py": "efd5f6a7bac61bcb32d2dc143702d1bab2aa113bc07454207c52a37256412c28",
+    "package/lowrank/diagnostics.py": "c46d26ad1df19d2daa267ce1061292232f6f5754c833a6e6f2cc4c3e0b56ad19",
+    "package/lowrank/eval/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "package/lowrank/eval/model_eval.py": "cba67f8cbb2ef0b72fa737280b6ef541907c1b94a5a7edcf1fcb973be168d145",
+    "package/lowrank/eval/tail_report.py": "89c04dc2363c7d102db3bb4d5876a4622287c252be86110c4d61110f52d25f09",
+    "package/lowrank/factors.py": "93d470c737d644ca30d7b09f154479d60ffa45ab30acb51fccc6707b1b093653",
+    "package/lowrank/features/__init__.py": "be74671c6f27829a792e7b32df9457c7657ca0f1c19d9de7b86a319b4ce076fc",
+    "package/lowrank/features/biomolecule_features.py": "7ec42634e77fd0253c1aa410fd82aa6300004654aae0325f5b63e3a9e5cb127f",
+    "package/lowrank/features/elemental_data.py": "efbf11e74c6dfd052ab24c7342598ecbc7a526a98face4e767cdf9daa99292e8",
+    "package/lowrank/features/gene_features.py": "592c50df64a87d72f88a6551d633e7f938d1328bbc36277f39db0cce72476720",
+    "package/lowrank/features/material_features.py": "5aea2289f373a772b524d05cd6cccbf8b951fac7fc250b9676a740c0ce7f44af",
+    "package/lowrank/features/molecule_features.py": "f9cc7942551c1a77b8253911319b486805e9af87f0401311dcfa5ef9e2d0b9b3",
+    "package/lowrank/features/utils.py": "cccafc305689a355cc66800e39f674581c927ec039e1089b88d9948fbaf0e5d1",
+    "package/lowrank/grouped.py": "1e2da2e3e226c11ef4bba3a9750edcafb22ad641ac4ffeb4a07bc0a83c9a5465",
+    "package/lowrank/local.py": "5d1464db8b25dc58559655f355176c89bab472bfd754606f5df871439cb3a038",
+    "package/lowrank/nd.py": "cab9e45085d7b8d6b7cf51dd1258e2e2739799212dd57e77370fb2c7a1f6d3c3",
+    "package/lowrank/neighbours.py": "039ae4b57fed62f153a3ce0b3ae208a679d363f378bb5ae0ba54e510fcda6037",
+    "package/lowrank/nystrom.py": "28137d0592e3a32d7d53867b34e0c298e29e4f087498be823f48548043a092f3",
+    "package/lowrank/objective.py": "d640f89163b27845ddaf1dae5a4ed738ffe04188b48ac63cd1feaab54effa77b",
+    "package/lowrank/optimize.py": "0c37e265dc8a7b5545a3b50d2835ecc5e23b9c1e3b88a3eb965a8dc941a86449",
+    "package/lowrank/splitter.py": "71e990c7318297219e6f70d898ae95cb06de482cd8e000c5eff0b1dfacb21148",
+    "package/lowrank/splitters/__init__.py": "39b136c0d90353b751dc0c09b999f509a9d00aa5d8e7197a067fdca45042cadc",
+    "package/lowrank/splitters/__main__.py": "6e142eb5f1528b9a3a1aecc1e26f934d7dc00cb4724a77d47cec7697100eadc0",
+    "package/lowrank/splitters/base.py": "b1e8dc6dbf10b5afd81488514eced906a49a06538b26a099fdaa7efe54a98a8d",
+    "package/lowrank/splitters/cli.py": "7d8ad572a753ae518960bbd1d2f98bdc4d694883554b7b53d1ee708324e6329d",
+    "package/lowrank/splitters/common/__init__.py": "212f625f247fe0dd6d3a043a06b7ff12fb6430130c31c9ff4d271b7c731e1bfa",
+    "package/lowrank/splitters/common/balanced_assignment.py": "d8a0d3114a5ecb30b3f77413701fe7a0482b971bbb8de0e6a8f5383ab090927a",
+    "package/lowrank/splitters/common/feature_preparation.py": "07f85f977babf767cb10a6deca36acc996cd10844ce5a3e8040a9b2f48f7f7f6",
+    "package/lowrank/splitters/common/fiduccia_mattheyses.py": "662178d6d792d31f7c54958a3c8b7ba987ef18eb1c5ab9da0e982f3f49bfbf7a",
+    "package/lowrank/splitters/common/leakage_metrics.py": "772629d881bc34581b9488e2cc4815836a53f32091bedee7739d2cec62e0ba3c",
+    "package/lowrank/splitters/common/pairwise_similarity.py": "a5560e76e7db59a56209438b36bbb6d8091e384412140abc88dbc7e84c0aa61d",
+    "package/lowrank/splitters/common/split_naming.py": "6aee2404577ebc7d27bc3576f6d8cb65ae332239282fcfb1a002999a71d05ce0",
+    "package/lowrank/splitters/dispatch.py": "d1a89bdcdf5571c6fd340df77a08b700cd5930df43a803187bf1ebd8b4fdec5e",
+    "package/lowrank/splitters/methods/__init__.py": "a4680d9cf55c545c59daabfff492f5c7c87f471916281397dabdd7201941abd8",
+    "package/lowrank/splitters/methods/random.py": "ff7ef5c0057a96ffd68f628547fb9563fbb0bb4c64cd9c1400fc9faf6edc72f3",
+    "package/lowrank/splitters/registry.py": "3e3798b039a9473b20d2fde9f3aca64e92250b347a3aeebf3f873406b25c4bc4",
+    "package/lowrank/target_gap.py": "52b55d8bd2b2b8c9a522d1af1e18e4c5459de6334d4cc2a0166dda18ce079b81",
+    "package/lowrank/validation.py": "0f8afa2c39114268beac4de172a7916c84bad3c6f15d363cc26193aa106ca339",
+    "package/pyproject.toml": "d3c65329b67091beffc8ad490a82cbe400acfe799065ef9abce5957d31ebca67",
+    "revision_20261026/scaling/run.py": "72396647e59d21d02df95699b29360512b61b74db27ecb19f19167df2245626b"
+  },
+  "packed_sha256": "bd9c01b0f0892f7cdb5202571dd2950297f69bbda98ba4e87666ce0885509311",
+  "python": "/homes/rzhu/miniforge3/envs/palm/bin/python",
+  "cpu_sets": [
+    "16,17",
+    "18,19",
+    "20,21"
+  ],
+  "host": "lambda2",
+  "timeout_seconds": 1800,
+  "quality_pairs": 262144,
+  "neighbour_queries": 128,
+  "neighbour_reference": "entire training fold",
+  "device": "CPU",
+  "threads": 2,
+  "memory_estimate_per_large_worker_gib": 64
+}

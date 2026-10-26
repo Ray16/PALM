@@ -1,0 +1,9 @@
+{
+  "host": "lambda13",
+  "ok": false,
+  "errors": [
+    "No preflight report; SSH/interpreter failed"
+  ],
+  "returncode": 127,
+  "stderr": "env: \u2018/homes/rzhu/miniforge3/envs/palm/bin/python\u2019: No such file or directory"
+}
