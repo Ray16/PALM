@@ -1,0 +1,79 @@
+{
+  "name": "moleculenet_sider__s2__new_default_plain__linear",
+  "dataset": "moleculenet_sider",
+  "seed": 2,
+  "setting": "new_default_plain",
+  "model": "linear",
+  "status": "ok",
+  "assignment_sha256": "47c8f46908c71cccd11dc299c1734ce88d39883bac56d83aa4612eb8178f336d",
+  "cache_sha256": "7f4ca4ba3adb157cc30e1ae3b2ff13b9a55ea6a4968f066721061c278ba40ef0",
+  "n_test": 143,
+  "brier": 0.2534076311151839,
+  "prior_brier_difference": 0.0,
+  "calibration_in_large": -0.0010194305686226368,
+  "ece10": 0.17361139780006743,
+  "bins": [
+    {
+      "bin": 0,
+      "n": 15,
+      "mean_probability": 0.04213621174722824,
+      "positive_fraction": 0.4666666666666667
+    },
+    {
+      "bin": 1,
+      "n": 33,
+      "mean_probability": 0.14793492713424958,
+      "positive_fraction": 0.3333333333333333
+    },
+    {
+      "bin": 2,
+      "n": 22,
+      "mean_probability": 0.24445398639879617,
+      "positive_fraction": 0.22727272727272727
+    },
+    {
+      "bin": 3,
+      "n": 14,
+      "mean_probability": 0.34135586960020387,
+      "positive_fraction": 0.2857142857142857
+    },
+    {
+      "bin": 4,
+      "n": 12,
+      "mean_probability": 0.45424442811339366,
+      "positive_fraction": 0.16666666666666666
+    },
+    {
+      "bin": 5,
+      "n": 9,
+      "mean_probability": 0.5570824037107674,
+      "positive_fraction": 0.4444444444444444
+    },
+    {
+      "bin": 6,
+      "n": 5,
+      "mean_probability": 0.6523847874917623,
+      "positive_fraction": 0.6
+    },
+    {
+      "bin": 7,
+      "n": 10,
+      "mean_probability": 0.7634035689718657,
+      "positive_fraction": 0.5
+    },
+    {
+      "bin": 8,
+      "n": 12,
+      "mean_probability": 0.8358099657687331,
+      "positive_fraction": 0.6666666666666666
+    },
+    {
+      "bin": 9,
+      "n": 11,
+      "mean_probability": 0.9811819813374576,
+      "positive_fraction": 0.8181818181818182
+    }
+  ],
+  "fit_predict_seconds": 2.999028604477644,
+  "interpretation": "descriptive; fixed ten equal-width bins; sample-size/distribution dependent"
+}

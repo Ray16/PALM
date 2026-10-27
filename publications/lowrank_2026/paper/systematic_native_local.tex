@@ -1,0 +1,30 @@
+\begin{longtable}{lrrrrr}
+\caption{Mean maximum test-to-training similarity. Both low-rank controls use exact native counts. The Groups control also preserves every group passed to DataSAIL's solver. Equal groups do not imply identical coarsened and entity-level objectives. One native solve is recorded per configuration; these configurations are not independent datasets.}\\
+\toprule
+Dataset & $K$ & Budget (s) & DataSAIL & Counts & Groups\\\midrule
+\endfirsthead
+\multicolumn{6}{l}{\tablename~\thetable\ (continued)}\\
+\toprule
+Dataset & $K$ & Budget (s) & DataSAIL & Counts & Groups\\\midrule
+\endhead
+\midrule
+\multicolumn{6}{r}{Continued on next page}\\
+\endfoot
+\bottomrule\endlastfoot
+BACE & 75 & 300 & 0.459 & 0.525 & 0.447\\
+BACE & 75 & 60 & 0.485 & 0.525 & 0.447\\
+BACE & 30 & 300 & 0.366 & 0.525 & 0.303\\
+BACE & 30 & 60 & 0.366 & 0.525 & 0.303\\
+BBBP & 9 & 300 & 0.135 & 0.170 & 0.135\\
+BBBP & 9 & 60 & 0.135 & 0.170 & 0.135\\
+BBBP & 101 & 300 & 0.301 & 0.252 & 0.237\\
+BBBP & 101 & 60 & 0.301 & 0.252 & 0.237\\
+BBBP & 40 & 300 & 0.235 & 0.246 & 0.239\\
+BBBP & 40 & 60 & 0.235 & 0.246 & 0.239\\
+ESOL & 56 & 300 & 0.296 & 0.270 & 0.260\\
+ESOL & 56 & 60 & 0.265 & 0.270 & 0.260\\
+ESOL & 22 & 300 & 0.273 & 0.270 & 0.286\\
+ESOL & 22 & 60 & 0.273 & 0.270 & 0.286\\
+FreeSolv & 32 & 300 & 0.178 & 0.368 & 0.285\\
+FreeSolv & 32 & 60 & 0.178 & 0.368 & 0.285\\
+\end{longtable}

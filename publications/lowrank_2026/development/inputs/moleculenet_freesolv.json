@@ -1,0 +1,11 @@
+{
+  "dataset": "moleculenet_freesolv",
+  "n": 642,
+  "task": "regression",
+  "feature_sha256": "3b28f6f7134618d3c01d5df0c25bd8fdb36ffe418aee790f4b30fa4d546f8cce",
+  "ids_sha256": "ecc70a9941abf594f8d342f6c471cf744c80c87090c8081383381499c9b25d39",
+  "raw_csv_sha256": "ab5895d914ee87cb563bd7b9611e869527bba45bec6b014d34dc495a0f9dcb72",
+  "preparation_seconds": 0.8821780402213335,
+  "feature_recipe": "ECFP-1024 radius 2; MACCS-167 used only for independent evaluation",
+  "rdkit_version": "2026.03.5"
+}

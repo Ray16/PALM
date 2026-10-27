@@ -1,0 +1,24 @@
+{
+  "name": "moleculenet_qm8__s1__new_default_weighted__linear",
+  "dataset": "moleculenet_qm8",
+  "seed": 1,
+  "setting": "new_default_weighted",
+  "model": "linear",
+  "assignment_sha256": "70458ac81415df1b79c3e988e2aa4382ae336efdc83cc5ce6d70329554ddd08d",
+  "split_source_sha256": "da556ca191800768c6d7583f3c06a513a5b2cfc36bdf55980162b156f4913709",
+  "task": "regression",
+  "n_train_labels": 17429,
+  "n_test_labels": 2178,
+  "cpu_affinity": [
+    18,
+    19
+  ],
+  "model_selection": "none; fixed defaults; training labels only",
+  "status": "ok",
+  "metrics": {
+    "mae": 0.033635818562217555,
+    "rmse": 0.04478617557194361,
+    "r2": -0.1899727660959467
+  },
+  "fit_predict_seconds": 0.26982477866113186
+}

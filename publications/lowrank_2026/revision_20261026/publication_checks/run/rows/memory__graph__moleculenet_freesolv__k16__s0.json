@@ -1,0 +1,132 @@
+{
+  "name": "memory__graph__moleculenet_freesolv__k16__s0",
+  "study": "memory",
+  "method": "graph",
+  "dataset": "moleculenet_freesolv",
+  "seed": 0,
+  "degree": 16,
+  "rows": [
+    {
+      "method": "native_graph",
+      "scores": {
+        "global_ratio": 0.18052058034634372,
+        "mean_nearest_training": 0.1717317368163437,
+        "top5_training_mean": 0.14559159840105987,
+        "local_ramp_04": 0.0,
+        "test_fraction_above_04": 0.0,
+        "test_fraction_above_06": 0.0,
+        "test_fraction_above_08": 0.0,
+        "maccs_mean_nearest_training": 0.5455106279400529,
+        "composition": {
+          "train": {
+            "n_labels": 518,
+            "mean": -3.5555405405405405,
+            "std": 3.4681277978329517
+          },
+          "val": {
+            "n_labels": 63,
+            "mean": -5.453015873015873,
+            "std": 4.901814900341338
+          },
+          "test": {
+            "n_labels": 61,
+            "mean": -4.200327868852458,
+            "std": 5.013729990445454
+          }
+        },
+        "task": "unspecified",
+        "target_wasserstein": 1.1218915754161656
+      },
+      "counts": [
+        518,
+        63,
+        61
+      ]
+    },
+    {
+      "method": "repaired_graph",
+      "scores": {
+        "global_ratio": 0.18633957643016916,
+        "mean_nearest_training": 0.17660183878615499,
+        "top5_training_mean": 0.14858776654000394,
+        "local_ramp_04": 0.0,
+        "test_fraction_above_04": 0.0,
+        "test_fraction_above_06": 0.0,
+        "test_fraction_above_08": 0.0,
+        "maccs_mean_nearest_training": 0.5573391576763242,
+        "composition": {
+          "train": {
+            "n_labels": 514,
+            "mean": -3.552081712062257,
+            "std": 3.4604748421858176
+          },
+          "val": {
+            "n_labels": 64,
+            "mean": -5.4712499999999995,
+            "std": 4.8655217153456425
+          },
+          "test": {
+            "n_labels": 64,
+            "mean": -4.15,
+            "std": 5.003280486340937
+          }
+        },
+        "task": "unspecified",
+        "target_wasserstein": 1.1018081225680934
+      },
+      "counts": [
+        514,
+        64,
+        64
+      ]
+    }
+  ],
+  "diagnostics": {
+    "graph_build_s": 0.03189787082374096,
+    "partition_s": 0.46203395538032055,
+    "repair_s": 0.0031523704528808594,
+    "split_s": 0.4997894689440727,
+    "graph_k": 16,
+    "graph_edges": 7015,
+    "graph_type": "ordinary undirected pairwise graph",
+    "objective": "CUT",
+    "preset": "QUALITY",
+    "edge_rule": "union top-k; one edge per unordered pair; positive similarities only",
+    "weight_scale": 115147,
+    "sum_integer_edge_weights": 268426133,
+    "integer_weight_budget": 268435455,
+    "max_weight_quantization_error": 4.342275526036943e-06,
+    "native_integer_cut": 15680240,
+    "threads": 2,
+    "seed": 0,
+    "native_counts": [
+      518,
+      63,
+      61
+    ],
+    "repaired_counts": [
+      514,
+      64,
+      64
+    ],
+    "repair_moves": 4,
+    "mtkahypar_version": "1.6.1",
+    "mtkahypar_module_sha256": "11ac22dfd1fd0a2cbfaa1001904b46be913196c257ac4d8b758be71ba9b036de"
+  },
+  "seconds": 0.4997894689440727,
+  "status": "ok",
+  "native_peak_rss_before_scoring_mb": 618.95703125,
+  "solver_evidence": [],
+  "memory_scope": "Fresh-process native method peak before first scoring call or matched controls; includes imports, input/features and common small low-rank warm-up.",
+  "artifacts": {
+    "assignments/memory__graph__moleculenet_freesolv__k16__s0/native_graph.npy": "8c16c1d5b07417f90ccede270cf5c1b71c6d583f5767efd42101ecdd4ff8f036",
+    "assignments/memory__graph__moleculenet_freesolv__k16__s0/repaired_graph.npy": "7217d10ad9050eac8dc9d07afdc1cb86957204c79d45da1498eaa973b5089850"
+  },
+  "manifest_sha256": "ead4180401d8ce36cadc23280b087ba1ffdd5754fa8f557c7a2f30c6db1af074",
+  "case_seconds": 1.8234318662434816,
+  "host": "lambda2",
+  "cpu_affinity": [
+    10,
+    11
+  ]
+}

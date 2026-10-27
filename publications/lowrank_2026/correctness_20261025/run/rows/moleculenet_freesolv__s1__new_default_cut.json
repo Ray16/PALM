@@ -1,0 +1,278 @@
+{
+  "name": "moleculenet_freesolv__s1__new_default_cut",
+  "dataset": "moleculenet_freesolv",
+  "seed": 1,
+  "setting": "new_default_cut",
+  "implementation": "new",
+  "params": {
+    "rank": "auto",
+    "rank_check": "cut_error",
+    "on_rank_failure": "return"
+  },
+  "manifest_sha256": "902794481280e5da96421ff56fd48ba90d8053a31e6bae553b31462c0f34f156",
+  "source_sha256": "da556ca191800768c6d7583f3c06a513a5b2cfc36bdf55980162b156f4913709",
+  "feature_sha256": "3b28f6f7134618d3c01d5df0c25bd8fdb36ffe418aee790f4b30fa4d546f8cce",
+  "preparation_seconds": 0.5715748574584723,
+  "loading_seconds": 0.008749930188059807,
+  "warmup_seconds": 0.029889583587646484,
+  "host": "lambda2",
+  "cpu_affinity": [
+    14,
+    15
+  ],
+  "status": "ok",
+  "split_seconds": 0.5544493515044451,
+  "scoring_seconds": 0.7092330437153578,
+  "peak_rss_after_split_mb": 564.91015625,
+  "process_peak_rss_mb": 578.28515625,
+  "diagnostics": {
+    "method": "lowrank",
+    "n": 642,
+    "runtime_s": 0.5541,
+    "split_counts": {
+      "train": 514,
+      "val": 64,
+      "test": 64
+    },
+    "split_fractions": {
+      "train": 0.8006,
+      "val": 0.0997,
+      "test": 0.0997
+    },
+    "metric": "tanimoto",
+    "rank": 64,
+    "factorization": {
+      "requested_rank": "auto",
+      "landmark_count": 64,
+      "effective_rank": 64,
+      "landmark_indices": [
+        510,
+        522,
+        584,
+        192,
+        353,
+        591,
+        473,
+        508,
+        558,
+        519,
+        638,
+        427,
+        219,
+        410,
+        259,
+        205,
+        414,
+        33,
+        239,
+        288,
+        212,
+        405,
+        494,
+        12,
+        422,
+        267,
+        364,
+        535,
+        276,
+        362,
+        134,
+        331,
+        18,
+        99,
+        614,
+        616,
+        493,
+        506,
+        330,
+        452,
+        620,
+        195,
+        594,
+        178,
+        618,
+        425,
+        25,
+        615,
+        164,
+        428,
+        147,
+        262,
+        150,
+        306,
+        227,
+        605,
+        19,
+        122,
+        586,
+        420,
+        32,
+        480,
+        513,
+        209
+      ],
+      "eigenvalue_threshold": 6.452557809374931e-08,
+      "discarded_eigenvalues": 0,
+      "minimum_eigenvalue": 0.33447642401948674,
+      "row_block_size": 642,
+      "estimated_array_bytes": 39645824,
+      "memory_scope": "factor arrays only; excludes framework and optimizer",
+      "rank_limit": 512,
+      "kernel_power": 1,
+      "adaptive": true,
+      "factor_backend": "nystrom",
+      "rank_check": "cut_error",
+      "probe_pair_budget": 32768,
+      "selection_reuses_landmarks": true,
+      "selection_history": [
+        {
+          "landmark_count": 32,
+          "effective_rank": 32,
+          "relative_pair_mae": {
+            "estimate": 0.02499850984794751,
+            "standard_error": 0.0011136226532133364,
+            "ci95": [
+              0.0,
+              0.054958727987647636
+            ],
+            "status": "estimated",
+            "confidence": 0.99,
+            "exact": false,
+            "interval": "empirical Bernstein; simultaneous ratio-component bounds"
+          },
+          "criterion": "cut_error",
+          "sample_pairs": 32768,
+          "eligible_rows": 642,
+          "seed": 104730,
+          "normalization": "mean absolute off-diagonal powered kernel similarity",
+          "exact": false,
+          "confidence": 0.99
+        },
+        {
+          "landmark_count": 64,
+          "effective_rank": 64,
+          "relative_pair_mae": {
+            "estimate": 0.008329007536673731,
+            "standard_error": 0.0007999160597520524,
+            "ci95": [
+              0.0,
+              0.03658633561089868
+            ],
+            "status": "estimated",
+            "confidence": 0.99,
+            "exact": false,
+            "interval": "empirical Bernstein; simultaneous ratio-component bounds"
+          },
+          "criterion": "cut_error",
+          "sample_pairs": 32768,
+          "eligible_rows": 642,
+          "seed": 104730,
+          "normalization": "mean absolute off-diagonal powered kernel similarity",
+          "exact": false,
+          "confidence": 0.99
+        }
+      ],
+      "selection_tolerance_met": true,
+      "rank_tolerance": 0.05,
+      "stop_reason": "sample_tolerance",
+      "audit": {
+        "relative_pair_mae": {
+          "estimate": 0.00979551854509161,
+          "standard_error": 0.0008417713208026719,
+          "ci95": [
+            0.0,
+            0.03152314429803491
+          ],
+          "status": "estimated",
+          "confidence": 0.95,
+          "exact": false,
+          "interval": "empirical Bernstein; simultaneous ratio-component bounds"
+        },
+        "criterion": "cut_error",
+        "sample_pairs": 32768,
+        "eligible_rows": 642,
+        "seed": 130364,
+        "normalization": "mean absolute off-diagonal powered kernel similarity",
+        "exact": false,
+        "confidence": 0.95
+      },
+      "audit_tolerance_met": true
+    },
+    "fold_weights": [
+      [
+        0.0,
+        1.0,
+        1.0
+      ],
+      [
+        1.0,
+        0.0,
+        1.0
+      ],
+      [
+        1.0,
+        1.0,
+        0.0
+      ]
+    ],
+    "optimization": {
+      "factor_storage": "dense",
+      "optimizer_device": "cpu",
+      "winning_restart_seed": 3,
+      "best_unrefined_objective": 2165.3501263832472,
+      "refined_restarts": 2,
+      "fm_moves": 1,
+      "refinement_candidates": [
+        {
+          "seed": 3,
+          "before": 2165.3501263832472,
+          "after": 2165.0800430710333,
+          "moves": 1
+        },
+        {
+          "seed": 1,
+          "before": 2165.6677342224393,
+          "after": 2165.460547156311,
+          "moves": 1
+        }
+      ]
+    },
+    "fm_moves": 1,
+    "factor_leakage": 2165.0800430710333,
+    "weighted_factor_leakage": 2165.0800430710333,
+    "leakage": null,
+    "leakage_diagnostic": "none"
+  },
+  "assignment_sha256": "7236afe7f82d434cadc19bd5a762fbc3ffd2258c491f3540aeaacaff3f8965bb",
+  "scores": {
+    "global_ratio": 0.1435387518591824,
+    "mean_nearest_training": 0.24821829795837402,
+    "top5_training_mean": 0.19422729301732033,
+    "local_ramp_04": 0.008586755798508719,
+    "test_fraction_above_04": 0.125,
+    "test_fraction_above_06": 0.0,
+    "test_fraction_above_08": 0.0,
+    "maccs_mean_nearest_training": 0.5139695899561048,
+    "composition": {
+      "train": {
+        "n_labels": 514,
+        "mean": -3.791556420233463,
+        "std": 3.350953332864344
+      },
+      "val": {
+        "n_labels": 64,
+        "mean": -3.7682812500000002,
+        "std": 5.290825654696858
+      },
+      "test": {
+        "n_labels": 64,
+        "mean": -3.9296875,
+        "std": 5.48592601821641
+      }
+    },
+    "task": "regression",
+    "target_wasserstein": 1.2489567120622567,
+    "weighted_global_ratio": 0.20051498740629548
+  },
+  "fresh_process_wall_seconds": 4.217380736023188
+}

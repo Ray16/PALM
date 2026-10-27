@@ -1,0 +1,6 @@
+{
+  "reason": "uint8 fold IDs must be converted to torch.long before weighted matrix indexing",
+  "failed_run_preserved": "run_failed_runner_v1 (ignored runtime directory)",
+  "complete_rows_before_failure": 0,
+  "processes_verified_terminal": true
+}

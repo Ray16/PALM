@@ -1,0 +1,33 @@
+generated current-version figures and numbers; preliminary= False
+{
+  "technical_checks_passed": false,
+  "issues": [
+    "compiled PDF differs from reviewed rendering: supplement.pdf"
+  ],
+  "source_checks": {
+    "run": true,
+    "fidelity/run": true,
+    "publication_checks/run": true,
+    "scaling/cpu_run": true,
+    "scaling/large_cpu_run": true
+  },
+  "rendered": {
+    "manuscript.pdf": {
+      "pages": 17,
+      "render_sha256": "b7c5d889e7634cbbd15f6e2faf99f7c4987f1e8a403dd346b69a90a3134c6582",
+      "minimum_figure_font_pt": 18.0,
+      "all_figure_fonts_at_least_18": true,
+      "clipped_figure_text": []
+    },
+    "supplement.pdf": {
+      "pages": 48,
+      "render_sha256": "d4d05c703e2e3e8151c641e911b1a5b9068cfcb2123c78f164d84eb584491ffb",
+      "minimum_figure_font_pt": 18.0,
+      "all_figure_fonts_at_least_18": true,
+      "clipped_figure_text": []
+    }
+  },
+  "author_submission_metadata_pending": true,
+  "submission_ready": false,
+  "scope": "Technical/reproducibility checks; author metadata was explicitly deferred and is never invented."
+}

@@ -1,0 +1,645 @@
+{
+  "jobs": [
+    {
+      "name": "moleculenet_clintox__s0__previous_plain__linear",
+      "dataset": "moleculenet_clintox",
+      "seed": 0,
+      "setting": "previous_plain",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_clintox__s0__previous_plain__forest",
+      "dataset": "moleculenet_clintox",
+      "seed": 0,
+      "setting": "previous_plain",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_clintox__s0__previous_combined__linear",
+      "dataset": "moleculenet_clintox",
+      "seed": 0,
+      "setting": "previous_combined",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_clintox__s0__previous_combined__forest",
+      "dataset": "moleculenet_clintox",
+      "seed": 0,
+      "setting": "previous_combined",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_clintox__s0__new_default_plain__linear",
+      "dataset": "moleculenet_clintox",
+      "seed": 0,
+      "setting": "new_default_plain",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_clintox__s0__new_default_plain__forest",
+      "dataset": "moleculenet_clintox",
+      "seed": 0,
+      "setting": "new_default_plain",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_clintox__s0__new_default_cut__linear",
+      "dataset": "moleculenet_clintox",
+      "seed": 0,
+      "setting": "new_default_cut",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_clintox__s0__new_default_cut__forest",
+      "dataset": "moleculenet_clintox",
+      "seed": 0,
+      "setting": "new_default_cut",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_clintox__s0__new_default_weighted__linear",
+      "dataset": "moleculenet_clintox",
+      "seed": 0,
+      "setting": "new_default_weighted",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_clintox__s0__new_default_weighted__forest",
+      "dataset": "moleculenet_clintox",
+      "seed": 0,
+      "setting": "new_default_weighted",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_clintox__s1__previous_plain__linear",
+      "dataset": "moleculenet_clintox",
+      "seed": 1,
+      "setting": "previous_plain",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_clintox__s1__previous_plain__forest",
+      "dataset": "moleculenet_clintox",
+      "seed": 1,
+      "setting": "previous_plain",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_clintox__s1__previous_combined__linear",
+      "dataset": "moleculenet_clintox",
+      "seed": 1,
+      "setting": "previous_combined",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_clintox__s1__previous_combined__forest",
+      "dataset": "moleculenet_clintox",
+      "seed": 1,
+      "setting": "previous_combined",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_clintox__s1__new_default_plain__linear",
+      "dataset": "moleculenet_clintox",
+      "seed": 1,
+      "setting": "new_default_plain",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_clintox__s1__new_default_plain__forest",
+      "dataset": "moleculenet_clintox",
+      "seed": 1,
+      "setting": "new_default_plain",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_clintox__s1__new_default_cut__linear",
+      "dataset": "moleculenet_clintox",
+      "seed": 1,
+      "setting": "new_default_cut",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_clintox__s1__new_default_cut__forest",
+      "dataset": "moleculenet_clintox",
+      "seed": 1,
+      "setting": "new_default_cut",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_clintox__s1__new_default_weighted__linear",
+      "dataset": "moleculenet_clintox",
+      "seed": 1,
+      "setting": "new_default_weighted",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_clintox__s1__new_default_weighted__forest",
+      "dataset": "moleculenet_clintox",
+      "seed": 1,
+      "setting": "new_default_weighted",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_clintox__s2__previous_plain__linear",
+      "dataset": "moleculenet_clintox",
+      "seed": 2,
+      "setting": "previous_plain",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_clintox__s2__previous_plain__forest",
+      "dataset": "moleculenet_clintox",
+      "seed": 2,
+      "setting": "previous_plain",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_clintox__s2__previous_combined__linear",
+      "dataset": "moleculenet_clintox",
+      "seed": 2,
+      "setting": "previous_combined",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_clintox__s2__previous_combined__forest",
+      "dataset": "moleculenet_clintox",
+      "seed": 2,
+      "setting": "previous_combined",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_clintox__s2__new_default_plain__linear",
+      "dataset": "moleculenet_clintox",
+      "seed": 2,
+      "setting": "new_default_plain",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_clintox__s2__new_default_plain__forest",
+      "dataset": "moleculenet_clintox",
+      "seed": 2,
+      "setting": "new_default_plain",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_clintox__s2__new_default_cut__linear",
+      "dataset": "moleculenet_clintox",
+      "seed": 2,
+      "setting": "new_default_cut",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_clintox__s2__new_default_cut__forest",
+      "dataset": "moleculenet_clintox",
+      "seed": 2,
+      "setting": "new_default_cut",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_clintox__s2__new_default_weighted__linear",
+      "dataset": "moleculenet_clintox",
+      "seed": 2,
+      "setting": "new_default_weighted",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_clintox__s2__new_default_weighted__forest",
+      "dataset": "moleculenet_clintox",
+      "seed": 2,
+      "setting": "new_default_weighted",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_sider__s0__previous_plain__linear",
+      "dataset": "moleculenet_sider",
+      "seed": 0,
+      "setting": "previous_plain",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_sider__s0__previous_plain__forest",
+      "dataset": "moleculenet_sider",
+      "seed": 0,
+      "setting": "previous_plain",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_sider__s0__previous_combined__linear",
+      "dataset": "moleculenet_sider",
+      "seed": 0,
+      "setting": "previous_combined",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_sider__s0__previous_combined__forest",
+      "dataset": "moleculenet_sider",
+      "seed": 0,
+      "setting": "previous_combined",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_sider__s0__new_default_plain__linear",
+      "dataset": "moleculenet_sider",
+      "seed": 0,
+      "setting": "new_default_plain",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_sider__s0__new_default_plain__forest",
+      "dataset": "moleculenet_sider",
+      "seed": 0,
+      "setting": "new_default_plain",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_sider__s0__new_default_cut__linear",
+      "dataset": "moleculenet_sider",
+      "seed": 0,
+      "setting": "new_default_cut",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_sider__s0__new_default_cut__forest",
+      "dataset": "moleculenet_sider",
+      "seed": 0,
+      "setting": "new_default_cut",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_sider__s0__new_default_weighted__linear",
+      "dataset": "moleculenet_sider",
+      "seed": 0,
+      "setting": "new_default_weighted",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_sider__s0__new_default_weighted__forest",
+      "dataset": "moleculenet_sider",
+      "seed": 0,
+      "setting": "new_default_weighted",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_sider__s1__previous_plain__linear",
+      "dataset": "moleculenet_sider",
+      "seed": 1,
+      "setting": "previous_plain",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_sider__s1__previous_plain__forest",
+      "dataset": "moleculenet_sider",
+      "seed": 1,
+      "setting": "previous_plain",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_sider__s1__previous_combined__linear",
+      "dataset": "moleculenet_sider",
+      "seed": 1,
+      "setting": "previous_combined",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_sider__s1__previous_combined__forest",
+      "dataset": "moleculenet_sider",
+      "seed": 1,
+      "setting": "previous_combined",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_sider__s1__new_default_plain__linear",
+      "dataset": "moleculenet_sider",
+      "seed": 1,
+      "setting": "new_default_plain",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_sider__s1__new_default_plain__forest",
+      "dataset": "moleculenet_sider",
+      "seed": 1,
+      "setting": "new_default_plain",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_sider__s1__new_default_cut__linear",
+      "dataset": "moleculenet_sider",
+      "seed": 1,
+      "setting": "new_default_cut",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_sider__s1__new_default_cut__forest",
+      "dataset": "moleculenet_sider",
+      "seed": 1,
+      "setting": "new_default_cut",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_sider__s1__new_default_weighted__linear",
+      "dataset": "moleculenet_sider",
+      "seed": 1,
+      "setting": "new_default_weighted",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_sider__s1__new_default_weighted__forest",
+      "dataset": "moleculenet_sider",
+      "seed": 1,
+      "setting": "new_default_weighted",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_sider__s2__previous_plain__linear",
+      "dataset": "moleculenet_sider",
+      "seed": 2,
+      "setting": "previous_plain",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_sider__s2__previous_plain__forest",
+      "dataset": "moleculenet_sider",
+      "seed": 2,
+      "setting": "previous_plain",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_sider__s2__previous_combined__linear",
+      "dataset": "moleculenet_sider",
+      "seed": 2,
+      "setting": "previous_combined",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_sider__s2__previous_combined__forest",
+      "dataset": "moleculenet_sider",
+      "seed": 2,
+      "setting": "previous_combined",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_sider__s2__new_default_plain__linear",
+      "dataset": "moleculenet_sider",
+      "seed": 2,
+      "setting": "new_default_plain",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_sider__s2__new_default_plain__forest",
+      "dataset": "moleculenet_sider",
+      "seed": 2,
+      "setting": "new_default_plain",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_sider__s2__new_default_cut__linear",
+      "dataset": "moleculenet_sider",
+      "seed": 2,
+      "setting": "new_default_cut",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_sider__s2__new_default_cut__forest",
+      "dataset": "moleculenet_sider",
+      "seed": 2,
+      "setting": "new_default_cut",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_sider__s2__new_default_weighted__linear",
+      "dataset": "moleculenet_sider",
+      "seed": 2,
+      "setting": "new_default_weighted",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_sider__s2__new_default_weighted__forest",
+      "dataset": "moleculenet_sider",
+      "seed": 2,
+      "setting": "new_default_weighted",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_qm8__s0__previous_plain__linear",
+      "dataset": "moleculenet_qm8",
+      "seed": 0,
+      "setting": "previous_plain",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_qm8__s0__previous_plain__forest",
+      "dataset": "moleculenet_qm8",
+      "seed": 0,
+      "setting": "previous_plain",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_qm8__s0__previous_combined__linear",
+      "dataset": "moleculenet_qm8",
+      "seed": 0,
+      "setting": "previous_combined",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_qm8__s0__previous_combined__forest",
+      "dataset": "moleculenet_qm8",
+      "seed": 0,
+      "setting": "previous_combined",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_qm8__s0__new_default_plain__linear",
+      "dataset": "moleculenet_qm8",
+      "seed": 0,
+      "setting": "new_default_plain",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_qm8__s0__new_default_plain__forest",
+      "dataset": "moleculenet_qm8",
+      "seed": 0,
+      "setting": "new_default_plain",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_qm8__s0__new_default_cut__linear",
+      "dataset": "moleculenet_qm8",
+      "seed": 0,
+      "setting": "new_default_cut",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_qm8__s0__new_default_cut__forest",
+      "dataset": "moleculenet_qm8",
+      "seed": 0,
+      "setting": "new_default_cut",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_qm8__s0__new_default_weighted__linear",
+      "dataset": "moleculenet_qm8",
+      "seed": 0,
+      "setting": "new_default_weighted",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_qm8__s0__new_default_weighted__forest",
+      "dataset": "moleculenet_qm8",
+      "seed": 0,
+      "setting": "new_default_weighted",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_qm8__s1__previous_plain__linear",
+      "dataset": "moleculenet_qm8",
+      "seed": 1,
+      "setting": "previous_plain",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_qm8__s1__previous_plain__forest",
+      "dataset": "moleculenet_qm8",
+      "seed": 1,
+      "setting": "previous_plain",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_qm8__s1__previous_combined__linear",
+      "dataset": "moleculenet_qm8",
+      "seed": 1,
+      "setting": "previous_combined",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_qm8__s1__previous_combined__forest",
+      "dataset": "moleculenet_qm8",
+      "seed": 1,
+      "setting": "previous_combined",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_qm8__s1__new_default_plain__linear",
+      "dataset": "moleculenet_qm8",
+      "seed": 1,
+      "setting": "new_default_plain",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_qm8__s1__new_default_plain__forest",
+      "dataset": "moleculenet_qm8",
+      "seed": 1,
+      "setting": "new_default_plain",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_qm8__s1__new_default_cut__linear",
+      "dataset": "moleculenet_qm8",
+      "seed": 1,
+      "setting": "new_default_cut",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_qm8__s1__new_default_cut__forest",
+      "dataset": "moleculenet_qm8",
+      "seed": 1,
+      "setting": "new_default_cut",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_qm8__s1__new_default_weighted__linear",
+      "dataset": "moleculenet_qm8",
+      "seed": 1,
+      "setting": "new_default_weighted",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_qm8__s1__new_default_weighted__forest",
+      "dataset": "moleculenet_qm8",
+      "seed": 1,
+      "setting": "new_default_weighted",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_qm8__s2__previous_plain__linear",
+      "dataset": "moleculenet_qm8",
+      "seed": 2,
+      "setting": "previous_plain",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_qm8__s2__previous_plain__forest",
+      "dataset": "moleculenet_qm8",
+      "seed": 2,
+      "setting": "previous_plain",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_qm8__s2__previous_combined__linear",
+      "dataset": "moleculenet_qm8",
+      "seed": 2,
+      "setting": "previous_combined",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_qm8__s2__previous_combined__forest",
+      "dataset": "moleculenet_qm8",
+      "seed": 2,
+      "setting": "previous_combined",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_qm8__s2__new_default_plain__linear",
+      "dataset": "moleculenet_qm8",
+      "seed": 2,
+      "setting": "new_default_plain",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_qm8__s2__new_default_plain__forest",
+      "dataset": "moleculenet_qm8",
+      "seed": 2,
+      "setting": "new_default_plain",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_qm8__s2__new_default_cut__linear",
+      "dataset": "moleculenet_qm8",
+      "seed": 2,
+      "setting": "new_default_cut",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_qm8__s2__new_default_cut__forest",
+      "dataset": "moleculenet_qm8",
+      "seed": 2,
+      "setting": "new_default_cut",
+      "model": "forest"
+    },
+    {
+      "name": "moleculenet_qm8__s2__new_default_weighted__linear",
+      "dataset": "moleculenet_qm8",
+      "seed": 2,
+      "setting": "new_default_weighted",
+      "model": "linear"
+    },
+    {
+      "name": "moleculenet_qm8__s2__new_default_weighted__forest",
+      "dataset": "moleculenet_qm8",
+      "seed": 2,
+      "setting": "new_default_weighted",
+      "model": "forest"
+    }
+  ],
+  "split_manifest_sha256": "902794481280e5da96421ff56fd48ba90d8053a31e6bae553b31462c0f34f156",
+  "runner_sha256": "b96e7e8e1a3e04c5547d7301844404f8a3334643111a870bd2c686aabbe58a99",
+  "cpus": [
+    "12,13",
+    "14,15",
+    "16,17",
+    "18,19",
+    "21,22",
+    "23,24"
+  ],
+  "protocol": "Three additional datasets, five frozen split settings, three seeds, two fixed models. No fitting on validation/test labels, parameter search or prospective claim."
+}

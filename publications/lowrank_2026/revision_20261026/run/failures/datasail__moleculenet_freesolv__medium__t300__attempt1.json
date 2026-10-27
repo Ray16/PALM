@@ -1,0 +1,12 @@
+{
+  "name": "datasail__moleculenet_freesolv__medium__t300",
+  "study": "frontier",
+  "method": "datasail",
+  "dataset": "moleculenet_freesolv",
+  "seed": 0,
+  "cluster_policy": "medium",
+  "solver_seconds": 300,
+  "code": 1,
+  "log": "/nfs/lambda_stor_01/homes/rzhu/data_splitting_lowrank_systematic/publications/lowrank_2026/revision_20261026/run/logs/datasail__moleculenet_freesolv__medium__t300__attempt1.log",
+  "terminal": true
+}

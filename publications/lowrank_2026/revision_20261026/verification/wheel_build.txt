@@ -1,0 +1,9 @@
+Processing ./.
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: lowrank-split
+  Building wheel for lowrank-split (pyproject.toml): started
+  Building wheel for lowrank-split (pyproject.toml): finished with status 'done'
+  Created wheel for lowrank-split: filename=lowrank_split-0.2.0.dev3-py3-none-any.whl size=131630 sha256=fcbfbbb708702de626a830e864cbc7c0152c6c204f40450dc55e54ab44313dd1
+  Stored in directory: /tmp/pip-ephem-wheel-cache-qu987yn3/wheels/d6/6d/15/b031702d9938f4160b30c533a131b4d6e71a6b85caadfc2769
+Successfully built lowrank-split

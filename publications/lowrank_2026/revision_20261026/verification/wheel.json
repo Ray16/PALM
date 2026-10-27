@@ -1,0 +1,13 @@
+{
+  "wheel": "lowrank_split-0.2.0.dev3-py3-none-any.whl",
+  "sha256": "fcbfbbb708702de626a830e864cbc7c0152c6c204f40450dc55e54ab44313dd1",
+  "python_files_verified": 43,
+  "all_files_exact": true,
+  "imported_namespace": "lowrank/__init__.py",
+  "joint_cut_audit_pass": true,
+  "counts": {
+    "train": 64,
+    "val": 8,
+    "test": 8
+  }
+}

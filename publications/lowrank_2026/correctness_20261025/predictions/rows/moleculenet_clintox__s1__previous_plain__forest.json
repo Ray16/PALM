@@ -1,0 +1,26 @@
+{
+  "name": "moleculenet_clintox__s1__previous_plain__forest",
+  "dataset": "moleculenet_clintox",
+  "seed": 1,
+  "setting": "previous_plain",
+  "model": "forest",
+  "assignment_sha256": "159e46cc7e4b9c1c4bd8ebbd3a0075eae55490deb7b250e13cf1772888cbd71d",
+  "split_source_sha256": "01ececd6c3e692c07150ef6de51afda07b7739c749e90b684b390fb65334e5a9",
+  "task": "classification",
+  "n_train_labels": 1184,
+  "n_test_labels": 148,
+  "cpu_affinity": [
+    23,
+    24
+  ],
+  "model_selection": "none; fixed defaults; training labels only",
+  "status": "ok",
+  "train_positive_fraction": 0.08445945945945946,
+  "test_positive_fraction": 0.006756756756756757,
+  "metrics": {
+    "auroc": 0.673469387755102,
+    "average_precision": 0.02040816326530612,
+    "brier": 0.007850592558806364
+  },
+  "fit_predict_seconds": 0.565901905298233
+}

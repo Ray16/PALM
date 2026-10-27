@@ -1,0 +1,13 @@
+{
+  "expected": 243,
+  "completed": 242,
+  "ok": 242,
+  "not_completed": [
+    "moleculenet_qm8__s0__new_plain"
+  ],
+  "budget_seconds_per_case": 600,
+  "confirmed_timeout": [
+    "moleculenet_qm8__s0__new_plain"
+  ],
+  "note": "Original four-restart study retained; missing observations are not treated as successes or omitted from availability."
+}

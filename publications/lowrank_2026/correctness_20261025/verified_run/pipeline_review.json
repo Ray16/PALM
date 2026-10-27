@@ -1,0 +1,340 @@
+{
+  "final_cases": 189,
+  "retained_rows_and_exact_counts": 189,
+  "strict_group_artifacts": 27,
+  "dense_reference_cases": 42,
+  "maximum_dense_score_error": 3.4367546170033236e-09,
+  "source_exact_match": false,
+  "non_doc_executable_source_match": true,
+  "documentation_only_changes": [
+    "lowrank/nystrom.py",
+    "lowrank/splitters/common/feature_preparation.py",
+    "lowrank/splitters/common/leakage_metrics.py"
+  ],
+  "replays": [
+    {
+      "dataset": "moleculenet_freesolv",
+      "setting": "new_default_plain",
+      "assignment_equal": true
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "setting": "new_default_combined",
+      "assignment_equal": true
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "setting": "new_default_strict",
+      "assignment_equal": true
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "setting": "new_default_cut",
+      "assignment_equal": true
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "setting": "new_default_weighted",
+      "assignment_equal": true
+    },
+    {
+      "dataset": "moleculenet_clintox",
+      "setting": "new_default_plain",
+      "assignment_equal": true
+    },
+    {
+      "dataset": "moleculenet_clintox",
+      "setting": "new_default_combined",
+      "assignment_equal": true
+    },
+    {
+      "dataset": "moleculenet_clintox",
+      "setting": "new_default_strict",
+      "assignment_equal": true
+    },
+    {
+      "dataset": "moleculenet_clintox",
+      "setting": "new_default_cut",
+      "assignment_equal": true
+    },
+    {
+      "dataset": "moleculenet_clintox",
+      "setting": "new_default_weighted",
+      "assignment_equal": true
+    }
+  ],
+  "cut_fidelity": [
+    {
+      "dataset": "moleculenet_freesolv",
+      "seed": 0,
+      "actual_cut_error": 0.010568466106429218,
+      "reported_interval": [
+        0.0,
+        0.031939699114720624
+      ],
+      "audit_tolerance_met": true
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "seed": 1,
+      "actual_cut_error": 0.0099341053339445,
+      "reported_interval": [
+        0.0,
+        0.03152314429803491
+      ],
+      "audit_tolerance_met": true
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "seed": 2,
+      "actual_cut_error": 0.013953402887230475,
+      "reported_interval": [
+        0.0,
+        0.038051754573890526
+      ],
+      "audit_tolerance_met": true
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 0,
+      "actual_cut_error": 0.018507653999342417,
+      "reported_interval": [
+        0.0,
+        0.04020035464156337
+      ],
+      "audit_tolerance_met": true
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 1,
+      "actual_cut_error": 0.021062189190664278,
+      "reported_interval": [
+        0.0011637970324862115,
+        0.043012732076207524
+      ],
+      "audit_tolerance_met": true
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 2,
+      "actual_cut_error": 0.01722508357230641,
+      "reported_interval": [
+        0.0,
+        0.039366846122845536
+      ],
+      "audit_tolerance_met": true
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 0,
+      "actual_cut_error": 0.019860774510068232,
+      "reported_interval": [
+        0.009807643460094538,
+        0.030562385763040843
+      ],
+      "audit_tolerance_met": true
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 1,
+      "actual_cut_error": 0.018575788629901828,
+      "reported_interval": [
+        0.009053199677497271,
+        0.02995486566766271
+      ],
+      "audit_tolerance_met": true
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 2,
+      "actual_cut_error": 0.02154375532807554,
+      "reported_interval": [
+        0.01193640551390062,
+        0.03386259765841958
+      ],
+      "audit_tolerance_met": true
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 0,
+      "actual_cut_error": 0.017402394787324155,
+      "reported_interval": [
+        0.0019494129577989914,
+        0.03229101567273206
+      ],
+      "audit_tolerance_met": true
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 1,
+      "actual_cut_error": 0.01756436797370792,
+      "reported_interval": [
+        0.0018745484491191542,
+        0.031787315823106226
+      ],
+      "audit_tolerance_met": true
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 2,
+      "actual_cut_error": 0.01885738618979476,
+      "reported_interval": [
+        0.004737248119590958,
+        0.03468664122028511
+      ],
+      "audit_tolerance_met": true
+    },
+    {
+      "dataset": "moleculenet_lipophilicity",
+      "seed": 0,
+      "actual_cut_error": 0.02256427464729588,
+      "reported_interval": [
+        0.008870136345898588,
+        0.035568922827023564
+      ],
+      "audit_tolerance_met": true
+    },
+    {
+      "dataset": "moleculenet_lipophilicity",
+      "seed": 1,
+      "actual_cut_error": 0.020410154911555962,
+      "reported_interval": [
+        0.006701406347448829,
+        0.03316252855417218
+      ],
+      "audit_tolerance_met": true
+    },
+    {
+      "dataset": "moleculenet_lipophilicity",
+      "seed": 2,
+      "actual_cut_error": 0.019554388523646285,
+      "reported_interval": [
+        0.005871249821846941,
+        0.03264236283691349
+      ],
+      "audit_tolerance_met": true
+    },
+    {
+      "dataset": "moleculenet_tox21",
+      "seed": 0,
+      "actual_cut_error": 0.021363149879698982,
+      "reported_interval": [
+        0.002727174246274249,
+        0.04161413113415291
+      ],
+      "audit_tolerance_met": true
+    },
+    {
+      "dataset": "moleculenet_tox21",
+      "seed": 1,
+      "actual_cut_error": 0.021875809724921653,
+      "reported_interval": [
+        0.00204869286582848,
+        0.04157418612047813
+      ],
+      "audit_tolerance_met": true
+    },
+    {
+      "dataset": "moleculenet_tox21",
+      "seed": 2,
+      "actual_cut_error": 0.020905170396040486,
+      "reported_interval": [
+        0.0029401795835008464,
+        0.04197907414853448
+      ],
+      "audit_tolerance_met": true
+    },
+    {
+      "dataset": "moleculenet_clintox",
+      "seed": 0,
+      "actual_cut_error": 0.01884718215183867,
+      "reported_interval": [
+        0.0005218464341636852,
+        0.03586325007023072
+      ],
+      "audit_tolerance_met": true
+    },
+    {
+      "dataset": "moleculenet_clintox",
+      "seed": 1,
+      "actual_cut_error": 0.018899180589307937,
+      "reported_interval": [
+        0.0012848372741387708,
+        0.03596234155898133
+      ],
+      "audit_tolerance_met": true
+    },
+    {
+      "dataset": "moleculenet_clintox",
+      "seed": 2,
+      "actual_cut_error": 0.022388256763378907,
+      "reported_interval": [
+        0.005019142574221297,
+        0.04007860369011531
+      ],
+      "audit_tolerance_met": true
+    },
+    {
+      "dataset": "moleculenet_sider",
+      "seed": 0,
+      "actual_cut_error": 0.018541849153841165,
+      "reported_interval": [
+        0.0010169903989693994,
+        0.035950539646643485
+      ],
+      "audit_tolerance_met": true
+    },
+    {
+      "dataset": "moleculenet_sider",
+      "seed": 1,
+      "actual_cut_error": 0.01845684053931739,
+      "reported_interval": [
+        0.0006472539562530765,
+        0.035750862922442436
+      ],
+      "audit_tolerance_met": true
+    },
+    {
+      "dataset": "moleculenet_sider",
+      "seed": 2,
+      "actual_cut_error": 0.017977261581636927,
+      "reported_interval": [
+        0.0,
+        0.035320140397228826
+      ],
+      "audit_tolerance_met": true
+    },
+    {
+      "dataset": "moleculenet_qm8",
+      "seed": 0,
+      "actual_cut_error": 0.01180848960407664,
+      "reported_interval": [
+        0.0,
+        0.035019462161300495
+      ],
+      "audit_tolerance_met": true
+    },
+    {
+      "dataset": "moleculenet_qm8",
+      "seed": 1,
+      "actual_cut_error": 0.011381580072159784,
+      "reported_interval": [
+        0.0,
+        0.03153356840122831
+      ],
+      "audit_tolerance_met": true
+    },
+    {
+      "dataset": "moleculenet_qm8",
+      "seed": 2,
+      "actual_cut_error": 0.01255234584386487,
+      "reported_interval": [
+        0.0,
+        0.034235277927302916
+      ],
+      "audit_tolerance_met": true
+    }
+  ],
+  "predictive_inputs_identical_to_final_cases": 90,
+  "predictive_note": "Models were fit on the preceding grid; every feature/target cache and assignment used by all 90 fits is byte-identical to the corresponding final-source case."
+}

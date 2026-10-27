@@ -1,0 +1,8 @@
+.........................................                                [100%]
+=============================== warnings summary ===============================
+webapp/tests/test_deployment.py::test_datasail_custom_distance_matrix_callback_preserves_results
+  /nfs/lambda_stor_01/homes/rzhu/data_splitting_webapp_20261022/.venv/lib/python3.12/site-packages/grakel/kernels/graph_hopper.py:9: PendingDeprecationWarning: Importing from numpy.matlib is deprecated since 1.19.0. The matrix subclass is not the recommended way to represent matrices or deal with linear algebra (see https://docs.scipy.org/doc/numpy/user/numpy-for-matlab-users.html). Please adjust your code to use regular ndarray.
+    from numpy.matlib import repmat
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+41 passed, 1 warning in 72.22s (0:01:12)

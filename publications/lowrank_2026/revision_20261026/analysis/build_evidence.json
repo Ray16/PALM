@@ -1,0 +1,227 @@
+{
+  "preliminary": false,
+  "unmet": [],
+  "primary_successes": 191,
+  "native_infeasible": 8,
+  "scaling_outcomes": [
+    {
+      "name": "plain__n10000__eps0.0__s0",
+      "n": 10000,
+      "epsilon": 0.0,
+      "seed": 0,
+      "method": "plain",
+      "status": "ok"
+    },
+    {
+      "name": "plain__n10000__eps0.01__s0",
+      "n": 10000,
+      "epsilon": 0.01,
+      "seed": 0,
+      "method": "plain",
+      "status": "ok"
+    },
+    {
+      "name": "plain__n100000__eps0.0__s0",
+      "n": 100000,
+      "epsilon": 0.0,
+      "seed": 0,
+      "method": "plain",
+      "status": "ok"
+    },
+    {
+      "name": "plain__n100000__eps0.0__s1",
+      "n": 100000,
+      "epsilon": 0.0,
+      "seed": 1,
+      "method": "plain",
+      "status": "ok"
+    },
+    {
+      "name": "plain__n100000__eps0.0__s2",
+      "n": 100000,
+      "epsilon": 0.0,
+      "seed": 2,
+      "method": "plain",
+      "status": "ok"
+    },
+    {
+      "name": "plain__n100000__eps0.01__s0",
+      "n": 100000,
+      "epsilon": 0.01,
+      "seed": 0,
+      "method": "plain",
+      "status": "ok"
+    },
+    {
+      "name": "plain__n100000__eps0.01__s1",
+      "n": 100000,
+      "epsilon": 0.01,
+      "seed": 1,
+      "method": "plain",
+      "status": "ok"
+    },
+    {
+      "name": "plain__n100000__eps0.01__s2",
+      "n": 100000,
+      "epsilon": 0.01,
+      "seed": 2,
+      "method": "plain",
+      "status": "ok"
+    },
+    {
+      "name": "plain__n1000000__eps0.0__s0",
+      "n": 1000000,
+      "epsilon": 0.0,
+      "seed": 0,
+      "method": "plain",
+      "status": "end_to_end_budget_failure",
+      "failure": {
+        "name": "plain__n1000000__eps0.0__s0",
+        "n": 1000000,
+        "epsilon": 0.0,
+        "seed": 0,
+        "method": "plain",
+        "exit_code": -999,
+        "terminal": true
+      }
+    },
+    {
+      "name": "plain__n1000000__eps0.01__s0",
+      "n": 1000000,
+      "epsilon": 0.01,
+      "seed": 0,
+      "method": "plain",
+      "status": "end_to_end_budget_failure",
+      "failure": {
+        "name": "plain__n1000000__eps0.01__s0",
+        "n": 1000000,
+        "epsilon": 0.01,
+        "seed": 0,
+        "method": "plain",
+        "exit_code": -999,
+        "terminal": true
+      }
+    },
+    {
+      "name": "plain__n2000000__eps0.0__s0",
+      "n": 2000000,
+      "epsilon": 0.0,
+      "seed": 0,
+      "method": "plain",
+      "status": "end_to_end_budget_failure",
+      "failure": {
+        "name": "plain__n2000000__eps0.0__s0",
+        "n": 2000000,
+        "epsilon": 0.0,
+        "seed": 0,
+        "method": "plain",
+        "exit_code": -999,
+        "terminal": true
+      }
+    },
+    {
+      "name": "plain__n2000000__eps0.0__s1",
+      "n": 2000000,
+      "epsilon": 0.0,
+      "seed": 1,
+      "method": "plain",
+      "status": "end_to_end_budget_failure",
+      "failure": {
+        "name": "plain__n2000000__eps0.0__s1",
+        "n": 2000000,
+        "epsilon": 0.0,
+        "seed": 1,
+        "method": "plain",
+        "exit_code": -999,
+        "terminal": true
+      }
+    },
+    {
+      "name": "plain__n2000000__eps0.0__s2",
+      "n": 2000000,
+      "epsilon": 0.0,
+      "seed": 2,
+      "method": "plain",
+      "status": "end_to_end_budget_failure",
+      "failure": {
+        "name": "plain__n2000000__eps0.0__s2",
+        "n": 2000000,
+        "epsilon": 0.0,
+        "seed": 2,
+        "method": "plain",
+        "exit_code": -999,
+        "terminal": true
+      }
+    },
+    {
+      "name": "plain__n2000000__eps0.01__s0",
+      "n": 2000000,
+      "epsilon": 0.01,
+      "seed": 0,
+      "method": "plain",
+      "status": "end_to_end_budget_failure",
+      "failure": {
+        "name": "plain__n2000000__eps0.01__s0",
+        "n": 2000000,
+        "epsilon": 0.01,
+        "seed": 0,
+        "method": "plain",
+        "exit_code": -999,
+        "terminal": true,
+        "allocation_pid": 1517968
+      }
+    },
+    {
+      "name": "plain__n2000000__eps0.01__s1",
+      "n": 2000000,
+      "epsilon": 0.01,
+      "seed": 1,
+      "method": "plain",
+      "status": "end_to_end_budget_failure",
+      "failure": {
+        "name": "plain__n2000000__eps0.01__s1",
+        "n": 2000000,
+        "epsilon": 0.01,
+        "seed": 1,
+        "method": "plain",
+        "exit_code": -999,
+        "terminal": true,
+        "allocation_pid": 1517968
+      }
+    },
+    {
+      "name": "plain__n2000000__eps0.01__s2",
+      "n": 2000000,
+      "epsilon": 0.01,
+      "seed": 2,
+      "method": "plain",
+      "status": "end_to_end_budget_failure",
+      "failure": {
+        "name": "plain__n2000000__eps0.01__s2",
+        "n": 2000000,
+        "epsilon": 0.01,
+        "seed": 2,
+        "method": "plain",
+        "exit_code": -999,
+        "terminal": true,
+        "allocation_pid": 1517968
+      }
+    },
+    {
+      "name": "combined__n10000__eps0.0__s0",
+      "n": 10000,
+      "epsilon": 0.0,
+      "seed": 0,
+      "method": "combined",
+      "status": "ok"
+    },
+    {
+      "name": "combined__n10000__eps0.01__s0",
+      "n": 10000,
+      "epsilon": 0.01,
+      "seed": 0,
+      "method": "combined",
+      "status": "ok"
+    }
+  ]
+}

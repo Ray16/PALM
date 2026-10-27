@@ -1,0 +1,11 @@
+{
+  "version": "0.2.0.dev1",
+  "wheel_sha256": "508019083d088b13639691ab880a2f539d2334b209000eb4082e7dee5e7319be",
+  "imported_from": "/tmp/lowrank_next_wheel_final_smoke_20261023/lowrank/__init__.py",
+  "source_files_matched": 41,
+  "adaptive": true,
+  "strict_groups": true,
+  "local_objective": true,
+  "exact_counts": true,
+  "namespace_check": true
+}

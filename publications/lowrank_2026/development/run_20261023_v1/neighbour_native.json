@@ -1,0 +1,155 @@
+{
+  "cpu_affinity": [
+    52,
+    53
+  ],
+  "threads": 2,
+  "protocol": "same CPU interpreter; exact, ANN, auto in fixed order; first ANN includes compilation; sampled recall only",
+  "records": [
+    {
+      "dataset": "moleculenet_bbbp",
+      "n": 2039,
+      "backend": "tiled",
+      "wall_seconds": 0.16276349127292633,
+      "diagnostics": {
+        "requested_backend": "tiled",
+        "approximate": false,
+        "index_recall": 1.0,
+        "strong_recall": 1.0,
+        "audit_queries": 0,
+        "projected_exact_seconds": null,
+        "ann_seconds": null,
+        "selection_policy": "conservative exact cutoff; measured pilot; ANN recall/cost gate",
+        "selected_backend": "tiled",
+        "reason": "explicit_exact",
+        "total_seconds": 0.16227570921182632
+      }
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "n": 2039,
+      "backend": "nndescent",
+      "wall_seconds": 46.983616787940264,
+      "diagnostics": {
+        "requested_backend": "nndescent",
+        "approximate": true,
+        "index_recall": 0.99169921875,
+        "strong_recall": 0.9983660130718954,
+        "audit_queries": 64,
+        "projected_exact_seconds": 0.2471299872850068,
+        "ann_seconds": 46.95737421512604,
+        "selection_policy": "conservative exact cutoff; measured pilot; ANN recall/cost gate",
+        "pilot_seconds": 0.007756900042295456,
+        "audit_seed": 0,
+        "ann_audit": {
+          "index_recall": 0.99169921875,
+          "strong_recall": 0.9983660130718954,
+          "score_recall": 1.0,
+          "ann_seconds": 46.95737421512604,
+          "recall_scope": "sampled exact top-k queries; not full graph"
+        },
+        "score_recall": 1.0,
+        "recall_scope": "sampled exact top-k queries; not full graph",
+        "selected_backend": "nndescent",
+        "reason": "explicit_ANN",
+        "total_seconds": 46.98323744907975
+      }
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "n": 2039,
+      "backend": "auto",
+      "wall_seconds": 0.15718837268650532,
+      "diagnostics": {
+        "requested_backend": "auto",
+        "approximate": false,
+        "index_recall": 1.0,
+        "strong_recall": 1.0,
+        "audit_queries": 0,
+        "projected_exact_seconds": null,
+        "ann_seconds": null,
+        "selection_policy": "conservative exact cutoff; measured pilot; ANN recall/cost gate",
+        "selected_backend": "tiled",
+        "reason": "small_dataset_exact",
+        "total_seconds": 0.15678652189671993
+      }
+    },
+    {
+      "dataset": "moleculenet_tox21",
+      "n": 7823,
+      "backend": "tiled",
+      "wall_seconds": 1.684256600216031,
+      "diagnostics": {
+        "requested_backend": "tiled",
+        "approximate": false,
+        "index_recall": 1.0,
+        "strong_recall": 1.0,
+        "audit_queries": 0,
+        "projected_exact_seconds": null,
+        "ann_seconds": null,
+        "selection_policy": "conservative exact cutoff; measured pilot; ANN recall/cost gate",
+        "selected_backend": "tiled",
+        "reason": "explicit_exact",
+        "total_seconds": 1.6831614710390568
+      }
+    },
+    {
+      "dataset": "moleculenet_tox21",
+      "n": 7823,
+      "backend": "nndescent",
+      "wall_seconds": 12.229995030909777,
+      "diagnostics": {
+        "requested_backend": "nndescent",
+        "approximate": true,
+        "index_recall": 0.98779296875,
+        "strong_recall": 0.9883040935672515,
+        "audit_queries": 64,
+        "projected_exact_seconds": 2.728553400200326,
+        "ann_seconds": 12.174030078575015,
+        "selection_policy": "conservative exact cutoff; measured pilot; ANN recall/cost gate",
+        "pilot_seconds": 0.022322308272123337,
+        "audit_seed": 0,
+        "ann_audit": {
+          "index_recall": 0.98779296875,
+          "strong_recall": 0.9883040935672515,
+          "score_recall": 1.0,
+          "ann_seconds": 12.174030078575015,
+          "recall_scope": "sampled exact top-k queries; not full graph"
+        },
+        "score_recall": 1.0,
+        "recall_scope": "sampled exact top-k queries; not full graph",
+        "selected_backend": "nndescent",
+        "reason": "explicit_ANN",
+        "total_seconds": 12.229057794436812
+      }
+    },
+    {
+      "dataset": "moleculenet_tox21",
+      "n": 7823,
+      "backend": "auto",
+      "wall_seconds": 14.064593527466059,
+      "diagnostics": {
+        "requested_backend": "auto",
+        "approximate": false,
+        "index_recall": 1.0,
+        "strong_recall": 1.0,
+        "audit_queries": 64,
+        "projected_exact_seconds": 2.569960675551556,
+        "ann_seconds": null,
+        "selection_policy": "conservative exact cutoff; measured pilot; ANN recall/cost gate",
+        "pilot_seconds": 0.021024860441684723,
+        "audit_seed": 0,
+        "ann_audit": {
+          "index_recall": 0.98779296875,
+          "strong_recall": 0.9883040935672515,
+          "score_recall": 1.0,
+          "ann_seconds": 12.345710851252079,
+          "recall_scope": "sampled exact top-k queries; not full graph"
+        },
+        "selected_backend": "tiled",
+        "reason": "ANN_failed_sampled_recall_or_projected_cost_gate",
+        "total_seconds": 14.063591621816158
+      }
+    }
+  ]
+}

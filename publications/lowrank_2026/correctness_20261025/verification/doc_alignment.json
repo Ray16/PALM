@@ -1,0 +1,9 @@
+{
+  "numerical_commit": "356ae758af8f268028dd2534c4f7530054bd6b1c",
+  "documentation_only_files": [
+    "publications/lowrank_2026/package/lowrank/nystrom.py",
+    "publications/lowrank_2026/package/lowrank/splitters/common/feature_preparation.py",
+    "publications/lowrank_2026/package/lowrank/splitters/common/leakage_metrics.py"
+  ],
+  "non_doc_executable_ast_unchanged": true
+}

@@ -1,0 +1,17 @@
+{
+  "expected_cases": 36,
+  "completed": 36,
+  "retained_rows_and_exact_counts_verified": 36,
+  "strict_group_artifacts_verified": 0,
+  "source_refs": {
+    "release": "9f7c34e"
+  },
+  "final_source_delta": [],
+  "dense_reference_cases": 6,
+  "maximum_dense_score_error": 1.2643857471433817e-09,
+  "sampled_diagnostic_intervals_cover_exact": {
+    "covered": 0,
+    "total": 0,
+    "interpretation": "descriptive finite-grid coverage, not an interval guarantee"
+  }
+}

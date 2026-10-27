@@ -1,0 +1,85 @@
+sh: 1: cd-hit: not found
+sh: 1: cd-hit-est: not found
+sh: 1: diamond: not found
+sh: 1: mmseqs: not found
+sh: 1: mmseqs: not found
+sh: 1: mmseqs: not found
+sh: 1: mash: not found
+sh: 1: foldseek: not found
+sh: 1: TMalign: not found
+2026-10-26 16:25:29,761 Validating arguments
+2026-10-26 16:25:29,762 Read data
+2026-10-26 16:25:29,764 Cluster first set of entities.
+2026-10-26 16:25:29,765 Cluster 1128 items based on distances
+2026-10-26 16:25:29,773 Clustering based on distances. Distances above 0.8254513332381428 cannot end up in same cluster.
+2026-10-26 16:25:29,910 Clustering finished
+2026-10-26 16:25:30,847 Reduced number of clusters to 9.
+2026-10-26 16:25:31,319 Some cluster statistics:
+2026-10-26 16:25:31,321 	Min distance   : 0.00000
+2026-10-26 16:25:31,323 	Max distance   : 1.00000
+2026-10-26 16:25:31,325 	Avg distance   : 0.91717
+2026-10-26 16:25:31,328 	Mean distance  : 0.91717
+2026-10-26 16:25:31,339 	Var distance   : 0.00651
+2026-10-26 16:25:31,340 	Maximal distance in same split: 1.00000
+2026-10-26 16:25:31,343 	0.0% of distances are larger
+2026-10-26 16:25:31,343 	Minimal distance between two splits: 1.00000
+2026-10-26 16:25:31,346 	0.33% of distances are smaller
+2026-10-26 16:25:31,346 Split data
+2026-10-26 16:25:31,348 Define optimization problem
+2026-10-26 16:25:31,348 Splitting technique C1e of run 1 of 1
+2026-10-26 16:25:31,368 Start solving with SCIP
+2026-10-26 16:25:31,369 The problem has 27 variables and 12 constraints.
+===============================================================================
+                                     CVXPY                                     
+                                     v1.5.3                                    
+===============================================================================
+(CVXPY) Oct 26 04:25:31 PM: Your problem has 27 variables, 12 constraints, and 0 parameters.
+(CVXPY) Oct 26 04:25:31 PM: It is compliant with the following grammars: DCP, DQCP
+(CVXPY) Oct 26 04:25:31 PM: (If you need to solve this problem multiple times, but with different data, consider using parameters.)
+(CVXPY) Oct 26 04:25:31 PM: CVXPY will first compile your problem; then, it will invoke a numerical solver to obtain a solution.
+(CVXPY) Oct 26 04:25:31 PM: Your problem is compiled with the CPP canonicalization backend.
+-------------------------------------------------------------------------------
+                                  Compilation                                  
+-------------------------------------------------------------------------------
+(CVXPY) Oct 26 04:25:31 PM: Compiling problem (target solver=SCIP).
+(CVXPY) Oct 26 04:25:31 PM: Reduction chain: Dcp2Cone -> CvxAttr2Constr -> ConeMatrixStuffing -> SCIP
+(CVXPY) Oct 26 04:25:31 PM: Applying reduction Dcp2Cone
+(CVXPY) Oct 26 04:25:31 PM: Applying reduction CvxAttr2Constr
+(CVXPY) Oct 26 04:25:31 PM: Applying reduction ConeMatrixStuffing
+(CVXPY) Oct 26 04:25:31 PM: Applying reduction SCIP
+(CVXPY) Oct 26 04:25:31 PM: Finished problem compilation (took 9.593e-02 seconds).
+-------------------------------------------------------------------------------
+                                Numerical solver                               
+-------------------------------------------------------------------------------
+(CVXPY) Oct 26 04:25:31 PM: Invoking solver SCIP  to obtain a solution.
+-------------------------------------------------------------------------------
+                                    Summary                                    
+-------------------------------------------------------------------------------
+(CVXPY) Oct 26 04:25:31 PM: Problem status: infeasible
+(CVXPY) Oct 26 04:25:31 PM: Optimal value: inf
+(CVXPY) Oct 26 04:25:31 PM: Compilation took 9.593e-02 seconds
+(CVXPY) Oct 26 04:25:31 PM: Solver (including time spent in interface) took 2.469e-02 seconds
+2026-10-26 16:25:31,809 SCIP status: infeasible
+2026-10-26 16:25:31,809 Solution's score: inf
+2026-10-26 16:25:31,809 SCIP cannot solve the problem. Please consider relaxing split restrictions, e.g., less splits, or a higher tolerance level for exceeding cluster limits.
+2026-10-26 16:25:31,812 No assignments could be made for any technique! Please check your input data and values for cluster-numbers, delta, and epsilon.
+Traceback (most recent call last):
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting_lowrank_systematic/publications/lowrank_2026/revision_20261026/study.py", line 781, in <module>
+    dict(plan=plan, launch=launch, case=case)[args.action](args)
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting_lowrank_systematic/publications/lowrank_2026/revision_20261026/study.py", line 549, in case
+    result = dict(
+             ^^^^^
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting_lowrank_systematic/publications/lowrank_2026/revision_20261026/frontier.py", line 129, in frontier_case
+    raw = e_splits["C1e"][0]
+          ~~~~~~~~^^^^^^^
+TypeError: 'NoneType' object is not subscriptable
+Traceback (most recent call last):
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting_lowrank_systematic/publications/lowrank_2026/revision_20261026/study.py", line 781, in <module>
+    dict(plan=plan, launch=launch, case=case)[args.action](args)
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting_lowrank_systematic/publications/lowrank_2026/revision_20261026/study.py", line 549, in case
+    result = dict(
+             ^^^^^
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting_lowrank_systematic/publications/lowrank_2026/revision_20261026/frontier.py", line 129, in frontier_case
+    raw = e_splits["C1e"][0]
+          ~~~~~~~~^^^^^^^
+TypeError: 'NoneType' object is not subscriptable

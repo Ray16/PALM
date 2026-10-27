@@ -1,0 +1,32 @@
+{
+  "purpose": "power-only and group-only controls specified in the development plan",
+  "original_grid_preserved": true,
+  "wrapper_sha256": "54427ed063a3b5ff99fd593af38cfb955368b5253cd614679b9231b86dad1008",
+  "settings": {
+    "release_power3": [
+      "release",
+      {
+        "kernel_power": 3
+      }
+    ],
+    "release_groups": [
+      "release",
+      {
+        "must_link": 0.4
+      }
+    ]
+  },
+  "datasets": [
+    "moleculenet_freesolv",
+    "moleculenet_esol",
+    "moleculenet_bace",
+    "moleculenet_bbbp",
+    "moleculenet_lipophilicity",
+    "moleculenet_tox21"
+  ],
+  "seeds": [
+    0,
+    1,
+    2
+  ]
+}

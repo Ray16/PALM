@@ -1,0 +1,11 @@
+{
+  "dataset": "moleculenet_sider",
+  "n": 1427,
+  "task": "classification",
+  "feature_sha256": "a0d0b1365232cc1e4ebb213607f35748277e8869924fbfd539d58503d5ed8842",
+  "cache_sha256": "7f4ca4ba3adb157cc30e1ae3b2ff13b9a55ea6a4968f066721061c278ba40ef0",
+  "raw_csv_sha256": "71efc6ac4ca82d6545bc512509863281be0f17234afd7adaf71a71899988302e",
+  "preparation_seconds": 2.373827837407589,
+  "recipe": "ECFP-1024 radius 2; MACCS-167 only for evaluation",
+  "additional_validation": true
+}

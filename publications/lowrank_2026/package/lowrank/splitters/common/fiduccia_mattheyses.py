@@ -19,12 +19,19 @@ from typing import Callable, Optional, Sequence, Tuple
 import numpy as np
 
 from .balanced_assignment import capacity_corridor
-from .pairwise_similarity import pairwise_similarity, standardize_for_metric
+from .pairwise_similarity import pairwise_similarity
 
 
-def fiduccia_mattheyses_loop(lab, S, sim_column: Callable[[int], "object"], caps_t,
-                             floors_t, self_term=None, tol: float = 1e-6,
-                             max_moves: Optional[int] = None):
+def fiduccia_mattheyses_loop(
+    lab,
+    S,
+    sim_column: Callable[[int], "object"],
+    caps_t,
+    floors_t,
+    self_term=None,
+    tol: float = 1e-6,
+    max_moves: Optional[int] = None,
+):
     """Greedy monotone FM loop. Mutates ``lab``/``S`` in place; returns ``(lab, moves)``.
 
     Args:
@@ -74,10 +81,16 @@ def fiduccia_mattheyses_loop(lab, S, sim_column: Callable[[int], "object"], caps
     return lab, moves
 
 
-def fiduccia_mattheyses_exact(labels, X, splits: Sequence[float], metric: str,
-                              epsilon: float = 0.05, max_moves: Optional[int] = None,
-                              block: int = 4096, tol_frac: float = 1e-4
-                              ) -> Tuple[np.ndarray, int, dict]:
+def fiduccia_mattheyses_exact(
+    labels,
+    X,
+    splits: Sequence[float],
+    metric: str,
+    epsilon: float = 0.05,
+    max_moves: Optional[int] = None,
+    block: int = 4096,
+    tol_frac: float = 1e-4,
+) -> Tuple[np.ndarray, int, dict]:
     """FM polish on the EXACT pairwise leakage ``L = sum_{i,j diff block} sim(i,j)``.
 
     Returns ``(labels, n_moves, info)``.
@@ -85,9 +98,10 @@ def fiduccia_mattheyses_exact(labels, X, splits: Sequence[float], metric: str,
     import torch
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    Xt = torch.as_tensor(X, dtype=torch.float32, device=device)
-    n, k = Xt.shape[0], len(splits)
-    ref = standardize_for_metric(Xt, metric)
+    from lowrank.diagnostics import prepare_reference
+
+    ref = prepare_reference(X, metric, device)
+    n, k = ref.shape[0], len(splits)
 
     def sim_col(v):
         s = pairwise_similarity(ref, ref[v][None, :], metric).squeeze(1)
@@ -109,8 +123,16 @@ def fiduccia_mattheyses_exact(labels, X, splits: Sequence[float], metric: str,
     caps, floors = capacity_corridor(n, splits, epsilon)
     caps_t = torch.as_tensor(caps, device=device)
     floors_t = torch.as_tensor(floors, device=device)
-    lab, moves = fiduccia_mattheyses_loop(lab, S, sim_col, caps_t, floors_t,
-                                          self_term=None, tol=tol_frac, max_moves=max_moves)
+    lab, moves = fiduccia_mattheyses_loop(
+        lab,
+        S,
+        sim_col,
+        caps_t,
+        floors_t,
+        self_term=None,
+        tol=tol_frac,
+        max_moves=max_moves,
+    )
     return lab.cpu().numpy(), moves, {}
 
 

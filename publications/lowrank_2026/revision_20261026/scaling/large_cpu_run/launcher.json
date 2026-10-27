@@ -1,0 +1,16 @@
+{
+  "pid": 311685,
+  "host": "lambda13",
+  "start_ticks": "117099224",
+  "command": [
+    "/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/bin/python",
+    "-u",
+    "/nfs/lambda_stor_01/homes/rzhu/data_splitting_lowrank_systematic/publications/lowrank_2026/revision_20261026/scaling/large_cpu.py",
+    "launch",
+    "--output",
+    "/nfs/lambda_stor_01/homes/rzhu/data_splitting_lowrank_systematic/publications/lowrank_2026/revision_20261026/scaling/large_cpu_run",
+    "--cpus",
+    "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31",
+    "32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "manifest_sha256": "2b466f8ddf64c0d60f3b71691968cb41e816b87a854a3a8a57a3e93fe9357924",
+  "report_sha256": "f6f66ea174ae2953060f0e3793a835162038c41ecc534a75cc8be67b8cebf023",
+  "producer_commit": "f7e0866",
+  "summary_sha256": "113c19747b40fe0c537edca3e86328b3c2b3e94b09cb8448c026fb502414ae84",
+  "independent_validation_sha256": "b3049a6e3791e468191e35cf55330570799d3e647e321657528e50d3f9558cf4",
+  "observations": 199,
+  "successes": 191,
+  "native_infeasible": 8
+}

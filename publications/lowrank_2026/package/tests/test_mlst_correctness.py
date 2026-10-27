@@ -1,4 +1,5 @@
 """Counterexamples discovered during the MLST evidence audit."""
+
 import numpy as np
 import pytest
 import torch
@@ -38,7 +39,7 @@ def test_single_featured_record_on_nd_axis_stays_finite():
     records = [{"a": "F"}, {"a": "M"}, {"a": "M"}]
     maps = {"a": {"F": np.array([1.0, 2.0])}}
     B, axes = _build_nd_factor(records, maps, rank=4, landmark="uniform", seed=0)
-    assert axes == ["a"] and np.isfinite(B).all()
+    assert axes == ["a"] and np.isfinite(B.data).all()
 
 
 @pytest.mark.parametrize("power", (0, -1, 1.5, True))

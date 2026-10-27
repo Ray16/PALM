@@ -1,0 +1,79 @@
+{
+  "name": "moleculenet_sider__s1__previous_plain__linear",
+  "dataset": "moleculenet_sider",
+  "seed": 1,
+  "setting": "previous_plain",
+  "model": "linear",
+  "status": "ok",
+  "assignment_sha256": "f5a85a5b5c5bb15f319d0c340cf312e0410d153d640183a633a8b1436f729f46",
+  "cache_sha256": "7f4ca4ba3adb157cc30e1ae3b2ff13b9a55ea6a4968f066721061c278ba40ef0",
+  "n_test": 143,
+  "brier": 0.27170606862845237,
+  "prior_brier_difference": 0.0,
+  "calibration_in_large": 0.0912954984448574,
+  "ece10": 0.22092341238815916,
+  "bins": [
+    {
+      "bin": 0,
+      "n": 19,
+      "mean_probability": 0.04523412031021924,
+      "positive_fraction": 0.2631578947368421
+    },
+    {
+      "bin": 1,
+      "n": 22,
+      "mean_probability": 0.15367208108353633,
+      "positive_fraction": 0.22727272727272727
+    },
+    {
+      "bin": 2,
+      "n": 18,
+      "mean_probability": 0.24952056018455324,
+      "positive_fraction": 0.4444444444444444
+    },
+    {
+      "bin": 3,
+      "n": 20,
+      "mean_probability": 0.35509885903087607,
+      "positive_fraction": 0.3
+    },
+    {
+      "bin": 4,
+      "n": 15,
+      "mean_probability": 0.45663287812627085,
+      "positive_fraction": 0.2
+    },
+    {
+      "bin": 5,
+      "n": 8,
+      "mean_probability": 0.5407750259767697,
+      "positive_fraction": 0.375
+    },
+    {
+      "bin": 6,
+      "n": 15,
+      "mean_probability": 0.6483060047293403,
+      "positive_fraction": 0.26666666666666666
+    },
+    {
+      "bin": 7,
+      "n": 7,
+      "mean_probability": 0.7490062609305623,
+      "positive_fraction": 0.2857142857142857
+    },
+    {
+      "bin": 8,
+      "n": 9,
+      "mean_probability": 0.8291825424392049,
+      "positive_fraction": 0.4444444444444444
+    },
+    {
+      "bin": 9,
+      "n": 10,
+      "mean_probability": 0.9615704784828056,
+      "positive_fraction": 0.6
+    }
+  ],
+  "fit_predict_seconds": 0.3354211524128914,
+  "interpretation": "descriptive; fixed ten equal-width bins; sample-size/distribution dependent"
+}

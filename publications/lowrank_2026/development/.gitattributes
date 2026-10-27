@@ -1,0 +1,4 @@
+run_*/rows/** linguist-generated=true
+controls_*/rows/** linguist-generated=true
+*/manifest.json linguist-generated=true
+summary.json linguist-generated=true

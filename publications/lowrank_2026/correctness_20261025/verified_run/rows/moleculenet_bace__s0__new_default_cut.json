@@ -1,0 +1,223 @@
+{
+  "name": "moleculenet_bace__s0__new_default_cut",
+  "dataset": "moleculenet_bace",
+  "seed": 0,
+  "setting": "new_default_cut",
+  "implementation": "new",
+  "params": {
+    "rank": "auto",
+    "rank_check": "cut_error",
+    "on_rank_failure": "return"
+  },
+  "manifest_sha256": "bbeb2ec744f649401f585c67291e75b5c895a6de7c476b7f08c69fcd03a49bdd",
+  "source_sha256": "502ec251081bc4990098e6e47b48e237959312e57d62b463e5f177e9eb7f2966",
+  "feature_sha256": "ccc0c971c88b397f59a19fe022a28f492c93b93e61758c1adde5e7ea52b00cb3",
+  "preparation_seconds": 2.8427099511027336,
+  "loading_seconds": 0.013716606423258781,
+  "warmup_seconds": 0.033784179016947746,
+  "host": "lambda2",
+  "cpu_affinity": [
+    16,
+    17
+  ],
+  "status": "ok",
+  "split_seconds": 0.6750701181590557,
+  "scoring_seconds": 0.7926960084587336,
+  "peak_rss_after_split_mb": 599.3359375,
+  "process_peak_rss_mb": 609.546875,
+  "diagnostics": {
+    "method": "lowrank",
+    "n": 1513,
+    "runtime_s": 0.6748,
+    "split_counts": {
+      "train": 1211,
+      "val": 151,
+      "test": 151
+    },
+    "split_fractions": {
+      "train": 0.8004,
+      "val": 0.0998,
+      "test": 0.0998
+    },
+    "metric": "tanimoto",
+    "rank": 32,
+    "factorization": {
+      "requested_rank": "auto",
+      "landmark_count": 32,
+      "effective_rank": 32,
+      "landmark_indices": [
+        436,
+        350,
+        119,
+        1130,
+        1510,
+        1006,
+        1327,
+        116,
+        1165,
+        995,
+        460,
+        1328,
+        386,
+        34,
+        479,
+        147,
+        835,
+        482,
+        597,
+        1262,
+        343,
+        90,
+        873,
+        1105,
+        1489,
+        1391,
+        1256,
+        1060,
+        1110,
+        42,
+        1055,
+        1047
+      ],
+      "eigenvalue_threshold": 6.061368324553929e-08,
+      "discarded_eigenvalues": 0,
+      "minimum_eigenvalue": 0.2289330059215388,
+      "row_block_size": 1513,
+      "estimated_array_bytes": 101585600,
+      "memory_scope": "factor arrays only; excludes framework and optimizer",
+      "rank_limit": 512,
+      "kernel_power": 1,
+      "adaptive": true,
+      "factor_backend": "nystrom",
+      "rank_check": "cut_error",
+      "probe_pair_budget": 32768,
+      "selection_reuses_landmarks": true,
+      "selection_history": [
+        {
+          "landmark_count": 32,
+          "effective_rank": 32,
+          "relative_pair_mae": {
+            "estimate": 0.020212349391319478,
+            "standard_error": 0.0005960400598000793,
+            "ci95": [
+              0.007109584505079614,
+              0.03370286645142525
+            ],
+            "status": "estimated",
+            "confidence": 0.99,
+            "exact": false,
+            "interval": "empirical Bernstein; simultaneous ratio-component bounds"
+          },
+          "criterion": "cut_error",
+          "sample_pairs": 32768,
+          "eligible_rows": 1513,
+          "seed": 104729,
+          "normalization": "mean absolute off-diagonal powered kernel similarity",
+          "exact": false,
+          "confidence": 0.99
+        }
+      ],
+      "selection_tolerance_met": true,
+      "rank_tolerance": 0.05,
+      "stop_reason": "sample_tolerance",
+      "audit": {
+        "relative_pair_mae": {
+          "estimate": 0.02005479607731079,
+          "standard_error": 0.000595245063368297,
+          "ci95": [
+            0.009807643460094538,
+            0.030562385763040843
+          ],
+          "status": "estimated",
+          "confidence": 0.95,
+          "exact": false,
+          "interval": "empirical Bernstein; simultaneous ratio-component bounds"
+        },
+        "criterion": "cut_error",
+        "sample_pairs": 32768,
+        "eligible_rows": 1513,
+        "seed": 130363,
+        "normalization": "mean absolute off-diagonal powered kernel similarity",
+        "exact": false,
+        "confidence": 0.95
+      },
+      "audit_tolerance_met": true
+    },
+    "fold_weights": [
+      [
+        0.0,
+        1.0,
+        1.0
+      ],
+      [
+        1.0,
+        0.0,
+        1.0
+      ],
+      [
+        1.0,
+        1.0,
+        0.0
+      ]
+    ],
+    "optimization": {
+      "factor_storage": "dense",
+      "optimizer_device": "cpu",
+      "winning_restart_seed": 3,
+      "best_unrefined_objective": 47620.182527050776,
+      "refined_restarts": 2,
+      "fm_moves": 12,
+      "refinement_candidates": [
+        {
+          "seed": 1,
+          "before": 47620.182527050776,
+          "after": 47606.10052459901,
+          "moves": 11
+        },
+        {
+          "seed": 3,
+          "before": 47622.71317692737,
+          "after": 47605.137103983856,
+          "moves": 12
+        }
+      ]
+    },
+    "fm_moves": 12,
+    "factor_leakage": 47605.137103983856,
+    "weighted_factor_leakage": 47605.137103983856,
+    "leakage": null,
+    "leakage_diagnostic": "none"
+  },
+  "assignment_sha256": "71381e6b325ffefd9c39aec71a2aabd1699bd6539bf64a2b91155e822fa96c24",
+  "scores": {
+    "global_ratio": 0.25648661125581756,
+    "mean_nearest_training": 0.5703024064862965,
+    "top5_training_mean": 0.48305439199043426,
+    "local_ramp_04": 0.2934448266397775,
+    "test_fraction_above_04": 0.9271523178807947,
+    "test_fraction_above_06": 0.423841059602649,
+    "test_fraction_above_08": 0.026490066225165563,
+    "maccs_mean_nearest_training": 0.8107063600559108,
+    "composition": {
+      "train": {
+        "n_labels": 1211,
+        "mean": 0.5177539223781998,
+        "std": 0.49968469882535815
+      },
+      "val": {
+        "n_labels": 151,
+        "mean": 0.18543046357615894,
+        "std": 0.3886463775131446
+      },
+      "test": {
+        "n_labels": 151,
+        "mean": 0.23841059602649006,
+        "std": 0.42611146866610367
+      }
+    },
+    "task": "classification",
+    "target_wasserstein": 0.2793433263517098,
+    "weighted_global_ratio": 0.3726194580154993
+  },
+  "fresh_process_wall_seconds": 4.128261195495725
+}

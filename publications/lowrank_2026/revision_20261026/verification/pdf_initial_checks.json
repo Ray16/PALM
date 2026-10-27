@@ -1,0 +1,16 @@
+{
+  "manuscript.pdf": {
+    "pages": 22,
+    "render_sha256": "110f850e9da6f8ceb3bb92dc50b75a2ebf8dd2779f4a4197799fc88395edc459",
+    "minimum_figure_font_pt": 18.0,
+    "all_figure_fonts_at_least_18": true,
+    "clipped_figure_text": []
+  },
+  "supplement.pdf": {
+    "pages": 38,
+    "render_sha256": "608e42388fe4e4560fc2de3ee0d8d48fe25469955d3816db48d6781fd6fa5294",
+    "minimum_figure_font_pt": 18.0,
+    "all_figure_fonts_at_least_18": true,
+    "clipped_figure_text": []
+  }
+}

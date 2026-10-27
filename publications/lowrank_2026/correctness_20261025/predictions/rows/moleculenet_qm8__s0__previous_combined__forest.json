@@ -1,0 +1,24 @@
+{
+  "name": "moleculenet_qm8__s0__previous_combined__forest",
+  "dataset": "moleculenet_qm8",
+  "seed": 0,
+  "setting": "previous_combined",
+  "model": "forest",
+  "assignment_sha256": "766f97fe4c9af0a2ec17d1531c61733a599e12d7dd8f04e6368a8939bf0a0c8d",
+  "split_source_sha256": "01ececd6c3e692c07150ef6de51afda07b7739c749e90b684b390fb65334e5a9",
+  "task": "regression",
+  "n_train_labels": 17429,
+  "n_test_labels": 2178,
+  "cpu_affinity": [
+    12,
+    13
+  ],
+  "model_selection": "none; fixed defaults; training labels only",
+  "status": "ok",
+  "metrics": {
+    "mae": 0.022175705010994765,
+    "rmse": 0.030662052105924938,
+    "r2": 0.1197477054479813
+  },
+  "fit_predict_seconds": 214.98132391646504
+}

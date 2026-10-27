@@ -1,0 +1,11 @@
+{
+  "dataset": "moleculenet_clintox",
+  "n": 1480,
+  "task": "classification",
+  "feature_sha256": "5e081c77039ed83396b56d406e8db3d519f19ccd4150afe4f178aa4beede589c",
+  "cache_sha256": "a19a8c809fcb993b3952cbe5338a8bc59cd55aeb4085291cb26fd3840a0daf60",
+  "raw_csv_sha256": "9999816e760dd838358b5d88e81cea2fc062be4458ffa412ceecdba4f88a67b6",
+  "preparation_seconds": 2.2428304478526115,
+  "recipe": "ECFP-1024 radius 2; MACCS-167 only for evaluation",
+  "additional_validation": true
+}

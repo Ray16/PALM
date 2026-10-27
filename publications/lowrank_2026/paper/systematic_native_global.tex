@@ -1,0 +1,30 @@
+\begin{longtable}{lrrrrr}
+\caption{Global overlap relative to count-matched random. Both low-rank controls use exact native counts. The Groups control also preserves every group passed to DataSAIL's solver. Equal groups do not imply identical coarsened and entity-level objectives. One native solve is recorded per configuration; these configurations are not independent datasets.}\\
+\toprule
+Dataset & $K$ & Budget (s) & DataSAIL & Counts & Groups\\\midrule
+\endfirsthead
+\multicolumn{6}{l}{\tablename~\thetable\ (continued)}\\
+\toprule
+Dataset & $K$ & Budget (s) & DataSAIL & Counts & Groups\\\midrule
+\endhead
+\midrule
+\multicolumn{6}{r}{Continued on next page}\\
+\endfoot
+\bottomrule\endlastfoot
+BACE & 75 & 300 & 0.828 & 0.750 & 0.767\\
+BACE & 75 & 60 & 0.851 & 0.750 & 0.767\\
+BACE & 30 & 300 & 0.767 & 0.750 & 0.779\\
+BACE & 30 & 60 & 0.767 & 0.750 & 0.779\\
+BBBP & 9 & 300 & 0.514 & 0.458 & 0.514\\
+BBBP & 9 & 60 & 0.514 & 0.458 & 0.514\\
+BBBP & 101 & 300 & 0.916 & 0.703 & 0.743\\
+BBBP & 101 & 60 & 0.916 & 0.703 & 0.743\\
+BBBP & 40 & 300 & 0.745 & 0.692 & 0.749\\
+BBBP & 40 & 60 & 0.745 & 0.692 & 0.749\\
+ESOL & 56 & 300 & 0.597 & 0.524 & 0.652\\
+ESOL & 56 & 60 & 0.607 & 0.524 & 0.652\\
+ESOL & 22 & 300 & 0.648 & 0.524 & 0.664\\
+ESOL & 22 & 60 & 0.648 & 0.524 & 0.664\\
+FreeSolv & 32 & 300 & 0.510 & 0.415 & 0.574\\
+FreeSolv & 32 & 60 & 0.510 & 0.415 & 0.574\\
+\end{longtable}

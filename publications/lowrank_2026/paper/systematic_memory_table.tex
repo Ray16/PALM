@@ -1,0 +1,68 @@
+\begin{longtable}{lrrrr}
+\caption{Fresh-process native memory profiles at seed zero. Memory is captured before the first scoring call or any matched controls and includes framework/input costs and the common small warm-up. Graph configuration is degree; DataSAIL configuration is cluster policy/solver seconds. Native profiling repeats can differ from a time-limited earlier solve; their own assignments and quality scores are retained. Solver-reported infeasibility has no imputed timing or memory.}\\
+\toprule
+Dataset & Method & Configuration & Call (s) & RSS (GiB)\\\midrule
+\endfirsthead
+\multicolumn{5}{l}{\tablename~\thetable\ (continued)}\\
+\toprule
+Dataset & Method & Configuration & Call (s) & RSS (GiB)\\\midrule
+\endhead
+\midrule
+\multicolumn{5}{r}{Continued on next page}\\
+\endfoot
+\bottomrule\endlastfoot
+BACE & Combined & -- & 0.56 & 0.579\\
+BACE & DataSAIL & coarse/60 & -- & Infeasible\\
+BACE & DataSAIL & coarse/300 & -- & Infeasible\\
+BACE & DataSAIL & fine/60 & 71.70 & 1.051\\
+BACE & DataSAIL & fine/300 & 312.13 & 1.054\\
+BACE & DataSAIL & medium/60 & 37.12 & 0.841\\
+BACE & DataSAIL & medium/300 & 31.29 & 0.842\\
+BACE & Graph & 16 & 0.51 & 0.617\\
+BACE & Graph & 32 & 1.13 & 0.619\\
+BACE & Graph & 128 & 2.30 & 0.647\\
+BACE & Plain & -- & 0.39 & 0.558\\
+BBBP & Combined & -- & 0.70 & 0.648\\
+BBBP & DataSAIL & coarse/60 & 37.86 & 0.865\\
+BBBP & DataSAIL & coarse/300 & 28.34 & 0.866\\
+BBBP & DataSAIL & fine/60 & 95.65 & 1.307\\
+BBBP & DataSAIL & fine/300 & 344.22 & 1.301\\
+BBBP & DataSAIL & medium/60 & 42.45 & 0.921\\
+BBBP & DataSAIL & medium/300 & 42.86 & 0.921\\
+BBBP & Graph & 16 & 0.62 & 0.628\\
+BBBP & Graph & 32 & 0.70 & 0.628\\
+BBBP & Graph & 128 & 8.40 & 0.664\\
+BBBP & Plain & -- & 0.45 & 0.573\\
+ESOL & Combined & -- & 0.43 & 0.559\\
+ESOL & DataSAIL & coarse/60 & -- & Infeasible\\
+ESOL & DataSAIL & coarse/300 & -- & Infeasible\\
+ESOL & DataSAIL & fine/60 & 71.94 & 0.954\\
+ESOL & DataSAIL & fine/300 & 90.20 & 0.969\\
+ESOL & DataSAIL & medium/60 & 4.94 & 0.792\\
+ESOL & DataSAIL & medium/300 & 5.05 & 0.790\\
+ESOL & Graph & 16 & 0.50 & 0.613\\
+ESOL & Graph & 32 & 0.56 & 0.618\\
+ESOL & Graph & 128 & 10.73 & 0.638\\
+ESOL & Plain & -- & 0.27 & 0.546\\
+FreeSolv & Combined & -- & 0.27 & 0.535\\
+FreeSolv & DataSAIL & coarse/60 & -- & Infeasible\\
+FreeSolv & DataSAIL & coarse/300 & -- & Infeasible\\
+FreeSolv & DataSAIL & fine/60 & 4.97 & 0.801\\
+FreeSolv & DataSAIL & fine/300 & 4.94 & 0.800\\
+FreeSolv & DataSAIL & medium/60 & -- & Infeasible\\
+FreeSolv & DataSAIL & medium/300 & -- & Infeasible\\
+FreeSolv & Graph & 16 & 0.50 & 0.604\\
+FreeSolv & Graph & 32 & 0.44 & 0.606\\
+FreeSolv & Graph & 128 & 0.68 & 0.623\\
+FreeSolv & Plain & -- & 0.20 & 0.533\\
+Lipophilicity & Combined & -- & 13.18 & 0.782\\
+Lipophilicity & Graph & 16 & 3.25 & 0.646\\
+Lipophilicity & Graph & 32 & 2.99 & 0.655\\
+Lipophilicity & Graph & 128 & 8.11 & 0.723\\
+Lipophilicity & Plain & -- & 11.01 & 0.608\\
+Tox21 & Combined & -- & 4.10 & 1.026\\
+Tox21 & Graph & 16 & 6.93 & 0.678\\
+Tox21 & Graph & 32 & 2.92 & 0.694\\
+Tox21 & Graph & 128 & 7.98 & 0.813\\
+Tox21 & Plain & -- & 1.53 & 0.653\\
+\end{longtable}

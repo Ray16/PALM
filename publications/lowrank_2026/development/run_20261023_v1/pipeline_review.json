@@ -1,0 +1,25 @@
+{
+  "expected_cases": 180,
+  "completed": 180,
+  "retained_rows_and_exact_counts_verified": 180,
+  "strict_group_artifacts_verified": 18,
+  "source_refs": {
+    "release": "9f7c34e",
+    "development": "95e43be"
+  },
+  "final_source_delta": [
+    {
+      "file": "lowrank/neighbours.py",
+      "function": "approximate_tanimoto_neighbours",
+      "grid_impact": "none: all grid paths use exact neighbours",
+      "validation": "separate native ANN audit and regression tests"
+    }
+  ],
+  "dense_reference_cases": 30,
+  "maximum_dense_score_error": 3.311712515330356e-09,
+  "sampled_diagnostic_intervals_cover_exact": {
+    "covered": 18,
+    "total": 18,
+    "interpretation": "descriptive finite-grid coverage, not an interval guarantee"
+  }
+}

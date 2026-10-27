@@ -1,0 +1,79 @@
+{
+  "name": "moleculenet_sider__s0__previous_combined__linear",
+  "dataset": "moleculenet_sider",
+  "seed": 0,
+  "setting": "previous_combined",
+  "model": "linear",
+  "status": "ok",
+  "assignment_sha256": "2f454c862f64b320c1df91d587de6d2bb01fa3d7274d3873d3bc6f070ba5cedc",
+  "cache_sha256": "7f4ca4ba3adb157cc30e1ae3b2ff13b9a55ea6a4968f066721061c278ba40ef0",
+  "n_test": 143,
+  "brier": 0.304050922248188,
+  "prior_brier_difference": 0.0,
+  "calibration_in_large": 0.040815141376309705,
+  "ece10": 0.24219132001675614,
+  "bins": [
+    {
+      "bin": 0,
+      "n": 31,
+      "mean_probability": 0.05925687663658045,
+      "positive_fraction": 0.41935483870967744
+    },
+    {
+      "bin": 1,
+      "n": 18,
+      "mean_probability": 0.14436790684660805,
+      "positive_fraction": 0.1111111111111111
+    },
+    {
+      "bin": 2,
+      "n": 13,
+      "mean_probability": 0.26266054654246707,
+      "positive_fraction": 0.23076923076923078
+    },
+    {
+      "bin": 3,
+      "n": 8,
+      "mean_probability": 0.3589227117163175,
+      "positive_fraction": 0.375
+    },
+    {
+      "bin": 4,
+      "n": 12,
+      "mean_probability": 0.4578208214392551,
+      "positive_fraction": 0.6666666666666666
+    },
+    {
+      "bin": 5,
+      "n": 8,
+      "mean_probability": 0.54992606255906,
+      "positive_fraction": 0.625
+    },
+    {
+      "bin": 6,
+      "n": 5,
+      "mean_probability": 0.6365428559198795,
+      "positive_fraction": 0.6
+    },
+    {
+      "bin": 7,
+      "n": 15,
+      "mean_probability": 0.7617383833517951,
+      "positive_fraction": 0.4666666666666667
+    },
+    {
+      "bin": 8,
+      "n": 10,
+      "mean_probability": 0.8543432630894869,
+      "positive_fraction": 0.4
+    },
+    {
+      "bin": 9,
+      "n": 23,
+      "mean_probability": 0.9595447782844345,
+      "positive_fraction": 0.5217391304347826
+    }
+  ],
+  "fit_predict_seconds": 0.43798014521598816,
+  "interpretation": "descriptive; fixed ten equal-width bins; sample-size/distribution dependent"
+}

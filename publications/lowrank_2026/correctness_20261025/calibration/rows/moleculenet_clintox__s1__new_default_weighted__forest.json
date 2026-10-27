@@ -1,0 +1,79 @@
+{
+  "name": "moleculenet_clintox__s1__new_default_weighted__forest",
+  "dataset": "moleculenet_clintox",
+  "seed": 1,
+  "setting": "new_default_weighted",
+  "model": "forest",
+  "status": "ok",
+  "assignment_sha256": "8e998534443ac504e0a4795a989727380c75efb3536ad1fc1c7b007b14b30f3b",
+  "cache_sha256": "a19a8c809fcb993b3952cbe5338a8bc59cd55aeb4085291cb26fd3840a0daf60",
+  "n_test": 148,
+  "brier": 0.05135459384402713,
+  "prior_brier_difference": 0.0,
+  "calibration_in_large": -0.03016522381756757,
+  "ece10": 0.04144408079954955,
+  "bins": [
+    {
+      "bin": 0,
+      "n": 142,
+      "mean_probability": 0.01902050322769953,
+      "positive_fraction": 0.056338028169014086
+    },
+    {
+      "bin": 1,
+      "n": 6,
+      "mean_probability": 0.13910590277777776,
+      "positive_fraction": 0.0
+    },
+    {
+      "bin": 2,
+      "n": 0,
+      "mean_probability": null,
+      "positive_fraction": null
+    },
+    {
+      "bin": 3,
+      "n": 0,
+      "mean_probability": null,
+      "positive_fraction": null
+    },
+    {
+      "bin": 4,
+      "n": 0,
+      "mean_probability": null,
+      "positive_fraction": null
+    },
+    {
+      "bin": 5,
+      "n": 0,
+      "mean_probability": null,
+      "positive_fraction": null
+    },
+    {
+      "bin": 6,
+      "n": 0,
+      "mean_probability": null,
+      "positive_fraction": null
+    },
+    {
+      "bin": 7,
+      "n": 0,
+      "mean_probability": null,
+      "positive_fraction": null
+    },
+    {
+      "bin": 8,
+      "n": 0,
+      "mean_probability": null,
+      "positive_fraction": null
+    },
+    {
+      "bin": 9,
+      "n": 0,
+      "mean_probability": null,
+      "positive_fraction": null
+    }
+  ],
+  "fit_predict_seconds": 0.5109969042241573,
+  "interpretation": "descriptive; fixed ten equal-width bins; sample-size/distribution dependent"
+}

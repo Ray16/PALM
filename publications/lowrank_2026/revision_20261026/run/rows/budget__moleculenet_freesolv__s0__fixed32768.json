@@ -1,0 +1,293 @@
+{
+  "name": "budget__moleculenet_freesolv__s0__fixed32768",
+  "study": "budget",
+  "dataset": "moleculenet_freesolv",
+  "seed": 0,
+  "policy": "fixed",
+  "pairs": 32768,
+  "status": "ok",
+  "manifest_sha256": "2b466f8ddf64c0d60f3b71691968cb41e816b87a854a3a8a57a3e93fe9357924",
+  "artifacts": {
+    "assignments/budget__moleculenet_freesolv__s0__fixed32768/labels.npy": "27e198df80c8f02a930812e0f1ca4ea111f4c8d5f9031aaeeac681fbc1b04e71"
+  },
+  "warmup_seconds": 0.054501961916685104,
+  "case_seconds": 1.6705478373914957,
+  "peak_rss_mb": 583.0390625,
+  "cpu_affinity": [
+    3,
+    4
+  ],
+  "host": "lambda2",
+  "seconds": 0.8432134911417961,
+  "params": {
+    "rank": "auto",
+    "rank_min": 32,
+    "rank_max": 512,
+    "rank_tolerance": 0.05,
+    "rank_check": "cut_error",
+    "rank_probe_policy": "fixed",
+    "rank_probe_pairs": 32768,
+    "on_rank_failure": "return",
+    "refine_restarts": 2,
+    "score_exact_leakage": false,
+    "metric": "tanimoto"
+  },
+  "diagnostics": {
+    "method": "lowrank",
+    "n": 642,
+    "runtime_s": 0.8424,
+    "split_counts": {
+      "train": 514,
+      "val": 64,
+      "test": 64
+    },
+    "split_fractions": {
+      "train": 0.8006,
+      "val": 0.0997,
+      "test": 0.0997
+    },
+    "metric": "tanimoto",
+    "rank": 64,
+    "factorization": {
+      "requested_rank": "auto",
+      "landmark_count": 64,
+      "effective_rank": 64,
+      "landmark_indices": [
+        436,
+        265,
+        579,
+        521,
+        577,
+        379,
+        593,
+        299,
+        533,
+        52,
+        152,
+        135,
+        395,
+        225,
+        450,
+        337,
+        435,
+        463,
+        598,
+        573,
+        429,
+        298,
+        488,
+        293,
+        182,
+        524,
+        173,
+        393,
+        566,
+        276,
+        443,
+        374,
+        420,
+        475,
+        199,
+        372,
+        105,
+        601,
+        614,
+        5,
+        523,
+        154,
+        567,
+        163,
+        269,
+        603,
+        477,
+        119,
+        535,
+        405,
+        198,
+        396,
+        615,
+        133,
+        260,
+        594,
+        591,
+        389,
+        356,
+        458,
+        495,
+        54,
+        587,
+        326
+      ],
+      "eigenvalue_threshold": 5.920845567761165e-08,
+      "discarded_eigenvalues": 0,
+      "minimum_eigenvalue": 0.3710621363717235,
+      "row_block_size": 642,
+      "estimated_array_bytes": 44905088,
+      "memory_scope": "factor arrays only; excludes framework and optimizer",
+      "rank_limit": 512,
+      "kernel_power": 1,
+      "adaptive": true,
+      "factor_backend": "nystrom",
+      "rank_check": "cut_error",
+      "probe_pair_budget": 32768,
+      "probe_policy": "fixed",
+      "maximum_probe_pairs": 32768,
+      "selection_grid_checks": 5,
+      "selection_confidence": 0.99,
+      "joint_selection_audit_confidence": null,
+      "selection_reuses_landmarks": true,
+      "selection_history": [
+        {
+          "landmark_count": 32,
+          "effective_rank": 32,
+          "requested_pairs": 32768,
+          "decision": "increase_rank",
+          "relative_pair_mae": {
+            "estimate": 0.03511277081393164,
+            "standard_error": 0.0011958743632886123,
+            "ci95": [
+              0.006330690883552311,
+              0.06558101928355836
+            ],
+            "status": "estimated",
+            "confidence": 0.99,
+            "exact": false,
+            "interval": "empirical Bernstein; simultaneous ratio-component bounds"
+          },
+          "criterion": "cut_error",
+          "sample_pairs": 32768,
+          "eligible_rows": 642,
+          "seed": 104729,
+          "normalization": "mean absolute off-diagonal powered kernel similarity",
+          "exact": false,
+          "confidence": 0.99
+        },
+        {
+          "landmark_count": 64,
+          "effective_rank": 64,
+          "requested_pairs": 32768,
+          "decision": "accept",
+          "relative_pair_mae": {
+            "estimate": 0.011551954265672596,
+            "standard_error": 0.0008277962723729404,
+            "ci95": [
+              0.0,
+              0.039918668932836514
+            ],
+            "status": "estimated",
+            "confidence": 0.99,
+            "exact": false,
+            "interval": "empirical Bernstein; simultaneous ratio-component bounds"
+          },
+          "criterion": "cut_error",
+          "sample_pairs": 32768,
+          "eligible_rows": 642,
+          "seed": 104729,
+          "normalization": "mean absolute off-diagonal powered kernel similarity",
+          "exact": false,
+          "confidence": 0.99
+        }
+      ],
+      "selection_tolerance_met": true,
+      "rank_tolerance": 0.05,
+      "selected_probe_pairs": 32768,
+      "selection_pair_evaluations": 65536,
+      "stop_reason": "sample_tolerance",
+      "audit": {
+        "relative_pair_mae": {
+          "estimate": 0.010367964838733625,
+          "standard_error": 0.0008133918578848326,
+          "ci95": [
+            0.0,
+            0.031939699114720624
+          ],
+          "status": "estimated",
+          "confidence": 0.95,
+          "exact": false,
+          "interval": "empirical Bernstein; simultaneous ratio-component bounds"
+        },
+        "criterion": "cut_error",
+        "sample_pairs": 32768,
+        "eligible_rows": 642,
+        "seed": 130363,
+        "normalization": "mean absolute off-diagonal powered kernel similarity",
+        "exact": false,
+        "confidence": 0.95
+      },
+      "audit_tolerance_met": true
+    },
+    "fold_weights": [
+      [
+        0.0,
+        1.0,
+        1.0
+      ],
+      [
+        1.0,
+        0.0,
+        1.0
+      ],
+      [
+        1.0,
+        1.0,
+        0.0
+      ]
+    ],
+    "optimization": {
+      "factor_storage": "dense",
+      "optimizer_device": "cpu",
+      "winning_restart_seed": 3,
+      "best_unrefined_objective": 2162.3682780699946,
+      "refined_restarts": 2,
+      "fm_moves": 0,
+      "refinement_candidates": [
+        {
+          "seed": 3,
+          "before": 2162.3682780699946,
+          "after": 2162.3682780699946,
+          "moves": 0
+        },
+        {
+          "seed": 1,
+          "before": 2162.5903064821414,
+          "after": 2162.5903064821414,
+          "moves": 0
+        }
+      ]
+    },
+    "fm_moves": 0,
+    "factor_leakage": 2162.3682780699946,
+    "weighted_factor_leakage": 2162.3682780699946,
+    "leakage": null,
+    "leakage_diagnostic": "none"
+  },
+  "scores": {
+    "global_ratio": 0.14400577267322875,
+    "mean_nearest_training": 0.24347185855731368,
+    "top5_training_mean": 0.19478016754146665,
+    "local_ramp_04": 0.00699532063057025,
+    "test_fraction_above_04": 0.078125,
+    "test_fraction_above_06": 0.0,
+    "test_fraction_above_08": 0.0,
+    "maccs_mean_nearest_training": 0.5386264538392425,
+    "composition": {
+      "train": {
+        "n_labels": 514,
+        "mean": -3.8744163424124514,
+        "std": 3.4525271505799457
+      },
+      "val": {
+        "n_labels": 64,
+        "mean": -3.9212499999999997,
+        "std": 5.3005982858069896
+      },
+      "test": {
+        "n_labels": 64,
+        "mean": -3.11125,
+        "std": 4.891490857857142
+      }
+    },
+    "task": "unspecified",
+    "target_wasserstein": 1.4112718871595331
+  }
+}

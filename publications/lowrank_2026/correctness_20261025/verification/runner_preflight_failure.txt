@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting_lowrank_correctness/publications/lowrank_2026/correctness_20261025/benchmark.py", line 449, in <module>
+    dict(prepare=prepare, case=case, launch=launch)[args.action](args)
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting_lowrank_correctness/publications/lowrank_2026/correctness_20261025/benchmark.py", line 418, in launch
+    future.result()
+  File "/homes/rzhu/miniforge3/envs/palm/lib/python3.12/concurrent/futures/_base.py", line 456, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/homes/rzhu/miniforge3/envs/palm/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/homes/rzhu/miniforge3/envs/palm/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nfs/lambda_stor_01/homes/rzhu/data_splitting_lowrank_correctness/publications/lowrank_2026/correctness_20261025/benchmark.py", line 406, in worker
+    raise RuntimeError("case failed: " + job["name"])
+RuntimeError: case failed: moleculenet_freesolv__s0__previous_plain

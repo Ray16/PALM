@@ -1,0 +1,9 @@
+{
+  "name": "plain__n2000000__eps0.0__s1",
+  "n": 2000000,
+  "epsilon": 0.0,
+  "seed": 1,
+  "method": "plain",
+  "exit_code": -999,
+  "terminal": true
+}

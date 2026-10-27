@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0.dev2",
+  "wheel_sha256": "37489fa58d0654648301b766c855d97b715397dda6e672ca814cc822b86d9bfe",
+  "imported_from": "/tmp/lowrank_reviewed_delivery_target/lowrank/__init__.py",
+  "source_files_matched": 43,
+  "namespace_check": true,
+  "cut_adaptation": true,
+  "strict_groups": true,
+  "weighted_policy": true,
+  "sparse_nd": true,
+  "chronological_helper": true,
+  "invalid_input_rejected": true
+}

@@ -1,0 +1,23 @@
+\begin{longtable}{lrrrr}
+\caption{Equal-confidence accuracy/cost controls. Every policy uses the same 95 percent joint selection/final-audit coverage, cut tolerance 0.05, rank range 32--512, two refined candidates and exact counts. A fixed policy is a single-size probe grid, not the older policy with separate unadjusted 95 percent checks. Established requires both selection and independent final audit to establish tolerance. These datasets are development evidence; no model outcome selects a policy.}\\
+\toprule
+Dataset & Probe policy & Median call (s) & Ranks & Established\\\midrule
+\endfirsthead
+\multicolumn{5}{l}{\tablename~\thetable\ (continued)}\\
+\toprule
+Dataset & Probe policy & Median call (s) & Ranks & Established\\\midrule
+\endhead
+\midrule
+\multicolumn{5}{r}{Continued on next page}\\
+\endfoot
+\bottomrule\endlastfoot
+FreeSolv & Fixed 2k & 0.84 & 512--512 & 0/3\\
+FreeSolv & Fixed 32k & 0.78 & 64--64 & 3/3\\
+FreeSolv & Joint 2--32k & 1.02 & 64--128 & 3/3\\
+BACE & Fixed 2k & 1.84 & 512--512 & 0/3\\
+BACE & Fixed 32k & 0.72 & 32--32 & 3/3\\
+BACE & Joint 2--32k & 0.98 & 32--32 & 3/3\\
+QM8 & Fixed 2k & 857.95 & 512--512 & 0/3\\
+QM8 & Fixed 32k & 111.75 & 128--128 & 3/3\\
+QM8 & Joint 2--32k & 451.20 & 128--256 & 3/3\\
+\end{longtable}

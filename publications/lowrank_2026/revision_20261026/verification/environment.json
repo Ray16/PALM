@@ -1,0 +1,20 @@
+{
+  "observed_utc": "2026-10-26T21:23:56.528546+00:00",
+  "python": "/homes/rzhu/miniforge3/envs/palm/bin/python",
+  "versions": {
+    "numpy": "1.26.4",
+    "scipy": "1.17.0",
+    "torch": "2.8.0",
+    "scikit-learn": "1.2.2",
+    "rdkit": "2026.3.5",
+    "numba": "0.63.1",
+    "pynndescent": "0.6.0",
+    "datasail": "1.3.0",
+    "mtkahypar": "1.6.1",
+    "cvxpy": "1.5.3",
+    "pyscipopt": "6.1.0",
+    "matplotlib": "3.10.8",
+    "pymupdf": "1.28.2",
+    "pytest": "9.1.1"
+  }
+}

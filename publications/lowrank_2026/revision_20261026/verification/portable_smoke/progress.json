@@ -1,0 +1,10 @@
+{
+  "expected": 1,
+  "completed": 1,
+  "outcomes": [
+    {
+      "name": "groups__moleculenet_freesolv__s0",
+      "complete": true
+    }
+  ]
+}

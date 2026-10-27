@@ -1,0 +1,323 @@
+% Archival v0.1 protocol and results; preserved from f38161f.
+
+\section{Dataset scope}
+
+Target slices follow the declared dataset-loader mapping and supply one scalar
+task per source for the prediction studies. Structural benchmarks optimize
+features without using responses, including entities whose target is missing.
+The study does not claim coverage of every target in Tox21, SIDER or MUV.
+MUV-466 has sparse labels and few actives; no predictive AUC is reported for
+MUV in this article. The dataset catalogue identifies the exact offline
+snapshots rather than silently substituting a newer database query.
+\input{dataset_table.tex}
+\section{Settings and computational scope}
+
+\begin{table}[htbp]\centering
+\begin{tabular}{llll}
+\toprule
+Setting & Power & Group threshold & Capacity tolerance\\
+\midrule
+Plain & 1 & None & 0, 0.01 or 0.05\\
+Power only & 3 & None & 0\\
+Groups only & 1 & 0.4 & 0\\
+Combined & 3 & 0.4 & 0, 0.01 or 0.05\\
+Higher-threshold combined & 3 & 0.6 & 0.01 or 0.05\\
+\bottomrule
+\end{tabular}
+\caption{Readable setting names. Standard factors have rank 256, four restarts
+and at most 25 assignment iterations. Molecular thresholds refer to the
+1024-bit radius-two Morgan/Tanimoto representation. Group caps are half the
+smallest target fold, with the freeze rule; top-32 neighbours use exact CPU
+blocks in the benchmark and exact GPU tiling in the H100 scaling study.
+Materials grouping instead uses a representation-specific similarity quantile.}
+\end{table}
+
+\begin{table}[htbp]\centering
+\begin{tabular}{ll}
+\toprule
+Operation & Storage or arithmetic scope\\
+\midrule
+Factor storage & $O(nr)$\\
+Factor construction/whitening & $O(nrd+nr^2+r^3)$ arithmetic\\
+Fold products, fixed fold count & $O(nr)$ per iteration, plus assignment sorting\\
+$M$ point-refinement moves & Up to $O(Mnr)$ arithmetic\\
+Exact neighbour construction & $O(n^2d)$ arithmetic; blocked temporary storage\\
+Retained neighbour indices & $O(nk)$ storage\\
+\bottomrule
+\end{tabular}
+\caption{Computational scope for $n$ entities, feature dimension $d$, rank $r$
+and neighbour degree $k$. Input features and outputs occupy additional storage.
+If the number of refinement moves grows with $n$, refinement can be quadratic.
+The factor-storage statement alone is not a linear-time claim.}
+\end{table}
+
+\section{Factor construction and optimization details}
+
+The main article presents the factor-space objective and its scientific use.
+This section records the numerical choices needed to reproduce the solver.
+The regularized landmark eigendecomposition floors eigenvalues at $10^{-6}$.
+
+Landmark selection affects approximation fidelity; fixed and adaptive sampling
+are established alternatives \citep{kumar2012,musco2017}. The implementation
+supports uniform landmarks and a similarity-based spreading
+heuristic historically named \texttt{kmeans++}. The latter samples proportional
+to $(1-\max_j S_{ij})^2$ over current landmarks. This is not ordinary squared
+Hilbert-distance sampling for a normalized kernel, so standard k-means++
+initialization guarantees do not automatically apply. We retain its name for API
+compatibility and evaluate uniform sampling as an ablation.
+
+
+The target count for each fold is obtained by largest-remainder rounding.
+For normalized requested fractions $q_c$, the tolerance corridor is based on
+$(1\pm\epsilon)nq_c$, with integer bounds widened only enough to contain the
+rounded target. Zero tolerance yields the exact integer targets.
+
+Each restart starts from a seeded count-constrained assignment. The two-fold
+linear subproblem is solved by sorting preference differences while enforcing
+both folds' bounds. Three-fold assignment uses a regret-ordered greedy peel
+that leaves sufficient capacity for the remaining folds. Proposals exclude
+self-similarity and are accepted only when the sum of squared fold sums does
+not decrease. A rejected proposal ends the restart. The best restart undergoes
+move refinement, or size-preserving pair swaps at exact capacities. The current
+fold is masked before alternative destinations are searched. Candidate limits
+make this a local search. Point-level refinement is skipped above two million
+entities. The standard settings are rank 256, four restarts and at most 25
+assignment iterations.
+
+For groups, the default freeze rule stops growth of the larger component after
+a cap-blocked merge. The alternative skip rule rejects only that merge. Weighted
+assignment and repair operate on group counts; groups dissolved into singletons
+are counted in the output diagnostics. Failure to satisfy the final count
+corridor raises an error. The multi-component extension concatenates per-axis
+factors. Dense identity columns for repeated featureless values can make its
+storage quadratic, so this extension is outside the reported scaling claims.
+
+\section{Neighbour construction details}
+
+The CPU reference scans exact similarities in row blocks. Blocking limits
+temporary storage while retaining quadratic arithmetic. Two-dimensional GPU
+tiling supplies a second exact backend. The optional NN-Descent candidate graph
+over packed binary fingerprints recomputes retained Tanimoto similarities using
+exact bit intersections. Its candidate recall is approximate. Top-32 recall and
+recall of exact top-32 edges at similarity at least 0.4 use 256 uniformly sampled
+query entities. Index-based recall is conservative when similarities tie.
+Compilation warm-up is recorded separately from warm graph construction.
+The retained graph-construction measurements appear below. Their split-quality
+and optimizer clocks are not used to characterize the revised solver.
+\input{neighbour_table.tex}
+
+\section{Powered-kernel fidelity and rank sensitivity}
+
+The fidelity study uses six full datasets: FreeSolv, ESOL, BACE, BBBP, ClinTox
+and Lipophilicity. For each power, rank and seed, a factor and optimized partition
+are constructed with the release solver. Five count-preserving perturbations
+give a spectrum of partitions evaluated against the same factor and exact
+powered kernel. The tables distinguish empirical cut errors from the spectral
+residual estimate. The latter is obtained with a symmetric eigensolver, a fixed
+starting vector and tolerance $10^{-8}$; its eigenpair residual is retained in
+the machine-readable results. It is not a certified numerical upper bound.
+
+\begin{figure}[htbp]
+\centering\includegraphics[width=6.5in]{revision/combined_rank.pdf}
+\caption{Combined-setting local leakage versus rank. Values average three split
+seeds at exact integer fold counts. Here local queries include validation and
+test, for continuity with the rank study's stored metric. The main baseline
+comparison uses test-only local queries and reports pooled held-out queries
+separately. Small nonmonotone changes are retained.}
+\end{figure}
+
+\section{External assay sensitivity}
+
+Original and class-balanced partitions share fold counts and input molecules.
+Class-balanced assignments use target labels, and their structural composition
+changes. They diagnose sensitivity and are not a proposed label-blind splitter.
+Per-assay JSON records retain all assignments, input and producer hashes,
+nearest-training-molecule similarity and label support, and all model scores.
+Reported ROC-AUC below 0.5 is retained; no prediction is flipped after inspecting
+the test labels. Class rates accompany AUC so shifts are visible directly.
+
+\begin{figure}[htbp]
+\centering\includegraphics[width=6.5in]{revision/external_xgb.pdf}
+\caption{Boosted-tree absolute AUC with the same protocol and assay-bootstrap
+intervals as the main RF figure. Circles show original partitions; triangles
+show the target-aware intervention.}
+\end{figure}
+
+\input{revision_tables.tex}
+\clearpage
+\section{Scaling measurements}
+
+The plain-factor and exact-tiled combined pipelines use the same ChEMBL cache,
+nested sample indices, kernel rank and two-thread CPU allocation. Independent
+cases are distributed across reserved H100s, with one process per case. All
+returned assignments satisfy the stated two-sided count corridor. The table
+reports the actual measured ranges without extending the combined setting to
+unmeasured sizes. Saved sample indices and assignments allow independent checks
+of retention, counts and nesting.
+\input{scaling_table.tex}
+\clearpage
+\section{Threshold and independent-representation robustness}
+
+Power/threshold cases and their controls share the same retained rows and exact
+8:1:1 integer targets. Morgan and MACCS kernels are scored exactly on the full
+datasets, with test-only local queries and the complete training fold as
+reference. Three random assignments at those counts supply a common
+normalization for all settings within a seed. MACCS keys are never supplied to
+the optimizer. Its raw nearest-neighbour similarity is the primary independent
+representation check: the absolute Morgan ramp cutoffs have no universal
+interpretation for MACCS.
+
+\begin{figure}[htbp]
+\centering\includegraphics[width=6.5in]{revision/power_threshold_frontier.pdf}
+\caption{Power/threshold sensitivity at exact fold counts on six full
+development datasets. Each point averages dataset means after averaging three
+split seeds. Colours denote kernel power; marker shapes denote grouping
+thresholds, listed along the bottom. Lines connect thresholds in increasing
+order within each power. Both axes use the original Morgan kernel; local
+queries are test-only. The settings were not selected using external-assay
+prediction scores.}
+\end{figure}
+
+
+\begin{figure}[htbp]
+\centering\includegraphics[width=6.5in]{revision/independent_fingerprint.pdf}
+\caption{MACCS nearest-training-similarity changes for the fixed combined
+setting relative to plain low rank. Small circles are paired split-seed
+differences and diamonds are dataset means. Negative values indicate lower
+similarity. The two positive dataset means are retained.}
+\end{figure}
+\input{robustness_table.tex}
+\clearpage
+\section{Component ablation}
+
+Six full datasets (BACE, BBBP, ESOL, FreeSolv, Lipophilicity and Tox21) are
+partitioned with the release solver at eighteen prespecified settings and
+three split seeds. This study separates landmark sampling, restart budget,
+move/swap refinement and cap policy in addition to the power, grouping, rank
+and capacity controls. It uses the same primary scoring protocol as the main
+benchmark: exact global scoring through 4,000 entities and a fixed uniform
+4,000-row sample above that limit; test-only local queries against the full
+training fold, with three count-preserving permutation controls. All input
+entities are retained. The 0.05-tolerance row may change fold counts; the other
+rows use exact integer targets. Group dissolution counts describe output
+relaxations rather than a guarantee of hard analogue exclusion. NN-Descent
+can return fewer candidate neighbours for some samples; execution logs retain
+these native warnings, and the assignments are scored without tuning the
+search parameters after observing their results.
+\input{ablation_tables.tex}
+\clearpage
+
+\section{Published local and cluster baselines}
+
+Lo-Hi uses the official Hi objective, threshold 0.4 and no coarsening. Resource
+controls cap it at two CPU threads and 7,200 solver seconds, with the native
+solver outcome retained. Eligible full datasets have at most 5,000 molecules.
+The comparison preserves the native retained subset and exact realized counts;
+discarded molecules are never assigned to a test fold by another name.
+
+The UMAP recipe follows the published NCI-60 clustering study
+\citep{hernandez2023clustering}: radius-two 1024-bit Morgan fingerprints,
+Jaccard UMAP with 100 neighbours, minimum distance zero, two components and
+seed 42, followed by Ward agglomeration into seven clusters. We transfer this
+recipe to new datasets and evaluate all seven native cluster holdouts.
+Low-rank controls exactly match each holdout's counts and retain all rows.
+The memory policy excludes cases whose condensed float64 agglomeration
+distances alone exceed 16 GiB. FreeSolv instead exhibits a native method
+failure: one valid fingerprint is disconnected in Jaccard similarity, producing
+a nonfinite embedding coordinate rejected by Ward clustering. We neither impute
+nor drop the row to manufacture a result.
+
+\input{local_baselines_tables.tex}
+\clearpage
+\section{Graph-degree and optimization sensitivity}
+
+Graph degree is varied over 16, 32, 64 and 128 on six full development datasets
+with three seeds and tolerance 0.01. The prespecified primary comparator uses
+32 neighbours, matching the grouping builder's degree. All settings use the
+ordinary pairwise Graph API, quality preset and CUT objective. Larger graphs
+retain more dense similarity mass but change the global--local trade-off;
+no single degree is declared best for both metrics. Native and repaired
+assignments are preserved. Tables distinguish degree sensitivity from the
+additional effect of imposing both lower and upper capacity bounds.
+
+The FreeSolv search control compares four and thirty restarts at exact counts
+for plain and combined settings, with five fixed seeds. A small change under
+this finite search budget is empirical saturation, not a lower bound on the
+unknown optimum. The combined setting shows larger objective changes than the
+plain setting, so the earlier development claim that extra restarts have no
+effect is not carried forward.
+\input{sensitivity_tables.tex}
+\clearpage
+\section{Materials generality check}
+
+Leaving related materials together is a recognized evaluation choice
+\citep{meredig2018,witman2025matfold}, and structure-based out-of-distribution
+benchmarks test transfer beyond random holdouts \citep{omee2024}. Here the
+QMOF and Materials Project checks use composition descriptors and a standardized
+Euclidean similarity kernel. They test applicability of the factor formulation
+beyond molecular Tanimoto similarity, rather than crystal-structure novelty.
+Full per-dataset scores accompany the benchmark tables. The study makes no
+empirical claim about untested sequence or biomolecular featurizers.
+
+\input{datasail_tables.tex}
+\section{Calibration protocol and prediction provenance}
+
+The hardness parameter uses a nested seeded sequence of point swaps between
+an optimized assignment and its count-preserving random endpoint. Its observed
+predictive response need not be monotone. Classification difficulty is
+$\mathrm{AUC}_0-\mathrm{AUC}_\alpha$; regression difficulty is
+$\mathrm{RMSE}_\alpha/\mathrm{RMSE}_0-1$. Subscript zero denotes the random
+endpoint with the same split seed, fold counts and model. These definitions use
+test scores and avoid interpreting a nearly perfect RF training score as a
+separate measure of difficulty.
+
+Five knots, $\alpha\in\{0,0.25,0.5,0.75,1\}$, are fitted with RF on split seeds
+0--2. The mean curve uses isotonic regression followed by piecewise-linear
+interpolation. Its direction is estimated from the calibration probes.
+Fitting can pool noisy negative early differences, so the fitted random
+endpoint can differ slightly from the known observed value zero. Seeds 10--14
+are excluded from that fit and evaluate all five knots, as well as three
+interior targets at 25\%, 50\% and 75\% of the fitted difficulty range. RF and
+boosted trees each have model initialization seed zero. The study has 570 model
+fits and 378 saved assignments across six datasets. Observed adjacent-knot
+decreases are reported before isotonic fitting; a fitted monotone curve is not
+evidence that individual predictive responses are monotone.
+
+Fixed-knot validation and interior-target inversion evaluate different points.
+Their errors therefore receive separate tables and source columns. The
+random-relative study's authoritative summary is
+\path{calibration_v2/validation_summary.csv}. The older
+\path{calibration_validation.csv} and
+\path{inversion_validation.csv} describe 25 fixed-knot and 15 interior-target
+scores per dataset/model, respectively, using train-minus-test gaps. Recomputed
+legacy errors match both files; they are separate studies and are not used as
+random-relative calibration errors. The source reconciliation is included with
+the release records.
+
+\IfFileExists{calibration_tables.tex}{\input{calibration_tables.tex}}{}
+
+The D-MPNN metric-validation study reuses saved predictions from the specified
+30-epoch protocol and five model initializations. Test SMILES are checked against
+the prediction rows before ensembling. Its split assignments and prior group-cap
+rule remain attached to those measurements. It is a supporting metric study,
+separate from the release-code thirteen-dataset benchmark. Per-model and
+per-split variability is reported at its actual level of replication.
+
+\section{Metric-validation provenance}
+
+The synthetic analysis excludes random-reference and all hypergraph rows.
+Global and local correlations use the same finite observations. Correlations
+by constructed regime and all included rows are distributed as CSV files;
+pooled associations can also reflect differences between regimes.
+
+Per-molecule validation uses existing five-initialization D-MPNN predictions
+for the random and plain-low-rank partitions of four datasets. Prediction rows
+are checked against test SMILES before ensembling. Training-only references are
+primary. Training-plus-validation references are retained as a secondary check.
+Within-split correlations accompany pooled results because the latter also mix
+split membership with molecular similarity. These analyses validate metric
+interpretation; they are not new release-code neural-model experiments.
+
+\input{metric_validation_tables.tex}
+\IfFileExists{benchmark_tables.tex}{\clearpage\section{Complete benchmark tables}\input{benchmark_tables.tex}}{}
+\IfFileExists{runtime_table.tex}{\clearpage\section{Same-host timing details}\input{runtime_table.tex}}{}

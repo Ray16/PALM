@@ -1,0 +1,171 @@
+{
+  "name": "cut_budget_moleculenet_bace_0_32768",
+  "kind": "rank_budget",
+  "dataset": "moleculenet_bace",
+  "seed": 0,
+  "pairs": 32768,
+  "implementation": "new",
+  "cpu_affinity": [
+    44,
+    45
+  ],
+  "seconds": 0.8256133105605841,
+  "diagnostics": {
+    "method": "lowrank",
+    "n": 1513,
+    "runtime_s": 0.8239,
+    "split_counts": {
+      "train": 1211,
+      "val": 151,
+      "test": 151
+    },
+    "split_fractions": {
+      "train": 0.8004,
+      "val": 0.0998,
+      "test": 0.0998
+    },
+    "metric": "tanimoto",
+    "rank": 32,
+    "factorization": {
+      "requested_rank": "auto",
+      "landmark_count": 32,
+      "effective_rank": 32,
+      "landmark_indices": [
+        436,
+        350,
+        119,
+        1130,
+        1510,
+        1006,
+        1327,
+        116,
+        1165,
+        995,
+        460,
+        1328,
+        386,
+        34,
+        479,
+        147,
+        835,
+        482,
+        597,
+        1262,
+        343,
+        90,
+        873,
+        1105,
+        1489,
+        1391,
+        1256,
+        1060,
+        1110,
+        42,
+        1055,
+        1047
+      ],
+      "eigenvalue_threshold": 6.061368324553929e-08,
+      "discarded_eigenvalues": 0,
+      "minimum_eigenvalue": 0.2289330059215388,
+      "row_block_size": 1513,
+      "estimated_array_bytes": 89191104,
+      "memory_scope": "factor arrays only; excludes framework and optimizer",
+      "rank_limit": 512,
+      "kernel_power": 1,
+      "adaptive": true,
+      "factor_backend": "nystrom",
+      "rank_check": "cut_error",
+      "selection_reuses_landmarks": true,
+      "selection_history": [
+        {
+          "landmark_count": 32,
+          "effective_rank": 32,
+          "relative_pair_mae": {
+            "estimate": 0.02010523775827213,
+            "standard_error": 0.0005947543701583854,
+            "ci95": [
+              0.007008962122345737,
+              0.033589073530663344
+            ],
+            "status": "estimated",
+            "confidence": 0.99,
+            "exact": false,
+            "interval": "empirical Bernstein; simultaneous ratio-component bounds"
+          },
+          "criterion": "cut_error",
+          "sample_pairs": 32768,
+          "eligible_rows": 1513,
+          "seed": 104729,
+          "normalization": "mean absolute off-diagonal powered kernel similarity",
+          "exact": false,
+          "confidence": 0.99
+        }
+      ],
+      "selection_tolerance_met": true,
+      "rank_tolerance": 0.05,
+      "stop_reason": "sample_tolerance",
+      "audit": {
+        "relative_pair_mae": {
+          "estimate": 0.01994358832306352,
+          "standard_error": 0.0005941305326082491,
+          "ci95": [
+            0.009701321212795154,
+            0.0304461683339763
+          ],
+          "status": "estimated",
+          "confidence": 0.95,
+          "exact": false,
+          "interval": "empirical Bernstein; simultaneous ratio-component bounds"
+        },
+        "criterion": "cut_error",
+        "sample_pairs": 32768,
+        "eligible_rows": 1513,
+        "seed": 130363,
+        "normalization": "mean absolute off-diagonal powered kernel similarity",
+        "exact": false,
+        "confidence": 0.95
+      },
+      "audit_tolerance_met": true
+    },
+    "fold_weights": [
+      [
+        0.0,
+        1.0,
+        1.0
+      ],
+      [
+        1.0,
+        0.0,
+        1.0
+      ],
+      [
+        1.0,
+        1.0,
+        0.0
+      ]
+    ],
+    "optimization": {
+      "factor_storage": "dense",
+      "optimizer_device": "cpu",
+      "winning_restart_seed": 1,
+      "best_unrefined_objective": 47620.182527050776,
+      "refined_restarts": 1,
+      "fm_moves": 11,
+      "refinement_candidates": [
+        {
+          "seed": 1,
+          "before": 47620.182527050776,
+          "after": 47606.10052459901,
+          "moves": 11
+        }
+      ]
+    },
+    "fm_moves": 11,
+    "factor_leakage": 47606.10052459901,
+    "weighted_factor_leakage": 47606.10052459901,
+    "leakage": null,
+    "leakage_diagnostic": "none"
+  },
+  "status": "ok",
+  "process_peak_rss_mb": 639.64453125
+}

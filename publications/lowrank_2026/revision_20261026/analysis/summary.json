@@ -1,0 +1,4629 @@
+{
+  "expected": 199,
+  "successful": 191,
+  "native_infeasible": 8,
+  "completed_by_study": {
+    "groups": 18,
+    "budget": 27,
+    "exact": 20,
+    "deployment": 20,
+    "frontier": 106
+  },
+  "grouping": {
+    "feasible_groups": {
+      "cases": 18,
+      "global_relative_mean": 0.9593280205501914,
+      "mean_nearest": 0.3869135583744193,
+      "values": [
+        {
+          "dataset": "moleculenet_freesolv",
+          "seed": 0,
+          "global_relative": 0.9404286106401363,
+          "mean_nearest": 0.36772586847655475,
+          "raw_global": 0.31942241114894393
+        },
+        {
+          "dataset": "moleculenet_freesolv",
+          "seed": 1,
+          "global_relative": 1.0015009563706412,
+          "mean_nearest": 0.3920221137814224,
+          "raw_global": 0.34016601221237935
+        },
+        {
+          "dataset": "moleculenet_freesolv",
+          "seed": 2,
+          "global_relative": 0.9377791162255934,
+          "mean_nearest": 0.4097595983184874,
+          "raw_global": 0.31852249393604365
+        },
+        {
+          "dataset": "moleculenet_esol",
+          "seed": 0,
+          "global_relative": 0.8927857067878012,
+          "mean_nearest": 0.3702331187978255,
+          "raw_global": 0.30425993283820135
+        },
+        {
+          "dataset": "moleculenet_esol",
+          "seed": 1,
+          "global_relative": 0.9071728182271273,
+          "mean_nearest": 0.37469449481077954,
+          "raw_global": 0.3091630372752278
+        },
+        {
+          "dataset": "moleculenet_esol",
+          "seed": 2,
+          "global_relative": 0.9638911776992134,
+          "mean_nearest": 0.3792267625047042,
+          "raw_global": 0.3284925629525151
+        },
+        {
+          "dataset": "moleculenet_bace",
+          "seed": 0,
+          "global_relative": 0.9650190911812087,
+          "mean_nearest": 0.5023447778445995,
+          "raw_global": 0.3277871431395251
+        },
+        {
+          "dataset": "moleculenet_bace",
+          "seed": 1,
+          "global_relative": 0.9491212973075741,
+          "mean_nearest": 0.3605496275503904,
+          "raw_global": 0.3223871541821241
+        },
+        {
+          "dataset": "moleculenet_bace",
+          "seed": 2,
+          "global_relative": 0.9626733025983795,
+          "mean_nearest": 0.5289693935620075,
+          "raw_global": 0.3269903512988231
+        },
+        {
+          "dataset": "moleculenet_bbbp",
+          "seed": 0,
+          "global_relative": 0.9898523047392026,
+          "mean_nearest": 0.36641787094812767,
+          "raw_global": 0.3368509020123872
+        },
+        {
+          "dataset": "moleculenet_bbbp",
+          "seed": 1,
+          "global_relative": 1.009394711444921,
+          "mean_nearest": 0.385845622376484,
+          "raw_global": 0.3435012651976794
+        },
+        {
+          "dataset": "moleculenet_bbbp",
+          "seed": 2,
+          "global_relative": 0.9792794452363085,
+          "mean_nearest": 0.33947012931400655,
+          "raw_global": 0.33325291346061187
+        },
+        {
+          "dataset": "moleculenet_lipophilicity",
+          "seed": 0,
+          "global_relative": 0.9768582807457357,
+          "mean_nearest": 0.3250889090200265,
+          "raw_global": 0.33221091329004776
+        },
+        {
+          "dataset": "moleculenet_lipophilicity",
+          "seed": 1,
+          "global_relative": 0.9776029297955379,
+          "mean_nearest": 0.32573917167527333,
+          "raw_global": 0.33246415426245013
+        },
+        {
+          "dataset": "moleculenet_lipophilicity",
+          "seed": 2,
+          "global_relative": 0.9962263290791522,
+          "mean_nearest": 0.35724573667560305,
+          "raw_global": 0.3387976179864323
+        },
+        {
+          "dataset": "moleculenet_tox21",
+          "seed": 0,
+          "global_relative": 0.8550987969033801,
+          "mean_nearest": 0.4033988287191257,
+          "raw_global": 0.2906789235444963
+        },
+        {
+          "dataset": "moleculenet_tox21",
+          "seed": 1,
+          "global_relative": 0.9377224225418491,
+          "mean_nearest": 0.40324895320188664,
+          "raw_global": 0.3187656740426933
+        },
+        {
+          "dataset": "moleculenet_tox21",
+          "seed": 2,
+          "global_relative": 1.025497072379681,
+          "mean_nearest": 0.37246307316224286,
+          "raw_global": 0.3486034434580548
+        }
+      ]
+    },
+    "optimized_p1": {
+      "cases": 18,
+      "global_relative_mean": 0.7910623147917775,
+      "mean_nearest": 0.3055039235799312,
+      "values": [
+        {
+          "dataset": "moleculenet_freesolv",
+          "seed": 0,
+          "global_relative": 0.5774875145814552,
+          "mean_nearest": 0.26971140142995864,
+          "raw_global": 0.19614721652338757
+        },
+        {
+          "dataset": "moleculenet_freesolv",
+          "seed": 1,
+          "global_relative": 0.5774875145814552,
+          "mean_nearest": 0.26971140142995864,
+          "raw_global": 0.19614721652338757
+        },
+        {
+          "dataset": "moleculenet_freesolv",
+          "seed": 2,
+          "global_relative": 0.5774875145814552,
+          "mean_nearest": 0.2919303401140496,
+          "raw_global": 0.19614721652338757
+        },
+        {
+          "dataset": "moleculenet_esol",
+          "seed": 0,
+          "global_relative": 0.749895864378475,
+          "mean_nearest": 0.28102478872885744,
+          "raw_global": 0.2555633043816975
+        },
+        {
+          "dataset": "moleculenet_esol",
+          "seed": 1,
+          "global_relative": 0.7418711014415074,
+          "mean_nearest": 0.28451310698173743,
+          "raw_global": 0.2528284780805137
+        },
+        {
+          "dataset": "moleculenet_esol",
+          "seed": 2,
+          "global_relative": 0.7500199196300288,
+          "mean_nearest": 0.28483791715275925,
+          "raw_global": 0.2556055822118856
+        },
+        {
+          "dataset": "moleculenet_bace",
+          "seed": 0,
+          "global_relative": 0.8052498999354325,
+          "mean_nearest": 0.3844510686910705,
+          "raw_global": 0.2735184895566589
+        },
+        {
+          "dataset": "moleculenet_bace",
+          "seed": 1,
+          "global_relative": 0.8069500750820774,
+          "mean_nearest": 0.35305134656018766,
+          "raw_global": 0.2740959864779617
+        },
+        {
+          "dataset": "moleculenet_bace",
+          "seed": 2,
+          "global_relative": 0.8052498999354325,
+          "mean_nearest": 0.3844510686910705,
+          "raw_global": 0.2735184895566589
+        },
+        {
+          "dataset": "moleculenet_bbbp",
+          "seed": 0,
+          "global_relative": 0.8418116090781622,
+          "mean_nearest": 0.2596957402157725,
+          "raw_global": 0.2864720307108738
+        },
+        {
+          "dataset": "moleculenet_bbbp",
+          "seed": 1,
+          "global_relative": 0.8418871223496557,
+          "mean_nearest": 0.2663692324148381,
+          "raw_global": 0.28649772819472535
+        },
+        {
+          "dataset": "moleculenet_bbbp",
+          "seed": 2,
+          "global_relative": 0.8443180731252206,
+          "mean_nearest": 0.26083534808062453,
+          "raw_global": 0.28732499096673303
+        },
+        {
+          "dataset": "moleculenet_lipophilicity",
+          "seed": 0,
+          "global_relative": 0.9223173467265234,
+          "mean_nearest": 0.33041999052677834,
+          "raw_global": 0.3136625794535545
+        },
+        {
+          "dataset": "moleculenet_lipophilicity",
+          "seed": 1,
+          "global_relative": 0.922421867454505,
+          "mean_nearest": 0.3256533840937274,
+          "raw_global": 0.3136981249642851
+        },
+        {
+          "dataset": "moleculenet_lipophilicity",
+          "seed": 2,
+          "global_relative": 0.9223060614850086,
+          "mean_nearest": 0.330332639139323,
+          "raw_global": 0.3136587415576547
+        },
+        {
+          "dataset": "moleculenet_tox21",
+          "seed": 0,
+          "global_relative": 0.8482114607387028,
+          "mean_nearest": 0.30924392205274776,
+          "raw_global": 0.2883376695634506
+        },
+        {
+          "dataset": "moleculenet_tox21",
+          "seed": 1,
+          "global_relative": 0.8525532640707996,
+          "mean_nearest": 0.3071196163239915,
+          "raw_global": 0.289813605120121
+        },
+        {
+          "dataset": "moleculenet_tox21",
+          "seed": 2,
+          "global_relative": 0.8515955570760984,
+          "mean_nearest": 0.30571831181130904,
+          "raw_global": 0.2894880459691797
+        }
+      ]
+    },
+    "optimized_p3": {
+      "cases": 18,
+      "global_relative_mean": 0.7446429514362942,
+      "mean_nearest": 0.29189333477219503,
+      "values": [
+        {
+          "dataset": "moleculenet_freesolv",
+          "seed": 0,
+          "global_relative": 0.5073806738907171,
+          "mean_nearest": 0.2836525038583204,
+          "raw_global": 0.17233499320509932
+        },
+        {
+          "dataset": "moleculenet_freesolv",
+          "seed": 1,
+          "global_relative": 0.5008146259832372,
+          "mean_nearest": 0.27606639929581434,
+          "raw_global": 0.17010479430366535
+        },
+        {
+          "dataset": "moleculenet_freesolv",
+          "seed": 2,
+          "global_relative": 0.5009712359990485,
+          "mean_nearest": 0.28026005590800196,
+          "raw_global": 0.17015798786699862
+        },
+        {
+          "dataset": "moleculenet_esol",
+          "seed": 0,
+          "global_relative": 0.6818063001510222,
+          "mean_nearest": 0.27181869455143415,
+          "raw_global": 0.23235849041422743
+        },
+        {
+          "dataset": "moleculenet_esol",
+          "seed": 1,
+          "global_relative": 0.6678280371935569,
+          "mean_nearest": 0.2942400063692996,
+          "raw_global": 0.22759472088219124
+        },
+        {
+          "dataset": "moleculenet_esol",
+          "seed": 2,
+          "global_relative": 0.6901968364068666,
+          "mean_nearest": 0.2749452915998687,
+          "raw_global": 0.23521797167414246
+        },
+        {
+          "dataset": "moleculenet_bace",
+          "seed": 0,
+          "global_relative": 0.7898270968334349,
+          "mean_nearest": 0.27901520910642,
+          "raw_global": 0.26827984027582524
+        },
+        {
+          "dataset": "moleculenet_bace",
+          "seed": 1,
+          "global_relative": 0.7898195155273389,
+          "mean_nearest": 0.27902170176932356,
+          "raw_global": 0.2682772651405878
+        },
+        {
+          "dataset": "moleculenet_bace",
+          "seed": 2,
+          "global_relative": 0.7898195155273389,
+          "mean_nearest": 0.27902170176932356,
+          "raw_global": 0.2682772651405878
+        },
+        {
+          "dataset": "moleculenet_bbbp",
+          "seed": 0,
+          "global_relative": 0.7903916310379111,
+          "mean_nearest": 0.30960412864007203,
+          "raw_global": 0.26897359594299264
+        },
+        {
+          "dataset": "moleculenet_bbbp",
+          "seed": 1,
+          "global_relative": 0.7907033301889898,
+          "mean_nearest": 0.24717738740511386,
+          "raw_global": 0.26907966847491954
+        },
+        {
+          "dataset": "moleculenet_bbbp",
+          "seed": 2,
+          "global_relative": 0.7880038197684317,
+          "mean_nearest": 0.30765590473425153,
+          "raw_global": 0.26816101372632406
+        },
+        {
+          "dataset": "moleculenet_lipophilicity",
+          "seed": 0,
+          "global_relative": 0.9095552532255435,
+          "mean_nearest": 0.2990214880733263,
+          "raw_global": 0.3093224342953265
+        },
+        {
+          "dataset": "moleculenet_lipophilicity",
+          "seed": 1,
+          "global_relative": 0.9083971128383561,
+          "mean_nearest": 0.3014891648576373,
+          "raw_global": 0.30892857278713326
+        },
+        {
+          "dataset": "moleculenet_lipophilicity",
+          "seed": 2,
+          "global_relative": 0.9096193498684494,
+          "mean_nearest": 0.3338867312031133,
+          "raw_global": 0.3093442323439261
+        },
+        {
+          "dataset": "moleculenet_tox21",
+          "seed": 0,
+          "global_relative": 0.7897585943956873,
+          "mean_nearest": 0.3016661947921795,
+          "raw_global": 0.2684674319625925
+        },
+        {
+          "dataset": "moleculenet_tox21",
+          "seed": 1,
+          "global_relative": 0.8007959470532579,
+          "mean_nearest": 0.3000874045778952,
+          "raw_global": 0.27221942623612216
+        },
+        {
+          "dataset": "moleculenet_tox21",
+          "seed": 2,
+          "global_relative": 0.7978842499641075,
+          "mean_nearest": 0.3354500573881142,
+          "raw_global": 0.271229635373795
+        }
+      ]
+    }
+  },
+  "exact": [
+    {
+      "grouped": false,
+      "power": 1,
+      "rank": 2,
+      "cases": 20,
+      "max_optimization_gap": 4.1275564336727495e-17,
+      "max_true_gap": 0.1573639920834071,
+      "max_approximation_error": 0.5325515545126591
+    },
+    {
+      "grouped": false,
+      "power": 1,
+      "rank": 4,
+      "cases": 20,
+      "max_optimization_gap": 0.0027935571415947462,
+      "max_true_gap": 0.10931475434623734,
+      "max_approximation_error": 0.2771171949231481
+    },
+    {
+      "grouped": false,
+      "power": 1,
+      "rank": 8,
+      "cases": 20,
+      "max_optimization_gap": 0.02068932616578057,
+      "max_true_gap": 0.041359632180848975,
+      "max_approximation_error": 0.08391453687989707
+    },
+    {
+      "grouped": false,
+      "power": 1,
+      "rank": 12,
+      "cases": 20,
+      "max_optimization_gap": 0.013161578795467178,
+      "max_true_gap": 0.013161577991036604,
+      "max_approximation_error": 5.641027470456865e-08
+    },
+    {
+      "grouped": false,
+      "power": 3,
+      "rank": 2,
+      "cases": 20,
+      "max_optimization_gap": 9.148754124389603e-07,
+      "max_true_gap": 0.3290208190543117,
+      "max_approximation_error": 0.7620583661465904
+    },
+    {
+      "grouped": false,
+      "power": 3,
+      "rank": 4,
+      "cases": 20,
+      "max_optimization_gap": 0.03764458751130609,
+      "max_true_gap": 0.36555217111118077,
+      "max_approximation_error": 0.5588168183468996
+    },
+    {
+      "grouped": false,
+      "power": 3,
+      "rank": 8,
+      "cases": 20,
+      "max_optimization_gap": 0.033445909421114854,
+      "max_true_gap": 0.20507285851428456,
+      "max_approximation_error": 0.29470444757905256
+    },
+    {
+      "grouped": false,
+      "power": 3,
+      "rank": 12,
+      "cases": 20,
+      "max_optimization_gap": 0.04077934595679491,
+      "max_true_gap": 0.04077926956129256,
+      "max_approximation_error": 5.427043853919969e-07
+    },
+    {
+      "grouped": true,
+      "power": 1,
+      "rank": 2,
+      "cases": 20,
+      "max_optimization_gap": 1.3107694697556824e-16,
+      "max_true_gap": 0.10415022526643543,
+      "max_approximation_error": 0.4591398415408097
+    },
+    {
+      "grouped": true,
+      "power": 1,
+      "rank": 4,
+      "cases": 20,
+      "max_optimization_gap": 1.6048477539474797e-16,
+      "max_true_gap": 0.07674830588003778,
+      "max_approximation_error": 0.2721226710371926
+    },
+    {
+      "grouped": true,
+      "power": 1,
+      "rank": 8,
+      "cases": 20,
+      "max_optimization_gap": 1.3107694697556824e-16,
+      "max_true_gap": 0.059328580960073034,
+      "max_approximation_error": 0.08391452508711184
+    },
+    {
+      "grouped": true,
+      "power": 1,
+      "rank": 12,
+      "cases": 20,
+      "max_optimization_gap": 1.4403334034896676e-16,
+      "max_true_gap": 1.6100156218498289e-16,
+      "max_approximation_error": 5.641027470456865e-08
+    },
+    {
+      "grouped": true,
+      "power": 3,
+      "rank": 2,
+      "cases": 20,
+      "max_optimization_gap": 1.3777397055954573e-17,
+      "max_true_gap": 0.3285674737896355,
+      "max_approximation_error": 0.6702246235845957
+    },
+    {
+      "grouped": true,
+      "power": 3,
+      "rank": 4,
+      "cases": 20,
+      "max_optimization_gap": 3.2761625651086427e-17,
+      "max_true_gap": 0.3177709014829639,
+      "max_approximation_error": 0.5532182817734913
+    },
+    {
+      "grouped": true,
+      "power": 3,
+      "rank": 8,
+      "cases": 20,
+      "max_optimization_gap": 1.1439084187134535e-16,
+      "max_true_gap": 0.26089429577222106,
+      "max_approximation_error": 0.2947044091359767
+    },
+    {
+      "grouped": true,
+      "power": 3,
+      "rank": 12,
+      "cases": 20,
+      "max_optimization_gap": 5.510958822381829e-17,
+      "max_true_gap": 9.987098121046439e-17,
+      "max_approximation_error": 3.6590187188192295e-07
+    }
+  ],
+  "deployment": [
+    {
+      "method": "random",
+      "instances": 20,
+      "interpolation_ranking_agreement": 20,
+      "new_family_ranking_agreement": 0,
+      "knn_interpolation_bias": -0.0006415783682233389,
+      "knn_new_family_bias": -0.9327298328088178,
+      "values": [
+        {
+          "seed": 0,
+          "estimated_difference": 0.7386260511266087,
+          "interpolation_difference": 0.8700708699861504,
+          "new_family_difference": -0.27373599064473675,
+          "knn_interpolation_bias": 0.017294736068228733,
+          "knn_new_family_bias": -1.0368046865013425,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 1,
+          "estimated_difference": 0.5367600422703218,
+          "interpolation_difference": 0.5008284388186781,
+          "new_family_difference": -0.23480618713663404,
+          "knn_interpolation_bias": 0.0053976665584072325,
+          "knn_new_family_bias": -0.4815775408063183,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 2,
+          "estimated_difference": 0.6824379353233907,
+          "interpolation_difference": 0.5680253207904786,
+          "new_family_difference": -0.2078906729797636,
+          "knn_interpolation_bias": 0.007088946480739988,
+          "knn_new_family_bias": -0.8414780682562295,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 3,
+          "estimated_difference": 0.7414962732645942,
+          "interpolation_difference": 0.5933765696563431,
+          "new_family_difference": -0.21966267705066178,
+          "knn_interpolation_bias": -0.1258412223616494,
+          "knn_new_family_bias": -0.8958753231079006,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 4,
+          "estimated_difference": 0.571458061144219,
+          "interpolation_difference": 0.7867736106493053,
+          "new_family_difference": -0.24392715111115382,
+          "knn_interpolation_bias": 0.23660734752531765,
+          "knn_new_family_bias": -0.5758723550351668,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 5,
+          "estimated_difference": 0.5648082335274835,
+          "interpolation_difference": 0.42481895206678066,
+          "new_family_difference": -0.15089790227115074,
+          "knn_interpolation_bias": -0.12196246524403431,
+          "knn_new_family_bias": -1.43546250832222,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 6,
+          "estimated_difference": 1.0602833443339672,
+          "interpolation_difference": 0.8976964648858803,
+          "new_family_difference": -0.2618896427094708,
+          "knn_interpolation_bias": 0.07783048505374834,
+          "knn_new_family_bias": -0.8721568589539466,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 7,
+          "estimated_difference": 0.4792124480599709,
+          "interpolation_difference": 0.4829094924494539,
+          "new_family_difference": -0.22372332250954186,
+          "knn_interpolation_bias": -0.056211096851513265,
+          "knn_new_family_bias": -1.089421476804131,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 8,
+          "estimated_difference": 0.5903353885496052,
+          "interpolation_difference": 0.5350711683126692,
+          "new_family_difference": -0.24594695599268523,
+          "knn_interpolation_bias": -0.11462363023565958,
+          "knn_new_family_bias": -0.9012305752681424,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 9,
+          "estimated_difference": 0.7533907969423432,
+          "interpolation_difference": 0.6470889567762619,
+          "new_family_difference": -0.20639196776941438,
+          "knn_interpolation_bias": 0.12492438146944052,
+          "knn_new_family_bias": -1.0629354187799689,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 10,
+          "estimated_difference": 0.7979219062503446,
+          "interpolation_difference": 0.7004453185805772,
+          "new_family_difference": -0.27802522346675507,
+          "knn_interpolation_bias": 0.015789430699701956,
+          "knn_new_family_bias": -0.7203475275576499,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 11,
+          "estimated_difference": 0.8037195841312024,
+          "interpolation_difference": 0.8151196241684453,
+          "new_family_difference": -0.2866447302060193,
+          "knn_interpolation_bias": -0.041697654846938104,
+          "knn_new_family_bias": -0.9182436738287973,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 12,
+          "estimated_difference": 0.892693869324521,
+          "interpolation_difference": 0.8071810690721908,
+          "new_family_difference": -0.2382025115176205,
+          "knn_interpolation_bias": -0.07678641221671345,
+          "knn_new_family_bias": -1.3073168321328368,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 13,
+          "estimated_difference": 0.8253583250763719,
+          "interpolation_difference": 1.0604422263041247,
+          "new_family_difference": -0.3139097549308947,
+          "knn_interpolation_bias": 0.08218129498468807,
+          "knn_new_family_bias": -0.827572015066971,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 14,
+          "estimated_difference": 0.5146118092685181,
+          "interpolation_difference": 0.7002813881209027,
+          "new_family_difference": -0.23425069789817288,
+          "knn_interpolation_bias": 0.21847680652545498,
+          "knn_new_family_bias": -0.576234063463541,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 15,
+          "estimated_difference": 0.49597381816082464,
+          "interpolation_difference": 0.6241034129328857,
+          "new_family_difference": -0.1873732343068193,
+          "knn_interpolation_bias": 0.03682285495502957,
+          "knn_new_family_bias": -1.0001036663845781,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 16,
+          "estimated_difference": 0.3085163801101205,
+          "interpolation_difference": 0.23121912480506612,
+          "new_family_difference": -0.15885100782167827,
+          "knn_interpolation_bias": -0.0807979673977055,
+          "knn_new_family_bias": -1.2872979809289828,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 17,
+          "estimated_difference": 0.5155969813051666,
+          "interpolation_difference": 0.5251123776402451,
+          "new_family_difference": -0.21373580046032004,
+          "knn_interpolation_bias": -0.09859809584467305,
+          "knn_new_family_bias": -1.0101164813487347,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 18,
+          "estimated_difference": 0.8376109557093363,
+          "interpolation_difference": 0.9114678980817046,
+          "new_family_difference": -0.21891715794073452,
+          "knn_interpolation_bias": -0.028850305646453744,
+          "knn_new_family_bias": -1.0885838429853085,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 19,
+          "estimated_difference": 0.6731439409082067,
+          "interpolation_difference": 0.5522347044046141,
+          "new_family_difference": -0.23934307762269857,
+          "knn_interpolation_bias": -0.0898766670398834,
+          "knn_new_family_bias": -0.7259657606435881,
+          "test_seen_family_fraction": 1.0
+        }
+      ]
+    },
+    {
+      "method": "plain",
+      "instances": 20,
+      "interpolation_ranking_agreement": 8,
+      "new_family_ranking_agreement": 12,
+      "knn_interpolation_bias": 0.5844467563061804,
+      "knn_new_family_bias": -0.2408502036740853,
+      "values": [
+        {
+          "seed": 0,
+          "estimated_difference": -0.19270239921605858,
+          "interpolation_difference": 0.8281414293728513,
+          "new_family_difference": -0.3052701290137545,
+          "knn_interpolation_bias": 0.38044156201021195,
+          "knn_new_family_bias": -0.6376821986038472,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 1,
+          "estimated_difference": -0.22195737404572657,
+          "interpolation_difference": 0.40206561686032005,
+          "new_family_difference": -0.2354201572555239,
+          "knn_interpolation_bias": 0.871991849602695,
+          "knn_new_family_bias": 0.4892733881210476,
+          "test_seen_family_fraction": 0.8
+        },
+        {
+          "seed": 2,
+          "estimated_difference": -0.37023907855513927,
+          "interpolation_difference": 0.4239570406456614,
+          "new_family_difference": -0.19457122965628026,
+          "knn_interpolation_bias": 0.7207144384276643,
+          "knn_new_family_bias": -0.025897645286584225,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 3,
+          "estimated_difference": 0.057414993294496286,
+          "interpolation_difference": 0.5070041027077135,
+          "new_family_difference": -0.24896794185010318,
+          "knn_interpolation_bias": 0.4798263197210766,
+          "knn_new_family_bias": -0.2165825485601649,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 4,
+          "estimated_difference": 0.6030363241244259,
+          "interpolation_difference": 0.7455939121791819,
+          "new_family_difference": -0.22891412736981032,
+          "knn_interpolation_bias": 0.47636981118357236,
+          "knn_new_family_bias": -0.2736258654393344,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 5,
+          "estimated_difference": -0.5723475562400349,
+          "interpolation_difference": 0.281195716611486,
+          "new_family_difference": -0.1314392306176293,
+          "knn_interpolation_bias": 1.0657500732431224,
+          "knn_new_family_bias": -0.07602106134820241,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 6,
+          "estimated_difference": 0.2934593676349757,
+          "interpolation_difference": 0.8642445841714923,
+          "new_family_difference": -0.27041749350723876,
+          "knn_interpolation_bias": 0.4761395459785214,
+          "knn_new_family_bias": -0.4325567793510787,
+          "test_seen_family_fraction": 0.8
+        },
+        {
+          "seed": 7,
+          "estimated_difference": -0.2068588673383922,
+          "interpolation_difference": 0.22583750932763502,
+          "new_family_difference": -0.20397063609195554,
+          "knn_interpolation_bias": 0.047012610925843745,
+          "knn_new_family_bias": -0.7142004558228092,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 8,
+          "estimated_difference": 0.2130779458814025,
+          "interpolation_difference": 0.5180664425033268,
+          "new_family_difference": -0.20885217032880088,
+          "knn_interpolation_bias": 0.44010026041047223,
+          "knn_new_family_bias": -0.26831573329436265,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 9,
+          "estimated_difference": 0.38569410194444487,
+          "interpolation_difference": 0.6458584875445381,
+          "new_family_difference": -0.17334139731028664,
+          "knn_interpolation_bias": 0.7674587158938599,
+          "knn_new_family_bias": -0.3612871031635154,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 10,
+          "estimated_difference": -0.2127225011259246,
+          "interpolation_difference": 0.6119908581846878,
+          "new_family_difference": -0.2790337080742582,
+          "knn_interpolation_bias": 0.8154820886025287,
+          "knn_new_family_bias": 0.1924321954576511,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 11,
+          "estimated_difference": -0.28204469028613044,
+          "interpolation_difference": 0.711568960276243,
+          "new_family_difference": -0.30651361423636736,
+          "knn_interpolation_bias": 0.1389197926965895,
+          "knn_new_family_bias": -0.6345888639195163,
+          "test_seen_family_fraction": 0.8
+        },
+        {
+          "seed": 12,
+          "estimated_difference": 0.5482995026043336,
+          "interpolation_difference": 0.6562041710884658,
+          "new_family_difference": -0.22091067850277124,
+          "knn_interpolation_bias": -0.030331352979196646,
+          "knn_new_family_bias": -1.0860187575308375,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 13,
+          "estimated_difference": 0.04466302444075332,
+          "interpolation_difference": 0.8950644910118746,
+          "new_family_difference": -0.37811105528075717,
+          "knn_interpolation_bias": 0.8735924317044079,
+          "knn_new_family_bias": 0.06149705089427604,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 14,
+          "estimated_difference": -0.4644407446146015,
+          "interpolation_difference": 0.6472000569357006,
+          "new_family_difference": -0.2586724103723874,
+          "knn_interpolation_bias": 1.0807124658963585,
+          "knn_new_family_bias": 0.36157957898312665,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 15,
+          "estimated_difference": -0.3078684283790505,
+          "interpolation_difference": 0.5464720052828926,
+          "new_family_difference": -0.20225755827708847,
+          "knn_interpolation_bias": 0.7804765691305262,
+          "knn_new_family_bias": -0.19466545234226773,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 16,
+          "estimated_difference": -0.18272972128652354,
+          "interpolation_difference": 0.13934686851268796,
+          "new_family_difference": -0.1277491122474248,
+          "knn_interpolation_bias": 0.23232500224951402,
+          "knn_new_family_bias": -0.8386237676175929,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 17,
+          "estimated_difference": -0.02050725883987825,
+          "interpolation_difference": 0.4289558174977437,
+          "new_family_difference": -0.20243348896599134,
+          "knn_interpolation_bias": 0.7163781931364666,
+          "knn_new_family_bias": -0.09535386857035588,
+          "test_seen_family_fraction": 1.0
+        },
+        {
+          "seed": 18,
+          "estimated_difference": 0.06516962891899225,
+          "interpolation_difference": 0.7140584207913447,
+          "new_family_difference": -0.23299280624224217,
+          "knn_interpolation_bias": 0.39147652136864886,
+          "knn_new_family_bias": -0.4582057944390274,
+          "test_seen_family_fraction": 0.8
+        },
+        {
+          "seed": 19,
+          "estimated_difference": -0.18308177453425944,
+          "interpolation_difference": 0.43587169143611604,
+          "new_family_difference": -0.2565239929293903,
+          "knn_interpolation_bias": 0.9640982269207234,
+          "knn_new_family_bias": 0.39183960835169085,
+          "test_seen_family_fraction": 0.8
+        }
+      ]
+    },
+    {
+      "method": "combined",
+      "instances": 20,
+      "interpolation_ranking_agreement": 0,
+      "new_family_ranking_agreement": 20,
+      "knn_interpolation_bias": 0.9831118501850942,
+      "knn_new_family_bias": -0.026562038179437232,
+      "values": [
+        {
+          "seed": 0,
+          "estimated_difference": -0.3348734024162616,
+          "interpolation_difference": 1.112243658880807,
+          "new_family_difference": -0.29222458864776835,
+          "knn_interpolation_bias": 0.22842845089539288,
+          "knn_new_family_bias": -0.9800682342319709,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 1,
+          "estimated_difference": -0.17305491375812276,
+          "interpolation_difference": 0.4392673992446323,
+          "new_family_difference": -0.17948539212325731,
+          "knn_interpolation_bias": 0.5941223410593481,
+          "knn_new_family_bias": 0.07650596281390576,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 2,
+          "estimated_difference": -0.16969974041142288,
+          "interpolation_difference": 0.47167781599421454,
+          "new_family_difference": -0.18644316074890965,
+          "knn_interpolation_bias": 1.4166141516943336,
+          "knn_new_family_bias": 0.5327483753113178,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 3,
+          "estimated_difference": -0.28953551934862354,
+          "interpolation_difference": 0.6635165810459014,
+          "new_family_difference": -0.22427281476065808,
+          "knn_interpolation_bias": 0.7407599700481149,
+          "knn_new_family_bias": -0.07584866104683652,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 4,
+          "estimated_difference": -0.24468089875369436,
+          "interpolation_difference": 0.9233408692277365,
+          "new_family_difference": -0.25932593467464615,
+          "knn_interpolation_bias": 1.3499249674756069,
+          "knn_new_family_bias": 0.4413254278096841,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 5,
+          "estimated_difference": -0.15904946375534346,
+          "interpolation_difference": 0.3952068005627971,
+          "new_family_difference": -0.13292393165144967,
+          "knn_interpolation_bias": 1.256605390601874,
+          "knn_new_family_bias": -0.13288736837382498,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 6,
+          "estimated_difference": -0.5011342358051123,
+          "interpolation_difference": 0.9878126625087171,
+          "new_family_difference": -0.27509257848505175,
+          "knn_interpolation_bias": 0.6436343449480868,
+          "knn_new_family_bias": -0.35456704553820084,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 7,
+          "estimated_difference": -0.19357060396137338,
+          "interpolation_difference": 0.518150673539931,
+          "new_family_difference": -0.19272127237093928,
+          "knn_interpolation_bias": 0.6373681576551506,
+          "knn_new_family_bias": -0.4369164919729551,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 8,
+          "estimated_difference": -0.11669162597173743,
+          "interpolation_difference": 0.6128090910198745,
+          "new_family_difference": -0.2264538318217031,
+          "knn_interpolation_bias": 1.1969794816202861,
+          "knn_new_family_bias": 0.33408383859958857,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 9,
+          "estimated_difference": -0.24865542384284423,
+          "interpolation_difference": 0.7829629317211735,
+          "new_family_difference": -0.183232772150145,
+          "knn_interpolation_bias": 1.248813046576585,
+          "knn_new_family_bias": 0.009034711596176415,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 10,
+          "estimated_difference": -0.4290647186573282,
+          "interpolation_difference": 0.8860276195812593,
+          "new_family_difference": -0.2873373269600681,
+          "knn_interpolation_bias": 0.6076024688273081,
+          "knn_new_family_bias": -0.23366022403676356,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 11,
+          "estimated_difference": -0.3298235970732608,
+          "interpolation_difference": 0.985223464529625,
+          "new_family_difference": -0.31256583474814237,
+          "knn_interpolation_bias": 1.0205499354036678,
+          "knn_new_family_bias": 0.09029696454250624,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 12,
+          "estimated_difference": -0.23800015370429595,
+          "interpolation_difference": 0.9817329984175944,
+          "new_family_difference": -0.25237747078797845,
+          "knn_interpolation_bias": 1.248477822099534,
+          "knn_new_family_bias": -0.032451659823380385,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 13,
+          "estimated_difference": -0.38914662542965917,
+          "interpolation_difference": 1.276229353063802,
+          "new_family_difference": -0.37905117291924695,
+          "knn_interpolation_bias": 0.6175154065288135,
+          "knn_new_family_bias": -0.3959221787307883,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 14,
+          "estimated_difference": -0.05036353319925624,
+          "interpolation_difference": 0.7038090795099718,
+          "new_family_difference": -0.19709374709715233,
+          "knn_interpolation_bias": 1.1975530414284843,
+          "knn_new_family_bias": 0.28453186138099307,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 15,
+          "estimated_difference": -0.13096686932401758,
+          "interpolation_difference": 0.5486572561933876,
+          "new_family_difference": -0.17520995098687386,
+          "knn_interpolation_bias": 1.7631735744046628,
+          "knn_new_family_bias": 0.6241932758986919,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 16,
+          "estimated_difference": -0.1304027516859596,
+          "interpolation_difference": 0.09814990149301539,
+          "new_family_difference": -0.1343806659869866,
+          "knn_interpolation_bias": 0.765753208089232,
+          "knn_new_family_bias": -0.48640954423885496,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 17,
+          "estimated_difference": -0.1555234797372349,
+          "interpolation_difference": 0.6566501862170713,
+          "new_family_difference": -0.21075411980138226,
+          "knn_interpolation_bias": 1.0090702572571568,
+          "knn_new_family_bias": 0.00866016805206593,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 18,
+          "estimated_difference": -0.4344800419201802,
+          "interpolation_difference": 1.127942287345102,
+          "new_family_difference": -0.24515131047687166,
+          "knn_interpolation_bias": 0.7516927144486114,
+          "knn_new_family_bias": -0.4130447408713851,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 19,
+          "estimated_difference": -0.2193421214894662,
+          "interpolation_difference": 0.6557548716063035,
+          "new_family_difference": -0.2507356900404254,
+          "knn_interpolation_bias": 1.3675982726396296,
+          "knn_new_family_bias": 0.6091547992712862,
+          "test_seen_family_fraction": 0.0
+        }
+      ]
+    },
+    {
+      "method": "oracle_family_holdout",
+      "instances": 20,
+      "interpolation_ranking_agreement": 0,
+      "new_family_ranking_agreement": 20,
+      "knn_interpolation_bias": 0.8949452597167881,
+      "knn_new_family_bias": -0.10400457198990928,
+      "values": [
+        {
+          "seed": 0,
+          "estimated_difference": -0.20248573097487776,
+          "interpolation_difference": 1.0141357995436295,
+          "new_family_difference": -0.30315425905912496,
+          "knn_interpolation_bias": 1.2587678949348184,
+          "knn_new_family_bias": 0.0657842478585513,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 1,
+          "estimated_difference": -0.07370669125651963,
+          "interpolation_difference": 0.38836744804658263,
+          "new_family_difference": -0.20162883177856328,
+          "knn_interpolation_bias": 1.341526776735672,
+          "knn_new_family_bias": 0.8319392129150451,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 2,
+          "estimated_difference": -0.16098392518594595,
+          "interpolation_difference": 0.5074670315310472,
+          "new_family_difference": -0.17390520882959426,
+          "knn_interpolation_bias": 1.096336891239556,
+          "knn_new_family_bias": 0.18182215986690053,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 3,
+          "estimated_difference": -0.3727179109560159,
+          "interpolation_difference": 0.7424005474200355,
+          "new_family_difference": -0.20769710650534434,
+          "knn_interpolation_bias": 0.574717623079543,
+          "knn_new_family_bias": -0.24160099705492843,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 4,
+          "estimated_difference": -0.5276607250799671,
+          "interpolation_difference": 0.9609066106963993,
+          "new_family_difference": -0.2529291450164606,
+          "knn_interpolation_bias": 0.20818702113092025,
+          "knn_new_family_bias": -0.6802053524880787,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 5,
+          "estimated_difference": -0.25610052222615187,
+          "interpolation_difference": 0.5703231884346123,
+          "new_family_difference": -0.14324191344858583,
+          "knn_interpolation_bias": 0.22659344073138632,
+          "knn_new_family_bias": -1.1540608693399075,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 6,
+          "estimated_difference": -0.3156666543222495,
+          "interpolation_difference": 1.0279979498790868,
+          "new_family_difference": -0.24369234092004977,
+          "knn_interpolation_bias": 1.2475781920188,
+          "knn_new_family_bias": 0.22709608325230857,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 7,
+          "estimated_difference": -0.35169261928036866,
+          "interpolation_difference": 0.6066072831440787,
+          "new_family_difference": -0.20427118616031015,
+          "knn_interpolation_bias": 0.37568594857601,
+          "knn_new_family_bias": -0.6851896411157861,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 8,
+          "estimated_difference": -0.2313860715693148,
+          "interpolation_difference": 0.6477357267131956,
+          "new_family_difference": -0.23793842056321424,
+          "knn_interpolation_bias": 0.5644132057881879,
+          "knn_new_family_bias": -0.2991041479406402,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 9,
+          "estimated_difference": -0.30026869414113166,
+          "interpolation_difference": 0.8212122064753626,
+          "new_family_difference": -0.20784417649254827,
+          "knn_interpolation_bias": 0.6316087059155671,
+          "knn_new_family_bias": -0.6384181562931464,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 10,
+          "estimated_difference": -0.23245882783480143,
+          "interpolation_difference": 0.7531869002214229,
+          "new_family_difference": -0.26777171900932006,
+          "knn_interpolation_bias": 1.0771744347651622,
+          "knn_new_family_bias": 0.2775105333433232,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 11,
+          "estimated_difference": -0.1801501757381163,
+          "interpolation_difference": 0.8290976294902155,
+          "new_family_difference": -0.27653016342196945,
+          "knn_interpolation_bias": 1.2560184933953158,
+          "knn_new_family_bias": 0.38559081780399396,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 12,
+          "estimated_difference": -0.21656260787695625,
+          "interpolation_difference": 0.9840666577378394,
+          "new_family_difference": -0.26968997695987085,
+          "knn_interpolation_bias": 0.7033865633612497,
+          "knn_new_family_bias": -0.6338599287207523,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 13,
+          "estimated_difference": -0.37066888184262137,
+          "interpolation_difference": 1.066779814417231,
+          "new_family_difference": -0.29372285067286885,
+          "knn_interpolation_bias": 1.3413525769623549,
+          "knn_new_family_bias": 0.3717159388853335,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 14,
+          "estimated_difference": -0.2640013587378227,
+          "interpolation_difference": 0.9097212433493835,
+          "new_family_difference": -0.2323974058376539,
+          "knn_interpolation_bias": 0.43691036031795183,
+          "knn_new_family_bias": -0.44698479761310783,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 15,
+          "estimated_difference": -0.25518973213658347,
+          "interpolation_difference": 0.7349780122617862,
+          "new_family_difference": -0.19207686446191197,
+          "knn_interpolation_bias": 1.2474029104628592,
+          "knn_new_family_bias": 0.08265802945164813,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 16,
+          "estimated_difference": -0.04931683874618065,
+          "interpolation_difference": 0.23824255578904863,
+          "new_family_difference": -0.13870564131141316,
+          "knn_interpolation_bias": 1.071876917633101,
+          "knn_new_family_bias": -0.19826463374323833,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 17,
+          "estimated_difference": -0.13196349846535682,
+          "interpolation_difference": 0.19755973024780982,
+          "new_family_difference": -0.14746234284141035,
+          "knn_interpolation_bias": 0.8350133233065582,
+          "knn_new_family_bias": -0.06547496604315794,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 18,
+          "estimated_difference": -0.20688076340628925,
+          "interpolation_difference": 0.9403132339735734,
+          "new_family_difference": -0.2027626469047239,
+          "knn_interpolation_bias": 1.6995580504050356,
+          "knn_new_family_bias": 0.5805709116653048,
+          "test_seen_family_fraction": 0.0
+        },
+        {
+          "seed": 19,
+          "estimated_difference": -0.3697046951129881,
+          "interpolation_difference": 0.7310901424742975,
+          "new_family_difference": -0.26451190748494224,
+          "knn_interpolation_bias": 0.7047958635757103,
+          "knn_new_family_bias": -0.041615884487851806,
+          "test_seen_family_fraction": 0.0
+        }
+      ]
+    }
+  ],
+  "fidelity": [
+    {
+      "power": 1,
+      "rank": 32,
+      "comparisons": 90,
+      "max_error": 0.05993527041529933
+    },
+    {
+      "power": 1,
+      "rank": 64,
+      "comparisons": 90,
+      "max_error": 0.03228697072541616
+    },
+    {
+      "power": 1,
+      "rank": 128,
+      "comparisons": 90,
+      "max_error": 0.016525812530920954
+    },
+    {
+      "power": 1,
+      "rank": 256,
+      "comparisons": 90,
+      "max_error": 0.006998631061880001
+    },
+    {
+      "power": 1,
+      "rank": 512,
+      "comparisons": 90,
+      "max_error": 0.0027158912425131352
+    },
+    {
+      "power": 3,
+      "rank": 32,
+      "comparisons": 90,
+      "max_error": 0.22592412323677757
+    },
+    {
+      "power": 3,
+      "rank": 64,
+      "comparisons": 90,
+      "max_error": 0.20299355517779277
+    },
+    {
+      "power": 3,
+      "rank": 128,
+      "comparisons": 90,
+      "max_error": 0.1689096833349446
+    },
+    {
+      "power": 3,
+      "rank": 256,
+      "comparisons": 90,
+      "max_error": 0.1367007875988017
+    },
+    {
+      "power": 3,
+      "rank": 512,
+      "comparisons": 90,
+      "max_error": 0.09358238431869004
+    }
+  ],
+  "frontier": [
+    {
+      "dataset": "moleculenet_freesolv",
+      "seed": 0,
+      "method": "repaired_graph",
+      "degree": 16,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.5600042827427387,
+      "global_relative": 0.5650446025210261,
+      "mean_nearest": 0.19621706649195403,
+      "counts": [
+        514,
+        64,
+        64
+      ],
+      "parent_case": "graph__moleculenet_freesolv__k16__s0"
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "seed": 0,
+      "method": "repaired_graph",
+      "degree": 32,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.49908078648149967,
+      "global_relative": 0.5441736424426538,
+      "mean_nearest": 0.19330732233356684,
+      "counts": [
+        514,
+        64,
+        64
+      ],
+      "parent_case": "graph__moleculenet_freesolv__k32__s0"
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "seed": 0,
+      "method": "repaired_graph",
+      "degree": 128,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.8602720331400633,
+      "global_relative": 0.4340349359420923,
+      "mean_nearest": 0.21142122126184404,
+      "counts": [
+        514,
+        64,
+        64
+      ],
+      "parent_case": "graph__moleculenet_freesolv__k128__s0"
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "seed": 0,
+      "method": "plain",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.2153380811214447,
+      "global_relative": 0.4196832984659153,
+      "mean_nearest": 0.36621333786752075,
+      "counts": [
+        514,
+        64,
+        64
+      ],
+      "parent_case": "frontier__moleculenet_freesolv__plain__s0"
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "seed": 0,
+      "method": "combined",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.41891794465482235,
+      "global_relative": 0.5054842339415389,
+      "mean_nearest": 0.26615071448031813,
+      "counts": [
+        514,
+        64,
+        64
+      ],
+      "parent_case": "frontier__moleculenet_freesolv__combined__s0"
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "seed": 1,
+      "method": "repaired_graph",
+      "degree": 16,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.4811808653175831,
+      "global_relative": 0.5655849247194766,
+      "mean_nearest": 0.17107516597025096,
+      "counts": [
+        514,
+        64,
+        64
+      ],
+      "parent_case": "graph__moleculenet_freesolv__k16__s1"
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "seed": 1,
+      "method": "repaired_graph",
+      "degree": 32,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.5321699678897858,
+      "global_relative": 0.5422684358831604,
+      "mean_nearest": 0.19287329458165914,
+      "counts": [
+        514,
+        64,
+        64
+      ],
+      "parent_case": "graph__moleculenet_freesolv__k32__s1"
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "seed": 1,
+      "method": "repaired_graph",
+      "degree": 128,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.9106504712253809,
+      "global_relative": 0.43743276560851946,
+      "mean_nearest": 0.20113892934750766,
+      "counts": [
+        514,
+        64,
+        64
+      ],
+      "parent_case": "graph__moleculenet_freesolv__k128__s1"
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "seed": 1,
+      "method": "plain",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.1975783295929432,
+      "global_relative": 0.42032834023049825,
+      "mean_nearest": 0.391763276187703,
+      "counts": [
+        514,
+        64,
+        64
+      ],
+      "parent_case": "frontier__moleculenet_freesolv__plain__s1"
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "seed": 1,
+      "method": "combined",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.4340124037116766,
+      "global_relative": 0.5008146259832372,
+      "mean_nearest": 0.27606639929581434,
+      "counts": [
+        514,
+        64,
+        64
+      ],
+      "parent_case": "frontier__moleculenet_freesolv__combined__s1"
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "seed": 2,
+      "method": "repaired_graph",
+      "degree": 16,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.4814360532909632,
+      "global_relative": 0.5617260749769195,
+      "mean_nearest": 0.17917163530364633,
+      "counts": [
+        514,
+        64,
+        64
+      ],
+      "parent_case": "graph__moleculenet_freesolv__k16__s2"
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "seed": 2,
+      "method": "repaired_graph",
+      "degree": 32,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.5554450042545795,
+      "global_relative": 0.5510953658098545,
+      "mean_nearest": 0.19411864294670522,
+      "counts": [
+        514,
+        64,
+        64
+      ],
+      "parent_case": "graph__moleculenet_freesolv__k32__s2"
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "seed": 2,
+      "method": "repaired_graph",
+      "degree": 128,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.7888106219470501,
+      "global_relative": 0.43902029132202314,
+      "mean_nearest": 0.21187554113566875,
+      "counts": [
+        514,
+        64,
+        64
+      ],
+      "parent_case": "graph__moleculenet_freesolv__k128__s2"
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "seed": 2,
+      "method": "plain",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.3053486440330744,
+      "global_relative": 0.4199109895788119,
+      "mean_nearest": 0.21379141532815993,
+      "counts": [
+        514,
+        64,
+        64
+      ],
+      "parent_case": "frontier__moleculenet_freesolv__plain__s2"
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "seed": 2,
+      "method": "combined",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.31358908489346504,
+      "global_relative": 0.5009712359990485,
+      "mean_nearest": 0.28026005590800196,
+      "counts": [
+        514,
+        64,
+        64
+      ],
+      "parent_case": "frontier__moleculenet_freesolv__combined__s2"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 0,
+      "method": "repaired_graph",
+      "degree": 16,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.5738884191960096,
+      "global_relative": 0.6853120615263546,
+      "mean_nearest": 0.20896079118496605,
+      "counts": [
+        904,
+        112,
+        112
+      ],
+      "parent_case": "graph__moleculenet_esol__k16__s0"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 0,
+      "method": "repaired_graph",
+      "degree": 32,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.6318516004830599,
+      "global_relative": 0.6885222131806972,
+      "mean_nearest": 0.21182145803634608,
+      "counts": [
+        904,
+        112,
+        112
+      ],
+      "parent_case": "graph__moleculenet_esol__k32__s0"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 0,
+      "method": "repaired_graph",
+      "degree": 128,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 1.3736934754997492,
+      "global_relative": 0.5668503828826723,
+      "mean_nearest": 0.21633362437465362,
+      "counts": [
+        904,
+        112,
+        112
+      ],
+      "parent_case": "graph__moleculenet_esol__k128__s0"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 0,
+      "method": "plain",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.2928038649260998,
+      "global_relative": 0.5264618657883622,
+      "mean_nearest": 0.2691303591376969,
+      "counts": [
+        904,
+        112,
+        112
+      ],
+      "parent_case": "frontier__moleculenet_esol__plain__s0"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 0,
+      "method": "combined",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.6223270427435637,
+      "global_relative": 0.6471369769924925,
+      "mean_nearest": 0.2682250249199569,
+      "counts": [
+        904,
+        112,
+        112
+      ],
+      "parent_case": "frontier__moleculenet_esol__combined__s0"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 1,
+      "method": "repaired_graph",
+      "degree": 16,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.5294328853487968,
+      "global_relative": 0.7422993246985552,
+      "mean_nearest": 0.23513439488885676,
+      "counts": [
+        903,
+        112,
+        113
+      ],
+      "parent_case": "graph__moleculenet_esol__k16__s1"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 1,
+      "method": "repaired_graph",
+      "degree": 32,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.9371722787618637,
+      "global_relative": 0.6907792899623579,
+      "mean_nearest": 0.2021455410202699,
+      "counts": [
+        904,
+        112,
+        112
+      ],
+      "parent_case": "graph__moleculenet_esol__k32__s1"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 1,
+      "method": "repaired_graph",
+      "degree": 128,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.9822050034999847,
+      "global_relative": 0.5662562622953968,
+      "mean_nearest": 0.21645465100716269,
+      "counts": [
+        904,
+        112,
+        112
+      ],
+      "parent_case": "graph__moleculenet_esol__k128__s1"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 1,
+      "method": "plain",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.31911137141287327,
+      "global_relative": 0.5262747495030778,
+      "mean_nearest": 0.2715235448974584,
+      "counts": [
+        904,
+        112,
+        112
+      ],
+      "parent_case": "frontier__moleculenet_esol__plain__s1"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 1,
+      "method": "combined",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.43454718589782715,
+      "global_relative": 0.6338328300439862,
+      "mean_nearest": 0.2881355269679001,
+      "counts": [
+        904,
+        112,
+        112
+      ],
+      "parent_case": "frontier__moleculenet_esol__combined__s1"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 2,
+      "method": "repaired_graph",
+      "degree": 16,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.5895353481173515,
+      "global_relative": 0.729926018999884,
+      "mean_nearest": 0.1859580734744668,
+      "counts": [
+        904,
+        112,
+        112
+      ],
+      "parent_case": "graph__moleculenet_esol__k16__s2"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 2,
+      "method": "repaired_graph",
+      "degree": 32,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.610854335129261,
+      "global_relative": 0.6641554605587278,
+      "mean_nearest": 0.20416670512141927,
+      "counts": [
+        904,
+        112,
+        112
+      ],
+      "parent_case": "graph__moleculenet_esol__k32__s2"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 2,
+      "method": "repaired_graph",
+      "degree": 128,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 1.539978327229619,
+      "global_relative": 0.5681570716183623,
+      "mean_nearest": 0.30347570178232025,
+      "counts": [
+        904,
+        112,
+        112
+      ],
+      "parent_case": "graph__moleculenet_esol__k128__s2"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 2,
+      "method": "plain",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.32369815558195114,
+      "global_relative": 0.5268213726656039,
+      "mean_nearest": 0.3547473507268088,
+      "counts": [
+        904,
+        112,
+        112
+      ],
+      "parent_case": "frontier__moleculenet_esol__plain__s2"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 2,
+      "method": "combined",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.3841614406555891,
+      "global_relative": 0.6368314975050858,
+      "mean_nearest": 0.27392210265887634,
+      "counts": [
+        904,
+        112,
+        112
+      ],
+      "parent_case": "frontier__moleculenet_esol__combined__s2"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 0,
+      "method": "repaired_graph",
+      "degree": 16,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.8423759415745735,
+      "global_relative": 0.9491168804637193,
+      "mean_nearest": 0.445578059279605,
+      "counts": [
+        1211,
+        150,
+        152
+      ],
+      "parent_case": "graph__moleculenet_bace__k16__s0"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 0,
+      "method": "repaired_graph",
+      "degree": 32,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.653133898973465,
+      "global_relative": 0.9106353063468031,
+      "mean_nearest": 0.4177264024485026,
+      "counts": [
+        1212,
+        150,
+        151
+      ],
+      "parent_case": "graph__moleculenet_bace__k32__s0"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 0,
+      "method": "repaired_graph",
+      "degree": 128,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 1.4055176712572575,
+      "global_relative": 0.8971439627429252,
+      "mean_nearest": 0.30319865345954894,
+      "counts": [
+        1213,
+        150,
+        150
+      ],
+      "parent_case": "graph__moleculenet_bace__k128__s0"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 0,
+      "method": "plain",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.3479200080037117,
+      "global_relative": 0.7496302175388716,
+      "mean_nearest": 0.5141178651650746,
+      "counts": [
+        1213,
+        150,
+        150
+      ],
+      "parent_case": "frontier__moleculenet_bace__plain__s0"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 0,
+      "method": "combined",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.5888636391609907,
+      "global_relative": 0.7814181148121268,
+      "mean_nearest": 0.27506269375483194,
+      "counts": [
+        1213,
+        150,
+        150
+      ],
+      "parent_case": "frontier__moleculenet_bace__combined__s0"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 1,
+      "method": "repaired_graph",
+      "degree": 16,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.6100576408207417,
+      "global_relative": 0.9387364694817741,
+      "mean_nearest": 0.4010658198595047,
+      "counts": [
+        1213,
+        150,
+        150
+      ],
+      "parent_case": "graph__moleculenet_bace__k16__s1"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 1,
+      "method": "repaired_graph",
+      "degree": 32,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.6778760012239218,
+      "global_relative": 0.9516686925331297,
+      "mean_nearest": 0.421726111471653,
+      "counts": [
+        1213,
+        150,
+        150
+      ],
+      "parent_case": "graph__moleculenet_bace__k32__s1"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 1,
+      "method": "repaired_graph",
+      "degree": 128,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 1.4175415001809597,
+      "global_relative": 0.8960601413137858,
+      "mean_nearest": 0.3065713702638944,
+      "counts": [
+        1213,
+        150,
+        150
+      ],
+      "parent_case": "graph__moleculenet_bace__k128__s1"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 1,
+      "method": "plain",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.35857750475406647,
+      "global_relative": 0.750255721500482,
+      "mean_nearest": 0.5456435042619705,
+      "counts": [
+        1213,
+        150,
+        150
+      ],
+      "parent_case": "frontier__moleculenet_bace__plain__s1"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 1,
+      "method": "combined",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.5996758081018925,
+      "global_relative": 0.7818869455716013,
+      "mean_nearest": 0.28552825431029,
+      "counts": [
+        1213,
+        150,
+        150
+      ],
+      "parent_case": "frontier__moleculenet_bace__combined__s1"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 2,
+      "method": "repaired_graph",
+      "degree": 16,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.6691393945366144,
+      "global_relative": 0.8495634176726947,
+      "mean_nearest": 0.28174223452806474,
+      "counts": [
+        1213,
+        150,
+        150
+      ],
+      "parent_case": "graph__moleculenet_bace__k16__s2"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 2,
+      "method": "repaired_graph",
+      "degree": 32,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.5945968423038721,
+      "global_relative": 0.9114083226010359,
+      "mean_nearest": 0.25812798251708347,
+      "counts": [
+        1213,
+        150,
+        150
+      ],
+      "parent_case": "graph__moleculenet_bace__k32__s2"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 2,
+      "method": "repaired_graph",
+      "degree": 128,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 1.1320261117070913,
+      "global_relative": 0.8963868992187527,
+      "mean_nearest": 0.2836773865421613,
+      "counts": [
+        1213,
+        150,
+        150
+      ],
+      "parent_case": "graph__moleculenet_bace__k128__s2"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 2,
+      "method": "plain",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.5008684881031513,
+      "global_relative": 0.75019860595139,
+      "mean_nearest": 0.5368471280733744,
+      "counts": [
+        1213,
+        150,
+        150
+      ],
+      "parent_case": "frontier__moleculenet_bace__plain__s2"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 2,
+      "method": "combined",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.5500252023339272,
+      "global_relative": 0.7834807684684335,
+      "mean_nearest": 0.32152231216430666,
+      "counts": [
+        1213,
+        150,
+        150
+      ],
+      "parent_case": "frontier__moleculenet_bace__combined__s2"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 0,
+      "method": "repaired_graph",
+      "degree": 16,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.7403798662126064,
+      "global_relative": 0.8967941345588899,
+      "mean_nearest": 0.2131980951174651,
+      "counts": [
+        1635,
+        202,
+        202
+      ],
+      "parent_case": "graph__moleculenet_bbbp__k16__s0"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 0,
+      "method": "repaired_graph",
+      "degree": 32,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.870963878929615,
+      "global_relative": 0.8796623801046068,
+      "mean_nearest": 0.21622205027701832,
+      "counts": [
+        1632,
+        205,
+        202
+      ],
+      "parent_case": "graph__moleculenet_bbbp__k32__s0"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 0,
+      "method": "repaired_graph",
+      "degree": 128,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 1.9918563086539507,
+      "global_relative": 0.7309792277698407,
+      "mean_nearest": 0.2291176687962938,
+      "counts": [
+        1635,
+        202,
+        202
+      ],
+      "parent_case": "graph__moleculenet_bbbp__k128__s0"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 0,
+      "method": "plain",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.5067232958972454,
+      "global_relative": 0.6928333947064836,
+      "mean_nearest": 0.2455935335469128,
+      "counts": [
+        1635,
+        202,
+        202
+      ],
+      "parent_case": "frontier__moleculenet_bbbp__plain__s0"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 0,
+      "method": "combined",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.8329754825681448,
+      "global_relative": 0.7434257473338383,
+      "mean_nearest": 0.2762065147704417,
+      "counts": [
+        1635,
+        202,
+        202
+      ],
+      "parent_case": "frontier__moleculenet_bbbp__combined__s0"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 1,
+      "method": "repaired_graph",
+      "degree": 16,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.7580650169402361,
+      "global_relative": 0.9009247926607961,
+      "mean_nearest": 0.22163865449700024,
+      "counts": [
+        1635,
+        202,
+        202
+      ],
+      "parent_case": "graph__moleculenet_bbbp__k16__s1"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 1,
+      "method": "repaired_graph",
+      "degree": 32,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.9174371976405382,
+      "global_relative": 0.8971261915137279,
+      "mean_nearest": 0.21657687119475685,
+      "counts": [
+        1633,
+        204,
+        202
+      ],
+      "parent_case": "graph__moleculenet_bbbp__k32__s1"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 1,
+      "method": "repaired_graph",
+      "degree": 128,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 1.4871667567640543,
+      "global_relative": 0.8808489540687502,
+      "mean_nearest": 0.22961227219588687,
+      "counts": [
+        1635,
+        202,
+        202
+      ],
+      "parent_case": "graph__moleculenet_bbbp__k128__s1"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 1,
+      "method": "plain",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.8080549482256174,
+      "global_relative": 0.6927623400748956,
+      "mean_nearest": 0.3535353836631126,
+      "counts": [
+        1635,
+        202,
+        202
+      ],
+      "parent_case": "frontier__moleculenet_bbbp__plain__s1"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 1,
+      "method": "combined",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.8612930830568075,
+      "global_relative": 0.7486391255774386,
+      "mean_nearest": 0.24166003981660497,
+      "counts": [
+        1635,
+        202,
+        202
+      ],
+      "parent_case": "frontier__moleculenet_bbbp__combined__s1"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 2,
+      "method": "repaired_graph",
+      "degree": 16,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.6508043184876442,
+      "global_relative": 0.8806200333273828,
+      "mean_nearest": 0.21083760527100895,
+      "counts": [
+        1635,
+        202,
+        202
+      ],
+      "parent_case": "graph__moleculenet_bbbp__k16__s2"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 2,
+      "method": "repaired_graph",
+      "degree": 32,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.896038107573986,
+      "global_relative": 0.8834360718656392,
+      "mean_nearest": 0.22850729104610953,
+      "counts": [
+        1635,
+        202,
+        202
+      ],
+      "parent_case": "graph__moleculenet_bbbp__k32__s2"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 2,
+      "method": "repaired_graph",
+      "degree": 128,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 1.8269236404448748,
+      "global_relative": 0.8508005583382592,
+      "mean_nearest": 0.2299473113795318,
+      "counts": [
+        1635,
+        202,
+        202
+      ],
+      "parent_case": "graph__moleculenet_bbbp__k128__s2"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 2,
+      "method": "plain",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 0.4331992957741022,
+      "global_relative": 0.6928106324394427,
+      "mean_nearest": 0.25070165366967123,
+      "counts": [
+        1635,
+        202,
+        202
+      ],
+      "parent_case": "frontier__moleculenet_bbbp__plain__s2"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 2,
+      "method": "combined",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 1.0679220836609602,
+      "global_relative": 0.73986901455508,
+      "mean_nearest": 0.2201966455777978,
+      "counts": [
+        1635,
+        202,
+        202
+      ],
+      "parent_case": "frontier__moleculenet_bbbp__combined__s2"
+    },
+    {
+      "dataset": "moleculenet_lipophilicity",
+      "seed": 0,
+      "method": "repaired_graph",
+      "degree": 16,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 1.2177786715328693,
+      "global_relative": 0.9443645341545316,
+      "mean_nearest": 0.29388968725330555,
+      "counts": [
+        3368,
+        416,
+        416
+      ],
+      "parent_case": "graph__moleculenet_lipophilicity__k16__s0"
+    },
+    {
+      "dataset": "moleculenet_lipophilicity",
+      "seed": 0,
+      "method": "repaired_graph",
+      "degree": 32,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 1.85209577716887,
+      "global_relative": 0.9434968063515558,
+      "mean_nearest": 0.2847154908097134,
+      "counts": [
+        3368,
+        416,
+        416
+      ],
+      "parent_case": "graph__moleculenet_lipophilicity__k32__s0"
+    },
+    {
+      "dataset": "moleculenet_lipophilicity",
+      "seed": 0,
+      "method": "repaired_graph",
+      "degree": 128,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 3.47021446749568,
+      "global_relative": 0.8682503417837995,
+      "mean_nearest": 0.3285818031200996,
+      "counts": [
+        3368,
+        416,
+        416
+      ],
+      "parent_case": "graph__moleculenet_lipophilicity__k128__s0"
+    },
+    {
+      "dataset": "moleculenet_lipophilicity",
+      "seed": 0,
+      "method": "plain",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 1.06284923478961,
+      "global_relative": 0.7941933239788243,
+      "mean_nearest": 0.39925367940360534,
+      "counts": [
+        3368,
+        416,
+        416
+      ],
+      "parent_case": "frontier__moleculenet_lipophilicity__plain__s0"
+    },
+    {
+      "dataset": "moleculenet_lipophilicity",
+      "seed": 0,
+      "method": "combined",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 3.0677596665918827,
+      "global_relative": 0.854717515147506,
+      "mean_nearest": 0.27983363921968984,
+      "counts": [
+        3368,
+        416,
+        416
+      ],
+      "parent_case": "frontier__moleculenet_lipophilicity__combined__s0"
+    },
+    {
+      "dataset": "moleculenet_lipophilicity",
+      "seed": 1,
+      "method": "repaired_graph",
+      "degree": 16,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 1.2027041036635637,
+      "global_relative": 0.9511467689384865,
+      "mean_nearest": 0.28258425964472383,
+      "counts": [
+        3368,
+        416,
+        416
+      ],
+      "parent_case": "graph__moleculenet_lipophilicity__k16__s1"
+    },
+    {
+      "dataset": "moleculenet_lipophilicity",
+      "seed": 1,
+      "method": "repaired_graph",
+      "degree": 32,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 1.6493332404643297,
+      "global_relative": 0.9450470484977574,
+      "mean_nearest": 0.2901510146374886,
+      "counts": [
+        3368,
+        416,
+        416
+      ],
+      "parent_case": "graph__moleculenet_lipophilicity__k32__s1"
+    },
+    {
+      "dataset": "moleculenet_lipophilicity",
+      "seed": 1,
+      "method": "repaired_graph",
+      "degree": 128,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 4.438506405800581,
+      "global_relative": 0.8623716441778068,
+      "mean_nearest": 0.34823054634034634,
+      "counts": [
+        3368,
+        416,
+        416
+      ],
+      "parent_case": "graph__moleculenet_lipophilicity__k128__s1"
+    },
+    {
+      "dataset": "moleculenet_lipophilicity",
+      "seed": 1,
+      "method": "plain",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 1.1057661063969135,
+      "global_relative": 0.7942073859310049,
+      "mean_nearest": 0.4059498057557413,
+      "counts": [
+        3368,
+        416,
+        416
+      ],
+      "parent_case": "frontier__moleculenet_lipophilicity__plain__s1"
+    },
+    {
+      "dataset": "moleculenet_lipophilicity",
+      "seed": 1,
+      "method": "combined",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 2.6953508798033,
+      "global_relative": 0.8651414846494606,
+      "mean_nearest": 0.3254257900138887,
+      "counts": [
+        3368,
+        416,
+        416
+      ],
+      "parent_case": "frontier__moleculenet_lipophilicity__combined__s1"
+    },
+    {
+      "dataset": "moleculenet_lipophilicity",
+      "seed": 2,
+      "method": "repaired_graph",
+      "degree": 16,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 1.2701176982373,
+      "global_relative": 0.9463146600665286,
+      "mean_nearest": 0.30005868875349945,
+      "counts": [
+        3368,
+        416,
+        416
+      ],
+      "parent_case": "graph__moleculenet_lipophilicity__k16__s2"
+    },
+    {
+      "dataset": "moleculenet_lipophilicity",
+      "seed": 2,
+      "method": "repaired_graph",
+      "degree": 32,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 1.6445945780724287,
+      "global_relative": 0.9361100097639123,
+      "mean_nearest": 0.29755588602991057,
+      "counts": [
+        3368,
+        416,
+        416
+      ],
+      "parent_case": "graph__moleculenet_lipophilicity__k32__s2"
+    },
+    {
+      "dataset": "moleculenet_lipophilicity",
+      "seed": 2,
+      "method": "repaired_graph",
+      "degree": 128,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 3.298564488068223,
+      "global_relative": 0.8671636613549218,
+      "mean_nearest": 0.32669671929369754,
+      "counts": [
+        3368,
+        416,
+        416
+      ],
+      "parent_case": "graph__moleculenet_lipophilicity__k128__s2"
+    },
+    {
+      "dataset": "moleculenet_lipophilicity",
+      "seed": 2,
+      "method": "plain",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 1.278000172227621,
+      "global_relative": 0.794415839038577,
+      "mean_nearest": 0.4037414729022063,
+      "counts": [
+        3368,
+        416,
+        416
+      ],
+      "parent_case": "frontier__moleculenet_lipophilicity__plain__s2"
+    },
+    {
+      "dataset": "moleculenet_lipophilicity",
+      "seed": 2,
+      "method": "combined",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 2.621701980009675,
+      "global_relative": 0.8718595913156181,
+      "mean_nearest": 0.28319350827055484,
+      "counts": [
+        3368,
+        416,
+        416
+      ],
+      "parent_case": "frontier__moleculenet_lipophilicity__combined__s2"
+    },
+    {
+      "dataset": "moleculenet_tox21",
+      "seed": 0,
+      "method": "repaired_graph",
+      "degree": 16,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 3.349558712914586,
+      "global_relative": 0.7643929171467153,
+      "mean_nearest": 0.24706357208951826,
+      "counts": [
+        6273,
+        775,
+        775
+      ],
+      "parent_case": "graph__moleculenet_tox21__k16__s0"
+    },
+    {
+      "dataset": "moleculenet_tox21",
+      "seed": 0,
+      "method": "repaired_graph",
+      "degree": 32,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 3.2648352198302746,
+      "global_relative": 0.761711425729574,
+      "mean_nearest": 0.24937477838608527,
+      "counts": [
+        6273,
+        775,
+        775
+      ],
+      "parent_case": "graph__moleculenet_tox21__k32__s0"
+    },
+    {
+      "dataset": "moleculenet_tox21",
+      "seed": 0,
+      "method": "repaired_graph",
+      "degree": 128,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 9.514258751645684,
+      "global_relative": 0.6826693758898329,
+      "mean_nearest": 0.25075002286222675,
+      "counts": [
+        6273,
+        775,
+        775
+      ],
+      "parent_case": "graph__moleculenet_tox21__k128__s0"
+    },
+    {
+      "dataset": "moleculenet_tox21",
+      "seed": 0,
+      "method": "plain",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 2.1776735931634903,
+      "global_relative": 0.5643308900298196,
+      "mean_nearest": 0.3993219142190872,
+      "counts": [
+        6273,
+        775,
+        775
+      ],
+      "parent_case": "frontier__moleculenet_tox21__plain__s0"
+    },
+    {
+      "dataset": "moleculenet_tox21",
+      "seed": 0,
+      "method": "combined",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 4.874943021684885,
+      "global_relative": 0.7038555413922024,
+      "mean_nearest": 0.3106681787246658,
+      "counts": [
+        6273,
+        775,
+        775
+      ],
+      "parent_case": "frontier__moleculenet_tox21__combined__s0"
+    },
+    {
+      "dataset": "moleculenet_tox21",
+      "seed": 1,
+      "method": "repaired_graph",
+      "degree": 16,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 2.8574145678430796,
+      "global_relative": 0.767937042921412,
+      "mean_nearest": 0.24966829098040058,
+      "counts": [
+        6273,
+        775,
+        775
+      ],
+      "parent_case": "graph__moleculenet_tox21__k16__s1"
+    },
+    {
+      "dataset": "moleculenet_tox21",
+      "seed": 1,
+      "method": "repaired_graph",
+      "degree": 32,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 3.285184210166335,
+      "global_relative": 0.7672886200602308,
+      "mean_nearest": 0.24520215746856505,
+      "counts": [
+        6273,
+        775,
+        775
+      ],
+      "parent_case": "graph__moleculenet_tox21__k32__s1"
+    },
+    {
+      "dataset": "moleculenet_tox21",
+      "seed": 1,
+      "method": "repaired_graph",
+      "degree": 128,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 8.396369826048613,
+      "global_relative": 0.6860684943490376,
+      "mean_nearest": 0.24959131027902326,
+      "counts": [
+        6273,
+        775,
+        775
+      ],
+      "parent_case": "graph__moleculenet_tox21__k128__s1"
+    },
+    {
+      "dataset": "moleculenet_tox21",
+      "seed": 1,
+      "method": "plain",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 1.8848646711558104,
+      "global_relative": 0.5645632666077414,
+      "mean_nearest": 0.39610592659442656,
+      "counts": [
+        6273,
+        775,
+        775
+      ],
+      "parent_case": "frontier__moleculenet_tox21__plain__s1"
+    },
+    {
+      "dataset": "moleculenet_tox21",
+      "seed": 1,
+      "method": "combined",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 4.837746657431126,
+      "global_relative": 0.708137875475363,
+      "mean_nearest": 0.3080265356359943,
+      "counts": [
+        6273,
+        775,
+        775
+      ],
+      "parent_case": "frontier__moleculenet_tox21__combined__s1"
+    },
+    {
+      "dataset": "moleculenet_tox21",
+      "seed": 2,
+      "method": "repaired_graph",
+      "degree": 16,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 2.9242317508906126,
+      "global_relative": 0.7921252661192191,
+      "mean_nearest": 0.24894451340360027,
+      "counts": [
+        6273,
+        775,
+        775
+      ],
+      "parent_case": "graph__moleculenet_tox21__k16__s2"
+    },
+    {
+      "dataset": "moleculenet_tox21",
+      "seed": 2,
+      "method": "repaired_graph",
+      "degree": 32,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 3.5090014450252056,
+      "global_relative": 0.7621660180801554,
+      "mean_nearest": 0.2459187318144306,
+      "counts": [
+        6273,
+        775,
+        775
+      ],
+      "parent_case": "graph__moleculenet_tox21__k32__s2"
+    },
+    {
+      "dataset": "moleculenet_tox21",
+      "seed": 2,
+      "method": "repaired_graph",
+      "degree": 128,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 9.966156791895628,
+      "global_relative": 0.6825820286204554,
+      "mean_nearest": 0.2525123458523904,
+      "counts": [
+        6273,
+        775,
+        775
+      ],
+      "parent_case": "graph__moleculenet_tox21__k128__s2"
+    },
+    {
+      "dataset": "moleculenet_tox21",
+      "seed": 2,
+      "method": "plain",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 2.1581318993121386,
+      "global_relative": 0.5641912024394202,
+      "mean_nearest": 0.32094870346688453,
+      "counts": [
+        6273,
+        775,
+        775
+      ],
+      "parent_case": "frontier__moleculenet_tox21__plain__s2"
+    },
+    {
+      "dataset": "moleculenet_tox21",
+      "seed": 2,
+      "method": "combined",
+      "degree": null,
+      "cluster_policy": null,
+      "solver_seconds": null,
+      "seconds": 4.6368877328932285,
+      "global_relative": 0.7086822378110637,
+      "mean_nearest": 0.30424879711481834,
+      "counts": [
+        6273,
+        775,
+        775
+      ],
+      "parent_case": "frontier__moleculenet_tox21__combined__s2"
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "seed": 0,
+      "method": "datasail",
+      "degree": null,
+      "cluster_policy": "fine",
+      "solver_seconds": 60,
+      "seconds": 5.548983082175255,
+      "global_relative": 0.5097424658104179,
+      "mean_nearest": 0.17835722165921378,
+      "counts": [
+        516,
+        63,
+        63
+      ],
+      "parent_case": "datasail__moleculenet_freesolv__fine__t60"
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "seed": 0,
+      "method": "matched_counts",
+      "degree": null,
+      "cluster_policy": "fine",
+      "solver_seconds": 60,
+      "seconds": 0.21211088448762894,
+      "global_relative": 0.41546477678543847,
+      "mean_nearest": 0.3676972435343833,
+      "counts": [
+        516,
+        63,
+        63
+      ],
+      "parent_case": "datasail__moleculenet_freesolv__fine__t60"
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "seed": 0,
+      "method": "matched_native_groups",
+      "degree": null,
+      "cluster_policy": "fine",
+      "solver_seconds": 60,
+      "seconds": 0.23320643603801727,
+      "global_relative": 0.5737407895171351,
+      "mean_nearest": 0.28485643840025343,
+      "counts": [
+        516,
+        63,
+        63
+      ],
+      "parent_case": "datasail__moleculenet_freesolv__fine__t60"
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "seed": 0,
+      "method": "datasail",
+      "degree": null,
+      "cluster_policy": "fine",
+      "solver_seconds": 300,
+      "seconds": 5.66954954713583,
+      "global_relative": 0.5097424658104179,
+      "mean_nearest": 0.17835722165921378,
+      "counts": [
+        516,
+        63,
+        63
+      ],
+      "parent_case": "datasail__moleculenet_freesolv__fine__t300"
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "seed": 0,
+      "method": "matched_counts",
+      "degree": null,
+      "cluster_policy": "fine",
+      "solver_seconds": 300,
+      "seconds": 0.20668365247547626,
+      "global_relative": 0.41546477678543847,
+      "mean_nearest": 0.3676972435343833,
+      "counts": [
+        516,
+        63,
+        63
+      ],
+      "parent_case": "datasail__moleculenet_freesolv__fine__t300"
+    },
+    {
+      "dataset": "moleculenet_freesolv",
+      "seed": 0,
+      "method": "matched_native_groups",
+      "degree": null,
+      "cluster_policy": "fine",
+      "solver_seconds": 300,
+      "seconds": 0.22252821922302246,
+      "global_relative": 0.5737407895171351,
+      "mean_nearest": 0.28485643840025343,
+      "counts": [
+        516,
+        63,
+        63
+      ],
+      "parent_case": "datasail__moleculenet_freesolv__fine__t300"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 0,
+      "method": "datasail",
+      "degree": null,
+      "cluster_policy": "medium",
+      "solver_seconds": 60,
+      "seconds": 4.553053148090839,
+      "global_relative": 0.6484198230801376,
+      "mean_nearest": 0.27273722543372764,
+      "counts": [
+        906,
+        111,
+        111
+      ],
+      "parent_case": "datasail__moleculenet_esol__medium__t60"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 0,
+      "method": "matched_counts",
+      "degree": null,
+      "cluster_policy": "medium",
+      "solver_seconds": 60,
+      "seconds": 0.31862451508641243,
+      "global_relative": 0.5244122182084017,
+      "mean_nearest": 0.27006239678945626,
+      "counts": [
+        906,
+        111,
+        111
+      ],
+      "parent_case": "datasail__moleculenet_esol__medium__t60"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 0,
+      "method": "matched_native_groups",
+      "degree": null,
+      "cluster_policy": "medium",
+      "solver_seconds": 60,
+      "seconds": 0.39409044943749905,
+      "global_relative": 0.6635828181673904,
+      "mean_nearest": 0.2863613822170206,
+      "counts": [
+        906,
+        111,
+        111
+      ],
+      "parent_case": "datasail__moleculenet_esol__medium__t60"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 0,
+      "method": "datasail",
+      "degree": null,
+      "cluster_policy": "medium",
+      "solver_seconds": 300,
+      "seconds": 7.680614493787289,
+      "global_relative": 0.6484198230801376,
+      "mean_nearest": 0.27273722543372764,
+      "counts": [
+        906,
+        111,
+        111
+      ],
+      "parent_case": "datasail__moleculenet_esol__medium__t300"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 0,
+      "method": "matched_counts",
+      "degree": null,
+      "cluster_policy": "medium",
+      "solver_seconds": 300,
+      "seconds": 0.4835868086665869,
+      "global_relative": 0.5244122182084017,
+      "mean_nearest": 0.27006239678945626,
+      "counts": [
+        906,
+        111,
+        111
+      ],
+      "parent_case": "datasail__moleculenet_esol__medium__t300"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 0,
+      "method": "matched_native_groups",
+      "degree": null,
+      "cluster_policy": "medium",
+      "solver_seconds": 300,
+      "seconds": 0.5954527445137501,
+      "global_relative": 0.6635828181673904,
+      "mean_nearest": 0.2863613822170206,
+      "counts": [
+        906,
+        111,
+        111
+      ],
+      "parent_case": "datasail__moleculenet_esol__medium__t300"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 0,
+      "method": "datasail",
+      "degree": null,
+      "cluster_policy": "fine",
+      "solver_seconds": 60,
+      "seconds": 66.37232966721058,
+      "global_relative": 0.6066007536589504,
+      "mean_nearest": 0.2647881910607621,
+      "counts": [
+        906,
+        111,
+        111
+      ],
+      "parent_case": "datasail__moleculenet_esol__fine__t60"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 0,
+      "method": "matched_counts",
+      "degree": null,
+      "cluster_policy": "fine",
+      "solver_seconds": 60,
+      "seconds": 0.30480284057557583,
+      "global_relative": 0.5244122182084017,
+      "mean_nearest": 0.27006239678945626,
+      "counts": [
+        906,
+        111,
+        111
+      ],
+      "parent_case": "datasail__moleculenet_esol__fine__t60"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 0,
+      "method": "matched_native_groups",
+      "degree": null,
+      "cluster_policy": "fine",
+      "solver_seconds": 60,
+      "seconds": 0.40573454089462757,
+      "global_relative": 0.6520142919655822,
+      "mean_nearest": 0.25971160808930527,
+      "counts": [
+        906,
+        111,
+        111
+      ],
+      "parent_case": "datasail__moleculenet_esol__fine__t60"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 0,
+      "method": "datasail",
+      "degree": null,
+      "cluster_policy": "fine",
+      "solver_seconds": 300,
+      "seconds": 95.10677838884294,
+      "global_relative": 0.5968149469495541,
+      "mean_nearest": 0.29587961659506634,
+      "counts": [
+        906,
+        111,
+        111
+      ],
+      "parent_case": "datasail__moleculenet_esol__fine__t300"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 0,
+      "method": "matched_counts",
+      "degree": null,
+      "cluster_policy": "fine",
+      "solver_seconds": 300,
+      "seconds": 0.2992187552154064,
+      "global_relative": 0.5244122182084017,
+      "mean_nearest": 0.27006239678945626,
+      "counts": [
+        906,
+        111,
+        111
+      ],
+      "parent_case": "datasail__moleculenet_esol__fine__t300"
+    },
+    {
+      "dataset": "moleculenet_esol",
+      "seed": 0,
+      "method": "matched_native_groups",
+      "degree": null,
+      "cluster_policy": "fine",
+      "solver_seconds": 300,
+      "seconds": 0.4350791834294796,
+      "global_relative": 0.6520142919655822,
+      "mean_nearest": 0.25971160808930527,
+      "counts": [
+        906,
+        111,
+        111
+      ],
+      "parent_case": "datasail__moleculenet_esol__fine__t300"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 0,
+      "method": "datasail",
+      "degree": null,
+      "cluster_policy": "medium",
+      "solver_seconds": 60,
+      "seconds": 28.922778191044927,
+      "global_relative": 0.7671007147960358,
+      "mean_nearest": 0.36632296893020605,
+      "counts": [
+        1215,
+        149,
+        149
+      ],
+      "parent_case": "datasail__moleculenet_bace__medium__t60"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 0,
+      "method": "matched_counts",
+      "degree": null,
+      "cluster_policy": "medium",
+      "solver_seconds": 60,
+      "seconds": 1.5252543818205595,
+      "global_relative": 0.7496823932734571,
+      "mean_nearest": 0.5252412717614398,
+      "counts": [
+        1215,
+        149,
+        149
+      ],
+      "parent_case": "datasail__moleculenet_bace__medium__t60"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 0,
+      "method": "matched_native_groups",
+      "degree": null,
+      "cluster_policy": "medium",
+      "solver_seconds": 60,
+      "seconds": 0.5050308872014284,
+      "global_relative": 0.7785753735544367,
+      "mean_nearest": 0.3033220564959033,
+      "counts": [
+        1215,
+        149,
+        149
+      ],
+      "parent_case": "datasail__moleculenet_bace__medium__t60"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 0,
+      "method": "datasail",
+      "degree": null,
+      "cluster_policy": "medium",
+      "solver_seconds": 300,
+      "seconds": 20.962808173149824,
+      "global_relative": 0.7671007147960358,
+      "mean_nearest": 0.36632296893020605,
+      "counts": [
+        1215,
+        149,
+        149
+      ],
+      "parent_case": "datasail__moleculenet_bace__medium__t300"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 0,
+      "method": "matched_counts",
+      "degree": null,
+      "cluster_policy": "medium",
+      "solver_seconds": 300,
+      "seconds": 0.4333780091255903,
+      "global_relative": 0.7496823932734571,
+      "mean_nearest": 0.5252412717614398,
+      "counts": [
+        1215,
+        149,
+        149
+      ],
+      "parent_case": "datasail__moleculenet_bace__medium__t300"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 0,
+      "method": "matched_native_groups",
+      "degree": null,
+      "cluster_policy": "medium",
+      "solver_seconds": 300,
+      "seconds": 0.4562722258269787,
+      "global_relative": 0.7785753735544367,
+      "mean_nearest": 0.3033220564959033,
+      "counts": [
+        1215,
+        149,
+        149
+      ],
+      "parent_case": "datasail__moleculenet_bace__medium__t300"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 0,
+      "method": "datasail",
+      "degree": null,
+      "cluster_policy": "fine",
+      "solver_seconds": 60,
+      "seconds": 76.58283630758524,
+      "global_relative": 0.8511888607276913,
+      "mean_nearest": 0.48480081828248583,
+      "counts": [
+        1215,
+        149,
+        149
+      ],
+      "parent_case": "datasail__moleculenet_bace__fine__t60"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 0,
+      "method": "matched_counts",
+      "degree": null,
+      "cluster_policy": "fine",
+      "solver_seconds": 60,
+      "seconds": 0.42731640115380287,
+      "global_relative": 0.7496823932734571,
+      "mean_nearest": 0.5252412717614398,
+      "counts": [
+        1215,
+        149,
+        149
+      ],
+      "parent_case": "datasail__moleculenet_bace__fine__t60"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 0,
+      "method": "matched_native_groups",
+      "degree": null,
+      "cluster_policy": "fine",
+      "solver_seconds": 60,
+      "seconds": 0.4828570540994406,
+      "global_relative": 0.7665344054139127,
+      "mean_nearest": 0.4466204927271645,
+      "counts": [
+        1215,
+        149,
+        149
+      ],
+      "parent_case": "datasail__moleculenet_bace__fine__t60"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 0,
+      "method": "datasail",
+      "degree": null,
+      "cluster_policy": "fine",
+      "solver_seconds": 300,
+      "seconds": 332.2661115974188,
+      "global_relative": 0.8282541089344018,
+      "mean_nearest": 0.4586565103506882,
+      "counts": [
+        1215,
+        149,
+        149
+      ],
+      "parent_case": "datasail__moleculenet_bace__fine__t300"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 0,
+      "method": "matched_counts",
+      "degree": null,
+      "cluster_policy": "fine",
+      "solver_seconds": 300,
+      "seconds": 0.3519490249454975,
+      "global_relative": 0.7496823932734571,
+      "mean_nearest": 0.5252412717614398,
+      "counts": [
+        1215,
+        149,
+        149
+      ],
+      "parent_case": "datasail__moleculenet_bace__fine__t300"
+    },
+    {
+      "dataset": "moleculenet_bace",
+      "seed": 0,
+      "method": "matched_native_groups",
+      "degree": null,
+      "cluster_policy": "fine",
+      "solver_seconds": 300,
+      "seconds": 0.39126458391547203,
+      "global_relative": 0.7665344054139127,
+      "mean_nearest": 0.4466204927271645,
+      "counts": [
+        1215,
+        149,
+        149
+      ],
+      "parent_case": "datasail__moleculenet_bace__fine__t300"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 0,
+      "method": "datasail",
+      "degree": null,
+      "cluster_policy": "coarse",
+      "solver_seconds": 60,
+      "seconds": 93.57907288894057,
+      "global_relative": 0.5140890543940384,
+      "mean_nearest": 0.13510345754524072,
+      "counts": [
+        1911,
+        98,
+        30
+      ],
+      "parent_case": "datasail__moleculenet_bbbp__coarse__t60"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 0,
+      "method": "matched_counts",
+      "degree": null,
+      "cluster_policy": "coarse",
+      "solver_seconds": 60,
+      "seconds": 0.4176152367144823,
+      "global_relative": 0.4582948649681138,
+      "mean_nearest": 0.16975940776367981,
+      "counts": [
+        1911,
+        98,
+        30
+      ],
+      "parent_case": "datasail__moleculenet_bbbp__coarse__t60"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 0,
+      "method": "matched_native_groups",
+      "degree": null,
+      "cluster_policy": "coarse",
+      "solver_seconds": 60,
+      "seconds": 0.4720067251473665,
+      "global_relative": 0.5140890543940384,
+      "mean_nearest": 0.13510345754524072,
+      "counts": [
+        1911,
+        98,
+        30
+      ],
+      "parent_case": "datasail__moleculenet_bbbp__coarse__t60"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 0,
+      "method": "datasail",
+      "degree": null,
+      "cluster_policy": "coarse",
+      "solver_seconds": 300,
+      "seconds": 51.45751046948135,
+      "global_relative": 0.5140890543940384,
+      "mean_nearest": 0.13510345754524072,
+      "counts": [
+        1911,
+        98,
+        30
+      ],
+      "parent_case": "datasail__moleculenet_bbbp__coarse__t300"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 0,
+      "method": "matched_counts",
+      "degree": null,
+      "cluster_policy": "coarse",
+      "solver_seconds": 300,
+      "seconds": 0.3699812013655901,
+      "global_relative": 0.4582948649681138,
+      "mean_nearest": 0.16975940776367981,
+      "counts": [
+        1911,
+        98,
+        30
+      ],
+      "parent_case": "datasail__moleculenet_bbbp__coarse__t300"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 0,
+      "method": "matched_native_groups",
+      "degree": null,
+      "cluster_policy": "coarse",
+      "solver_seconds": 300,
+      "seconds": 0.3942133206874132,
+      "global_relative": 0.5140890543940384,
+      "mean_nearest": 0.13510345754524072,
+      "counts": [
+        1911,
+        98,
+        30
+      ],
+      "parent_case": "datasail__moleculenet_bbbp__coarse__t300"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 0,
+      "method": "datasail",
+      "degree": null,
+      "cluster_policy": "medium",
+      "solver_seconds": 60,
+      "seconds": 110.789197569713,
+      "global_relative": 0.7447259032742563,
+      "mean_nearest": 0.23515906472185358,
+      "counts": [
+        1637,
+        201,
+        201
+      ],
+      "parent_case": "datasail__moleculenet_bbbp__medium__t60"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 0,
+      "method": "matched_counts",
+      "degree": null,
+      "cluster_policy": "medium",
+      "solver_seconds": 60,
+      "seconds": 6.462849134579301,
+      "global_relative": 0.6918012258245642,
+      "mean_nearest": 0.24582036703231916,
+      "counts": [
+        1637,
+        201,
+        201
+      ],
+      "parent_case": "datasail__moleculenet_bbbp__medium__t60"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 0,
+      "method": "matched_native_groups",
+      "degree": null,
+      "cluster_policy": "medium",
+      "solver_seconds": 60,
+      "seconds": 0.5832933317869902,
+      "global_relative": 0.7490724441274477,
+      "mean_nearest": 0.23918073793029904,
+      "counts": [
+        1637,
+        201,
+        201
+      ],
+      "parent_case": "datasail__moleculenet_bbbp__medium__t60"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 0,
+      "method": "datasail",
+      "degree": null,
+      "cluster_policy": "medium",
+      "solver_seconds": 300,
+      "seconds": 51.31346325390041,
+      "global_relative": 0.7447259032742563,
+      "mean_nearest": 0.23515906472185358,
+      "counts": [
+        1637,
+        201,
+        201
+      ],
+      "parent_case": "datasail__moleculenet_bbbp__medium__t300"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 0,
+      "method": "matched_counts",
+      "degree": null,
+      "cluster_policy": "medium",
+      "solver_seconds": 300,
+      "seconds": 1.5203602388501167,
+      "global_relative": 0.6918012258245642,
+      "mean_nearest": 0.24582036703231916,
+      "counts": [
+        1637,
+        201,
+        201
+      ],
+      "parent_case": "datasail__moleculenet_bbbp__medium__t300"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 0,
+      "method": "matched_native_groups",
+      "degree": null,
+      "cluster_policy": "medium",
+      "solver_seconds": 300,
+      "seconds": 0.5170689448714256,
+      "global_relative": 0.7490724441274477,
+      "mean_nearest": 0.23918073793029904,
+      "counts": [
+        1637,
+        201,
+        201
+      ],
+      "parent_case": "datasail__moleculenet_bbbp__medium__t300"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 0,
+      "method": "datasail",
+      "degree": null,
+      "cluster_policy": "fine",
+      "solver_seconds": 60,
+      "seconds": 124.96016995236278,
+      "global_relative": 0.9156387711642694,
+      "mean_nearest": 0.3012958900370729,
+      "counts": [
+        1614,
+        207,
+        218
+      ],
+      "parent_case": "datasail__moleculenet_bbbp__fine__t60"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 0,
+      "method": "matched_counts",
+      "degree": null,
+      "cluster_policy": "fine",
+      "solver_seconds": 60,
+      "seconds": 0.3712272886186838,
+      "global_relative": 0.7029054810913828,
+      "mean_nearest": 0.2520539838854873,
+      "counts": [
+        1614,
+        207,
+        218
+      ],
+      "parent_case": "datasail__moleculenet_bbbp__fine__t60"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 0,
+      "method": "matched_native_groups",
+      "degree": null,
+      "cluster_policy": "fine",
+      "solver_seconds": 60,
+      "seconds": 0.5292195081710815,
+      "global_relative": 0.7430896681673201,
+      "mean_nearest": 0.23692362714524662,
+      "counts": [
+        1614,
+        207,
+        218
+      ],
+      "parent_case": "datasail__moleculenet_bbbp__fine__t60"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 0,
+      "method": "datasail",
+      "degree": null,
+      "cluster_policy": "fine",
+      "solver_seconds": 300,
+      "seconds": 370.28782642632723,
+      "global_relative": 0.9156387711642694,
+      "mean_nearest": 0.3012958900370729,
+      "counts": [
+        1614,
+        207,
+        218
+      ],
+      "parent_case": "datasail__moleculenet_bbbp__fine__t300"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 0,
+      "method": "matched_counts",
+      "degree": null,
+      "cluster_policy": "fine",
+      "solver_seconds": 300,
+      "seconds": 0.5595877710729837,
+      "global_relative": 0.7029054810913828,
+      "mean_nearest": 0.2520539838854873,
+      "counts": [
+        1614,
+        207,
+        218
+      ],
+      "parent_case": "datasail__moleculenet_bbbp__fine__t300"
+    },
+    {
+      "dataset": "moleculenet_bbbp",
+      "seed": 0,
+      "method": "matched_native_groups",
+      "degree": null,
+      "cluster_policy": "fine",
+      "solver_seconds": 300,
+      "seconds": 0.6396485306322575,
+      "global_relative": 0.7430896681673201,
+      "mean_nearest": 0.23692362714524662,
+      "counts": [
+        1614,
+        207,
+        218
+      ],
+      "parent_case": "datasail__moleculenet_bbbp__fine__t300"
+    }
+  ],
+  "outcomes": [
+    {
+      "name": "groups__moleculenet_freesolv__s0",
+      "status": "ok"
+    },
+    {
+      "name": "groups__moleculenet_freesolv__s1",
+      "status": "ok"
+    },
+    {
+      "name": "groups__moleculenet_freesolv__s2",
+      "status": "ok"
+    },
+    {
+      "name": "groups__moleculenet_esol__s0",
+      "status": "ok"
+    },
+    {
+      "name": "groups__moleculenet_esol__s1",
+      "status": "ok"
+    },
+    {
+      "name": "groups__moleculenet_esol__s2",
+      "status": "ok"
+    },
+    {
+      "name": "groups__moleculenet_bace__s0",
+      "status": "ok"
+    },
+    {
+      "name": "groups__moleculenet_bace__s1",
+      "status": "ok"
+    },
+    {
+      "name": "groups__moleculenet_bace__s2",
+      "status": "ok"
+    },
+    {
+      "name": "groups__moleculenet_bbbp__s0",
+      "status": "ok"
+    },
+    {
+      "name": "groups__moleculenet_bbbp__s1",
+      "status": "ok"
+    },
+    {
+      "name": "groups__moleculenet_bbbp__s2",
+      "status": "ok"
+    },
+    {
+      "name": "groups__moleculenet_lipophilicity__s0",
+      "status": "ok"
+    },
+    {
+      "name": "groups__moleculenet_lipophilicity__s1",
+      "status": "ok"
+    },
+    {
+      "name": "groups__moleculenet_lipophilicity__s2",
+      "status": "ok"
+    },
+    {
+      "name": "groups__moleculenet_tox21__s0",
+      "status": "ok"
+    },
+    {
+      "name": "groups__moleculenet_tox21__s1",
+      "status": "ok"
+    },
+    {
+      "name": "groups__moleculenet_tox21__s2",
+      "status": "ok"
+    },
+    {
+      "name": "budget__moleculenet_freesolv__s0__fixed2048",
+      "status": "ok"
+    },
+    {
+      "name": "budget__moleculenet_freesolv__s0__fixed32768",
+      "status": "ok"
+    },
+    {
+      "name": "budget__moleculenet_freesolv__s0__adaptive2048",
+      "status": "ok"
+    },
+    {
+      "name": "budget__moleculenet_freesolv__s1__fixed2048",
+      "status": "ok"
+    },
+    {
+      "name": "budget__moleculenet_freesolv__s1__fixed32768",
+      "status": "ok"
+    },
+    {
+      "name": "budget__moleculenet_freesolv__s1__adaptive2048",
+      "status": "ok"
+    },
+    {
+      "name": "budget__moleculenet_freesolv__s2__fixed2048",
+      "status": "ok"
+    },
+    {
+      "name": "budget__moleculenet_freesolv__s2__fixed32768",
+      "status": "ok"
+    },
+    {
+      "name": "budget__moleculenet_freesolv__s2__adaptive2048",
+      "status": "ok"
+    },
+    {
+      "name": "budget__moleculenet_bace__s0__fixed2048",
+      "status": "ok"
+    },
+    {
+      "name": "budget__moleculenet_bace__s0__fixed32768",
+      "status": "ok"
+    },
+    {
+      "name": "budget__moleculenet_bace__s0__adaptive2048",
+      "status": "ok"
+    },
+    {
+      "name": "budget__moleculenet_bace__s1__fixed2048",
+      "status": "ok"
+    },
+    {
+      "name": "budget__moleculenet_bace__s1__fixed32768",
+      "status": "ok"
+    },
+    {
+      "name": "budget__moleculenet_bace__s1__adaptive2048",
+      "status": "ok"
+    },
+    {
+      "name": "budget__moleculenet_bace__s2__fixed2048",
+      "status": "ok"
+    },
+    {
+      "name": "budget__moleculenet_bace__s2__fixed32768",
+      "status": "ok"
+    },
+    {
+      "name": "budget__moleculenet_bace__s2__adaptive2048",
+      "status": "ok"
+    },
+    {
+      "name": "budget__moleculenet_qm8__s0__fixed2048",
+      "status": "ok"
+    },
+    {
+      "name": "budget__moleculenet_qm8__s0__fixed32768",
+      "status": "ok"
+    },
+    {
+      "name": "budget__moleculenet_qm8__s0__adaptive2048",
+      "status": "ok"
+    },
+    {
+      "name": "budget__moleculenet_qm8__s1__fixed2048",
+      "status": "ok"
+    },
+    {
+      "name": "budget__moleculenet_qm8__s1__fixed32768",
+      "status": "ok"
+    },
+    {
+      "name": "budget__moleculenet_qm8__s1__adaptive2048",
+      "status": "ok"
+    },
+    {
+      "name": "budget__moleculenet_qm8__s2__fixed2048",
+      "status": "ok"
+    },
+    {
+      "name": "budget__moleculenet_qm8__s2__fixed32768",
+      "status": "ok"
+    },
+    {
+      "name": "budget__moleculenet_qm8__s2__adaptive2048",
+      "status": "ok"
+    },
+    {
+      "name": "exact__s0",
+      "status": "ok"
+    },
+    {
+      "name": "deployment__s0",
+      "status": "ok"
+    },
+    {
+      "name": "exact__s1",
+      "status": "ok"
+    },
+    {
+      "name": "deployment__s1",
+      "status": "ok"
+    },
+    {
+      "name": "exact__s2",
+      "status": "ok"
+    },
+    {
+      "name": "deployment__s2",
+      "status": "ok"
+    },
+    {
+      "name": "exact__s3",
+      "status": "ok"
+    },
+    {
+      "name": "deployment__s3",
+      "status": "ok"
+    },
+    {
+      "name": "exact__s4",
+      "status": "ok"
+    },
+    {
+      "name": "deployment__s4",
+      "status": "ok"
+    },
+    {
+      "name": "exact__s5",
+      "status": "ok"
+    },
+    {
+      "name": "deployment__s5",
+      "status": "ok"
+    },
+    {
+      "name": "exact__s6",
+      "status": "ok"
+    },
+    {
+      "name": "deployment__s6",
+      "status": "ok"
+    },
+    {
+      "name": "exact__s7",
+      "status": "ok"
+    },
+    {
+      "name": "deployment__s7",
+      "status": "ok"
+    },
+    {
+      "name": "exact__s8",
+      "status": "ok"
+    },
+    {
+      "name": "deployment__s8",
+      "status": "ok"
+    },
+    {
+      "name": "exact__s9",
+      "status": "ok"
+    },
+    {
+      "name": "deployment__s9",
+      "status": "ok"
+    },
+    {
+      "name": "exact__s10",
+      "status": "ok"
+    },
+    {
+      "name": "deployment__s10",
+      "status": "ok"
+    },
+    {
+      "name": "exact__s11",
+      "status": "ok"
+    },
+    {
+      "name": "deployment__s11",
+      "status": "ok"
+    },
+    {
+      "name": "exact__s12",
+      "status": "ok"
+    },
+    {
+      "name": "deployment__s12",
+      "status": "ok"
+    },
+    {
+      "name": "exact__s13",
+      "status": "ok"
+    },
+    {
+      "name": "deployment__s13",
+      "status": "ok"
+    },
+    {
+      "name": "exact__s14",
+      "status": "ok"
+    },
+    {
+      "name": "deployment__s14",
+      "status": "ok"
+    },
+    {
+      "name": "exact__s15",
+      "status": "ok"
+    },
+    {
+      "name": "deployment__s15",
+      "status": "ok"
+    },
+    {
+      "name": "exact__s16",
+      "status": "ok"
+    },
+    {
+      "name": "deployment__s16",
+      "status": "ok"
+    },
+    {
+      "name": "exact__s17",
+      "status": "ok"
+    },
+    {
+      "name": "deployment__s17",
+      "status": "ok"
+    },
+    {
+      "name": "exact__s18",
+      "status": "ok"
+    },
+    {
+      "name": "deployment__s18",
+      "status": "ok"
+    },
+    {
+      "name": "exact__s19",
+      "status": "ok"
+    },
+    {
+      "name": "deployment__s19",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_freesolv__k16__s0",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_freesolv__k32__s0",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_freesolv__k128__s0",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_freesolv__plain__s0",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_freesolv__combined__s0",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_freesolv__k16__s1",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_freesolv__k32__s1",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_freesolv__k128__s1",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_freesolv__plain__s1",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_freesolv__combined__s1",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_freesolv__k16__s2",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_freesolv__k32__s2",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_freesolv__k128__s2",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_freesolv__plain__s2",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_freesolv__combined__s2",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_esol__k16__s0",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_esol__k32__s0",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_esol__k128__s0",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_esol__plain__s0",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_esol__combined__s0",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_esol__k16__s1",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_esol__k32__s1",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_esol__k128__s1",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_esol__plain__s1",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_esol__combined__s1",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_esol__k16__s2",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_esol__k32__s2",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_esol__k128__s2",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_esol__plain__s2",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_esol__combined__s2",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_bace__k16__s0",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_bace__k32__s0",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_bace__k128__s0",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_bace__plain__s0",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_bace__combined__s0",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_bace__k16__s1",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_bace__k32__s1",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_bace__k128__s1",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_bace__plain__s1",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_bace__combined__s1",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_bace__k16__s2",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_bace__k32__s2",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_bace__k128__s2",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_bace__plain__s2",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_bace__combined__s2",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_bbbp__k16__s0",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_bbbp__k32__s0",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_bbbp__k128__s0",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_bbbp__plain__s0",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_bbbp__combined__s0",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_bbbp__k16__s1",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_bbbp__k32__s1",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_bbbp__k128__s1",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_bbbp__plain__s1",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_bbbp__combined__s1",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_bbbp__k16__s2",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_bbbp__k32__s2",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_bbbp__k128__s2",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_bbbp__plain__s2",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_bbbp__combined__s2",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_lipophilicity__k16__s0",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_lipophilicity__k32__s0",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_lipophilicity__k128__s0",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_lipophilicity__plain__s0",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_lipophilicity__combined__s0",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_lipophilicity__k16__s1",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_lipophilicity__k32__s1",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_lipophilicity__k128__s1",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_lipophilicity__plain__s1",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_lipophilicity__combined__s1",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_lipophilicity__k16__s2",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_lipophilicity__k32__s2",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_lipophilicity__k128__s2",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_lipophilicity__plain__s2",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_lipophilicity__combined__s2",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_tox21__k16__s0",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_tox21__k32__s0",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_tox21__k128__s0",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_tox21__plain__s0",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_tox21__combined__s0",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_tox21__k16__s1",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_tox21__k32__s1",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_tox21__k128__s1",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_tox21__plain__s1",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_tox21__combined__s1",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_tox21__k16__s2",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_tox21__k32__s2",
+      "status": "ok"
+    },
+    {
+      "name": "graph__moleculenet_tox21__k128__s2",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_tox21__plain__s2",
+      "status": "ok"
+    },
+    {
+      "name": "frontier__moleculenet_tox21__combined__s2",
+      "status": "ok"
+    },
+    {
+      "name": "datasail__moleculenet_freesolv__coarse__t60",
+      "study": "frontier",
+      "method": "datasail",
+      "dataset": "moleculenet_freesolv",
+      "seed": 0,
+      "cluster_policy": "coarse",
+      "solver_seconds": 60,
+      "status": "native_solver_reported_infeasible",
+      "evidence": [
+        "2026-10-26 16:25:09,826 SCIP status: infeasible",
+        "2026-10-26 16:25:09,828 No assignments could be made for any technique! Please check your input data and values for cluster-numbers, delta, and epsilon."
+      ],
+      "log_sha256": "692ef2fcc8e89ab0e10e073399e20c50cd31327a760440432fb42c0c56949aa7",
+      "adapter_note": "v1 adapter subsequently raised TypeError when reading absent native assignments; no score or runtime is imputed"
+    },
+    {
+      "name": "datasail__moleculenet_freesolv__coarse__t300",
+      "study": "frontier",
+      "method": "datasail",
+      "dataset": "moleculenet_freesolv",
+      "seed": 0,
+      "cluster_policy": "coarse",
+      "solver_seconds": 300,
+      "status": "native_solver_reported_infeasible",
+      "evidence": [
+        "2026-10-26 16:25:17,607 SCIP status: infeasible",
+        "2026-10-26 16:25:17,611 No assignments could be made for any technique! Please check your input data and values for cluster-numbers, delta, and epsilon."
+      ],
+      "log_sha256": "f579e0becef5678e5db9e210918a7f56f33fd93db858070ff022a031023fa450",
+      "adapter_note": "v1 adapter subsequently raised TypeError when reading absent native assignments; no score or runtime is imputed"
+    },
+    {
+      "name": "datasail__moleculenet_freesolv__medium__t60",
+      "study": "frontier",
+      "method": "datasail",
+      "dataset": "moleculenet_freesolv",
+      "seed": 0,
+      "cluster_policy": "medium",
+      "solver_seconds": 60,
+      "status": "native_solver_reported_infeasible",
+      "evidence": [
+        "2026-10-26 16:25:17,498 SCIP status: infeasible",
+        "2026-10-26 16:25:17,501 No assignments could be made for any technique! Please check your input data and values for cluster-numbers, delta, and epsilon."
+      ],
+      "log_sha256": "976f6276302b431d7f218a76eb64502cc13290df10fe6f14f5cad2807b7f45f4",
+      "adapter_note": "v1 adapter subsequently raised TypeError when reading absent native assignments; no score or runtime is imputed"
+    },
+    {
+      "name": "datasail__moleculenet_freesolv__medium__t300",
+      "study": "frontier",
+      "method": "datasail",
+      "dataset": "moleculenet_freesolv",
+      "seed": 0,
+      "cluster_policy": "medium",
+      "solver_seconds": 300,
+      "status": "native_solver_reported_infeasible",
+      "evidence": [
+        "2026-10-26 16:25:17,817 SCIP status: infeasible",
+        "2026-10-26 16:25:17,820 No assignments could be made for any technique! Please check your input data and values for cluster-numbers, delta, and epsilon."
+      ],
+      "log_sha256": "38ddb06d53ec0c604cb37a6ac2eb906247c09eed719440004d2f90b746820cb3",
+      "adapter_note": "v1 adapter subsequently raised TypeError when reading absent native assignments; no score or runtime is imputed"
+    },
+    {
+      "name": "datasail__moleculenet_freesolv__fine__t60",
+      "status": "ok"
+    },
+    {
+      "name": "datasail__moleculenet_freesolv__fine__t300",
+      "status": "ok"
+    },
+    {
+      "name": "datasail__moleculenet_esol__coarse__t60",
+      "study": "frontier",
+      "method": "datasail",
+      "dataset": "moleculenet_esol",
+      "seed": 0,
+      "cluster_policy": "coarse",
+      "solver_seconds": 60,
+      "status": "native_solver_reported_infeasible",
+      "evidence": [
+        "2026-10-26 16:25:31,809 SCIP status: infeasible",
+        "2026-10-26 16:25:31,812 No assignments could be made for any technique! Please check your input data and values for cluster-numbers, delta, and epsilon."
+      ],
+      "log_sha256": "56a64f851b0524a9a6c8dd3a56935fcf0e6a35e39dd522e7146dcc0a7ecb68b6",
+      "adapter_note": "v1 adapter subsequently raised TypeError when reading absent native assignments; no score or runtime is imputed"
+    },
+    {
+      "name": "datasail__moleculenet_esol__coarse__t300",
+      "study": "frontier",
+      "method": "datasail",
+      "dataset": "moleculenet_esol",
+      "seed": 0,
+      "cluster_policy": "coarse",
+      "solver_seconds": 300,
+      "status": "native_solver_reported_infeasible",
+      "evidence": [
+        "2026-10-26 16:25:40,109 SCIP status: infeasible",
+        "2026-10-26 16:25:40,111 No assignments could be made for any technique! Please check your input data and values for cluster-numbers, delta, and epsilon."
+      ],
+      "log_sha256": "27cf607e5850cb23c50e84c1dd429954afec2bbee4af2ab59bc282fa8d5695f4",
+      "adapter_note": "v1 adapter subsequently raised TypeError when reading absent native assignments; no score or runtime is imputed"
+    },
+    {
+      "name": "datasail__moleculenet_esol__medium__t60",
+      "status": "ok"
+    },
+    {
+      "name": "datasail__moleculenet_esol__medium__t300",
+      "status": "ok"
+    },
+    {
+      "name": "datasail__moleculenet_esol__fine__t60",
+      "status": "ok"
+    },
+    {
+      "name": "datasail__moleculenet_esol__fine__t300",
+      "status": "ok"
+    },
+    {
+      "name": "datasail__moleculenet_bace__coarse__t60",
+      "study": "frontier",
+      "method": "datasail",
+      "dataset": "moleculenet_bace",
+      "seed": 0,
+      "cluster_policy": "coarse",
+      "solver_seconds": 60,
+      "status": "native_solver_reported_infeasible",
+      "evidence": [
+        "2026-10-26 16:26:08,159 SCIP status: infeasible",
+        "2026-10-26 16:26:08,163 No assignments could be made for any technique! Please check your input data and values for cluster-numbers, delta, and epsilon."
+      ],
+      "log_sha256": "044558842ceb8718fd5abfd9e601c3bf2b58b4174c90cdaf66798cd3d0c01b21",
+      "adapter_note": "v1 adapter subsequently raised TypeError when reading absent native assignments; no score or runtime is imputed"
+    },
+    {
+      "name": "datasail__moleculenet_bace__coarse__t300",
+      "study": "frontier",
+      "method": "datasail",
+      "dataset": "moleculenet_bace",
+      "seed": 0,
+      "cluster_policy": "coarse",
+      "solver_seconds": 300,
+      "status": "native_solver_reported_infeasible",
+      "evidence": [
+        "2026-10-26 16:26:40,089 SCIP status: infeasible",
+        "2026-10-26 16:26:40,091 No assignments could be made for any technique! Please check your input data and values for cluster-numbers, delta, and epsilon."
+      ],
+      "log_sha256": "7d8fe3b96a22d226c3331ededf6bdfbfd8f6e017fb34f0c6c22e910984065ebf",
+      "adapter_note": "v1 adapter subsequently raised TypeError when reading absent native assignments; no score or runtime is imputed"
+    },
+    {
+      "name": "datasail__moleculenet_bace__medium__t60",
+      "status": "ok"
+    },
+    {
+      "name": "datasail__moleculenet_bace__medium__t300",
+      "status": "ok"
+    },
+    {
+      "name": "datasail__moleculenet_bace__fine__t60",
+      "status": "ok"
+    },
+    {
+      "name": "datasail__moleculenet_bace__fine__t300",
+      "status": "ok"
+    },
+    {
+      "name": "datasail__moleculenet_bbbp__coarse__t60",
+      "status": "ok"
+    },
+    {
+      "name": "datasail__moleculenet_bbbp__coarse__t300",
+      "status": "ok"
+    },
+    {
+      "name": "datasail__moleculenet_bbbp__medium__t60",
+      "status": "ok"
+    },
+    {
+      "name": "datasail__moleculenet_bbbp__medium__t300",
+      "status": "ok"
+    },
+    {
+      "name": "datasail__moleculenet_bbbp__fine__t60",
+      "status": "ok"
+    },
+    {
+      "name": "datasail__moleculenet_bbbp__fine__t300",
+      "status": "ok"
+    }
+  ],
+  "units": {
+    "global_relative": "cross-fold kernel mass / total off-diagonal mass / analytic random fraction at actual counts",
+    "local": "mean maximum test-to-training Tanimoto similarity, unnormalized"
+  }
+}

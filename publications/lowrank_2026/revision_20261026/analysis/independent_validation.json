@@ -1,0 +1,6 @@
+{
+  "comparisons": 246,
+  "max_global_discrepancy": 0.0,
+  "max_nearest_discrepancy": 0.0,
+  "reference": "Independent full NumPy binary Tanimoto; float64 division/sums; self excluded; all test queries against every training row."
+}

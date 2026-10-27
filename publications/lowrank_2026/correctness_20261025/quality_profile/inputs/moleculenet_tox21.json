@@ -1,0 +1,11 @@
+{
+  "dataset": "moleculenet_tox21",
+  "n": 7823,
+  "task": "classification",
+  "feature_sha256": "a56c02491f8c2d3cc1b0d0468fc9205686ac134980516127b80f5a72091689cd",
+  "cache_sha256": "fbab607e1005744e074dc7c4b3bb432b7ba5337fcb336f7d6bd519bdb366018f",
+  "raw_csv_sha256": "7d7e7facd853a63e79ddce4e9c3fcb7a0d83a1c300b603031c0f2c64fbe77761",
+  "preparation_seconds": 8.880226142704487,
+  "recipe": "ECFP-1024 radius 2; MACCS-167 only for evaluation",
+  "additional_validation": false
+}

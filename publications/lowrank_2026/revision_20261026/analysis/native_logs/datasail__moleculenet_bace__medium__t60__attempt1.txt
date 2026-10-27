@@ -1,0 +1,67 @@
+sh: 1: cd-hit: not found
+sh: 1: cd-hit-est: not found
+sh: 1: diamond: not found
+sh: 1: mmseqs: not found
+sh: 1: mmseqs: not found
+sh: 1: mmseqs: not found
+sh: 1: mash: not found
+sh: 1: foldseek: not found
+sh: 1: TMalign: not found
+2026-10-26 16:26:59,913 Validating arguments
+2026-10-26 16:26:59,914 Read data
+2026-10-26 16:26:59,915 Cluster first set of entities.
+2026-10-26 16:26:59,915 Cluster 1513 items based on distances
+2026-10-26 16:26:59,946 Clustering based on distances. Distances above 0.7412125039911356 cannot end up in same cluster.
+2026-10-26 16:27:00,144 Clustering finished
+2026-10-26 16:27:01,487 Reduced number of clusters to 30.
+2026-10-26 16:27:01,888 Some cluster statistics:
+2026-10-26 16:27:01,891 	Min distance   : 0.00000
+2026-10-26 16:27:01,893 	Max distance   : 1.00000
+2026-10-26 16:27:01,897 	Avg distance   : 0.82357
+2026-10-26 16:27:01,901 	Mean distance  : 0.82357
+2026-10-26 16:27:07,389 	Var distance   : 0.01127
+2026-10-26 16:27:07,390 	Maximal distance in same split: 0.95506
+2026-10-26 16:27:07,394 	0.26% of distances are larger
+2026-10-26 16:27:07,394 	Minimal distance between two splits: 0.95506
+2026-10-26 16:27:07,397 	0.8% of distances are smaller
+2026-10-26 16:27:07,398 Split data
+2026-10-26 16:27:07,398 Define optimization problem
+2026-10-26 16:27:07,398 Splitting technique C1e of run 1 of 1
+2026-10-26 16:27:07,688 Start solving with SCIP
+2026-10-26 16:27:07,694 The problem has 90 variables and 33 constraints.
+===============================================================================
+                                     CVXPY                                     
+                                     v1.5.3                                    
+===============================================================================
+(CVXPY) Oct 26 04:27:07 PM: Your problem has 90 variables, 33 constraints, and 0 parameters.
+(CVXPY) Oct 26 04:27:07 PM: It is compliant with the following grammars: DCP, DQCP
+(CVXPY) Oct 26 04:27:07 PM: (If you need to solve this problem multiple times, but with different data, consider using parameters.)
+(CVXPY) Oct 26 04:27:07 PM: CVXPY will first compile your problem; then, it will invoke a numerical solver to obtain a solution.
+(CVXPY) Oct 26 04:27:07 PM: Your problem is compiled with the CPP canonicalization backend.
+-------------------------------------------------------------------------------
+                                  Compilation                                  
+-------------------------------------------------------------------------------
+(CVXPY) Oct 26 04:27:07 PM: Compiling problem (target solver=SCIP).
+(CVXPY) Oct 26 04:27:07 PM: Reduction chain: Dcp2Cone -> CvxAttr2Constr -> ConeMatrixStuffing -> SCIP
+(CVXPY) Oct 26 04:27:07 PM: Applying reduction Dcp2Cone
+(CVXPY) Oct 26 04:27:07 PM: Applying reduction CvxAttr2Constr
+(CVXPY) Oct 26 04:27:07 PM: Applying reduction ConeMatrixStuffing
+(CVXPY) Oct 26 04:27:08 PM: Applying reduction SCIP
+(CVXPY) Oct 26 04:27:08 PM: Finished problem compilation (took 6.595e-01 seconds).
+-------------------------------------------------------------------------------
+                                Numerical solver                               
+-------------------------------------------------------------------------------
+(CVXPY) Oct 26 04:27:08 PM: Invoking solver SCIP  to obtain a solution.
+-------------------------------------------------------------------------------
+                                    Summary                                    
+-------------------------------------------------------------------------------
+(CVXPY) Oct 26 04:27:19 PM: Problem status: optimal
+(CVXPY) Oct 26 04:27:19 PM: Optimal value: 3.743e+04
+(CVXPY) Oct 26 04:27:19 PM: Compilation took 6.595e-01 seconds
+(CVXPY) Oct 26 04:27:19 PM: Solver (including time spent in interface) took 1.086e+01 seconds
+2026-10-26 16:27:19,326 SCIP status: optimal
+2026-10-26 16:27:19,326 Solution's score: 37430.36757073533
+2026-10-26 16:27:19,356 Store results
+2026-10-26 16:27:19,357 ILP finished and results stored.
+2026-10-26 16:27:19,357 Total runtime: 19.44306s
+datasail__moleculenet_bace__medium__t60 ok

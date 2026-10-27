@@ -1,0 +1,79 @@
+{
+  "name": "moleculenet_sider__s1__previous_plain__forest",
+  "dataset": "moleculenet_sider",
+  "seed": 1,
+  "setting": "previous_plain",
+  "model": "forest",
+  "status": "ok",
+  "assignment_sha256": "f5a85a5b5c5bb15f319d0c340cf312e0410d153d640183a633a8b1436f729f46",
+  "cache_sha256": "7f4ca4ba3adb157cc30e1ae3b2ff13b9a55ea6a4968f066721061c278ba40ef0",
+  "n_test": 143,
+  "brier": 0.2788299347137238,
+  "prior_brier_difference": 0.0,
+  "calibration_in_large": 0.2332823426573427,
+  "ece10": 0.23328234265734263,
+  "bins": [
+    {
+      "bin": 0,
+      "n": 0,
+      "mean_probability": null,
+      "positive_fraction": null
+    },
+    {
+      "bin": 1,
+      "n": 0,
+      "mean_probability": null,
+      "positive_fraction": null
+    },
+    {
+      "bin": 2,
+      "n": 4,
+      "mean_probability": 0.2734375,
+      "positive_fraction": 0.25
+    },
+    {
+      "bin": 3,
+      "n": 13,
+      "mean_probability": 0.34555288461538464,
+      "positive_fraction": 0.15384615384615385
+    },
+    {
+      "bin": 4,
+      "n": 25,
+      "mean_probability": 0.4565625,
+      "positive_fraction": 0.32
+    },
+    {
+      "bin": 5,
+      "n": 47,
+      "mean_probability": 0.5487034574468085,
+      "positive_fraction": 0.3617021276595745
+    },
+    {
+      "bin": 6,
+      "n": 35,
+      "mean_probability": 0.6417410714285714,
+      "positive_fraction": 0.42857142857142855
+    },
+    {
+      "bin": 7,
+      "n": 19,
+      "mean_probability": 0.7425986842105263,
+      "positive_fraction": 0.15789473684210525
+    },
+    {
+      "bin": 8,
+      "n": 0,
+      "mean_probability": null,
+      "positive_fraction": null
+    },
+    {
+      "bin": 9,
+      "n": 0,
+      "mean_probability": null,
+      "positive_fraction": null
+    }
+  ],
+  "fit_predict_seconds": 0.8106156960129738,
+  "interpretation": "descriptive; fixed ten equal-width bins; sample-size/distribution dependent"
+}
