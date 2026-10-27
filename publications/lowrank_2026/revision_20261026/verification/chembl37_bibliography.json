@@ -1,0 +1,12 @@
+{
+  "verified_primary_source": "https://chembl.gitbook.io/chembl-interface-documentation/downloads",
+  "release": "ChEMBL 37",
+  "date": "May 2026",
+  "release_doi": "10.6019/CHEMBL.database.37",
+  "creator_metadata_claimed": false,
+  "citation": "Keyed dataset citation; no unverified personal creator names supplied.",
+  "unsuccessful_optional_lookup": {
+    "source": "https://api.datacite.org/dois/10.6019%2FCHEMBL.database.37",
+    "error": "HTTPError: HTTP Error 404: Not Found"
+  }
+}

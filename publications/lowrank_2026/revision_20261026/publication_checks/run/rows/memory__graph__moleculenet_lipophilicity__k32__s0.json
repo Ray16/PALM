@@ -1,0 +1,132 @@
+{
+  "name": "memory__graph__moleculenet_lipophilicity__k32__s0",
+  "study": "memory",
+  "method": "graph",
+  "dataset": "moleculenet_lipophilicity",
+  "seed": 0,
+  "degree": 32,
+  "rows": [
+    {
+      "method": "native_graph",
+      "scores": {
+        "global_ratio": 0.3070181372423234,
+        "mean_nearest_training": 0.29489948637232993,
+        "top5_training_mean": 0.2660732568411404,
+        "local_ramp_04": 0.011579915293919042,
+        "test_fraction_above_04": 0.05172413793103448,
+        "test_fraction_above_06": 0.017241379310344827,
+        "test_fraction_above_08": 0.0049261083743842365,
+        "maccs_mean_nearest_training": 0.7861082012136581,
+        "composition": {
+          "train": {
+            "n_labels": 3393,
+            "mean": 2.22008547008547,
+            "std": 1.1945191263354302
+          },
+          "val": {
+            "n_labels": 401,
+            "mean": 2.1446633416458853,
+            "std": 1.1992220873719361
+          },
+          "test": {
+            "n_labels": 406,
+            "mean": 1.945443349753695,
+            "std": 1.2463399323965818
+          }
+        },
+        "task": "unspecified",
+        "target_wasserstein": 0.3029002989347817
+      },
+      "counts": [
+        3393,
+        401,
+        406
+      ]
+    },
+    {
+      "method": "repaired_graph",
+      "scores": {
+        "global_ratio": 0.31476674181287967,
+        "mean_nearest_training": 0.2921889597335114,
+        "top5_training_mean": 0.26539839381495345,
+        "local_ramp_04": 0.008192305500881793,
+        "test_fraction_above_04": 0.05048076923076923,
+        "test_fraction_above_06": 0.009615384615384616,
+        "test_fraction_above_08": 0.0,
+        "maccs_mean_nearest_training": 0.7841751978087884,
+        "composition": {
+          "train": {
+            "n_labels": 3368,
+            "mean": 2.2209709026128266,
+            "std": 1.1936737098215484
+          },
+          "val": {
+            "n_labels": 416,
+            "mean": 2.1418028846153847,
+            "std": 1.2021996544760976
+          },
+          "test": {
+            "n_labels": 416,
+            "mean": 1.9504567307692307,
+            "std": 1.2487501571005077
+          }
+        },
+        "task": "unspecified",
+        "target_wasserstein": 0.2936010300566417
+      },
+      "counts": [
+        3368,
+        416,
+        416
+      ]
+    }
+  ],
+  "diagnostics": {
+    "graph_build_s": 2.2671598233282566,
+    "partition_s": 0.7067300621420145,
+    "repair_s": 0.01050843670964241,
+    "split_s": 2.986916571855545,
+    "graph_k": 32,
+    "graph_edges": 91800,
+    "graph_type": "ordinary undirected pairwise graph",
+    "objective": "CUT",
+    "preset": "QUALITY",
+    "edge_rule": "union top-k; one edge per unordered pair; positive similarities only",
+    "weight_scale": 8132,
+    "sum_integer_edge_weights": 268314698,
+    "integer_weight_budget": 268435455,
+    "max_weight_quantization_error": 6.14854894245287e-05,
+    "native_integer_cut": 12778198,
+    "threads": 2,
+    "seed": 0,
+    "native_counts": [
+      3393,
+      401,
+      406
+    ],
+    "repaired_counts": [
+      3368,
+      416,
+      416
+    ],
+    "repair_moves": 25,
+    "mtkahypar_version": "1.6.1",
+    "mtkahypar_module_sha256": "11ac22dfd1fd0a2cbfaa1001904b46be913196c257ac4d8b758be71ba9b036de"
+  },
+  "seconds": 2.986916571855545,
+  "status": "ok",
+  "native_peak_rss_before_scoring_mb": 670.82421875,
+  "solver_evidence": [],
+  "memory_scope": "Fresh-process native method peak before first scoring call or matched controls; includes imports, input/features and common small low-rank warm-up.",
+  "artifacts": {
+    "assignments/memory__graph__moleculenet_lipophilicity__k32__s0/native_graph.npy": "e5b59ffe6f22519e1ff83ec14f8a9383b1d8e5a30de3abb5abebad5b0fda1899",
+    "assignments/memory__graph__moleculenet_lipophilicity__k32__s0/repaired_graph.npy": "3682e675136f2c220ba469da878b215d97d6ae383f2394c45b5947ed480be958"
+  },
+  "manifest_sha256": "ead4180401d8ce36cadc23280b087ba1ffdd5754fa8f557c7a2f30c6db1af074",
+  "case_seconds": 15.037939134985209,
+  "host": "lambda2",
+  "cpu_affinity": [
+    10,
+    11
+  ]
+}

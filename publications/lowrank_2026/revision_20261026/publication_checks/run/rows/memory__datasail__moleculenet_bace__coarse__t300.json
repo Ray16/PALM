@@ -1,0 +1,23 @@
+{
+  "name": "memory__datasail__moleculenet_bace__coarse__t300",
+  "study": "memory",
+  "method": "datasail",
+  "dataset": "moleculenet_bace",
+  "seed": 0,
+  "cluster_policy": "coarse",
+  "solver_seconds": 300,
+  "status": "native_infeasible",
+  "solver_evidence": [
+    "SCIP status: infeasible",
+    "No assignments could be made for any technique! Please check your input data and values for cluster-numbers, delta, and epsilon."
+  ],
+  "protocol": "Native SCIP reported infeasibility and DataSAIL returned no assignment; no score or native timing is imputed.",
+  "artifacts": {},
+  "manifest_sha256": "ead4180401d8ce36cadc23280b087ba1ffdd5754fa8f557c7a2f30c6db1af074",
+  "case_seconds": 23.381977980956435,
+  "host": "lambda2",
+  "cpu_affinity": [
+    3,
+    4
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "name": "graph__moleculenet_esol__k32__s2",
+  "study": "frontier",
+  "method": "graph",
+  "dataset": "moleculenet_esol",
+  "seed": 2,
+  "degree": 32,
+  "status": "ok",
+  "manifest_sha256": "2b466f8ddf64c0d60f3b71691968cb41e816b87a854a3a8a57a3e93fe9357924",
+  "artifacts": {
+    "assignments/graph__moleculenet_esol__k32__s2/native_graph.npy": "2f408bc2e2041b8eaf7eb2ad556a944f805dc35e95a7a83aba6100acab055833",
+    "assignments/graph__moleculenet_esol__k32__s2/repaired_graph.npy": "ef3c6f8d5e247b9b77ddbcaa437a938d1b43db169eb5c5d8deddf66c354ed56c"
+  },
+  "warmup_seconds": 0.06451808474957943,
+  "case_seconds": 1.9847433175891638,
+  "peak_rss_mb": 634.1953125,
+  "cpu_affinity": [
+    10,
+    11
+  ],
+  "host": "lambda2",
+  "rows": [
+    {
+      "method": "native_graph",
+      "scores": {
+        "global_ratio": 0.22093185794977616,
+        "mean_nearest_training": 0.20416670512141927,
+        "top5_training_mean": 0.16771487885021738,
+        "local_ramp_04": 0.005874361399383771,
+        "test_fraction_above_04": 0.03571428571428571,
+        "test_fraction_above_06": 0.008928571428571428,
+        "test_fraction_above_08": 0.0,
+        "maccs_mean_nearest_training": 0.5839034763297865,
+        "composition": {
+          "train": {
+            "n_labels": 911,
+            "mean": -3.117576289791438,
+            "std": 2.159452166177992
+          },
+          "val": {
+            "n_labels": 105,
+            "mean": -2.2393142857142854,
+            "std": 1.5791291772262797
+          },
+          "test": {
+            "n_labels": 112,
+            "mean": -3.2613839285714286,
+            "std": 1.8053201894753805
+          }
+        },
+        "task": "unspecified",
+        "target_wasserstein": 0.5443583875646856
+      },
+      "counts": [
+        911,
+        105,
+        112
+      ]
+    },
+    {
+      "method": "repaired_graph",
+      "scores": {
+        "global_ratio": 0.2246911562085824,
+        "mean_nearest_training": 0.20416670512141927,
+        "top5_training_mean": 0.16771094840286033,
+        "local_ramp_04": 0.005874361399383771,
+        "test_fraction_above_04": 0.03571428571428571,
+        "test_fraction_above_06": 0.008928571428571428,
+        "test_fraction_above_08": 0.0,
+        "maccs_mean_nearest_training": 0.5839034763297865,
+        "composition": {
+          "train": {
+            "n_labels": 904,
+            "mean": -3.1308539823008847,
+            "std": 2.1606120882600535
+          },
+          "val": {
+            "n_labels": 112,
+            "mean": -2.1870357142857144,
+            "std": 1.5635245379805676
+          },
+          "test": {
+            "n_labels": 112,
+            "mean": -3.2613839285714286,
+            "std": 1.8053201894753805
+          }
+        },
+        "task": "unspecified",
+        "target_wasserstein": 0.5368972029077117
+      },
+      "counts": [
+        904,
+        112,
+        112
+      ]
+    }
+  ],
+  "diagnostics": {
+    "graph_build_s": 0.09172839671373367,
+    "partition_s": 0.512965640053153,
+    "repair_s": 0.003887046128511429,
+    "split_s": 0.610854335129261,
+    "graph_k": 32,
+    "graph_edges": 25477,
+    "graph_type": "ordinary undirected pairwise graph",
+    "objective": "CUT",
+    "preset": "QUALITY",
+    "edge_rule": "union top-k; one edge per unordered pair; positive similarities only",
+    "weight_scale": 35839,
+    "sum_integer_edge_weights": 268409977,
+    "integer_weight_budget": 268435455,
+    "max_weight_quantization_error": 1.3951282122781627e-05,
+    "native_integer_cut": 14217864,
+    "threads": 2,
+    "seed": 2,
+    "native_counts": [
+      911,
+      105,
+      112
+    ],
+    "repaired_counts": [
+      904,
+      112,
+      112
+    ],
+    "repair_moves": 7,
+    "mtkahypar_version": "1.6.1",
+    "mtkahypar_module_sha256": "11ac22dfd1fd0a2cbfaa1001904b46be913196c257ac4d8b758be71ba9b036de"
+  },
+  "seconds": 0.610854335129261
+}

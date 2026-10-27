@@ -1,0 +1,71 @@
+sh: 1: cd-hit: not found
+sh: 1: cd-hit-est: not found
+sh: 1: diamond: not found
+sh: 1: mmseqs: not found
+sh: 1: mmseqs: not found
+sh: 1: mmseqs: not found
+sh: 1: mash: not found
+sh: 1: foldseek: not found
+sh: 1: TMalign: not found
+2026-10-26 16:29:20,028 Validating arguments
+2026-10-26 16:29:20,029 Read data
+2026-10-26 16:29:20,030 Cluster first set of entities.
+2026-10-26 16:29:20,031 Cluster 2039 items based on distances
+2026-10-26 16:29:20,059 Clustering based on distances. Distances above 0.7985372622666589 cannot end up in same cluster.
+2026-10-26 16:29:20,375 Clustering finished
+2026-10-26 16:29:23,235 Reduced number of clusters to 101.
+2026-10-26 16:29:23,945 Some cluster statistics:
+2026-10-26 16:29:23,948 	Min distance   : 0.00000
+2026-10-26 16:29:23,952 	Max distance   : 1.00000
+2026-10-26 16:29:23,956 	Avg distance   : 0.88726
+2026-10-26 16:29:23,960 	Mean distance  : 0.88726
+2026-10-26 16:29:30,773 	Var distance   : 0.00374
+2026-10-26 16:29:30,773 	Maximal distance in same split: 0.98000
+2026-10-26 16:29:30,789 	2.3% of distances are larger
+2026-10-26 16:29:30,789 	Minimal distance between two splits: 0.98000
+2026-10-26 16:29:30,795 	0.18% of distances are smaller
+2026-10-26 16:29:30,795 Split data
+2026-10-26 16:29:30,796 Define optimization problem
+2026-10-26 16:29:30,796 Splitting technique C1e of run 1 of 1
+/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/cvxpy/problems/problem.py:158: UserWarning: Objective contains too many subexpressions. Consider vectorizing your CVXPY code to speed up compilation.
+  warnings.warn("Objective contains too many subexpressions. "
+2026-10-26 16:29:31,980 Start solving with SCIP
+2026-10-26 16:29:32,043 The problem has 303 variables and 104 constraints.
+===============================================================================
+                                     CVXPY                                     
+                                     v1.5.3                                    
+===============================================================================
+(CVXPY) Oct 26 04:29:32 PM: Your problem has 303 variables, 104 constraints, and 0 parameters.
+(CVXPY) Oct 26 04:29:33 PM: It is compliant with the following grammars: DCP, DQCP
+(CVXPY) Oct 26 04:29:33 PM: (If you need to solve this problem multiple times, but with different data, consider using parameters.)
+(CVXPY) Oct 26 04:29:33 PM: CVXPY will first compile your problem; then, it will invoke a numerical solver to obtain a solution.
+(CVXPY) Oct 26 04:29:33 PM: Your problem is compiled with the CPP canonicalization backend.
+-------------------------------------------------------------------------------
+                                  Compilation                                  
+-------------------------------------------------------------------------------
+(CVXPY) Oct 26 04:29:34 PM: Compiling problem (target solver=SCIP).
+(CVXPY) Oct 26 04:29:34 PM: Reduction chain: Dcp2Cone -> CvxAttr2Constr -> ConeMatrixStuffing -> SCIP
+(CVXPY) Oct 26 04:29:34 PM: Applying reduction Dcp2Cone
+(CVXPY) Oct 26 04:29:35 PM: Applying reduction CvxAttr2Constr
+(CVXPY) Oct 26 04:29:35 PM: Applying reduction ConeMatrixStuffing
+(CVXPY) Oct 26 04:29:40 PM: Applying reduction SCIP
+(CVXPY) Oct 26 04:29:40 PM: Finished problem compilation (took 7.235e+00 seconds).
+-------------------------------------------------------------------------------
+                                Numerical solver                               
+-------------------------------------------------------------------------------
+(CVXPY) Oct 26 04:29:40 PM: Invoking solver SCIP  to obtain a solution.
+/homes/rzhu/miniforge3/envs/palm/lib/python3.12/site-packages/cvxpy/problems/problem.py:1407: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  warnings.warn(
+-------------------------------------------------------------------------------
+                                    Summary                                    
+-------------------------------------------------------------------------------
+(CVXPY) Oct 26 04:30:42 PM: Problem status: optimal_inaccurate
+(CVXPY) Oct 26 04:30:42 PM: Optimal value: 7.517e+04
+(CVXPY) Oct 26 04:30:42 PM: Compilation took 7.235e+00 seconds
+(CVXPY) Oct 26 04:30:42 PM: Solver (including time spent in interface) took 6.166e+01 seconds
+2026-10-26 16:30:42,473 SCIP status: optimal_inaccurate
+2026-10-26 16:30:42,474 Solution's score: 75174.47146441361
+2026-10-26 16:30:42,763 Store results
+2026-10-26 16:30:42,764 ILP finished and results stored.
+2026-10-26 16:30:42,764 Total runtime: 82.73488s
+datasail__moleculenet_bbbp__fine__t60 ok

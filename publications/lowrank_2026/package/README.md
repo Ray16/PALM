@@ -6,8 +6,19 @@ local analogue transfer; strict supplied groups express domain requirements.
 Similarity separation is one property of an evaluation design: it does not by
 itself establish realistic deployment performance.
 
-This branch develops `0.2.0.dev2`. The published v0.1.0 reproduction and the
-running website remain separately pinned.
+The current manuscript uses `0.2.0.dev3`, with numerical source pinned to
+`f7e0866`. The v0.1.0 experiments remain explicitly archived; the running
+private website remains separately pinned.
+
+[Joint rank/probe allocation](JOINT_BUDGET.md) is optional and applies to
+`rank="auto"`. Its confidence level is a nominal procedure setting; fixed-rank
+calls do not perform or certify an audit. Check both selection and final-audit
+status fields when checking an accuracy tolerance.
+
+The current paper's local score is raw mean nearest-training similarity.
+Ramped/random-normalized local diagnostics are different measures. Likewise,
+`factor_leakage` concerns the approximate kernel; the paper evaluates original
+kernel quality separately.
 
 ```python
 from lowrank import split, SplitSpec

@@ -1,0 +1,9 @@
+{
+  "all_recorded_producers_terminal": true,
+  "live_producers": [],
+  "retired_claims": [
+    "retired_claims_after_run/plain__n2000000__eps0.01__s0__5fd676b2dbf94f8d9631bb8639024ccd"
+  ],
+  "results_preserved": true,
+  "reason": "Older cleanup used unlink/rmdir and encountered NFS open-file metadata. Claims retired only after proving all recorded controllers and predictors gone. The portable adapter uses ownership-checked directory retirement."
+}

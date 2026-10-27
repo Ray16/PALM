@@ -1,5 +1,7 @@
 # Correctness and clean-code pass
 
+> Historical v0.2.0.dev2 ledger. See `../revision_20261026/PLAN.md` for the current v0.2.0.dev3 manuscript revision. The measurements below retain their original scope.
+
 Base: `14904f256705e42c72256b4d93477dc5adfee163`.
 
 The user approved the critical-review improvements. Completion requires fixes,

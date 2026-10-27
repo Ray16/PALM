@@ -42,18 +42,36 @@ def save(fig, name):
             if intersection is not None and intersection.width > 1 and intersection.height > 1:
                 collisions.append([a.get_text(), b.get_text()])
     minimum = min(t.get_fontsize() for t in texts)
+    panels = [ax for ax in fig.axes if ax.get_visible() and ax.has_data()]
+    panel_collisions = []
+    for i, a in enumerate(panels):
+        aa = a.get_window_extent(renderer)
+        for b in panels[i + 1:]:
+            bb = b.get_window_extent(renderer)
+            intersection = aa.intersection(aa, bb)
+            if intersection is not None and intersection.width > 1 and intersection.height > 1:
+                panel_collisions.append(["panel", i, panels.index(b)])
+    for t in texts:
+        box = t.get_window_extent(renderer)
+        for i, panel in enumerate(panels):
+            if t.axes is panel:
+                continue
+            intersection = box.intersection(box, panel.get_window_extent(renderer))
+            if intersection is not None and intersection.width > 1 and intersection.height > 1:
+                panel_collisions.append([t.get_text(), i])
     clipped = []
     for t in texts:
         box = t.get_window_extent(renderer)
         if box.x0 < 0 or box.y0 < 0 or box.x1 > fig.bbox.width or box.y1 > fig.bbox.height:
             clipped.append(t.get_text())
-    if minimum < 18 or collisions or clipped:
-        raise ValueError(f"{name}: font {minimum}, text overlaps {collisions}, clipped {clipped}")
+    if minimum < 18 or collisions or clipped or panel_collisions:
+        raise ValueError(f"{name}: font {minimum}, text overlaps {collisions}, panel overlaps {panel_collisions}, clipped {clipped}")
     fig.savefig(FIG / (name + ".pdf"))
     fig.savefig(FIG / (name + ".png"), dpi=160)
     AUDIT.append(dict(figure=name, width_inches=float(fig.get_figwidth()),
         height_inches=float(fig.get_figheight()), minimum_source_font_pt=minimum,
-        detected_text_overlaps=collisions, clipped_text=clipped, final_width_inches=6.5,
+        detected_text_overlaps=collisions, detected_panel_overlaps=panel_collisions,
+        clipped_text=clipped, final_width_inches=6.5,
         visual_inspection="pending", final_manuscript_font_check="pending"))
     plt.close(fig)
 
@@ -134,8 +152,8 @@ def concept():
                   "Cut = ½ [ ‖Σ p(c)‖² − Σ ‖p(c)‖² ]", fontsize=18)
     rng = np.random.default_rng(4)
     B = rng.uniform(.1, 1, (15, 3))
+    B /= np.sqrt((B @ B.T).max())
     S = B @ B.T
-    S /= S.max()
     coarsened = np.array([[S[5*a:5*a+5, 5*b:5*b+5].mean() for b in range(3)] for a in range(3)])
     nodes = np.array([[.15, .2], [.85, .2], [.5, .8]])
     ax = axes[0, 0]

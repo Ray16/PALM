@@ -1,0 +1,7 @@
+{
+  "focused_adapter_smoke_passed": true,
+  "new_library_loaded": "/nfs/lambda_stor_01/homes/rzhu/data_splitting_lowrank_systematic/publications/lowrank_2026/package/lowrank/__init__.py",
+  "website_source_modified": false,
+  "runtime_deployed_package_changed": false,
+  "full_regression_suite_scope": "41 tests passed in unchanged checkout; that checkout can shadow installed packages, so those are not claimed as a new-package compatibility suite."
+}

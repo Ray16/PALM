@@ -1,0 +1,8 @@
+run/rows/*.json linguist-generated=true
+run/assignments/** linguist-generated=true
+fidelity/run/rows/*.json linguist-generated=true
+publication_checks/run/rows/*.json linguist-generated=true
+publication_checks/run/assignments/** linguist-generated=true
+analysis/summary.json linguist-generated=true
+scaling/cpu_run/**/result.json linguist-generated=true
+scaling/large_cpu_run/**/result.json linguist-generated=true

@@ -1,0 +1,7 @@
+{
+  "issue": "Clean-copy supplemental PDF differed only in seed order of largest-scale table rows.",
+  "numerical_values_changed": false,
+  "affected_page": 9,
+  "resolution": "Sort records by method, size, tolerance and seed before table generation.",
+  "initial_failure_retained": "fresh_build_initial_failure.txt"
+}

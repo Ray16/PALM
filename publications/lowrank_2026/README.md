@@ -1,86 +1,93 @@
-# Low-rank similarity splitting: publication revision
+# Low-rank similarity splitting: current publication revision
 
-Technical manuscript revision, 21 October 2026. Author order, affiliations,
-contributions, funding and competing interests remain pending author input.
+The current manuscript and package use v0.2.0.dev3. Numerical method source is
+pinned to `f7e0866`; per-study manifests retain the actual producer hashes.
+The v0.1 studies remain explicitly identified as archival supporting evidence.
+Author order, affiliations, contributions, funding and interests await author input.
 
 - [Manuscript PDF](paper/manuscript.pdf) and [supplement PDF](paper/supplement.pdf).
-- `package/`: MIT-licensed, namespaced `lowrank-split` distribution and tests.
-- `paper/`: LaTeX sources, figure builders, retained assignments, numerical
-  observations, input catalogue, environment versions and validation reports.
-- `reproduction/`: frozen measurement sources and saved predictions needed for
-  metric validation. These legacy source directories are not the public API.
-- `inputs/`: exact benchmark snapshots. Most are relative links to the tracked
-  repository data at the frozen base commit; clone this repository in full.
+- [Seven-point revision and evidence plan](revision_20261026/PLAN.md).
+- [Current study summary](revision_20261026/analysis/summary.json).
+- [Technical completion gate](revision_20261026/verification/completion_gate.json).
+- [Package API](package/README.md) and [joint audit policy](package/JOINT_BUDGET.md).
 
 ## Install and verify
 
 ```bash
 python -m pip install ./package
-cd package
-python -m pytest -q
+python -m pytest -q package/tests
 ```
 
-The wheel installs only `lowrank` and its distribution metadata. See the package
-README for the precomputed-feature API. Molecular and experiment dependencies
-are optional for the base API; the paper environment is recorded separately.
+The distribution installs only the `lowrank` namespace. Domain and experiment
+dependencies are optional extras. Actual producer versions are recorded in
+`revision_20261026/verification/environment.json` and node preflight records.
+Use the publication directory or a clean working directory for API imports:
+the surrounding repository's legacy top-level research module can otherwise
+shadow an installed distribution. The portable runner explicitly selects the
+current package; its replay checks verify the loaded numerical implementation.
 
-## Rebuild both PDFs from retained observations
+## Build both PDFs
 
-Use Python 3.12, the versions in `paper/environment_versions.json`, and TeX Live
-with pdflatex/bibtex. Install the pinned report/render dependencies with
-`python -m pip install -r paper/requirements-build.txt`. The build does not rerun
-expensive experiments. Its strict final gate compares the rebuilt PDFs to the
-reviewed page-render signatures, including the 18 pt figure-font check.
+Use Python 3.12, TeX Live (pdflatex and bibtex), and the pinned versions in
+`paper/requirements-build.txt`. Building from saved observations does not rerun
+expensive benchmarks or require the large feature caches.
 
 ```bash
 MLST_PYTHON=python bash paper/build.sh
 ```
 
-This rebuild validates the complete grid and derives tables and figures from
-retained records. `paper/revision_20261021/completion_gate.json` records the
-technical evidence gates. Manual scientific/visual reviews have their own
-reports; passing these gates is not a publication acceptance claim.
+The default gate checks source/assignment identities, complete study outcomes,
+generated figures, 18pt compiled figure text, TeX warnings and reviewed-render
+signatures. `--allow-partial` is for an intermediate review build; it does not
+declare submission readiness. Author-supplied metadata remains a separate flag.
 
-## Rerun experiments
+## Reproduce a current numerical case
+
+Prepare selected inputs from the included dataset snapshots, then choose a
+fresh run directory and CPU cores allowed on your machine:
 
 ```bash
-python reproduce.py revision_benchmark --output /absolute/fresh/run \
-  --datasets moleculenet_freesolv --methods plain combined random --eps 0.01 --seeds 0
+python revision_20261026/portable/run.py prepare --output /tmp/preparation \
+  --cache-root /tmp/palm-inputs --data inputs \
+  --datasets moleculenet_freesolv
+python revision_20261026/portable/run.py plan --output /tmp/palm-run \
+  --cache-root /tmp/palm-inputs --studies groups \
+  --datasets moleculenet_freesolv --seeds 0 --cpus 0,1
+python revision_20261026/portable/run.py launch --output /tmp/palm-run
 ```
 
-`reproduce.py` selects the frozen measurement sources, hides CUDA by default,
-and caps native threads at two. Output is separate from the retained article
-records. Use `--resume` only for an existing run with identical source/settings.
-Run different dataset commands concurrently within your machine's CPU/memory
-budget. For H100 scaling use `--gpu` and `revision_scaling_h100`; the full
-ChEMBL 37 radius-2/2048-bit packed fingerprint cache must first be prepared with
-`reproduction/comparisons/paper_lowrank/chembl_featurize.py`. The large cache is
-not bundled; retained entity indices and checksums identify the measured input.
+The adapter keeps the measured numerical functions unchanged, verifies inputs,
+uses disjoint two-core CPU workers, records native infeasibility without inventing
+assignments, and retires claims safely on NFS. Omit filters for the full primary
+grid. Runs resume only with identical source/settings; held claims require actual
+owner verification. Case budgets and missing outputs remain visible.
 
-Study entry points include `revision_powered_fidelity`, `revision_robustness`,
-`revision_lohi`, `revision_umap`, `revision_sensitivity_v2`,
-`revision_calibration_v2`, `revision_external_control`,
-`revision_datasail_matched_v2`, `revision_runtime`, and
-`revision_metric_validation`, and `revision_ablation_v2`. Each accepts `--help` through the launcher.
-The runtime study is deliberately expensive (DataSAIL has a 7,200-second solver
-limit, plus preprocessing). Lo-Hi uses version 1.1; UMAP 0.5.7;
-Mt-KaHyPar 1.6.1; DataSAIL 1.3.0. The DataSAIL 1.4 solver equivalence check is
-recorded in `paper/revision_20261021/datasail_version_check.json`.
+## Scaling and comparison scope
 
-## Comparison scope and provenance
+The primary comparisons use DataSAIL and ordinary weighted k-NN graphs solved
+through Mt-KaHyPar Graph/QUALITY/CUT. No hypergraph baseline is used.
+Lo-Hi and other earlier comparisons are retained in the versioned archive.
 
-The paper compares DataSAIL, Lo-Hi, the published UMAP/Ward recipe and an ordinary
-weighted k-nearest-neighbour graph partitioned with Mt-KaHyPar's Graph API,
-QUALITY preset and CUT objective. Random, scaffold and Butina are reference
-controls. This publication folder contains no hypergraph benchmark results.
-The surrounding repository contains separate historical research.
+Current scaling includes paired exact/1% two-core cases and three completed
+two-million-entity cases on two disjoint 32-core CPU allocations on lambda13.
+These are separate hardware protocols. The old 19.9-second H100 result belongs
+to v0.1 and is not a current-code timing. All new GPU visibility is disabled.
 
-The version tag is `lowrank-v0.1.0-review-20261021-r2`. No archival DOI has been issued.
+The large ChEMBL 37 cache is not bundled. Obtain the versioned chemical
+representations from the [official ChEMBL downloads](https://chembl.gitbook.io/chembl-interface-documentation/downloads)
+and prepare radius-two/2048-bit packed fingerprints with
+`reproduction/comparisons/paper_lowrank/chembl_featurize.py` (cap `--procs` to
+available CPU resources). Input hashes and preparation recipes identify the
+exact corpus. The staged large-CPU runner saves a completed split before its
+independent audit so an interrupted audit does not repeat optimization.
 
-`SHA256SUMS.json` inventories this bundle. Individual records retain measurement
-source hashes, assignments, native/returned counts, solver outcomes and scoring
-scope. `reproduction/retained_input_transformations.json` documents filtering of
-legacy synthetic observations to the permitted methods. Data and saved model
-outputs retain their original source terms; the code MIT license does not
-relicense third-party datasets. See the dataset catalogue and manuscript
-references for MoleculeNet, SIMPD, QMOF, Materials Project and ChEMBL credits.
+## Archival material and attribution
+
+`ARCHIVE_V01_README.md`, `reproduce.py`, `reproduction/` and the explicitly labelled
+supplement section preserve the earlier release workflows and observations.
+Use the current portable adapter for the new primary study. The running private
+website remains separately pinned and is not changed by this revision.
+
+`SHA256SUMS.json` inventories the delivered publication files. Code is MIT-licensed;
+input data retain their source attribution and original terms. No archival DOI
+is claimed. Publication and benchmark identities are documented in the manuscript.

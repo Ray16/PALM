@@ -1,0 +1,130 @@
+{
+  "name": "deployment__s8",
+  "study": "deployment",
+  "seed": 8,
+  "status": "ok",
+  "manifest_sha256": "2b466f8ddf64c0d60f3b71691968cb41e816b87a854a3a8a57a3e93fe9357924",
+  "artifacts": {
+    "assignments/deployment__s8/random.npy": "5d4ceedb99f31a81227f87f700b5d470d87ac211f8d909bb44c8996779475bce",
+    "assignments/deployment__s8/oracle_family_holdout.npy": "cb5a836530a24f82db40894a2f18c81da62fca95fce766a322ffed9020cd885d",
+    "assignments/deployment__s8/plain.npy": "9131f61614c2f13fec327d4d6f3d8d0819cb7c889e455c3caf81a05d78f77636",
+    "assignments/deployment__s8/combined.npy": "bdfddae55cd9ae058cc89aef4d4625c01e0fa3356ae314b77aed2eabfe9eff9f"
+  },
+  "warmup_seconds": 0.11082911305129528,
+  "case_seconds": 4.4701442159712315,
+  "peak_rss_mb": 614.46484375,
+  "cpu_affinity": [
+    10,
+    11
+  ],
+  "host": "lambda2",
+  "rows": [
+    {
+      "method": "random",
+      "model": "invariant_ridge",
+      "estimated_rmse": 1.8065145714403166,
+      "interpolation_rmse": 1.8658739814390402,
+      "new_family_rmse": 1.8714628021661686,
+      "interpolation_bias": -0.05935940999872358,
+      "new_family_bias": -0.06494823072585199,
+      "split_seconds": 0.0,
+      "train_families": 50,
+      "test_seen_family_fraction": 1.0
+    },
+    {
+      "method": "random",
+      "model": "family_knn",
+      "estimated_rmse": 1.2161791828907114,
+      "interpolation_rmse": 1.330802813126371,
+      "new_family_rmse": 2.117409758158854,
+      "interpolation_bias": -0.11462363023565958,
+      "new_family_bias": -0.9012305752681424,
+      "split_seconds": 0.0,
+      "train_families": 50,
+      "test_seen_family_fraction": 1.0
+    },
+    {
+      "method": "oracle_family_holdout",
+      "model": "invariant_ridge",
+      "estimated_rmse": 1.6121163987424452,
+      "interpolation_rmse": 1.9268249912367676,
+      "new_family_rmse": 1.904668197689186,
+      "interpolation_bias": -0.3147085924943225,
+      "new_family_bias": -0.29255179894674077,
+      "split_seconds": 0.0,
+      "train_families": 40,
+      "test_seen_family_fraction": 0.0
+    },
+    {
+      "method": "oracle_family_holdout",
+      "model": "family_knn",
+      "estimated_rmse": 1.84350247031176,
+      "interpolation_rmse": 1.279089264523572,
+      "new_family_rmse": 2.1426066182524,
+      "interpolation_bias": 0.5644132057881879,
+      "new_family_bias": -0.2991041479406402,
+      "split_seconds": 0.0,
+      "train_families": 40,
+      "test_seen_family_fraction": 0.0
+    },
+    {
+      "method": "plain",
+      "model": "invariant_ridge",
+      "estimated_rmse": 2.017293182102472,
+      "interpolation_rmse": 1.8821814183139243,
+      "new_family_rmse": 1.8636787991866315,
+      "interpolation_bias": 0.13511176378854794,
+      "new_family_bias": 0.15361438291584073,
+      "split_seconds": 0.20377562008798122,
+      "train_families": 49,
+      "test_seen_family_fraction": 1.0
+    },
+    {
+      "method": "plain",
+      "model": "family_knn",
+      "estimated_rmse": 1.8042152362210697,
+      "interpolation_rmse": 1.3641149758105975,
+      "new_family_rmse": 2.0725309695154324,
+      "interpolation_bias": 0.44010026041047223,
+      "new_family_bias": -0.26831573329436265,
+      "split_seconds": 0.20377562008798122,
+      "train_families": 49,
+      "test_seen_family_fraction": 1.0
+    },
+    {
+      "method": "combined",
+      "model": "invariant_ridge",
+      "estimated_rmse": 2.320981470133112,
+      "interpolation_rmse": 1.853502705504438,
+      "new_family_rmse": 1.877135425683558,
+      "interpolation_bias": 0.4674787646286742,
+      "new_family_bias": 0.4438460444495542,
+      "split_seconds": 0.36159363202750683,
+      "train_families": 40,
+      "test_seen_family_fraction": 0.0
+    },
+    {
+      "method": "combined",
+      "model": "family_knn",
+      "estimated_rmse": 2.4376730961048496,
+      "interpolation_rmse": 1.2406936144845635,
+      "new_family_rmse": 2.103589257505261,
+      "interpolation_bias": 1.1969794816202861,
+      "new_family_bias": 0.33408383859958857,
+      "split_seconds": 0.36159363202750683,
+      "train_families": 40,
+      "test_seen_family_fraction": 0.0
+    }
+  ],
+  "feature_sha256": "aad245a5d717776c3f2252cd758e1b55a86f1d04e13c519889662a633e16274b",
+  "target_sha256": "3ef6ba30e974c14077f65d9f960d32762ed2358267a27a63199487ae84a8a7b7",
+  "independent_known_sha256": "bbb652e9578bd71872e857cc3fc16c557e44d83307bc41b64728c3a45454cafe",
+  "independent_novel_sha256": "d25bc85f0f445d300998bf6b0a5fabe541141808a739d68cbc09d77db285c75e",
+  "n": 2000,
+  "counts": [
+    1600,
+    200,
+    200
+  ],
+  "protocol": "Synthetic mechanism test. Fixed generative causal features for invariant model; independent cohort observations, shared known-family effects and independently drawn novel-family effects. Interpolation risk is conditional on families present in each training set. No chronological or prospective application claim."
+}

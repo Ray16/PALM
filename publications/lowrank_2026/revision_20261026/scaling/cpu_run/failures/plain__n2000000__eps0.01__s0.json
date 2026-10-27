@@ -1,0 +1,10 @@
+{
+  "name": "plain__n2000000__eps0.01__s0",
+  "n": 2000000,
+  "epsilon": 0.01,
+  "seed": 0,
+  "method": "plain",
+  "exit_code": -999,
+  "terminal": true,
+  "allocation_pid": 1517968
+}

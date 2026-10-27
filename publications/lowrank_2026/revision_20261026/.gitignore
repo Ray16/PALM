@@ -2,5 +2,17 @@ run/cache/
 run/logs/
 run/claims/
 __pycache__/
+cache/
+verification/nfs_claim_tests/
+verification/portable_smoke/logs/
+verification/portable_smoke/claims/
+verification/portable_smoke/retired_claims/
+fidelity/run/logs/
+fidelity/run/claims/
+publication_checks/run/logs/
+publication_checks/run/claims/
+scaling/large_cpu_run/logs/
+scaling/large_cpu_run/claims/
 scaling/cpu_run/claims/
+scaling/cpu_run/retired_claims_after_run/
 scaling/cpu_run/logs/

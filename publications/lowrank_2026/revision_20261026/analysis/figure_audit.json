@@ -1,0 +1,62 @@
+[
+  {
+    "figure": "concept",
+    "width_inches": 6.5,
+    "height_inches": 7.2,
+    "minimum_source_font_pt": 18.0,
+    "detected_text_overlaps": [],
+    "detected_panel_overlaps": [],
+    "clipped_text": [],
+    "final_width_inches": 6.5,
+    "visual_inspection": "pending",
+    "final_manuscript_font_check": "pending"
+  },
+  {
+    "figure": "fidelity",
+    "width_inches": 6.5,
+    "height_inches": 4.8,
+    "minimum_source_font_pt": 18.0,
+    "detected_text_overlaps": [],
+    "detected_panel_overlaps": [],
+    "clipped_text": [],
+    "final_width_inches": 6.5,
+    "visual_inspection": "pending",
+    "final_manuscript_font_check": "pending"
+  },
+  {
+    "figure": "quality",
+    "width_inches": 6.5,
+    "height_inches": 7.3,
+    "minimum_source_font_pt": 18.0,
+    "detected_text_overlaps": [],
+    "detected_panel_overlaps": [],
+    "clipped_text": [],
+    "final_width_inches": 6.5,
+    "visual_inspection": "pending",
+    "final_manuscript_font_check": "pending"
+  },
+  {
+    "figure": "deployment",
+    "width_inches": 6.5,
+    "height_inches": 7.1,
+    "minimum_source_font_pt": 18.0,
+    "detected_text_overlaps": [],
+    "detected_panel_overlaps": [],
+    "clipped_text": [],
+    "final_width_inches": 6.5,
+    "visual_inspection": "pending",
+    "final_manuscript_font_check": "pending"
+  },
+  {
+    "figure": "cpu_scaling",
+    "width_inches": 6.5,
+    "height_inches": 5.0,
+    "minimum_source_font_pt": 18.0,
+    "detected_text_overlaps": [],
+    "detected_panel_overlaps": [],
+    "clipped_text": [],
+    "final_width_inches": 6.5,
+    "visual_inspection": "pending",
+    "final_manuscript_font_check": "pending"
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "database_release": "ChEMBL 37, as recorded by the frozen preparation source and release README",
+  "release_doi": "10.6019/CHEMBL.database.37",
+  "official_metadata": "https://chembl.gitbook.io/chembl-interface-documentation/downloads",
+  "rows": 2897804,
+  "packed_shape": [
+    2897804,
+    256
+  ],
+  "fingerprint_recipe": "Morgan radius 2, 2048 bits, np.packbits",
+  "sampled_regenerations_checked": 128,
+  "all_sampled_bits_match": true,
+  "full_regeneration_claim": false,
+  "recipe_sha256": "754c197f6e51cf24453cbe884aa509de54d33fec1d883aabbbcea7a7d3cc3c9c"
+}
