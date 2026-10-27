@@ -6,3 +6,5 @@ publication_checks/run/assignments/** linguist-generated=true
 analysis/summary.json linguist-generated=true
 scaling/cpu_run/**/result.json linguist-generated=true
 scaling/large_cpu_run/**/result.json linguist-generated=true
+analysis/native_logs/*.txt -whitespace
+verification/webapp_regression_pinned.txt -whitespace
