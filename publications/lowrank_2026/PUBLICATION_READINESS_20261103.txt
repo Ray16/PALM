@@ -1,0 +1,102 @@
+Publication readiness after ODAC25 integration
+=============================================
+
+Assessment
+----------
+The revised article is a credible computational-methods submission candidate.
+The main contribution is compact dense-overlap optimization with explicit
+capacity, fidelity and feasibility contracts, supported by current-code
+comparators/scaling and a separately versioned ODAC25 composition application.
+Technical checks and internal review support coauthor assessment. They do not
+guarantee acceptance or substitute for author approval of the scientific claims.
+
+The canonical starting manuscript is the October 26 v0.2.0.dev3 revision
+(3f8f5a9), not the older October 22 manuscript in low_rank/paper/mlst_2026.
+The primary method producer remains pinned to f7e0866. ODAC25 retains its
+original v0.1 factor source and weighted adapter as an explicitly separate case.
+
+Completed in this revision
+--------------------------
+1. Added ODAC25 to abstract, introduction, Results, Discussion and Methods,
+   with a four-arm count-matched comparison in the main text.
+2. Added supplementary source revisions, range-download accounting, original
+   split reconciliation, identity rules, representation aggregation, weighted
+   solver details, uncertainty units and per-seed observations.
+3. Included grouping-before-optimization and dense-kernel controls. Zero formula
+   overlap is attributed to the grouping contract; chemical shift and two large
+   validation components are disclosed. Only two distinct low-rank assignments
+   arise from three seeds. No predictive accuracy, deployment realism or ODAC25
+   speedup over a dense solver is claimed.
+4. Imported a small, checksum-verified evidence package and original numerical
+   source. Expanded metadata caches and large atomistic files are omitted.
+   A relocated offline replay reproduces all reported formula metrics exactly.
+5. Added generated-number/table validation to the article build, verified the
+   ODAC25 journal citation against the publisher/Crossref, and checked PDF layout.
+
+Remaining actions before submission
+------------------------------------
+A. Author input and approval (required; cannot be inferred)
+   Supply author order, affiliations, corresponding author/contact, CRediT
+   contributions, funding and competing-interest statements. Add ORCIDs where
+   available. The present PDF deliberately retains explicit placeholders.
+   Every named author should verify scientific claims, references and AI-assisted
+   code/analysis/text. The disclosure identifies the assistance; it cannot
+   establish that the authors have already completed that verification.
+
+B. Choose the intended scientific claim and final venue (author decision)
+   For a methods paper, retain the current formulation: representation-defined
+   generalization boundaries, accuracy/capacity diagnostics, and measured
+   quality--cost trade-offs. ODAC25 supplies a metadata-efficient composition-OOD
+   application. The independent-entity scaling evidence comes from ChEMBL.
+   MLST is a plausible fit; acceptance and novelty are editorial judgments.
+
+C. Freeze the reviewed release and public evidence (required for reproducibility)
+   Use the reviewed manuscript commit and stable release/supplement links for the
+   package, per-seed results, exact assignments and source/data manifests. Verify
+   the link a reviewer receives in a clean checkout. Expanded ODAC25 metadata
+   may be regenerated with pinned column-range reads; the numerical result
+   tables and formula/group maps are included for offline inspection.
+   An archival DOI is strongly recommended for persistence and citation, but
+   an independently minted DOI is not itself a universal submission blocker.
+   The publisher permits supplementary-data sharing and accepts a DOI,
+   pre-registered DOI, hyperlink or other identifier at submission.
+
+D. Final human scientific read-through (required author responsibility)
+   Check that novelty is distinguished from established Nyström/kernel clustering;
+   approximate cut fidelity is distinguished from optimizer optimality; primary
+   and archival source versions are distinct; original ODAC25 composition overlap
+   is not described as identical-geometry leakage; and target/chemical shift is
+   not used to infer prospective superiority. The new main table and SI contain
+   the controls and limitations needed for that read-through.
+
+Useful follow-up, conditional on expanding the claims
+----------------------------------------------------
+* To claim improved physical predictive evaluation, add a declared downstream
+  adsorption-energy/force study on a bounded, identity-preserving subset, with
+  the same model/tuning budget across original and new splits. Account for
+  training-data exposure in pretrained models. Present target and chemical
+  distributions alongside prediction scores. This is not required by the
+  present metadata-only application claim.
+* To claim ODAC25-specific low-rank speed superiority, benchmark a larger number
+  of independent entities against matched dense/graph/group controls with common
+  hardware, preprocessing and timing scope. Optimizing 2,050 representatives
+  cannot establish scaling over 37.7 million independent points.
+* Moving ODAC25 to the primary v0.2 implementation, broader representations or
+  genuine chronological outcomes would extend the evidence. Their absence is
+  disclosed rather than silently treated as completed validation.
+
+Publisher policies checked 2026-11-03
+------------------------------------
+MLST scope:
+https://publishingsupport.iopscience.iop.org/journals/machine-learning-science-and-technology/about-machine-learning-science-technology/
+
+IOP open-data policy: verification/reproduction data must be publicly accessible
+at publication; a trusted repository/DOI is recommended, and supplementary data
+are permitted. A data availability statement is required.
+https://publishingsupport.iopscience.iop.org/iop-publishing-open-data-policy/
+
+IOP AI policy: material assistance must be disclosed and author-verified;
+research-process use should also be described in Methods where applicable.
+https://publishingsupport.iopscience.iop.org/questions/generative-ai-tools/
+
+These are internal readiness findings, not independent journal peer review.

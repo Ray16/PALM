@@ -1,16 +1,16 @@
 {
-  "review_type": "Internal scientific and rendered-layout review",
+  "review_type": "Internal scientific and rendered-layout review after ODAC25 integration",
   "reviewed_documents": {
     "manuscript.pdf": {
-      "pages": 17,
-      "render_sha256": "b7c5d889e7634cbbd15f6e2faf99f7c4987f1e8a403dd346b69a90a3134c6582",
+      "pages": 19,
+      "render_sha256": "fb0444120217779ef99b6f721bd3e69627de5915830669ab2238bcfcab3a0acc",
       "minimum_figure_font_pt": 18.0,
       "all_figure_fonts_at_least_18": true,
       "clipped_figure_text": []
     },
     "supplement.pdf": {
-      "pages": 48,
-      "render_sha256": "457c0fa7de1e7b65e4ec0d19d2ef3e4bc26813b192e2050c816494473848e41d",
+      "pages": 51,
+      "render_sha256": "58067d5af2329cb940349113109b5298aa800290fd7cd8b3b07aa460c28323bc",
       "minimum_figure_font_pt": 18.0,
       "all_figure_fonts_at_least_18": true,
       "clipped_figure_text": []
@@ -34,7 +34,9 @@
       14,
       15,
       16,
-      17
+      17,
+      18,
+      19
     ],
     "supplement.pdf": [
       1,
@@ -84,11 +86,14 @@
       45,
       46,
       47,
-      48
+      48,
+      49,
+      50,
+      51
     ]
   },
-  "inspection": "Every page inspected in current contact sheets; all current figure pages and representative dense tables also inspected separately. Source text/panel geometry checks and compiled font checks supplement visual inspection. No overlapping panels, text/panel collisions or clipped figure text observed. Figure order is constrained to the relevant Results subsection; long tables repeat headers.",
+  "inspection": "Every page inspected in final contact sheets; ODAC25 main page 12 and supplementary pages 12--14 also inspected at readable resolution. Float ordering, table placement, margins and reference/layout warnings checked. Existing figures retain at least 18 pt text; no observed clipping or text/panel overlap. Methods page 14 and the changed final narrative/reference pages were reinspected after adding the research-process AI disclosure.",
   "minimum_required_figure_font_pt": 18,
-  "author_metadata": "Explicitly deferred by the user; not invented and not a passed submission gate.",
-  "numerical_review": "See SCIENTIFIC_REVIEW.md, independent_validation.json, source manifests and wheel checks."
+  "author_metadata": "Pending author input; technical review does not certify scientific approval or submission readiness.",
+  "odac25_scope": "Versioned v0.1-factor weighted adapter, matched counts, grouping and dense controls, chemical shift and clustered validation weight disclosed."
 }

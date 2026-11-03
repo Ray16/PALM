@@ -155,6 +155,12 @@ def main(args):
             issues.append("final manual visual review missing")
         else:
             issues += review_issues(PAPER, json.loads(review.read_text()))
+    odac = json.loads((PAPER.parent / "odac25_case/manuscript_validation.json").read_text())
+    if not odac.get("passed"):
+        issues.append("ODAC25 evidence gate failed")
+    for name, digest in odac["generated_files"].items():
+        if sha(PAPER / name) != digest:
+            issues.append("ODAC25 generated table/number drift: " + name)
     pending = (
         "Author information pending" in (PAPER / "manuscript.tex").read_text()
         or "Pending" in (PAPER / "submission_metadata.tex").read_text()

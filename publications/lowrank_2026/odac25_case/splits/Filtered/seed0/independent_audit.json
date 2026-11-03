@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "compact_source_records_checked": 5337784,
+  "original_configuration_counts": {
+    "Train": 36920036,
+    "Val": 791638
+  },
+  "assigned_configuration_counts": {
+    "train": 29717477,
+    "val": 2278663,
+    "test": 5715534
+  },
+  "alias_group_conflicts": 0,
+  "observed_formula_group_conflicts": 0,
+  "table_checksums_match": true,
+  "scope": "All compact source name/formula/count records; no original coordinates/forces inspected"
+}

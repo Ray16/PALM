@@ -1,0 +1,12 @@
+\begin{table}[htbp]\centering
+\begin{tabular}{lrr}
+\toprule
+Assignment & Global ratio $\downarrow$ & Mean nearest $\downarrow$\\
+\midrule
+Original & 0.969 & 0.846\\
+Groups before optimization & 0.825--0.873 & 0.526--0.574\\
+Low-rank optimization & 0.283 & 0.194--0.196\\
+Dense-kernel control & 0.287 & 0.154--0.164\\
+\bottomrule\end{tabular}
+\caption{ODAC25 composition separation at identical configuration counts. The global ratio is normalized by the random expectation at those counts. Scores use recorded elemental fractions, configuration weights, 200,000 pair draws and 512 validation queries against every distinct training formula. Ranges span three optimizer seeds, which yield only two distinct low-rank assignments. The group control uses the same exact-count feasible initialization; it is not a uniform sampler of feasible partitions.}
+\label{tab:odac25}\end{table}

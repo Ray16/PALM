@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "frozen_files": 102,
+  "original_counts_matched": true,
+  "immutable_groups_broken": 0,
+  "observed_formula_overlap": 0,
+  "distinct_lowrank_assignments": 2,
+  "evidence_manifest_sha256": "03e8fd0f218b7f454ec9d7466a6bf4a62de796358d3bb465e72d3f54f20f31e3",
+  "generator_sha256": "73e979b0d299b1f45c901fa4fa06f07f7dad311ea3d8bc65582d8886baf9067e",
+  "generated_files": {
+    "odac25_numbers.tex": "3e672645fc90a645dc27268bf681b7c1b58cd311c5a2b21d00f0ff66242b0b35",
+    "odac25_table.tex": "468208e6bd4113c4c0e2334006f31a49136f16a2c4d1bf932af933d0a36965d3",
+    "odac25_seed_table.tex": "d62b08e6b80e9d33a5177e3beef779e6eb023494dcbf59effddb5cd8d6885d50"
+  },
+  "scope": "Frozen weighted v0.1-factor case study; no new downloads, experiments, or predictive claims"
+}

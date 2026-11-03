@@ -12,6 +12,7 @@ if [[ "${1:-}" == "--allow-partial" ]]; then
   report_flags=(--allow-incomplete)
 fi
 "$mlst_python" "$paper_dir/build_tools/systematic_report.py" "${report_flags[@]}"
+"$mlst_python" "$paper_dir/build_tools/odac25_report.py"
 cd -- "$paper_dir"
 mkdir -p logs
 for document in manuscript supplement; do

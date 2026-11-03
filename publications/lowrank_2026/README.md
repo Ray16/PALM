@@ -1,3 +1,12 @@
+## ODAC25 manuscript update, 3 November 2026
+
+The manuscript now includes the audited metadata-only ODAC25 case, with the
+original split, exact-count grouping control, weighted low-rank optimization,
+and dense-kernel control. See [readiness assessment](PUBLICATION_READINESS_20261103.txt)
+and [case evidence/replay](odac25_case/README.txt). The case freezes its original
+v0.1 factor implementation separately from the primary v0.2.0.dev3 experiments.
+The main PDF has 19 pages and the supplement 51 pages before author metadata.
+
 # Low-rank similarity splitting: current publication revision
 
 The current manuscript and package use v0.2.0.dev3. Numerical method source is

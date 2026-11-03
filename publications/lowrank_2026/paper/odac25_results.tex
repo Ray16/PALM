@@ -1,0 +1,39 @@
+\subsection{A metadata-only composition holdout for ODAC25}
+\label{sec:odac25}
+
+The atomistic ODAC25 release provides a separate application of constrained
+split design \citep{sriram2026odac25}. Reading only names, formulas and
+multiplicities from pinned ColabFit Parquet snapshots transfers
+\ODACTransferMB{} MB of production payload. The retained
+\ODACUniqueRows{} rows represent \ODACFrames{} configurations after restoring
+multiplicities, exactly reconciling the published filtered training and
+validation counts. Small pilot and documentation requests are additional;
+coordinates, forces and energy labels are not read. Conservative family-name
+rules, shared configuration aliases and identical compositions define
+\ODACGroups{} indivisible components. A versioned weighted-factor adapter then
+constructs a two-fold holdout at exactly \ODACTrain{} training and
+\ODACVal{} validation configurations. This case uses the frozen v0.1 factor
+implementation and a separate exact-count group assignment, rather than the
+primary v0.2.0.dev3 point-level solver.
+
+On the recorded elemental-fraction vectors, the count-normalized global
+overlap falls from \ODACOriginalGlobal{} for the original split to
+\ODACLowGlobal{} after low-rank optimization. Mean nearest-training similarity
+falls from \ODACOriginalNN{} to \ODACLowNN{} (Table~\ref{tab:odac25}).
+The same-group feasible initialization already reduces overlap, but further
+optimization adds substantial separation. A dense-kernel control is
+competitive, so this small representative problem does not establish a
+low-rank speed advantage. The millions of configurations describe assignment
+coverage; the optimizer operates on \ODACGroups{} representatives.
+
+\input{odac25_table.tex}
+
+The resulting boundary is a strong composition-shift test. Phosphorus occurs
+in \ODACPhosphorusVal\% of validation configurations versus
+\ODACPhosphorusTrain\% of training configurations for seed zero, and two
+components contribute \ODACTopTwo\% of validation weight. Zero identical-
+composition overlap follows from the imposed grouping contract. These results
+demonstrate metadata-efficient construction of a specified holdout, while
+leaving its predictive and deployment relevance open. The ODAC25 section of
+the Supplementary Information gives the weighting, aggregation, source
+versions, individual seeds and numerical checks.

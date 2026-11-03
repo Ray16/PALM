@@ -1,0 +1,83 @@
+{
+  "rows": [
+    {
+      "method": "original",
+      "seed": null,
+      "train_configurations": 36920036,
+      "val_configurations": 791638,
+      "global_share_mc": 0.03983703680699411,
+      "global_random_relative_mc": 0.9692144776598091,
+      "global_random_relative_mc_stderr": 0.001970908101409766,
+      "pair_samples": 200000,
+      "val_nearest_train_similarity": 0.8464329031703528,
+      "nearest_similarity_mc_stderr": 0.010371625855468967,
+      "val_queries": 512,
+      "distinct_training_formulas": 201144,
+      "val_fraction_with_exact_training_formula": 0.46010550276767914,
+      "evaluation_seconds": 0.6756911054253578
+    },
+    {
+      "method": "weighted_lowrank_exact_original_counts",
+      "seed": 0,
+      "train_configurations": 36920036,
+      "val_configurations": 791638,
+      "global_share_mc": 0.011629874696326465,
+      "global_random_relative_mc": 0.2829488293434041,
+      "global_random_relative_mc_stderr": 0.0004778674708330257,
+      "pair_samples": 200000,
+      "val_nearest_train_similarity": 0.1937091746549413,
+      "nearest_similarity_mc_stderr": 0.005974134355208887,
+      "val_queries": 512,
+      "distinct_training_formulas": 196204,
+      "val_fraction_with_exact_training_formula": 0.0,
+      "evaluation_seconds": 1.0936769917607307
+    },
+    {
+      "method": "weighted_lowrank_exact_original_counts",
+      "seed": 1,
+      "train_configurations": 36920036,
+      "val_configurations": 791638,
+      "global_share_mc": 0.01164550699156952,
+      "global_random_relative_mc": 0.28332915499217226,
+      "global_random_relative_mc_stderr": 0.0004797828801571851,
+      "pair_samples": 200000,
+      "val_nearest_train_similarity": 0.19573210260386986,
+      "nearest_similarity_mc_stderr": 0.006044798896210763,
+      "val_queries": 512,
+      "distinct_training_formulas": 196177,
+      "val_fraction_with_exact_training_formula": 0.0,
+      "evaluation_seconds": 0.9659245740622282
+    },
+    {
+      "method": "weighted_lowrank_exact_original_counts",
+      "seed": 2,
+      "train_configurations": 36920036,
+      "val_configurations": 791638,
+      "global_share_mc": 0.011629874696326465,
+      "global_random_relative_mc": 0.2829488293434041,
+      "global_random_relative_mc_stderr": 0.0004778674708330257,
+      "pair_samples": 200000,
+      "val_nearest_train_similarity": 0.1937091746549413,
+      "nearest_similarity_mc_stderr": 0.005974134355208887,
+      "val_queries": 512,
+      "distinct_training_formulas": 196204,
+      "val_fraction_with_exact_training_formula": 0.0,
+      "evaluation_seconds": 0.9893371239304543
+    }
+  ],
+  "distinct_formulas": 205269,
+  "active_element_fraction_dimensions": 62,
+  "standardization": "Configuration-weighted mean and sample variance over full pool; remove zero-variance dimensions",
+  "global_metric": "Monte Carlo train-val pair mean / total pair mean; exact original fold counts",
+  "nearest_metric": "512 configuration-weighted validation queries against every distinct training formula",
+  "uncertainty": "Monte Carlo standard errors only; split/model uncertainty is separate",
+  "no_additional_downloads": true,
+  "source_sha256": "090f1a3346ba1b0d93930a7eb795545479cbdd6ec810220318014ec91686c9ba",
+  "input_hashes": {
+    "comparison_original/original_formula_counts.parquet": "876121d242e1167c371c67f0272c0ff4e6797229578285023934cd8d872d063a",
+    "splits/Filtered/seed0/formula_assignments.csv": "25a3e34091e34b5de8faff22fcff1ce222f81cd4d0d44ed4ae1a1b18f78e8fff",
+    "comparison_original/matched_lowrank_seed0_groups.csv": "b93e4973d7d8cfe84cfb9a1e3a86e8fa250be6aabcfcae15a7a5a30bc6bd6f67",
+    "comparison_original/matched_lowrank_seed1_groups.csv": "bd332827e7f3a0e3fa30901d37ac12faceb5b2ab092ee53c01650270e9bfc531",
+    "comparison_original/matched_lowrank_seed2_groups.csv": "b93e4973d7d8cfe84cfb9a1e3a86e8fa250be6aabcfcae15a7a5a30bc6bd6f67"
+  }
+}

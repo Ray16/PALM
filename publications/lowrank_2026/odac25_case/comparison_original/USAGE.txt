@@ -1,0 +1,54 @@
+Original ODAC25 split comparison (offline)
+=========================================
+
+The official downloaded release provides Train and Validation, with no Test
+archive listed in the DATASET.md used here. The original labels are retained
+from the pinned repository/source shard of every compact record.
+
+Recorded originals:
+  original_family_membership.csv: original Train/Val counts per inferred family.
+    Families can occur in both folds; these membership counts must not be summed
+    across families when deduplicated configuration aliases name multiple families.
+  original_group_counts.csv: unambiguous original counts per immutable component.
+  original_formula_counts.parquet: original Train/Val counts per reduced formula.
+
+Matched comparison:
+  matched_lowrank_seed{0,1,2}_groups.csv: new two-fold assignments, with exactly
+    36,920,036 training and 791,638 validation configurations (multiplicity sums).
+  matched_lowrank_seed{0,1,2}_families.csv: propagated family-level maps for lookup.py.
+  comparison_recorded_formulas.csv: primary composition evaluation.
+  comparison_group_proxy.csv: secondary group-average proxy evaluation.
+  summary.json: method, overlap counts and limitations.
+  provenance.json: derivation inputs/outputs and script digests, no new downloads.
+
+This is a weighted-group adaptation of the low-rank factor-cut approach. Each
+group's factor row is multiplied by its configuration count. Binary linear
+assignment enforces the exact original frame counts, and proposals are accepted
+only when they improve the weighted approximate cut. No group is dissolved.
+Linear-assignment solver status is retained; it does not certify a globally
+optimal quadratic partition. This is distinct from the previous equal-group-
+count 80/10/10 split and its public-API timing.
+
+The primary evaluation uses the actual 205,269 observed reduced formulas, with
+configuration-weighted elemental-fraction scaling shared across all methods.
+Global overlap is estimated from 200,000 pair samples. Nearest-training similarity
+uses 512 configuration-weighted validation queries against every distinct
+training formula. Reported standard errors quantify Monte Carlo error only.
+No coordinates, energy labels, predictive accuracy or target shifts are tested.
+
+Original overlap of six-letter CSD parents or identical compositions does not
+establish overlap of the same atomic structures. The original dataset may test
+a different generalization question. The new split explicitly strengthens the
+composition/family holdout requirement.
+
+Reproduce from the umbrella directory using the recorded palm Python environment:
+  export CUDA_VISIBLE_DEVICES=''
+  export OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2
+  task_python=/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/bin/python
+  "$task_python" odac25_metadata/compare_original.py
+  "$task_python" odac25_metadata/evaluate_original_formulas.py
+  "$task_python" odac25_metadata/finalize_original.py
+  "$task_python" -m unittest discover -s odac25_metadata -p 'test_original_comparison.py' -v
+
+All inputs come from the compact catalogue already downloaded. No network
+access or large dataset download is needed by these comparison scripts.

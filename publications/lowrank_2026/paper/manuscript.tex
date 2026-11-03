@@ -12,6 +12,7 @@
 \newcommand{\nnl}{\operatorname{NNL}}
 \input{systematic_numbers.tex}
 \input{revision_numbers.tex}
+\input{odac25_numbers.tex}
 \title{Compressing dense similarity for dataset splitting with global and local control}
 \author{Author information pending}
 \date{}
@@ -35,7 +36,9 @@ excluding close analogues produce different partitions. Kernel powers and
 capped groups adjust this trade-off, with additional approximation and
 computational costs. Independent cohorts in a synthetic family model show
 why the intended transfer task matters: random and family-separated splits
-support different model-selection decisions. The framework makes specified
+support different model-selection decisions. A metadata-only ODAC25 case
+constructs a count-matched composition holdout covering 37.7 million
+configurations through 2,050 group representatives. The framework makes specified
 similarity-aware evaluation boundaries computationally accessible while
 keeping approximation, capacity constraints and task validity explicit.
 \end{abstract}
@@ -93,7 +96,9 @@ cost compare with established alternatives, how capacity tolerance affects
 scaling, and when the boundary gives a useful evaluation decision. The primary
 experiments use one pinned implementation. Earlier-release molecular,
 materials and assay studies are retained as explicitly identified supporting
-evidence in the Supplementary Information.
+evidence in the Supplementary Information. A separately versioned ODAC25
+application tests metadata-only composition holdouts at the original
+configuration counts (Section~\ref{sec:odac25}).
 
 \begin{figure}[!htbp]
 \centering\includegraphics[width=6.5in]{systematic/concept.pdf}
@@ -207,6 +212,8 @@ memory scopes accompany the measurements.
 \section{Results}
 \input{results_systematic.tex}
 \FloatBarrier
+\input{odac25_results.tex}
+\FloatBarrier
 
 \section{Discussion}
 
@@ -236,6 +243,13 @@ particular evaluation boundaries matter; the primary benchmarks use the
 ordinary all-fold objective. Label-informed changes belong to declared benchmark
 design or sensitivity analysis, with a separate final evaluation.
 
+The ODAC25 application extends this design question to an atomistic corpus
+using a compact metadata transfer. It also illustrates the distinction between
+assignment coverage and independent optimization units. Its chemical shift,
+concentrated validation weight and competitive dense control delimit the claim:
+the case demonstrates a specified composition holdout, while the separate
+ChEMBL experiments establish measured computational scaling.
+
 Several limits remain. The datasets are convenience samples, and conclusions
 about molecular separation depend on the fingerprint representation.
 A small returned-cut error leaves optimizer suboptimality unresolved.
@@ -260,7 +274,14 @@ task can be examined explicitly.
 
 \subsection{Implementation, data and scoring}
 
-Primary numerical experiments use the pinned v0.2.0.dev3 implementation.
+Primary molecular experiments use the pinned v0.2.0.dev3 implementation.
+The ODAC25 case uses a separately frozen weighted adapter, detailed in
+the ODAC25 section of the Supplementary Information.
+AI assistance supported code development, analysis scripting and manuscript
+preparation. Numerical claims are checked against retained observations,
+source and assignment hashes, independent kernel calculations and scoped
+regression tests. The ODAC25 addition also retains a separate offline replay
+and numerical audit; its tables are generated from the verified records.
 The six full molecular datasets are FreeSolv, ESOL, BACE, BBBP, Lipophilicity
 and Tox21 \citep{wu2018moleculenet}. Radius-two Morgan fingerprints have 1024 bits,
 with binary Tanimoto similarity
@@ -399,7 +420,12 @@ manuscript changes and reproduction adapters. Public-input recipes and checksums
 The earlier
 \href{https://github.com/Ray16/PALM/tree/lowrank-v0.1.0-review-20261021-r2/publications/lowrank_2026}{v0.1 review release}
 preserves the archival experiments. MoleculeNet, ChEMBL, QMOF, Materials Project
-and SIMPD inputs retain their original attribution and terms.
+and SIMPD inputs retain their original attribution and terms. The ODAC25
+addition, frozen adapter, compact evidence and assignment maps are included
+in \path{odac25_case} on the
+\href{https://github.com/Ray16/PALM/tree/lowrank-odac25-20261103/publications/lowrank_2026}{ODAC25 revision branch}; its dataset sources retain their CC-BY-4.0 attribution.
+The expanded metadata caches can be regenerated from the pinned column-range
+requests and are not needed to rebuild the article.
 
 \input{submission_metadata.tex}
 \section*{Acknowledgements and use of AI tools}

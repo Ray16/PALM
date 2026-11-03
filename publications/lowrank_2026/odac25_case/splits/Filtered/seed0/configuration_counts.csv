@@ -1,0 +1,13 @@
+original_split,split,kind,count
+Train,test,multiplicity_sum,5530717
+Train,test,unique_configuration_rows,5488064
+Train,train,multiplicity_sum,29148497
+Train,train,unique_configuration_rows,28982738
+Train,val,multiplicity_sum,2240822
+Train,val,unique_configuration_rows,2197500
+Val,test,multiplicity_sum,184817
+Val,test,unique_configuration_rows,184817
+Val,train,multiplicity_sum,568980
+Val,train,unique_configuration_rows,565892
+Val,val,multiplicity_sum,37841
+Val,val,unique_configuration_rows,37841
