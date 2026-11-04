@@ -11,7 +11,7 @@
         "test_controls.py",
         "analysis/dense_factor_pairs.csv"
       ],
-      "status": "pending final completion/delivery audit"
+      "status": "verified complete for the controlled-optimization checkpoint"
     },
     {
       "id": "approximation_vs_optimization",
@@ -22,7 +22,7 @@
         "../revision_20261026/analysis/summary.json",
         "../paper/theory.tex"
       ],
-      "status": "pending final completion/delivery audit"
+      "status": "verified complete for the controlled-optimization checkpoint"
     },
     {
       "id": "component_attribution",
@@ -32,7 +32,7 @@
         "../paper/controls_ablation_table.tex",
         "suite.py"
       ],
-      "status": "pending final completion/delivery audit"
+      "status": "verified complete for the controlled-optimization checkpoint"
     },
     {
       "id": "ccpart",
@@ -44,7 +44,7 @@
         "../paper/controls_ccpart_native.tex",
         "../paper/controls_ccpart_counts.tex"
       ],
-      "status": "pending final completion/delivery audit"
+      "status": "verified complete for the controlled-optimization checkpoint"
     },
     {
       "id": "scale_and_rank",
@@ -54,7 +54,7 @@
         "../revision_20261026/scaling/large_cpu_run/manifest.json",
         "../paper/results_systematic.tex"
       ],
-      "status": "pending final completion/delivery audit"
+      "status": "verified complete for the controlled-optimization checkpoint"
     },
     {
       "id": "readable_manuscript",
@@ -66,7 +66,7 @@
         "../paper/controls_supplement.tex",
         "verification/final_visual_review.json"
       ],
-      "status": "pending final completion/delivery audit"
+      "status": "verified complete for the controlled-optimization checkpoint"
     },
     {
       "id": "verification",
@@ -77,7 +77,7 @@
         "verification/replay_scaling_addition.json",
         "verification/replay_clock_addition.json"
       ],
-      "status": "pending final completion/delivery audit"
+      "status": "verified complete for the controlled-optimization checkpoint"
     },
     {
       "id": "delivery",
@@ -85,7 +85,7 @@
       "authoritative_evidence": [
         "verification/delivery.json"
       ],
-      "status": "pending final completion/delivery audit"
+      "status": "verified complete for the controlled-optimization checkpoint"
     }
   ],
   "author_responsibilities_outside_technical_completion": [
@@ -93,5 +93,7 @@
     "funding",
     "competing interests",
     "author scientific approval"
-  ]
+  ],
+  "completion_evidence": "verification/completion.json and verification/delivery.json",
+  "new_user_extension": "Additional metadata-only large datasets with native splits are active work, separate from this completed checkpoint."
 }

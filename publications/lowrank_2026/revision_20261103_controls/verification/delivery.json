@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "manuscript_evidence_commit": "f2c65d02445fc3e080a088ee08da960ffd62e475",
+  "github_branch": "main",
+  "github_remote_commit_verified": "f2c65d02445fc3e080a088ee08da960ffd62e475",
+  "overleaf_commit": "1d75416c7aa9aa8db569686de6543a5ecf474b4d",
+  "overleaf_remote_commit_verified": "1d75416c7aa9aa8db569686de6543a5ecf474b4d",
+  "overleaf_project": "https://www.overleaf.com/project/6aeab853967b85c792e7ed91",
+  "main_pages": 23,
+  "supplement_pages": 58,
+  "independent_replays": 810,
+  "tests_passed": 226,
+  "pdf_sha256": {
+    "manuscript.pdf": "47c0b9199f5918bad2708b4b96d29d69c6c5bd8a587c14304e2c2eb38718dfaf",
+    "supplement.pdf": "2ece40ff0d1082ca8bd1234e24701cae05a29fc736d160507fa7c5e93dba217d"
+  },
+  "subsequent_scope": "User requested additional large datasets with native splits, using compact metadata only; pursued as a separate evidence extension"
+}
