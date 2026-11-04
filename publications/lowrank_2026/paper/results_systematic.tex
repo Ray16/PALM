@@ -1,13 +1,13 @@
 \subsection{Compression preserves the ordinary cut, and optimization adds to grouping}
 
-The first question concerns the objective represented by the factor.
+We first assess how accurately the factor represents the intended cut objective.
 Across six full molecular datasets, three seeds and five partitions per factor,
 the largest observed rank-256 error is \CurrentPlainFidelity{} of the ordinary
 kernel's off-diagonal mass. The corresponding error for the cubed kernel is
 \CurrentPowerFidelity{}. At rank 512 these values are
 \CurrentPlainHighRankFidelity{} and \CurrentPowerHighRankFidelity{}, respectively
-(Figure~\ref{fig:current-fidelity}). Ordinary-kernel fidelity consequently cannot
-be transferred to the powered objective. A coarse powered factor can still
+(Figure~\ref{fig:current-fidelity}). Accuracy for the ordinary kernel therefore cannot be assumed for the
+powered objective. A coarse powered factor can still
 produce useful local separation, but that behavior must be measured on the
 returned partition rather than inferred from ordinary-kernel accuracy.
 
@@ -22,19 +22,20 @@ These are observed cut errors, not uniform approximation guarantees.}
 \label{fig:current-fidelity}
 \end{figure}
 
-Grouping alone is an incomplete explanation for the method's separation.
+Optimization improves separation beyond that obtained by grouping alone.
 With the entities, groups and exact fold counts fixed, factor-space optimization
 improves both global overlap and mean nearest-training similarity on all six
 datasets, relative to a seeded feasible assignment
 (Table~\ref{tab:matched-groups}). Every group is preserved in these controls.
-The experiment isolates an improvement available after grouping has already
-been chosen; it does not attribute every advantage of the combined pipeline
+This control measures the improvement from optimization after groups have
+been fixed. It does not attribute every advantage of the combined pipeline
 to compression.
 
 \input{systematic_group_table.tex}
 \FloatBarrier
 
-Exact references distinguish approximation from optimization more directly.
+Exhaustive small-instance comparisons separate approximation error from
+optimization error.
 On twenty 12-entity instances, we enumerate 2,970 admissible ungrouped
 assignments and thirty assignments with paired entities as indivisible groups.
 Even with all twelve landmarks, the heuristic has nonzero optimization gaps
@@ -47,7 +48,7 @@ The complete decomposition and accuracy--cost controls appear in the supplement.
 \FloatBarrier
 \subsection{Dense overlap and analogue exposure give different quality--cost choices}
 
-The ordinary factor directly targets distributed overlap. Its mean global
+The ordinary factor directly targets similarity summed across all entity pairs. Its mean global
 score is \CurrentPlainGlobal{}, compared with \CurrentGraphGlobal{} for the
 top-32 graph, after averaging seeds within each dataset.
 The combined setting reduces nearest-training exposure relative to the plain
@@ -71,8 +72,8 @@ Tanimoto kernel. Lower values indicate less overlap.}
 \label{fig:current-quality}
 \end{figure}
 
-DataSAIL provides the closer dense-objective comparison and reveals the
-importance of admissible partitions. Sixteen of its twenty-four prespecified
+DataSAIL provides a closer comparison for the dense objective and shows why
+constraints on admissible partitions matter. Sixteen of its twenty-four prespecified
 configurations return assignments; eight report infeasibility under their
 cluster and capacity settings. At exactly matched native counts, entity-level
 low rank has mean global score \CurrentMatchedGlobal{}, versus
@@ -82,13 +83,12 @@ passed to DataSAIL's solver changes its mean to
 These summaries weight the four datasets equally after averaging their
 configurations.
 
-Matching counts alone thus leaves a material difference in constraints.
+Matching counts alone therefore leaves an important difference in constraints.
 Matching groups also leaves a distinction between linked cluster similarities
 and sums over entity-level similarities, as well as different optimizers.
 The comparison does not establish that compression solves an identical
-optimization problem better. It establishes an economical way to construct
-entity-level dense-overlap splits, with the consequences of additional
-indivisibility constraints made visible. The supplement reports all native
+optimization problem better. It demonstrates an economical way to construct splits using entity-level
+dense overlap, while showing how group indivisibility changes the results. The supplement reports all native
 outcomes, timings, group-preserving controls and memory profiles.
 
 \FloatBarrier
@@ -122,11 +122,11 @@ supplement. An end-to-end failure is not assigned a split-call runtime.}
 \label{fig:current-scaling}
 \end{figure}
 
-The large-data protocol checks quality as well as computational cost.
+The large-data protocol evaluates separation and approximation accuracy as
+well as computational cost.
 For every completed 100,000- and two-million-entity plain case, the independently
 sampled returned-cut error interval has an upper endpoint below 0.008 of ordinary
-kernel mass. Uniformly sampled test queries are also compared with every
-training entity, rather than a subsampled training reference.
+kernel mass. Each uniformly sampled test query is compared with every training entity.
 At two million entities, mean nearest-training similarity is
 \CurrentLargeNearest{} across the three sets of sampled queries, showing that
 low global overlap does not remove close-analogue exposure.
@@ -137,7 +137,7 @@ as timings of the current implementation.
 \FloatBarrier
 \subsection{Split usefulness depends on the transfer task}
 
-Independent cohorts give a direct test of what an evaluation boundary predicts.
+Independent cohorts allow us to test which transfer task a split reflects.
 In the synthetic family model, random splitting identifies the better model
 for known-family interpolation in all twenty generated instances, but identifies
 the better model for new-family transfer in none. The combined split shows the
@@ -157,7 +157,7 @@ the stable features. This mechanism test supplies no prospective validation.}
 \label{fig:current-deployment}
 \end{figure}
 
-The direction of error is as relevant as the ranking. Random evaluation is
+The direction of evaluation error also matters. Random evaluation is
 optimistic about the family-sensitive model on the new-family cohort, whereas
 the combined split is pessimistic about that model's interpolation performance.
 Stronger separation is useful when it matches the intended transfer boundary.
@@ -167,8 +167,8 @@ An earlier-release assay study illustrates a related risk in real molecular
 data. Across ten prespecified external assays, the combined setting gives
 mean random-forest ROC-AUC \ExtCombinedRF{}. A label-balance sensitivity intervention at
 unchanged counts raises this to \ExtCombinedBalancedRF{}.
-The intervention also changes structural composition and may break groups,
-so it cannot isolate a causal contribution of label proportions.
+The intervention also changes structural composition and may break groups.
+It therefore cannot isolate the causal contribution of label proportions.
 These archival results demonstrate why target composition and absolute
 predictive scores should accompany similarity measures. They supply no
 observed future outcomes against which to validate a deployment claim.

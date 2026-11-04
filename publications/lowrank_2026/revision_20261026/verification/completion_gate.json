@@ -11,7 +11,7 @@
   "rendered": {
     "manuscript.pdf": {
       "pages": 19,
-      "render_sha256": "fb0444120217779ef99b6f721bd3e69627de5915830669ab2238bcfcab3a0acc",
+      "render_sha256": "aa0630bddc2f85bf443dd7c0ed5a610d22096ed337246d9cfd8d822acbe364dc",
       "minimum_figure_font_pt": 18.0,
       "all_figure_fonts_at_least_18": true,
       "clipped_figure_text": []

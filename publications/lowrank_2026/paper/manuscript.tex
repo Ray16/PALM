@@ -20,27 +20,27 @@
 \maketitle
 
 \begin{abstract}
-An evaluation split specifies which relationships a model must generalize
-beyond. Controlling total similarity between folds involves a dense pairwise
-objective whose explicit storage grows quadratically. We present a
-capacity-controlled splitting framework that represents this objective through
-low-rank coordinates and compact fold sums. Across six molecular datasets, the
+An evaluation split defines the relationships across which a model must
+generalize. Controlling total similarity between folds requires a dense
+pairwise objective whose matrix takes quadratic space to store. We present a
+splitting framework that controls fold sizes and represents this objective
+using low-rank coordinates and compact sums within each fold. Across six molecular datasets, the
 largest observed rank-256 cut error is \CurrentPlainFidelity{} of the ordinary
 kernel's off-diagonal similarity mass. Controls with identical groups and fold
-counts show that factor-space optimization adds to the separation obtained
-from grouping alone. On 32 CPU cores, the plain setting partitions two million
+counts show that optimization in factor space improves separation beyond
+that obtained by grouping alone. On 32 CPU cores, the plain setting partitions two million
 fingerprints in a median \CurrentLargeCpuMinutes{} minutes with a 1\% capacity
 corridor. Comparisons with DataSAIL and an ordinary graph partitioner
-reveal distinct quality--cost choices: controlling distributed overlap and
-excluding close analogues produce different partitions. Kernel powers and
+show different trade-offs between separation and cost: reducing overlap
+across all pairs and excluding close analogues produce different partitions. Kernel powers and
 capped groups adjust this trade-off, with additional approximation and
 computational costs. Independent cohorts in a synthetic family model show
 why the intended transfer task matters: random and family-separated splits
 support different model-selection decisions. A metadata-only ODAC25 case
 constructs a count-matched composition holdout covering 37.7 million
-configurations through 2,050 group representatives. The framework makes specified
-similarity-aware evaluation boundaries computationally accessible while
-keeping approximation, capacity constraints and task validity explicit.
+configurations through 2,050 group representatives. The framework makes similarity-aware splits computationally practical while
+keeping approximation error, fold-size constraints and the relevance of the
+split to the intended task explicit.
 \end{abstract}
 
 \noindent\textbf{Keywords:} dataset splitting; similarity; Nystr\"om approximation;
@@ -50,30 +50,28 @@ model evaluation; molecular machine learning.
 
 An evaluation split defines the generalization task a model must solve.
 Predicting another member of a known chemical series differs from predicting
-a new series. Random, scaffold, cluster and temporal splits impose different
+members of a new series. Random, scaffold, cluster and temporal splits impose different
 boundaries between these tasks and can change apparent model performance
 \citep{wu2018moleculenet,yang2019representations}. Lo-Hi makes the distinction
 between lead optimization and novel-hit identification explicit
 \citep{steshin2023lohi}. Temporal studies and SIMPD show why the appropriate
 boundary depends on the project scenario
-\citep{sheridan2013timesplit,landrum2023simpd}. An evaluation procedure therefore
-needs both a computational way to construct the boundary and a scientific
-reason to use it.
+\citep{sheridan2013timesplit,landrum2023simpd}. An evaluation procedure therefore needs both a practical way to construct
+the split and a scientific justification for the generalization task it defines.
 
-Similarity provides a direct design objective: reduce the similarity crossing
-folds while controlling their sizes. The objective includes every entity pair,
+Similarity provides a direct objective for split design: reduce similarity
+between folds while controlling their sizes. The objective includes every entity pair,
 so storing its matrix requires quadratic memory. DataSAIL addresses the problem
 through clustering and integer programming
 \citep{joeres2025datasail,joeres2026datasailaddendum}. A nearest-neighbour graph
-represents selected pairwise relationships. These approaches raise a useful
-question: can the dense overlap itself be optimized approximately without
-storing the dense matrix?
+represents selected pairwise relationships. This raises a computational question: can the dense overlap objective be
+optimized approximately without storing the full matrix?
 
-Low rank is useful here because many pairwise similarities can share a smaller
+A low-rank approximation represents pairwise similarities using a smaller
 set of coordinates. Each entity receives a short vector whose dot product
 approximates its similarity to another entity. Cross-fold overlap can then be
-evaluated from the sum of vectors in each fold. The solver compares assignments
-using compact sums while keeping fold capacities explicit
+evaluated from the sum of vectors in each fold. The solver uses these compact sums to compare assignments subject to
+explicit fold-size constraints
 (Figure~\ref{fig:overview}). This benefit depends on whether the chosen kernel
 is compressible at an affordable rank. Nystr\"om approximation and its
 connections to kernel clustering are established
@@ -81,19 +79,20 @@ connections to kernel clustering are established
 Our contribution is a constrained splitting framework, accuracy and feasibility
 diagnostics, and evidence about the evaluation boundaries it can construct.
 
-Making the dense objective affordable also clarifies a limit of its meaning.
-A sum over many pairs can assign little importance to a few close analogues
-crossing a split. Those analogues may strongly affect prediction. We therefore
+Reducing the dense objective does not necessarily exclude close analogues.
+When similarity is summed over many pairs, a few close analogues in different
+folds may contribute little to the total. Those analogues may strongly affect prediction. We therefore
 distinguish global overlap from each test entity's closest training neighbour.
 Kernel powers emphasize strong similarities, while capped groups encourage
 nearby entities to remain together. These choices change the optimization
 problem and its cost. They provide control over an evaluation boundary; their
 usefulness must be assessed against the intended transfer task.
 
-The experiments address four questions: whether compression preserves the
-objective and optimization adds to grouping, how the resulting quality and
-cost compare with established alternatives, how capacity tolerance affects
-scaling, and when the boundary gives a useful evaluation decision. The primary
+The experiments examine whether compression preserves the objective and
+optimization improves separation beyond grouping alone. They also compare
+separation and cost with established alternatives, measure how fold-size
+tolerance affects scaling, and test when a split supports a useful evaluation
+decision. The primary
 experiments use one pinned implementation. Earlier-release molecular,
 materials and assay studies are retained as explicitly identified supporting
 evidence in the Supplementary Information. A separately versioned ODAC25
@@ -125,8 +124,8 @@ cross-fold cut and its normalized overlap as
  \qquad L_S(z)=\frac{\cut_S(z)}{\sum_{i<j}S_{ij}}.
  \label{eq:cut}
 \end{equation}
-The denominator is independent of the partition; the diagonal never contributes.
-We report the ratio only when its denominator is positive. Nonnegative
+The denominator is independent of the partition, and diagonal entries do not
+contribute. We report the ratio only when the denominator is positive. Nonnegative
 similarity is essential to this interpretation. Positive semidefiniteness alone
 does not make a signed cosine kernel an overlap measure.
 
@@ -134,7 +133,7 @@ We construct a Nystr\"om factor from $r$ landmarks. If $C$ contains
 entity--landmark similarities and $W=U\Lambda U^\top$ is the landmark kernel,
 retaining its numerically positive eigenvalues gives
 $B=CU_+\Lambda_+^{-1/2}$ and $\widetilde S=BB^\top$.
-For fold sums $p_c=\sum_{i:z_i=c}B_i$, the approximate cut is exactly
+For fold sums $p_c=\sum_{i:z_i=c}B_i$, the cut of the approximate kernel is given exactly by
 \begin{equation}
  \cut_{\widetilde S}(z)=
  \frac12\left(\left\|\sum_c p_c\right\|^2-\sum_c\|p_c\|^2\right).
@@ -144,7 +143,8 @@ Factor storage and fold-sum construction require $O(nr)$ space and work,
 respectively. This identity makes repeated objective evaluation practical
 without constructing $\widetilde S$.
 
-At equal fixed fold sizes, minimizing this cut agrees with kernel k-means.
+When fold sizes are equal and fixed, minimizing this cut has the same optima
+as kernel k-means.
 Unequal capacities give a different weighting of within-fold similarity, so
 ordinary kernel k-means guarantees do not transfer directly. We distinguish
 the approximation of $S$, the quality of the heuristic optimizer, and the
@@ -155,20 +155,19 @@ identities and conditional error bound.
 
 Largest-remainder rounding converts requested proportions into integer targets
 summing to $n$. Zero tolerance enforces those targets exactly; positive tolerance
-permits a declared two-sided corridor. Seeded restarts alternate fold-sum
-calculation with capacity-constrained assignment proposals, accepting proposals
-that do not increase the factor objective. A bounded shortlist is refined before
-the final candidate is selected. Legal single moves operate within a corridor;
+permits a declared two-sided corridor. Each seeded restart alternates between calculating fold sums and proposing
+assignments that satisfy the size constraints. Proposals are accepted only if
+they do not increase the factor objective. A limited set of candidates is then
+refined before the final partition is selected. Legal single moves operate within a corridor;
 swaps preserve exact counts \citep{fiduccia1982,kernighan1970}.
 The standard setting uses four restarts, at most 25 assignment iterations and
 two refined candidates. The optimizer remains heuristic.
 
-Rank can be fixed or selected using a bounded accuracy budget. The optional
-joint policy grows pair sampling when uncertainty prevents a decision and
-grows rank when the estimated error is established as too large or the probe
-budget is exhausted. It accounts for all checks over a declared rank--sample
-grid and uses a separate final audit. The cut criterion concerns the returned
-partition, normalized by the kernel's total absolute off-diagonal mass.
+Rank can be fixed or selected using a bounded accuracy budget. The optional joint policy increases the number of sampled pairs when
+uncertainty prevents a decision. It increases rank when the estimated error
+is established as too large or the pair-sampling budget is exhausted. It accounts for all checks over a declared rank--sample
+grid and uses a separate final audit. The cut criterion measures error for the returned partition, normalized by
+the kernel's total absolute off-diagonal mass.
 Establishing this tolerance does not certify a uniform approximation over all
 partitions or a near-optimal partition. Budget failure is reported explicitly.
 
@@ -190,23 +189,23 @@ their count. Group contraction therefore preserves the factor objective exactly.
 The combined molecular setting uses $p=3$, threshold 0.4, and a cap of half the
 smallest target fold, with component growth frozen after a cap-blocked merge.
 
-The capacity contract determines what happens when whole groups cannot be packed.
+The size-constraint policy determines what happens when whole groups cannot
+be assigned within the fold capacities.
 The default count-first policy may dissolve groups and reports that relaxation.
 The strict policy preserves every group or reports infeasibility or an unresolved
 feasibility check. Neither capped grouping nor a powered objective guarantees
-that every pair above the threshold stays within one fold. All reported quality
-scores use the original ordinary kernel.
+that every pair above the threshold stays within one fold. All reported separation scores use the original, unpowered kernel.
 
 \subsection{Computational scope}
 
-The factor removes quadratic matrix storage, not every source of quadratic
-work. Input features still require $O(nd)$ space and can dominate process memory.
+The factor avoids storing a quadratic-size matrix, but some computations
+can still require quadratic work. Input features still require $O(nd)$ space and can dominate process memory.
 Factor construction, assignment sorting and the number of accepted
 refinement moves determine runtime. Exact neighbour construction adds quadratic
-pairwise arithmetic even when temporary memory is blocked. Plain and combined
-settings therefore have separate measured scaling ranges, and exact-count
-refinement can cost substantially more than a relaxed corridor. Timing and
-memory scopes accompany the measurements.
+pairwise arithmetic even when temporary memory is blocked. We therefore report scaling separately for the plain and combined settings.
+Refinement under exact counts can also cost substantially more than refinement
+within a relaxed corridor. Each timing and memory measurement states which
+operations it includes.
 
 \FloatBarrier
 \section{Results}
@@ -218,16 +217,16 @@ memory scopes accompany the measurements.
 \section{Discussion}
 
 Low-rank coordinates make dense overlap available as a split-design objective
-at specified fold capacities. The useful contribution is the combination of a
-compact objective, explicit constraints and auditable trade-offs. The
+at specified fold capacities. The contribution combines a compact objective, explicit constraints and
+measurable trade-offs between separation, accuracy and cost. The
 matched-group controls show that optimization contributes beyond forming groups.
 The DataSAIL controls also show why feasible sets matter: an advantage observed
 at matched counts can disappear when indivisible clusters are matched as well.
 These comparisons support a practical computational framework without
-establishing universal superiority in partition quality.
+establishing universal superiority in partition quality. Compression makes the entity-level objective economical to evaluate, while
+group construction and size constraints determine the admissible partitions.
 
-Global and local overlap describe different evaluation boundaries. The plain
-factor favors reducing distributed similarity mass. Powers and groups can
+Global and local overlap describe different evaluation boundaries. The plain setting favors reducing similarity summed across all entity pairs. Powers and groups can
 strengthen analogue separation while changing global overlap, approximation
 accuracy and cost. A sparse graph can provide stronger local separation for a
 given configuration. Choosing among these outcomes requires specifying which
@@ -243,16 +242,27 @@ particular evaluation boundaries matter; the primary benchmarks use the
 ordinary all-fold objective. Label-informed changes belong to declared benchmark
 design or sensitivity analysis, with a separate final evaluation.
 
-The ODAC25 application extends this design question to an atomistic corpus
-using a compact metadata transfer. It also illustrates the distinction between
-assignment coverage and independent optimization units. Its chemical shift,
-concentrated validation weight and competitive dense control delimit the claim:
-the case demonstrates a specified composition holdout, while the separate
-ChEMBL experiments establish measured computational scaling.
+The ODAC25 application extends this split-design question to an atomistic
+corpus using a small metadata transfer. It also distinguishes the number of
+configurations assigned from the number of independent optimization units.
+The resulting chemical shift, concentration of validation weight in a few
+components, and competitive dense control limit the interpretation. The case
+demonstrates a specified composition holdout; computational scaling is
+established separately by the ChEMBL experiments.
 
-Several limits remain. The datasets are convenience samples, and conclusions
-about molecular separation depend on the fingerprint representation.
-A small returned-cut error leaves optimizer suboptimality unresolved.
+Several limitations remain. The datasets are convenience samples, and
+conclusions about molecular separation depend on the fingerprint representation.
+A small approximation error for the returned cut does not establish how close
+the partition is to the optimum.
+
+Accuracy auditing also has a computational cost. In the three development datasets
+used for equal-confidence probe comparisons, a fixed 32,768-pair budget was
+faster than joint adaptive allocation while establishing the same requested
+tolerance in every seed. Adaptive allocation is therefore an optional budget
+policy, not an established efficiency improvement. These measurements support
+retaining fixed probes as the default and auditing the returned partition
+when changing kernel power or rank.
+
 Powering can require substantially more rank, and strict whole-group capacities
 can be infeasible. Storage scaling alone does not establish fast construction
 at every size or tolerance. The synthetic invariant model receives the
@@ -260,13 +270,6 @@ generative stable features, making it a mechanism test rather than evidence of
 prospective performance on real projects. Real deployment validation requires
 independently specified project tasks and genuine dated outcomes; simulated
 temporal labels cannot supply those outcomes.
-
-\section{Conclusion}
-
-Compressed fold sums support capacity-controlled similarity splitting while
-exposing approximation and optimization limits. Their scientific value is in
-constructing an evaluation boundary whose relation to the intended transfer
-task can be examined explicitly.
 
 \clearpage
 \section{Methods}
@@ -278,16 +281,17 @@ Primary molecular experiments use the pinned v0.2.0.dev3 implementation.
 The ODAC25 case uses a separately frozen weighted adapter, detailed in
 the ODAC25 section of the Supplementary Information.
 AI assistance supported code development, analysis scripting and manuscript
-preparation. Numerical claims are checked against retained observations,
-source and assignment hashes, independent kernel calculations and scoped
-regression tests. The ODAC25 addition also retains a separate offline replay
+preparation. Numerical claims are checked against saved observations,
+source and assignment hashes, independent kernel calculations and targeted
+regression tests. The ODAC25 case also includes a separate offline replay
 and numerical audit; its tables are generated from the verified records.
+
 The six full molecular datasets are FreeSolv, ESOL, BACE, BBBP, Lipophilicity
 and Tox21 \citep{wu2018moleculenet}. Radius-two Morgan fingerprints have 1024 bits,
 with binary Tanimoto similarity
 \citep{rogers2010fingerprints,ralai2005}.
-Structural optimization uses no response values and retains every successfully
-featurized input entity. Raw-input, feature, source and assignment hashes identify
+Structural optimization does not use response values and retains every input
+entity for which features were successfully generated. Raw-input, feature, source and assignment hashes identify
 the exact observations. Earlier-release experiments are separated in the
 supplement, including the eleven-dataset molecular comparison, two
 composition-descriptor materials checks, neural-model reuse and external assays.
@@ -301,7 +305,8 @@ The primary global score is $L_S/\mathbb{E}[L_S]$.
 The primary local score is the raw mean
 $\nnl=|T|^{-1}\sum_{i\in T}\max_{j\in R}S_{ij}$, where $T$ is the test fold
 and $R$ the training fold. Lower values indicate less overlap.
-The six-dataset comparison scores all pairs and all test-to-training neighbours.
+The six-dataset comparison evaluates every pair for the global score and
+searches the full training fold for each test entity's nearest neighbour.
 Independent NumPy calculations check the saved global and local scores.
 Threshold ramps and alternative fingerprints are supporting diagnostics;
 their definitions are kept separate from the primary local score.
@@ -310,9 +315,9 @@ their definitions are kept separate from the primary local score.
 
 The group mechanism study uses three seeds and exact 80/10/10 counts.
 For each dataset and seed, a single set of capped groups is fixed.
-A seeded capacity-feasible assignment constructed without factor values serves
-as the control. Ordinary and cubed factors are optimized from that incumbent
-while preserving every group. Exact small-instance references use twenty
+The control is a seeded assignment that satisfies the fold capacities and is
+constructed without using factor values. Optimization with ordinary and cubed
+factors starts from this assignment and preserves every group. Exact small-instance references use twenty
 12-entity binary datasets, counts 8/2/2, powers one and three, and landmark counts
 2, 4, 8 and 12. Enumerating all feasible assignments measures approximation and
 optimization gaps separately, both without groups and with pairs as indivisible
@@ -324,7 +329,8 @@ An ordinary weighted k-nearest-neighbour graph tests the alternative of selectin
 pairs rather than compressing their similarities. We use Mt-KaHyPar's Graph API,
 QUALITY preset and CUT objective \citep{gottesburen2024}, with degrees
 16, 32 and 128. Exact top-k construction, safe integer weight encoding,
-partitioning and any lower/upper count repair are included in its split clock.
+partitioning and any repairs needed to satisfy lower and upper count bounds
+are included in the split time.
 Native and repaired assignments are retained separately.
 
 The six-dataset graph and low-rank comparison uses three split seeds,
@@ -332,22 +338,22 @@ The six-dataset graph and low-rank comparison uses three split seeds,
 FreeSolv, ESOL, BACE and BBBP. Its prespecified grid combines cluster counts
 $9$, $\max(9,\lfloor n/50\rfloor)$ and $\max(9,\lfloor n/20\rfloor)$ with
 solver budgets of 60 and 300 seconds, $\delta=0.1$ and $\epsilon=0.01$.
-Every native assignment receives an entity-level low-rank control at its exact
-counts and another control preserving the groups passed to its native solver.
+For every native assignment, we construct an entity-level low-rank control
+with identical counts and a second control that also preserves the groups
+passed to the native solver.
 Equal groups do not make DataSAIL's linked cluster similarities identical to
-the entity-level dense objective. Solver-reported infeasibility remains a
-reported outcome rather than an imputed score.
+the entity-level dense objective. We report solver-declared infeasibility as an outcome and do not impute a score.
 
 Lo-Hi, UMAP/Ward, scaffold and Butina comparisons address additional retention
 or grouping contracts and remain in the explicitly versioned archival studies
 \citep{steshin2023lohi,hernandez2023clustering,guo2025umap,bemis1996frameworks,butina1999clustering}.
 Their retained subsets and realized counts accompany the comparisons.
-They are not silently substituted for equal-constraint controls.
+We report these comparisons separately from controls with equal constraints.
 
 \subsection{Fidelity, accuracy budgets and computation}
 
-Full-kernel fidelity uses six datasets, three factor seeds, five landmark counts
-and powers one and three. For each setting, we evaluate the current returned
+We assess full-kernel fidelity on six datasets using three factor seeds, five
+landmark counts and powers one and three. For each setting, we evaluate the current returned
 partition and four count-preserving perturbations against an independent full
 NumPy Tanimoto kernel. Absolute cut error is divided by the off-diagonal mass
 of the kernel at that power. This yields 900 comparisons, not 900 independent
@@ -359,12 +365,12 @@ checks allocate failure probability $0.025/(RQ)$ each. An independent final
 audit uses failure probability 0.025. A union bound gives at least 95\%
 coverage for selection and final auditing together under the bounded-sampling
 assumptions. Fixed-size probe grids use the same policy with equal initial and
-maximum pair counts. Pair counts, allocation decisions and unestablished
-tolerances remain in the diagnostics. Model test outcomes do not select rank
-or audit budgets.
+maximum pair counts. Diagnostics record pair counts, allocation decisions and any failure to
+establish the requested tolerance. Model test outcomes are not used to select
+rank or audit budgets.
 
-CPU comparisons use disjoint two-core affinities, two-thread native pools and
-hidden CUDA devices. Wall-clock split times include factorization, assignment,
+CPU comparisons pin workers to disjoint pairs of cores, limit native thread
+pools to two threads and disable CUDA visibility. Wall-clock split times include factorization, assignment,
 refinement and any method-specific graph or clustering work; feature loading,
 imports and quality scoring are excluded. A small common low-rank warm-up is
 reported separately. Native memory profiles record fresh-process peak RSS before
@@ -377,8 +383,8 @@ The plain and combined settings are measured separately.
 Independent large-data audits use 262,144 uniform pair draws and up to
 128 uniformly sampled test queries, each evaluated against the complete training
 fold. A conservative bounded-mean interval describes query-sampling uncertainty.
-End-to-end case-budget failures include loading and auditing and are
-distinguished from split-call timings.
+End-to-end budgets include loading and auditing. Failures to complete within
+these budgets are reported separately from split-call timings.
 
 \subsection{Independent-cohort experiment and uncertainty}
 
@@ -388,15 +394,14 @@ an independent family effect and observation noise. Nonnegative cosine
 features encode family identity and a weaker continuous signal.
 Two fixed models represent different inductive assumptions: five-neighbour
 regression on the full representation and ridge regression supplied with the
-generative stable features. The latter is an explicitly privileged invariant
-reference. Plain and combined splitting use rank 128; the plain cosine kernel
+generative stable features. Ridge regression therefore serves as a privileged invariant reference. Plain and combined splitting use rank 128; the plain cosine kernel
 uses its exact finite feature map when available.
 
 For twenty prespecified generative seeds, each split retains 1600 training,
 200 validation and 200 test entities. Models are fitted on training labels only.
-Their held-out RMSE and ranking are compared with independently drawn observations
-from families present in that training set and with observations from fifty
-new families. The family-reference split uses the generator's known family
+We compare held-out RMSE and model rankings with those obtained on two
+independent cohorts: new observations from families present in the training
+set, and observations from fifty new families. The family-reference split uses the generator's known family
 identities and is a mechanism control. Cohort outcomes never enter split
 construction. This experiment contains no real experiment dates or prospective
 application evidence.
