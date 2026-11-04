@@ -12,5 +12,9 @@
   "odac25_case": "odac25_case",
   "controls_revision": "revision_20261103_controls",
   "controls_scope": "540 CPU cases; dense/factor, components, CCPart, cut-relative error and preempted equal-time controls",
-  "title": "Scalable Dataset Splitting through Constrained Low-Rank Similarity Optimization"
+  "title": "Scalable Dataset Splitting through Constrained Low-Rank Similarity Optimization",
+  "native_split_revision": "revision_20261104_native_splits",
+  "native_split_cases": 30,
+  "native_metadata_payload_bytes": 90293593,
+  "native_split_scope": "Metadata-only structural/cost comparison; native roles and parsing losses retained; no downstream prediction claim"
 }

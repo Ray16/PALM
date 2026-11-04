@@ -1,0 +1,39 @@
+{
+  "dataset": "moses",
+  "seed": 0,
+  "rank": 256,
+  "pair_count": 262144,
+  "results": [
+    {
+      "case": "moses__exact_assignment__s0",
+      "mass_relative_error": 0.002910689162272182,
+      "cut_relative_error": 0.011817060363258303,
+      "mass_error_ci95": [
+        0.0027067685291089134,
+        0.0031303562219963266
+      ],
+      "cut_error_ci95": [
+        0.011000825360511775,
+        0.012660945504024721
+      ],
+      "row_sha256": "4af19cb8933541025c181fb2a7d1f715a80dce6e342187104d2dcd0e5b03b233"
+    },
+    {
+      "case": "moses__corridor_plain__s0",
+      "mass_relative_error": 0.0028980317975047434,
+      "cut_relative_error": 0.011881350650018154,
+      "mass_error_ci95": [
+        0.002695913951168297,
+        0.0031180105619153403
+      ],
+      "cut_error_ci95": [
+        0.01105959394245882,
+        0.012752500821927786
+      ],
+      "row_sha256": "1c5efbdd9861ff53eef98e69fa0055ffe97c51e800861244987292303f5e2a04"
+    }
+  ],
+  "source_sha256": "88823cf4ac96b6944f9122504bdb9fd558c658f47c0d60985b95e3c7bb9fe3b5",
+  "manifest_sha256": "e65ddb3d0db889317ef253dc7f6f9093de1321d648df6a11b4cd561116363278",
+  "scope": "Post-hoc returned-cut diagnostic at fixed rank; saved-landmark factor reconstructed with the pinned double-construction/float32-storage formula; approximate Monte Carlo block-bootstrap intervals, not optimizer optimality or uniform cut guarantees"
+}

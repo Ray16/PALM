@@ -1,0 +1,7 @@
+__pycache__/
+.pytest_cache/
+raw/
+cache/
+run/claims/
+run/logs/
+!verification/build_final.log

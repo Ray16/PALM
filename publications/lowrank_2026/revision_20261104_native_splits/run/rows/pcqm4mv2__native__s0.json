@@ -1,0 +1,125 @@
+{
+  "job": {
+    "dataset": "pcqm4mv2",
+    "method": "native",
+    "seed": 0,
+    "name": "pcqm4mv2__native__s0"
+  },
+  "status": "ok",
+  "n": 3746581,
+  "fold_names": [
+    "train",
+    "valid",
+    "test-dev",
+    "test-challenge"
+  ],
+  "native_counts": [
+    3378573,
+    73545,
+    147034,
+    147429
+  ],
+  "realized_counts": [
+    3378573,
+    73545,
+    147034,
+    147429
+  ],
+  "size_tolerance": 0.0,
+  "split_seconds": null,
+  "peak_process_rss_gib": null,
+  "params": null,
+  "diagnostics": {},
+  "input_loading_seconds": 0.005537025630474091,
+  "input_adapter_seconds": 0.0,
+  "audit_seconds": 2.5892923455685377,
+  "metrics": {
+    "global_relative": 0.9783513008551638,
+    "global_ci95": [
+      0.9697658989573688,
+      0.9863574144992627
+    ],
+    "pair_mean_similarity": 0.08880923350901625,
+    "crossing_pair_mean": 0.015928752137796688,
+    "pair_count": 262144,
+    "bootstrap_blocks": 64,
+    "interval_scope": "Approximate 95% Monte Carlo interval, bootstrap of independent uniform-pair block means; not dataset or seed generalization uncertainty",
+    "counts": [
+      3378573,
+      73545,
+      147034,
+      147429
+    ],
+    "nearest_by_fold": [
+      {
+        "fold": "valid",
+        "queries": 128,
+        "training_entities": 3378573,
+        "mean_nearest": 0.7038564360357271,
+        "nearest_ci95": [
+          0.6769185999236658,
+          0.7311026329989643
+        ],
+        "fraction_gt06": 0.7109375,
+        "fraction_eq1": 0.1328125,
+        "interval_scope": "Approximate 95% query-sampling bootstrap interval; each query is searched against every training entity"
+      },
+      {
+        "fold": "test-dev",
+        "queries": 128,
+        "training_entities": 3378573,
+        "mean_nearest": 0.7026296139134345,
+        "nearest_ci95": [
+          0.6737943944838604,
+          0.7312809058641763
+        ],
+        "fraction_gt06": 0.7265625,
+        "fraction_eq1": 0.1328125,
+        "interval_scope": "Approximate 95% query-sampling bootstrap interval; each query is searched against every training entity"
+      },
+      {
+        "fold": "test-challenge",
+        "queries": 128,
+        "training_entities": 3378573,
+        "mean_nearest": 0.7216318263634623,
+        "nearest_ci95": [
+          0.6948181890602815,
+          0.7489322892886712
+        ],
+        "fraction_gt06": 0.796875,
+        "fraction_eq1": 0.140625,
+        "interval_scope": "Approximate 95% query-sampling bootstrap interval; each query is searched against every training entity"
+      }
+    ],
+    "mean_heldout_nearest": 0.7104873338876719
+  },
+  "artifacts": {
+    "assignments/pcqm4mv2__native__s0/labels.npz": "6b7982f88dc63aa9b77b354681befec4b09897520294bc746aefd49952ef70d2",
+    "assignments/pcqm4mv2__native__s0/nearest_audit.npz": "a17afa4b1a86353816796342d33612bc278bbec6913f6174ebc1b28ea7462c15",
+    "assignments/pcqm4mv2__native__s0/pair_blocks.npz": "aa1ec751ac9f1e1b4a23ac6b47c2e6be78d032caf517517737fc0bfe04cf1216"
+  },
+  "source_input_manifest_sha256": "a4e372eb4453e376209cf5fda334a1d3cc4a752d3c2036c1b9d9b2ec4ea1bb1d",
+  "manifest_sha256": "e65ddb3d0db889317ef253dc7f6f9093de1321d648df6a11b4cd561116363278",
+  "host": "lambda2",
+  "cpu_affinity": [
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39
+  ],
+  "native_construction_time_status": "not supplied; never equated with metadata loading",
+  "original_n": 3746620,
+  "parse_failures": 39
+}

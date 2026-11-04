@@ -1,3 +1,15 @@
+## Metadata-only native-split benchmarks, 4 November 2026
+
+The revised paper adds PCQM4Mv2 (3.75 million records), MOSES (1.94 million)
+and ogbg-molpcba (438,000), using **90.3 MB of metered metadata payload**.
+All 30 new native-split comparison cases complete successfully. The main text
+keeps one compact table; native roles, parsing losses, per-role uncertainty,
+source identities and complete outcomes remain explicit.
+
+See [native evidence and reproduction](revision_20261104_native_splits/README.md)
+and [current readiness assessment](PUBLICATION_READINESS_NATIVE_20261104.txt).
+The earlier controlled-optimization and ODAC25 evidence below retains its scope.
+
 ## Constrained optimization controls, 4 November 2026
 
 The revised paper is **Scalable Dataset Splitting through Constrained Low-Rank

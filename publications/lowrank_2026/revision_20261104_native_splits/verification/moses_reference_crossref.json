@@ -1,0 +1,1030 @@
+{
+  "indexed": {
+    "date-parts": [
+      [
+        2026,
+        11,
+        3
+      ]
+    ],
+    "date-time": "2026-11-03T20:55:16Z",
+    "timestamp": 1793739316587,
+    "version": "4.6.1"
+  },
+  "reference-count": 74,
+  "publisher": "Frontiers Media SA",
+  "license": [
+    {
+      "start": {
+        "date-parts": [
+          [
+            2020,
+            12,
+            18
+          ]
+        ],
+        "date-time": "2020-12-18T00:00:00Z",
+        "timestamp": 1608249600000
+      },
+      "content-version": "vor",
+      "delay-in-days": 0,
+      "URL": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "content-domain": {
+    "domain": [
+      "frontiersin.org"
+    ],
+    "crossmark-restriction": true
+  },
+  "short-container-title": [
+    "Front. Pharmacol."
+  ],
+  "abstract": "<jats:p>\n                    Generative models are becoming a tool of choice for exploring the molecular space. These models learn on a large training dataset and produce novel molecular structures with similar properties. Generated structures can be utilized for virtual screening or training semi-supervized predictive models in the downstream tasks. While there are plenty of generative models, it is unclear how to compare and rank them. In this work, we introduce a benchmarking platform called Molecular Sets (MOSES) to standardize training and comparison of molecular generative models. MOSES provides training and testing datasets, and a set of metrics to evaluate the quality and diversity of generated structures. We have implemented and compared several molecular generation models and suggest to use our results as reference points for further advancements in generative chemistry research. The platform and source code are available at\n                    <jats:ext-link>https://github.com/molecularsets/moses</jats:ext-link>\n                    .\n                  </jats:p>",
+  "DOI": "10.3389/fphar.2020.565644",
+  "type": "journal-article",
+  "created": {
+    "date-parts": [
+      [
+        2020,
+        12,
+        18
+      ]
+    ],
+    "date-time": "2020-12-18T01:32:26Z",
+    "timestamp": 1608255146000
+  },
+  "update-policy": "https://doi.org/10.3389/crossmark-policy",
+  "source": "Crossref",
+  "is-referenced-by-count": 714,
+  "title": [
+    "Molecular Sets (MOSES): A Benchmarking Platform for Molecular Generation Models"
+  ],
+  "prefix": "10.3389",
+  "volume": "11",
+  "author": [
+    {
+      "given": "Daniil",
+      "family": "Polykovskiy",
+      "sequence": "first",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Alexander",
+      "family": "Zhebrak",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Benjamin",
+      "family": "Sanchez-Lengeling",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Sergey",
+      "family": "Golovanov",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Oktai",
+      "family": "Tatanov",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Stanislav",
+      "family": "Belyaev",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Rauf",
+      "family": "Kurbanov",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Aleksey",
+      "family": "Artamonov",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Vladimir",
+      "family": "Aladinskiy",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Mark",
+      "family": "Veselov",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Artur",
+      "family": "Kadurin",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Simon",
+      "family": "Johansson",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Hongming",
+      "family": "Chen",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Sergey",
+      "family": "Nikolenko",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Al\u00e1n",
+      "family": "Aspuru-Guzik",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    },
+    {
+      "given": "Alex",
+      "family": "Zhavoronkov",
+      "sequence": "additional",
+      "affiliation": [],
+      "role": [
+        {
+          "vocabulary": "crossref",
+          "role": "author"
+        }
+      ]
+    }
+  ],
+  "member": "1965",
+  "published-online": {
+    "date-parts": [
+      [
+        2020,
+        12,
+        18
+      ]
+    ]
+  },
+  "reference": [
+    {
+      "key": "B1",
+      "doi-asserted-by": "publisher",
+      "first-page": "2524",
+      "DOI": "10.1021/acs.molpharmaceut.6b00248",
+      "article-title": "Deep learning applications for predicting pharmacological properties of drugs and drug repurposing using transcriptomic data",
+      "volume": "13",
+      "author": "Aliper",
+      "year": "2016",
+      "journal-title": "Mol. Pharm."
+    },
+    {
+      "key": "B2",
+      "doi-asserted-by": "publisher",
+      "first-page": "1",
+      "DOI": "10.1186/s13321-019-0393-0",
+      "article-title": "Randomized smiles strings improve the quality of molecular generative models",
+      "volume": "11",
+      "author": "Ar\u00fas-Pous",
+      "year": "2019",
+      "journal-title": "J. Cheminf."
+    },
+    {
+      "key": "B4",
+      "doi-asserted-by": "publisher",
+      "first-page": "2719",
+      "DOI": "10.1021/jm901137j",
+      "article-title": "New substructure filters for removal of pan assay interference compounds (PAINS) from screening libraries and for their exclusion in bioassays",
+      "volume": "53",
+      "author": "Baell",
+      "year": "2010",
+      "journal-title": "J. Med. Chem."
+    },
+    {
+      "key": "B5",
+      "doi-asserted-by": "publisher",
+      "first-page": "2887",
+      "DOI": "10.1021/jm9602928",
+      "article-title": "The properties of known drugs. 1. molecular frameworks",
+      "volume": "39",
+      "author": "Bemis",
+      "year": "1996",
+      "journal-title": "J. Med. Chem."
+    },
+    {
+      "key": "B6",
+      "unstructured": "ChemGAN challenge for drug discovery: can AI reproduce natural chemical diversity? BenhendaM. 2017"
+    },
+    {
+      "key": "B7",
+      "doi-asserted-by": "publisher",
+      "first-page": "90",
+      "DOI": "10.1038/nchem.1243",
+      "article-title": "Quantifying the chemical beauty of drugs",
+      "volume": "4",
+      "author": "Bickerton",
+      "year": "2012",
+      "journal-title": "Nat. Chem."
+    },
+    {
+      "key": "B8",
+      "doi-asserted-by": "publisher",
+      "first-page": "1700123",
+      "DOI": "10.1002/minf.201700123",
+      "article-title": "Application of generative autoencoder in de novo molecular design",
+      "volume": "37",
+      "author": "Blaschke",
+      "year": "2018",
+      "journal-title": "Mol. Inform."
+    },
+    {
+      "key": "B9",
+      "doi-asserted-by": "publisher",
+      "first-page": "1096",
+      "DOI": "10.1021/acs.jcim.8b00839",
+      "article-title": "Guacamol: benchmarking models for de novo molecular design",
+      "volume": "59",
+      "author": "Brown",
+      "year": "2019",
+      "journal-title": "J. Chem. Inf. Model."
+    },
+    {
+      "key": "B10",
+      "doi-asserted-by": "publisher",
+      "first-page": "20170387",
+      "DOI": "10.1098/rsif.2017.0387",
+      "article-title": "Opportunities and obstacles for deep learning in biology and medicine",
+      "volume": "15",
+      "author": "Ching",
+      "year": "2018",
+      "journal-title": "J. R. Soc. Interface"
+    },
+    {
+      "key": "B11",
+      "article-title": "Syntax-directed variational autoencoder for structured data",
+      "author": "Dai",
+      "year": "2018"
+    },
+    {
+      "key": "B12",
+      "article-title": "MolGAN: an implicit generative model for small molecular graphs",
+      "author": "De Cao",
+      "year": "2018"
+    },
+    {
+      "key": "B13",
+      "doi-asserted-by": "publisher",
+      "first-page": "1503",
+      "DOI": "10.1002/cmdc.200800178",
+      "article-title": "On the art of compiling and using 'drug-like' chemical fragment spaces",
+      "volume": "3",
+      "author": "Degen",
+      "year": "2008",
+      "journal-title": "ChemMedChem"
+    },
+    {
+      "key": "B14",
+      "unstructured": "ImageNet: a large-scale hierarchical image database DengJ. DongW. SocherR. LiL.-J. LiK. Fei-FeiL. IEEECVPR092009"
+    },
+    {
+      "key": "B15",
+      "unstructured": "Density estimation using real NVP DinhL. Sohl-DicksteinJ. BengioS. 2017"
+    },
+    {
+      "key": "B16",
+      "first-page": "2224",
+      "article-title": "Convolutional networks on graphs for learning molecular fingerprints",
+      "volume-title": "Advances in neural information processing systems 28",
+      "author": "Duvenaud",
+      "year": "2015"
+    },
+    {
+      "key": "B17",
+      "doi-asserted-by": "publisher",
+      "first-page": "8",
+      "DOI": "10.1186/1758-2946-1-8",
+      "article-title": "Estimation of synthetic accessibility score of drug-like molecules based on molecular complexity and fragment contributions",
+      "volume": "1",
+      "author": "Ertl",
+      "year": "2009",
+      "journal-title": "J. Cheminf."
+    },
+    {
+      "key": "B18",
+      "doi-asserted-by": "publisher",
+      "first-page": "191",
+      "DOI": "10.1038/nmat3568",
+      "article-title": "The high-throughput highway to computational materials design",
+      "volume": "12",
+      "author": "Ferrero",
+      "year": "2013",
+      "journal-title": "Nat. Mater."
+    },
+    {
+      "key": "B19",
+      "first-page": "1263",
+      "article-title": "Neural message passing for quantum chemistry",
+      "author": "Gilmer",
+      "year": "2017"
+    },
+    {
+      "key": "B20",
+      "doi-asserted-by": "publisher",
+      "first-page": "268",
+      "DOI": "10.1021/acscentsci.7b00572",
+      "article-title": "Automatic chemical design using a Data-Driven continuous representation of molecules",
+      "volume": "4",
+      "author": "G\u00f3mez-Bombarelli",
+      "year": "2018",
+      "journal-title": "ACS Cent. Sci."
+    },
+    {
+      "key": "B21",
+      "doi-asserted-by": "publisher",
+      "first-page": "1300",
+      "DOI": "10.1002/cmdc.201800204",
+      "article-title": "Designing anticancer peptides by constructive machine learning",
+      "volume": "13",
+      "author": "Grisoni",
+      "year": "2018",
+      "journal-title": "ChemMedChem"
+    },
+    {
+      "key": "B22",
+      "unstructured": "Objective-Reinforced generative adversarial networks (ORGAN) for sequence generation models GuimaraesG. L. Sanchez-LengelingB. FariasP. L. C. Aspuru-GuzikA. 2017"
+    },
+    {
+      "key": "B23",
+      "doi-asserted-by": "publisher",
+      "first-page": "1769",
+      "DOI": "10.1007/s11426-009-0260-3",
+      "article-title": "Emergent strategies for inverse molecular design",
+      "volume": "52",
+      "author": "Hu",
+      "year": "2009",
+      "journal-title": "Sci. China Ser. B-Chem."
+    },
+    {
+      "key": "B24",
+      "doi-asserted-by": "publisher",
+      "first-page": "913",
+      "DOI": "10.3389/fphar.2019.00913",
+      "article-title": "Identification of novel antibacterials using machine learning techniques",
+      "volume": "10",
+      "author": "Ivanenkov",
+      "year": "2019",
+      "journal-title": "Front. Pharmacol."
+    },
+    {
+      "key": "B25",
+      "unstructured": "Sequence tutor: conservative fine-tuning of sequence generation models with KL-control JaquesN. GuS. BahdanauD. Hern\u00e1ndez-LobatoJ. M. TurnerR. E. EckD. 2016"
+    },
+    {
+      "key": "B26",
+      "first-page": "2323",
+      "article-title": "Junction tree variational autoencoder for molecular graph generation",
+      "author": "Jin",
+      "year": "2018"
+    },
+    {
+      "key": "B27",
+      "doi-asserted-by": "publisher",
+      "first-page": "10883",
+      "DOI": "10.18632/oncotarget.14073",
+      "article-title": "The cornucopia of meaningful leads: applying deep adversarial autoencoders for new molecule development in oncology",
+      "volume": "8",
+      "author": "Kadurin",
+      "year": "2016",
+      "journal-title": "Oncotarget"
+    },
+    {
+      "key": "B75",
+      "doi-asserted-by": "publisher",
+      "first-page": "3098",
+      "DOI": "10.1021/acs.molpharmaceut.7b00346",
+      "article-title": "druGAN: an advanced generative adversarial autoencoder model for de novo generation of new molecules with desired molecular properties in silico",
+      "volume": "14",
+      "author": "Kadurin",
+      "year": "2017",
+      "journal-title": "Mol. Pharm."
+    },
+    {
+      "key": "B28",
+      "doi-asserted-by": "publisher",
+      "first-page": "43",
+      "DOI": "10.1021/acs.jcim.8b00263",
+      "article-title": "Conditional molecular design with deep generative models",
+      "volume": "59",
+      "author": "Kang",
+      "year": "2018",
+      "journal-title": "J. Chem. Inf. Model."
+    },
+    {
+      "key": "B29",
+      "first-page": "1",
+      "article-title": "Progressive growing of gans for improved quality, stability, and variation",
+      "author": "Karras",
+      "year": "2018"
+    },
+    {
+      "key": "B30",
+      "unstructured": "Generating and designing DNA with deep generative models KilloranN. LeeL. J. DelongA. DuvenaudD. FreyB. J. 2017"
+    },
+    {
+      "key": "B31",
+      "article-title": "Auto-Encoding variational bayes",
+      "author": "Kingma",
+      "year": "2013"
+    },
+    {
+      "key": "B32",
+      "doi-asserted-by": "publisher",
+      "first-page": "823",
+      "DOI": "10.1038/432823a",
+      "article-title": "Chemical space",
+      "volume": "432",
+      "author": "Kirkpatrick",
+      "year": "2004",
+      "journal-title": "Nature"
+    },
+    {
+      "key": "B33",
+      "unstructured": "Selfies: a robust representation of semantically constrained graphs with an example application in chemistry KrennM. H\u00e4seF. NigamA. FriederichP. Aspuru-GuzikA. 2019"
+    },
+    {
+      "key": "B34",
+      "first-page": "1945",
+      "article-title": "Grammar variational autoencoder",
+      "volume-title": "Proceedings of the 34th international conference on machine learning",
+      "author": "Kusner",
+      "year": "2017"
+    },
+    {
+      "key": "B35",
+      "doi-asserted-by": "publisher",
+      "first-page": "615",
+      "DOI": "10.1021/ci960169p",
+      "article-title": "A new atom-additive method for calculating partition coefficients",
+      "volume": "37",
+      "author": "Labat",
+      "year": "1997",
+      "journal-title": "J. Chem. Inf. Comput. Sci."
+    },
+    {
+      "key": "B36",
+      "unstructured": "RDKit: open-source cheminformatics LandrumG. 2006"
+    },
+    {
+      "key": "B37",
+      "doi-asserted-by": "publisher",
+      "first-page": "6107",
+      "DOI": "10.1021/acs.chemrev.5b00691",
+      "article-title": "Discovery and optimization of materials using evolutionary approaches",
+      "volume": "116",
+      "author": "Le",
+      "year": "2016",
+      "journal-title": "Chem. Rev."
+    },
+    {
+      "key": "B38",
+      "doi-asserted-by": "publisher",
+      "first-page": "2278",
+      "DOI": "10.1109/5.726791",
+      "article-title": "Gradient-based learning applied to document recognition",
+      "volume": "86",
+      "author": "LeCun",
+      "year": "1998",
+      "journal-title": "Proc. IEEE"
+    },
+    {
+      "key": "B39",
+      "doi-asserted-by": "publisher",
+      "first-page": "42",
+      "DOI": "10.1038/s41467-017-02465-5",
+      "article-title": "A machine learning approach to integrate big data for precision medicine in acute myeloid leukemia",
+      "volume": "9",
+      "author": "Lee",
+      "year": "2018",
+      "journal-title": "Nat. Commun."
+    },
+    {
+      "key": "B40",
+      "article-title": "Adversarial autoencoders",
+      "author": "Makhzani",
+      "year": "2016"
+    },
+    {
+      "key": "B41",
+      "doi-asserted-by": "publisher",
+      "first-page": "1445",
+      "DOI": "10.1021/acs.molpharmaceut.5b00982",
+      "article-title": "Applications of deep learning in biomedicine",
+      "volume": "13",
+      "author": "Mamoshina",
+      "year": "2016",
+      "journal-title": "Mol. Pharm."
+    },
+    {
+      "key": "B42",
+      "doi-asserted-by": "publisher",
+      "first-page": "242",
+      "DOI": "10.3389/fgene.2018.00242",
+      "article-title": "Machine learning on human muscle transcriptomic data for biomarker discovery and tissue-specific drug target identification",
+      "volume": "9",
+      "author": "Mamoshina",
+      "year": "2018",
+      "journal-title": "Front. Genet."
+    },
+    {
+      "key": "B43",
+      "doi-asserted-by": "publisher",
+      "first-page": "1700153",
+      "DOI": "10.1002/minf.201700153",
+      "article-title": "De novo design of bioactive small molecules by artificial intelligence",
+      "volume": "37",
+      "author": "Merk",
+      "year": "",
+      "journal-title": "Mol. Inf."
+    },
+    {
+      "key": "B44",
+      "doi-asserted-by": "publisher",
+      "first-page": "68",
+      "DOI": "10.1038/s42004-018-0068-1",
+      "article-title": "Tuning artificial intelligence on the de novo design of natural-product-inspired retinoid x receptor modulators",
+      "volume": "1",
+      "author": "Merk",
+      "year": "",
+      "journal-title": "Commun. Chem."
+    },
+    {
+      "key": "B45",
+      "doi-asserted-by": "publisher",
+      "first-page": "48",
+      "DOI": "10.1186/s13321-017-0235-x",
+      "article-title": "Molecular de-novo design through deep reinforcement learning",
+      "volume": "9",
+      "author": "Olivecrona",
+      "year": "2017",
+      "journal-title": "J. Cheminf."
+    },
+    {
+      "key": "B46",
+      "doi-asserted-by": "publisher",
+      "DOI": "10.26434/chemrxiv.7097960",
+      "article-title": "DeepSMILES: an adaptation of SMILES for use in machine-learning of chemical structures",
+      "author": "O\u2019Boyle",
+      "year": "2018",
+      "journal-title": "ChemRxiv"
+    },
+    {
+      "key": "B47",
+      "article-title": "Automatic differentiation in pytorch",
+      "author": "Paszke",
+      "year": "2017"
+    },
+    {
+      "key": "B48",
+      "unstructured": "Molecular sets (moses): a benchmarking platform for molecular generation models PolykovskiyD. ZhebrakA. Sanchez-LengelingB. GolovanovS. TatanovO. BelyaevS."
+    },
+    {
+      "key": "B49",
+      "doi-asserted-by": "publisher",
+      "first-page": "4398",
+      "DOI": "10.1021/acs.molpharmaceut.8b00839",
+      "article-title": "Entangled conditional adversarial autoencoder for de novo drug discovery",
+      "volume": "15",
+      "author": "Polykovskiy",
+      "year": "",
+      "journal-title": "Mol. Pharm."
+    },
+    {
+      "key": "B50",
+      "doi-asserted-by": "publisher",
+      "first-page": "eaap7885",
+      "DOI": "10.1126/sciadv.aap7885",
+      "article-title": "Deep reinforcement learning for de novo drug design",
+      "volume": "4",
+      "author": "Popova",
+      "year": "2018",
+      "journal-title": "Sci. Adv."
+    },
+    {
+      "key": "B51",
+      "doi-asserted-by": "publisher",
+      "first-page": "1736",
+      "DOI": "10.1021/acs.jcim.8b00234",
+      "article-title": "Fr\u00e9chet ChemNet distance: a metric for generative models for molecules in drug discovery",
+      "volume": "58",
+      "author": "Preuer",
+      "year": "2018",
+      "journal-title": "J. Chem. Inf. Model."
+    },
+    {
+      "key": "B52",
+      "doi-asserted-by": "publisher",
+      "first-page": "74",
+      "DOI": "10.1186/s13321-019-0397-9",
+      "article-title": "A de novo molecular generation method using latent vector based generative adversarial network",
+      "volume": "11",
+      "author": "Prykhodko",
+      "year": "2019",
+      "journal-title": "J. Cheminf."
+    },
+    {
+      "key": "B53",
+      "doi-asserted-by": "publisher",
+      "first-page": "4386",
+      "DOI": "10.1021/acs.molpharmaceut.7b01137",
+      "article-title": "Adversarial threshold neural computer for molecular de novo design",
+      "volume": "15",
+      "author": "Putin",
+      "year": "2018",
+      "journal-title": "Mol. Pharm."
+    },
+    {
+      "key": "B76",
+      "doi-asserted-by": "publisher",
+      "first-page": "195",
+      "DOI": "10.1146/annurev-matsci-070214-020823",
+      "article-title": "What is High-Throughput virtual screening? a perspective from organic materials discovery",
+      "volume": "45",
+      "author": "Pyzer-Knapp",
+      "year": "2015",
+      "journal-title": "Annu. Rev. Mater. Res."
+    },
+    {
+      "key": "B54",
+      "doi-asserted-by": "publisher",
+      "first-page": "140022",
+      "DOI": "10.1038/sdata.2014.22",
+      "article-title": "Quantum chemistry structures and properties of 134 kilo molecules",
+      "volume": "1",
+      "author": "Ramakrishnan",
+      "year": "2014",
+      "journal-title": "Scientific Data"
+    },
+    {
+      "key": "B55",
+      "doi-asserted-by": "publisher",
+      "first-page": "722",
+      "DOI": "10.1021/ar500432k",
+      "article-title": "The chemical space project",
+      "volume": "48",
+      "author": "Reymond",
+      "year": "2015",
+      "journal-title": "Acc. Chem. Res."
+    },
+    {
+      "key": "B56",
+      "doi-asserted-by": "publisher",
+      "first-page": "742",
+      "DOI": "10.1021/ci100050t",
+      "article-title": "Extended-connectivity fingerprints",
+      "volume": "50",
+      "author": "Rogers",
+      "year": "2010",
+      "journal-title": "J. Chem. Inf. Model."
+    },
+    {
+      "key": "B57",
+      "doi-asserted-by": "publisher",
+      "first-page": "360",
+      "DOI": "10.1126/science.aat2663",
+      "article-title": "Inverse molecular design using machine learning: generative models for matter engineering",
+      "volume": "361",
+      "author": "Sanchez-Lengeling",
+      "year": "2018",
+      "journal-title": "Science"
+    },
+    {
+      "key": "B58",
+      "doi-asserted-by": "publisher",
+      "first-page": "120",
+      "DOI": "10.1021/acscentsci.7b00512",
+      "article-title": "Generating focused molecule libraries for drug discovery with recurrent neural networks",
+      "volume": "4",
+      "author": "Segler",
+      "year": "2018",
+      "journal-title": "ACS Cent. Sci."
+    },
+    {
+      "key": "B59",
+      "article-title": "Graphaf: a flow-based autoregressive model for molecular graph generation",
+      "author": "Shi",
+      "year": "2019"
+    },
+    {
+      "key": "B60",
+      "doi-asserted-by": "publisher",
+      "first-page": "1701",
+      "DOI": "10.1021/acs.jmedchem.8b00686",
+      "article-title": "Two decades under the influence of the rule of five and the changing properties of approved oral drugs",
+      "volume": "62",
+      "author": "Shultz",
+      "year": "2018",
+      "journal-title": "J. Med. Chem."
+    },
+    {
+      "key": "B61",
+      "article-title": "An open standard for chemical structure representation: the iupac chemical identifier",
+      "author": "Stein",
+      "year": "2003"
+    },
+    {
+      "key": "B62",
+      "doi-asserted-by": "publisher",
+      "first-page": "2324",
+      "DOI": "10.1021/acs.jcim.5b00559",
+      "article-title": "Zinc 15 - ligand discovery for everyone",
+      "volume": "55",
+      "author": "Sterling",
+      "year": "2015",
+      "journal-title": "J. Chem. Inf. Model."
+    },
+    {
+      "key": "B63",
+      "doi-asserted-by": "publisher",
+      "first-page": "3743",
+      "DOI": "10.1002/(SICI)1521-3773(19991216)38:24%3C3743::AID-ANIE3743%3E3.0.CO;2-U",
+      "article-title": "The design of leadlike combinatorial libraries",
+      "volume": "38",
+      "author": "Teague",
+      "year": "1999",
+      "journal-title": "Angew. Chem. Int. Ed."
+    },
+    {
+      "key": "B64",
+      "doi-asserted-by": "publisher",
+      "first-page": "644",
+      "DOI": "10.1021/acs.jcim.8b00737",
+      "article-title": "Virtual compound libraries in computer-assisted drug discovery",
+      "volume": "59",
+      "author": "van Hilten",
+      "year": "2019",
+      "journal-title": "J. Chem. Inf. Model."
+    },
+    {
+      "key": "B65",
+      "doi-asserted-by": "publisher",
+      "first-page": "210",
+      "DOI": "10.1016/j.drudis.2016.09.019",
+      "article-title": "Design of efficient computational workflows for in silico drug repurposing",
+      "volume": "22",
+      "author": "Vanhaelen",
+      "year": "2017",
+      "journal-title": "Drug Discov. Today"
+    },
+    {
+      "key": "B66",
+      "doi-asserted-by": "publisher",
+      "first-page": "31",
+      "DOI": "10.1021/ci00057a005",
+      "article-title": "Smiles, a chemical language and information system. 1. introduction to methodology and encoding rules",
+      "volume": "28",
+      "author": "Weininger",
+      "year": "1988",
+      "journal-title": "J. Chem. Inf. Model."
+    },
+    {
+      "key": "B67",
+      "doi-asserted-by": "publisher",
+      "first-page": "97",
+      "DOI": "10.1021/ci00062a008",
+      "article-title": "Smiles. 2. algorithm for generation of unique smiles notation",
+      "volume": "29",
+      "author": "Weininger",
+      "year": "1989",
+      "journal-title": "J. Chem. Inf. Model."
+    },
+    {
+      "key": "B68",
+      "doi-asserted-by": "publisher",
+      "first-page": "868",
+      "DOI": "10.1021/ci990307l",
+      "article-title": "Prediction of physicochemical parameters by atomic contributions",
+      "volume": "39",
+      "author": "Wildman",
+      "year": "1999",
+      "journal-title": "J. Chem. Inf. Comput. Sci."
+    },
+    {
+      "key": "B69",
+      "doi-asserted-by": "publisher",
+      "first-page": "513",
+      "DOI": "10.1039/c7sc02664a",
+      "article-title": "MoleculeNet: a benchmark for molecular machine learning",
+      "volume": "9",
+      "author": "Wu",
+      "year": "2018",
+      "journal-title": "Chem. Sci."
+    },
+    {
+      "key": "B70",
+      "doi-asserted-by": "publisher",
+      "first-page": "972",
+      "DOI": "10.1080/14686996.2017.1401424",
+      "article-title": "ChemTS: an efficient python library for de novo molecular generation",
+      "volume": "18",
+      "author": "Yang",
+      "year": "2017",
+      "journal-title": "Sci. Technol. Adv. Mater."
+    },
+    {
+      "key": "B71",
+      "doi-asserted-by": "crossref",
+      "DOI": "10.1609/aaai.v31i1.10804",
+      "article-title": "Seqgan: sequence generative adversarial nets with policy gradient",
+      "author": "Yu",
+      "year": "2017"
+    },
+    {
+      "key": "B72",
+      "doi-asserted-by": "publisher",
+      "first-page": "1038",
+      "DOI": "10.1038/s41587-019-0224-x",
+      "article-title": "Deep learning enables rapid identification of potent DDR1 kinase inhibitors",
+      "volume": "37",
+      "author": "Zhavoronkov",
+      "year": "",
+      "journal-title": "Nat. Biotechnol."
+    },
+    {
+      "key": "B73",
+      "doi-asserted-by": "publisher",
+      "first-page": "49",
+      "DOI": "10.1016/j.arr.2018.11.003",
+      "article-title": "Artificial intelligence for aging and longevity research: recent advances and perspectives",
+      "volume": "49",
+      "author": "Zhavoronkov",
+      "year": "",
+      "journal-title": "Ageing Res. Rev."
+    }
+  ],
+  "container-title": [
+    "Frontiers in Pharmacology"
+  ],
+  "original-title": [],
+  "link": [
+    {
+      "URL": "https://www.frontiersin.org/articles/10.3389/fphar.2020.565644/full",
+      "content-type": "unspecified",
+      "content-version": "vor",
+      "intended-application": "similarity-checking"
+    }
+  ],
+  "deposited": {
+    "date-parts": [
+      [
+        2022,
+        12,
+        6
+      ]
+    ],
+    "date-time": "2022-12-06T07:03:50Z",
+    "timestamp": 1670310230000
+  },
+  "score": 1,
+  "resource": {
+    "primary": {
+      "URL": "https://www.frontiersin.org/articles/10.3389/fphar.2020.565644/full"
+    }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+    "date-parts": [
+      [
+        2020,
+        12,
+        18
+      ]
+    ]
+  },
+  "references-count": 74,
+  "alternative-id": [
+    "10.3389/fphar.2020.565644"
+  ],
+  "URL": "https://doi.org/10.3389/fphar.2020.565644",
+  "relation": {},
+  "ISSN": [
+    "1663-9812"
+  ],
+  "issn-type": [
+    {
+      "value": "1663-9812",
+      "type": "electronic"
+    }
+  ],
+  "subject": [],
+  "published": {
+    "date-parts": [
+      [
+        2020,
+        12,
+        18
+      ]
+    ]
+  },
+  "article-number": "565644"
+}

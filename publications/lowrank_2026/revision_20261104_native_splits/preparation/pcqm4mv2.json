@@ -1,0 +1,70 @@
+{
+  "dataset": "pcqm4mv2",
+  "recipe": {
+    "radius": 2,
+    "bits": 1024,
+    "include_chirality": false,
+    "packed_bit_order": "little",
+    "rdkit_version": "2026.03.5",
+    "producer_sha256": "0327787ce5a97e1ed67721140fb9088a9a6b139040caf7d679213f198b6fc29f"
+  },
+  "metadata": {
+    "metadata_loading_seconds": 6.0513545870780945,
+    "source_files": {
+      "raw/pcqm4m-v2/raw/data.csv.gz": "ab89a4707d5e37f19c3b5e69d1c5cbb7fc1a9665d38783c0c89df6675f34286b",
+      "raw/pcqm4m-v2/split_dict.pt": "d913e5541af6a6279abfe23ecf0fdbe4bc86785e1d8fc24a8f3ef422a01d3722"
+    },
+    "original_n": 3746620,
+    "original_counts": [
+      3378606,
+      73545,
+      147037,
+      147432
+    ],
+    "native_disjoint": true,
+    "native_complete": true,
+    "response_labels_loaded": false,
+    "native_construction_seconds": null,
+    "native_timing_note": "Published fixed assignments; construction time is not supplied. Loading is not split generation."
+  },
+  "fold_names": [
+    "train",
+    "valid",
+    "test-dev",
+    "test-challenge"
+  ],
+  "retained_n": 3746581,
+  "retained_counts": [
+    3378573,
+    73545,
+    147034,
+    147429
+  ],
+  "parse_failures": 39,
+  "fingerprint_seconds": 106.94924154318869,
+  "artifacts": {
+    "packed.npy": "9804bcdf8f18a60c1b6436ab34801c2a02c515d5eb5c27edc910d7fa858aa4e1",
+    "canonical.npy": "55e0543232f4b4cef8ba4bd4a7116a279df97806fbd3a7e9c88a770e8b24dea7",
+    "native.npy": "64776928dc392dbbef9d4b685479114fccfbe3fe51a732efbdfff89eba8c82d4",
+    "retained_original_rows.npy": "d124fc89fbaf30aa2229c36bb840079465983d8b665f562e6eba7a2cff7edc5d",
+    "parse_failures.json": "7f8ee765fe3e4fb536cb8d5c32a39682367e2a9b3372bd6e6e89b0ce5140590d"
+  },
+  "identity_audit": {
+    "canonical_identity_key": "BLAKE2b-128 of RDKit isomeric canonical SMILES; no chemistry deduplication applied",
+    "unique_canonical_keys": 3574491,
+    "repeated_canonical_records": 172090,
+    "canonical_groups_crossing_native_folds": 34992
+  },
+  "cpu_worker_slots": [
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "parent_cpu": 16,
+  "host": "lambda2"
+}

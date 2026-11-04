@@ -1,0 +1,108 @@
+{
+  "job": {
+    "dataset": "moses",
+    "method": "random",
+    "seed": 0,
+    "name": "moses__random__s0"
+  },
+  "status": "ok",
+  "n": 1936962,
+  "fold_names": [
+    "train",
+    "test",
+    "test_scaffolds"
+  ],
+  "native_counts": [
+    1584663,
+    176074,
+    176225
+  ],
+  "realized_counts": [
+    1584663,
+    176074,
+    176225
+  ],
+  "size_tolerance": 0.0,
+  "split_seconds": 0.057709310203790665,
+  "peak_process_rss_gib": 0.5872116088867188,
+  "params": null,
+  "diagnostics": {},
+  "input_loading_seconds": 0.003982275724411011,
+  "input_adapter_seconds": 0.0,
+  "audit_seconds": 0.9251793548464775,
+  "metrics": {
+    "global_relative": 1.000332929618976,
+    "global_ci95": [
+      0.9944807687130057,
+      1.006152243241373
+    ],
+    "pair_mean_similarity": 0.14359084941783162,
+    "crossing_pair_mean": 0.045123067216053726,
+    "pair_count": 262144,
+    "bootstrap_blocks": 64,
+    "interval_scope": "Approximate 95% Monte Carlo interval, bootstrap of independent uniform-pair block means; not dataset or seed generalization uncertainty",
+    "counts": [
+      1584663,
+      176074,
+      176225
+    ],
+    "nearest_by_fold": [
+      {
+        "fold": "test",
+        "queries": 128,
+        "training_entities": 1584663,
+        "mean_nearest": 0.7476598348310731,
+        "nearest_ci95": [
+          0.7309465514897333,
+          0.7632649828435715
+        ],
+        "fraction_gt06": 0.9140625,
+        "fraction_eq1": 0.0078125,
+        "interval_scope": "Approximate 95% query-sampling bootstrap interval; each query is searched against every training entity"
+      },
+      {
+        "fold": "test_scaffolds",
+        "queries": 128,
+        "training_entities": 1584663,
+        "mean_nearest": 0.7503615569944295,
+        "nearest_ci95": [
+          0.7342317413239956,
+          0.7678410319263683
+        ],
+        "fraction_gt06": 0.9453125,
+        "fraction_eq1": 0.0078125,
+        "interval_scope": "Approximate 95% query-sampling bootstrap interval; each query is searched against every training entity"
+      }
+    ],
+    "mean_heldout_nearest": 0.7490112749096356
+  },
+  "artifacts": {
+    "assignments/moses__random__s0/labels.npz": "27b9d895749347fccbb23fb2f658e731520ec93057878648741283ba6db3ad15",
+    "assignments/moses__random__s0/nearest_audit.npz": "fbf848cd932aeb27e807574792b5866aaa20c8e034d7d101f1e89ac5cb3c69ca",
+    "assignments/moses__random__s0/pair_blocks.npz": "175905dddca68651341c8c86c1913242ca79d32587b2c0cf368c7c8ab1433fd0"
+  },
+  "source_input_manifest_sha256": "1e10ab255355d8cb2ec22362e4aa5da97ca5e821b680c007d53505afa9ac76a4",
+  "manifest_sha256": "e65ddb3d0db889317ef253dc7f6f9093de1321d648df6a11b4cd561116363278",
+  "host": "lambda2",
+  "cpu_affinity": [
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39
+  ],
+  "native_construction_time_status": "not supplied; never equated with metadata loading",
+  "original_n": 1936962,
+  "parse_failures": 0
+}

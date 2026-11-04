@@ -1,0 +1,10 @@
+{
+  "hu2020ogb": {
+    "url": "https://proceedings.neurips.cc/paper_files/paper/2020/file/fb60d411a5c5b72b2e7d3527cfc84fd0-Bibtex.bib",
+    "publisher_bibtex": "@inproceedings{hu2020ogb,\n author = {Hu, Weihua and Fey, Matthias and Zitnik, Marinka and Dong, Yuxiao and Ren, Hongyu and Liu, Bowen and Catasta, Michele and Leskovec, Jure},\n booktitle = {Advances in Neural Information Processing Systems},\n editor = {H. Larochelle and M. Ranzato and R. Hadsell and M.F. Balcan and H. Lin},\n pages = {22118--22133},\n publisher = {Curran Associates, Inc.},\n title = {Open Graph Benchmark: Datasets for Machine Learning on Graphs},\n url = {https://proceedings.neurips.cc/paper_files/paper/2020/file/fb60d411a5c5b72b2e7d3527cfc84fd0-Paper.pdf},\n volume = {33},\n year = {2020}\n}\n"
+  },
+  "hu2021ogblsc": {
+    "url": "https://datasets-benchmarks-proceedings.neurips.cc/paper_files/paper/2021/file/db8e1af0cb3aca1ae2d0018624204529-Bibtex-round2.bib",
+    "publisher_bibtex": "@inproceedings{hu2021ogblsc,\n author = {Hu, Weihua and Fey, Matthias and Ren, Hongyu and Nakata, Maho and Dong, Yuxiao and Leskovec, Jure},\n booktitle = {Proceedings of the Neural Information Processing Systems Track on Datasets and Benchmarks},\n editor = {J. Vanschoren and S. Yeung},\n pages = {},\n title = {OGB-LSC: A Large-Scale Challenge for Machine Learning on Graphs},\n url = {https://datasets-benchmarks-proceedings.neurips.cc/paper_files/paper/2021/file/db8e1af0cb3aca1ae2d0018624204529-Paper-round2.pdf},\n volume = {1},\n year = {2021}\n}\n"
+  }
+}

@@ -14,6 +14,7 @@
 \input{revision_numbers.tex}
 \input{odac25_numbers.tex}
 \input{controls_numbers.tex}
+\input{native_split_numbers.tex}
 \title{Scalable Dataset Splitting through Constrained Low-Rank Similarity Optimization}
 \author{Ruijie Zhu}
 \date{}
@@ -25,8 +26,8 @@ Similarity-aware dataset splitting reduces overlap between training and
 evaluation data while controlling fold sizes. Optimizing similarity across
 all entity pairs usually requires a matrix with quadratic storage. We present
 a framework that evaluates and optimizes this dense objective through compact
-low-rank factors, with explicit size and group constraints. Across six molecular
-datasets, the largest observed rank-256 approximation error is
+low-rank factors, with explicit size and group constraints. On six primary
+molecular datasets, the largest full-kernel rank-256 approximation error is
 \ControlsPlainCutError{}\% of the true cut for ordinary Tanimoto similarity.
 Powered kernels have substantially larger errors, so their accuracy must be
 checked separately. Direct dense-kernel controls use identical initial
@@ -40,8 +41,9 @@ size tolerance. Comparisons with DataSAIL and CCPart show that grouping and
 capacity constraints materially affect conclusions about quality. Reducing
 aggregate overlap does not consistently reduce nearest-training exposure;
 matching DataSAIL's groups removes the average global advantage observed when
-only fold counts match. A metadata-only ODAC25 example illustrates composition
-holdouts through group representatives. These results establish a scalable
+only fold counts match. Additional metadata-only applications use released
+molecular partitions covering up to 3.75 million records and an ODAC25
+composition holdout. These results establish a scalable
 constrained optimization framework with measured accuracy--cost trade-offs,
 rather than a universal ordering of splitting methods or a guarantee of
 real-world predictive performance.
@@ -112,6 +114,12 @@ the relation between split design and model selection. An ODAC25 application
 examines metadata-only composition holdouts at the original configuration
 counts (Section~\ref{sec:odac25}).
 
+Three additional large molecular datasets retain their released partition roles
+and supply native-split comparisons using compact metadata
+(Section~\ref{sec:native-molecular}). Their purpose is to characterize structural
+boundaries and generation cost; the isolated optimizer controls remain the
+same-procedure dense and matched-group studies.
+
 \begin{figure}[!htbp]
 \centering\includegraphics[width=6.5in]{systematic/concept.pdf}
 \caption{How the split is constructed. A small set of reference samples is
@@ -151,6 +159,9 @@ The primary global score is $L_S/\mathbb{E}[L_S]$.
 The primary local score is the raw mean
 $\nnl=|T|^{-1}\sum_{i\in T}\max_{j\in R}S_{ij}$, where $T$ is the test fold
 and $R$ the training fold. Lower values indicate less overlap.
+For native multi-role applications, we first evaluate each held-out role
+separately and summarize their means with population weights; the role-specific
+scores remain available. This summary preserves the released partition roles.
 
 \subsection{Low-rank representation}
 
@@ -288,6 +299,15 @@ representatives. The chemical shift, concentration of validation weight and
 competitive dense control limit what can be inferred from this application. The
 separate ChEMBL experiments provide the computational scaling evidence.
 
+The native molecular applications extend this comparison to millions of
+molecular records. Compact SMILES and index metadata suffice to measure
+separation on millions of records. They also expose different benchmark aims:
+CID, scaffold and generation-test partitions need not minimize the same dense
+objective. Parsing losses, repeated canonical identities, native role definitions
+and per-role sampling uncertainty accompany the comparisons. Lower measured
+similarity specifies a different structural transfer boundary; establishing
+better predictive evaluation would require an independent outcome study.
+
 Several limitations guide further work. The datasets are convenience samples,
 and molecular separation depends on the fingerprint representation. Powered
 kernels can require substantially more rank, strict whole-group capacities can
@@ -423,6 +443,28 @@ memory scopes are retained.
 
 \input{controls_methods.tex}
 
+\subsection{Native molecular partitions at scale}
+
+The additional PCQM4Mv2, MOSES and ogbg-molpcba comparisons preserve released
+partition roles and use the same retained, fingerprinted rows for every method.
+A validated four-role specification adapter passes PCQM4Mv2 assignments to the
+unchanged numerical routines; earlier producer versions remain pinned. The
+exact-count control uses four starts and assignment only. The 1\% corridor
+setting uses four starts and two refined candidates, subject to the standard
+two-million-row refinement cutoff. Three seeds are used per low-rank setting.
+Workers use 16 CPU cores on lambda2. The public-call clock includes factor
+construction and enabled optimization, while prepared-input loading, unpacking,
+input-adapter construction, common warm-up and independent auditing are outside
+it. Peak RSS is captured before auditing; original native construction costs
+are not supplied.
+
+Quality uses 262,144 common uniform distinct-record pairs and 128 uniform
+queries per held-out role, each compared with the entire returned training
+fold using exact original Tanimoto. Pair-block and query bootstraps describe
+Monte Carlo sampling uncertainty at fixed partitions. Source identities,
+parsing losses, per-role definitions, all outcomes, independent numerical checks
+and saved-landmark fidelity audits are detailed in the supplement.
+
 \subsection{Implementation and reproducibility}
 
 The direct-kernel, component and CCPart controls added in this revision use
@@ -431,6 +473,8 @@ pins the control adapters, upstream CCPart source, inputs and assignments.
 The original study records are retained without relabelling their producer
 versions. The added comparison and independent replay are described in the
 Supplementary Information.
+The native-split extension separately versions its four-role specification
+adapter while retaining the same numerical factor and optimization functions.
 
 The primary molecular studies use numerical package v0.2.0.dev3. The
 ODAC25 case uses the frozen v0.1 factor implementation with a separate
@@ -467,6 +511,11 @@ Public-input recipes and checksums accompany the records. The earlier
 \href{https://github.com/Ray16/PALM/tree/lowrank-v0.1.0-review-20261021-r2/publications/lowrank_2026}{v0.1
 review release} preserves the archival experiments. MoleculeNet, ChEMBL, QMOF,
 Materials Project and SIMPD inputs retain their original attribution and terms.
+Native PCQM4Mv2, MOSES and ogbg-molpcba source identities, selective metadata
+retrieval, retained-row maps and benchmark artifacts are documented in
+\path{revision_20261104_native_splits}. Raw metadata and regenerable packed
+fingerprints are excluded from the public evidence bundle; their pinned
+download recipes and checksums are included.
 The ODAC25 addition, frozen adapter, compact evidence and assignment maps are
 included in \path{odac25_case} on the
 \href{https://github.com/Ray16/PALM/tree/lowrank-odac25-20261103/publications/lowrank_2026}{ODAC25

@@ -1,16 +1,16 @@
 {
-  "review_type": "Internal source, scientific-claim and rendered-layout review",
+  "review_type": "Internal scientific-source and rendered-layout review after native-split extension",
   "reviewed_documents": {
     "manuscript.pdf": {
-      "pages": 23,
-      "render_sha256": "1746d7e4afd84929b40d563fa0918edc391bcba119129f36a8409a33d9831263",
+      "pages": 24,
+      "render_sha256": "007f82b2b0a9ede05b1abd761d525a746b2989e3919508606aa7594cf7a6bcc7",
       "minimum_figure_font_pt": 18.0,
       "all_figure_fonts_at_least_18": true,
       "clipped_figure_text": []
     },
     "supplement.pdf": {
-      "pages": 58,
-      "render_sha256": "f5e32548073f1f52724b9e8b9bc8698b585c8e45df4804edbb5f2f3070e08d78",
+      "pages": 63,
+      "render_sha256": "d5407a419dec0063c8665a10feb4ae48ba259e3d672bc3ba11767851d879d87c",
       "minimum_figure_font_pt": 18.0,
       "all_figure_fonts_at_least_18": true,
       "clipped_figure_text": []
@@ -40,7 +40,8 @@
       20,
       21,
       22,
-      23
+      23,
+      24
     ],
     "supplement.pdf": [
       1,
@@ -100,26 +101,29 @@
       55,
       56,
       57,
-      58
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
     ]
   },
-  "inspection": "All main and supplementary pages inspected as rendered contact sheets; title/abstract, dense-control table, CCPart example and new supplementary tables inspected at larger scale. Final main paper follows formulation, fidelity and optimization, scaling, matched benchmarking and task interpretation. Table captions define metrics and timing scopes; long-table captions span the text width. No overlapping or clipped table/figure text was observed. Main figures retain 18pt text. Existing archival numerical content is preserved with its version labels. This is an internal technical/editorial review, not independent journal peer review or author approval.",
-  "minimum_required_figure_font_pt": 18,
-  "author_metadata": "Author contributions, funding, interests and author scientific approval remain pending.",
   "detail_inspection": {
     "manuscript.pdf": [
       1,
-      7,
-      10
+      12
     ],
     "supplement.pdf": [
-      15,
-      16,
-      17,
-      18,
-      19,
-      20,
-      21
+      21,
+      22,
+      23,
+      24,
+      25,
+      26
     ]
-  }
+  },
+  "inspection": "All 24 main and 63 supplementary pages inspected as current rendered contact sheets, with native comparison, identities, timing scopes and fidelity tables inspected at larger scale. Main text retains one compact native table and the four-question narrative. Native roles, parsing losses, unavailable original creation times, PCQM blind-response limitation, per-role aggregation and separate 16-core protocol are explicit. Source/number and numerical checks are separate from this layout inspection. No observed clipping/overlap; final figure text remains at least 18pt. Existing evidence and source-version distinctions are preserved. This internal review does not establish author approval or independent journal peer review.",
+  "minimum_required_figure_font_pt": 18,
+  "author_metadata": "Author contributions, funding, competing interests and author scientific approval remain pending."
 }

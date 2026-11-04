@@ -1,0 +1,270 @@
+{
+  "limit_bytes": 209715200,
+  "requests": [
+    {
+      "url": "https://dgl-data.s3-accelerate.amazonaws.com/dataset/OGB-LSC/pcqm4m-v2.zip",
+      "start": 61602584,
+      "end": 61602605,
+      "bytes": 22,
+      "etag": "\"4038096bb9667ab367b9cd11e7040c5a-8\"",
+      "time": 1793774153.5594633
+    },
+    {
+      "url": "https://dgl-data.s3-accelerate.amazonaws.com/dataset/OGB-LSC/pcqm4m-v2.zip",
+      "start": 61602564,
+      "end": 61602583,
+      "bytes": 20,
+      "etag": "\"4038096bb9667ab367b9cd11e7040c5a-8\"",
+      "time": 1793774153.6620028
+    },
+    {
+      "url": "https://dgl-data.s3-accelerate.amazonaws.com/dataset/OGB-LSC/pcqm4m-v2.zip",
+      "start": 61601964,
+      "end": 61602583,
+      "bytes": 620,
+      "etag": "\"4038096bb9667ab367b9cd11e7040c5a-8\"",
+      "time": 1793774153.8371475
+    },
+    {
+      "url": "https://snap.stanford.edu/ogb/data/graphproppred/csv_mol_download/pcba.zip",
+      "start": 39533450,
+      "end": 39533471,
+      "bytes": 22,
+      "etag": "\"2c8073d-25b3ba0-5a4daf939472d\"",
+      "time": 1793774154.3702612
+    },
+    {
+      "url": "https://snap.stanford.edu/ogb/data/graphproppred/csv_mol_download/pcba.zip",
+      "start": 39533430,
+      "end": 39533449,
+      "bytes": 20,
+      "etag": "\"2c8073d-25b3ba0-5a4daf939472d\"",
+      "time": 1793774154.6064498
+    },
+    {
+      "url": "https://snap.stanford.edu/ogb/data/graphproppred/csv_mol_download/pcba.zip",
+      "start": 39532523,
+      "end": 39533449,
+      "bytes": 927,
+      "etag": "\"2c8073d-25b3ba0-5a4daf939472d\"",
+      "time": 1793774154.8343613
+    },
+    {
+      "url": "https://dgl-data.s3-accelerate.amazonaws.com/dataset/OGB-LSC/pcqm4m-v2.zip",
+      "start": 61602584,
+      "end": 61602605,
+      "bytes": 22,
+      "etag": "\"4038096bb9667ab367b9cd11e7040c5a-8\"",
+      "time": 1793774220.1275752
+    },
+    {
+      "url": "https://dgl-data.s3-accelerate.amazonaws.com/dataset/OGB-LSC/pcqm4m-v2.zip",
+      "start": 61602564,
+      "end": 61602583,
+      "bytes": 20,
+      "etag": "\"4038096bb9667ab367b9cd11e7040c5a-8\"",
+      "time": 1793774220.224331
+    },
+    {
+      "url": "https://dgl-data.s3-accelerate.amazonaws.com/dataset/OGB-LSC/pcqm4m-v2.zip",
+      "start": 61601964,
+      "end": 61602583,
+      "bytes": 620,
+      "etag": "\"4038096bb9667ab367b9cd11e7040c5a-8\"",
+      "time": 1793774220.3180296
+    },
+    {
+      "url": "https://dgl-data.s3-accelerate.amazonaws.com/dataset/OGB-LSC/pcqm4m-v2.zip",
+      "start": 542,
+      "end": 571,
+      "bytes": 30,
+      "etag": "\"4038096bb9667ab367b9cd11e7040c5a-8\"",
+      "time": 1793774220.4685857
+    },
+    {
+      "url": "https://dgl-data.s3-accelerate.amazonaws.com/dataset/OGB-LSC/pcqm4m-v2.zip",
+      "start": 572,
+      "end": 596,
+      "bytes": 25,
+      "etag": "\"4038096bb9667ab367b9cd11e7040c5a-8\"",
+      "time": 1793774220.5555124
+    },
+    {
+      "url": "https://dgl-data.s3-accelerate.amazonaws.com/dataset/OGB-LSC/pcqm4m-v2.zip",
+      "start": 625,
+      "end": 54831276,
+      "bytes": 54830652,
+      "etag": "\"4038096bb9667ab367b9cd11e7040c5a-8\"",
+      "time": 1793774221.842992
+    },
+    {
+      "url": "https://dgl-data.s3-accelerate.amazonaws.com/dataset/OGB-LSC/pcqm4m-v2.zip",
+      "start": 54831277,
+      "end": 54831306,
+      "bytes": 30,
+      "etag": "\"4038096bb9667ab367b9cd11e7040c5a-8\"",
+      "time": 1793774222.4749625
+    },
+    {
+      "url": "https://dgl-data.s3-accelerate.amazonaws.com/dataset/OGB-LSC/pcqm4m-v2.zip",
+      "start": 54831307,
+      "end": 54831329,
+      "bytes": 23,
+      "etag": "\"4038096bb9667ab367b9cd11e7040c5a-8\"",
+      "time": 1793774222.5645795
+    },
+    {
+      "url": "https://dgl-data.s3-accelerate.amazonaws.com/dataset/OGB-LSC/pcqm4m-v2.zip",
+      "start": 54831358,
+      "end": 61601963,
+      "bytes": 6770606,
+      "etag": "\"4038096bb9667ab367b9cd11e7040c5a-8\"",
+      "time": 1793774222.9502876
+    },
+    {
+      "url": "https://snap.stanford.edu/ogb/data/graphproppred/csv_mol_download/pcba.zip",
+      "start": 39533450,
+      "end": 39533471,
+      "bytes": 22,
+      "etag": "\"2c8073d-25b3ba0-5a4daf939472d\"",
+      "time": 1793774223.7000825
+    },
+    {
+      "url": "https://snap.stanford.edu/ogb/data/graphproppred/csv_mol_download/pcba.zip",
+      "start": 39533430,
+      "end": 39533449,
+      "bytes": 20,
+      "etag": "\"2c8073d-25b3ba0-5a4daf939472d\"",
+      "time": 1793774223.9285772
+    },
+    {
+      "url": "https://snap.stanford.edu/ogb/data/graphproppred/csv_mol_download/pcba.zip",
+      "start": 39532523,
+      "end": 39533449,
+      "bytes": 927,
+      "etag": "\"2c8073d-25b3ba0-5a4daf939472d\"",
+      "time": 1793774224.1564822
+    },
+    {
+      "url": "https://snap.stanford.edu/ogb/data/graphproppred/csv_mol_download/pcba.zip",
+      "start": 120,
+      "end": 149,
+      "bytes": 30,
+      "etag": "\"2c8073d-25b3ba0-5a4daf939472d\"",
+      "time": 1793774224.3855252
+    },
+    {
+      "url": "https://snap.stanford.edu/ogb/data/graphproppred/csv_mol_download/pcba.zip",
+      "start": 150,
+      "end": 172,
+      "bytes": 23,
+      "etag": "\"2c8073d-25b3ba0-5a4daf939472d\"",
+      "time": 1793774224.6132302
+    },
+    {
+      "url": "https://snap.stanford.edu/ogb/data/graphproppred/csv_mol_download/pcba.zip",
+      "start": 173,
+      "end": 14823269,
+      "bytes": 14823097,
+      "etag": "\"2c8073d-25b3ba0-5a4daf939472d\"",
+      "time": 1793774226.734854
+    },
+    {
+      "url": "https://snap.stanford.edu/ogb/data/graphproppred/csv_mol_download/pcba.zip",
+      "start": 38547361,
+      "end": 38547390,
+      "bytes": 30,
+      "etag": "\"2c8073d-25b3ba0-5a4daf939472d\"",
+      "time": 1793774227.0526178
+    },
+    {
+      "url": "https://snap.stanford.edu/ogb/data/graphproppred/csv_mol_download/pcba.zip",
+      "start": 38547391,
+      "end": 38547422,
+      "bytes": 32,
+      "etag": "\"2c8073d-25b3ba0-5a4daf939472d\"",
+      "time": 1793774227.2817328
+    },
+    {
+      "url": "https://snap.stanford.edu/ogb/data/graphproppred/csv_mol_download/pcba.zip",
+      "start": 38547423,
+      "end": 39323850,
+      "bytes": 776428,
+      "etag": "\"2c8073d-25b3ba0-5a4daf939472d\"",
+      "time": 1793774228.4605842
+    },
+    {
+      "url": "https://snap.stanford.edu/ogb/data/graphproppred/csv_mol_download/pcba.zip",
+      "start": 39427685,
+      "end": 39427714,
+      "bytes": 30,
+      "etag": "\"2c8073d-25b3ba0-5a4daf939472d\"",
+      "time": 1793774228.7010298
+    },
+    {
+      "url": "https://snap.stanford.edu/ogb/data/graphproppred/csv_mol_download/pcba.zip",
+      "start": 39427715,
+      "end": 39427746,
+      "bytes": 32,
+      "etag": "\"2c8073d-25b3ba0-5a4daf939472d\"",
+      "time": 1793774228.9280193
+    },
+    {
+      "url": "https://snap.stanford.edu/ogb/data/graphproppred/csv_mol_download/pcba.zip",
+      "start": 39427747,
+      "end": 39532522,
+      "bytes": 104776,
+      "etag": "\"2c8073d-25b3ba0-5a4daf939472d\"",
+      "time": 1793774229.4262662
+    },
+    {
+      "url": "https://snap.stanford.edu/ogb/data/graphproppred/csv_mol_download/pcba.zip",
+      "start": 39323851,
+      "end": 39323880,
+      "bytes": 30,
+      "etag": "\"2c8073d-25b3ba0-5a4daf939472d\"",
+      "time": 1793774229.6571589
+    },
+    {
+      "url": "https://snap.stanford.edu/ogb/data/graphproppred/csv_mol_download/pcba.zip",
+      "start": 39323881,
+      "end": 39323911,
+      "bytes": 31,
+      "etag": "\"2c8073d-25b3ba0-5a4daf939472d\"",
+      "time": 1793774229.8852713
+    },
+    {
+      "url": "https://snap.stanford.edu/ogb/data/graphproppred/csv_mol_download/pcba.zip",
+      "start": 39323912,
+      "end": 39427684,
+      "bytes": 103773,
+      "etag": "\"2c8073d-25b3ba0-5a4daf939472d\"",
+      "time": 1793774230.3769252
+    },
+    {
+      "url": "https://media.githubusercontent.com/media/molecularsets/moses/dd7ed6ab38e23afd3ef5371d67939a1760bd8599/moses/dataset/data/train.csv.gz",
+      "start": null,
+      "end": null,
+      "bytes": 10238967,
+      "etag": "\"786f0313aa6b9ba5514df685f885742a70ea8d86f1a4fa48115f7f80a634265c\"",
+      "time": 1793774231.5228856
+    },
+    {
+      "url": "https://media.githubusercontent.com/media/molecularsets/moses/dd7ed6ab38e23afd3ef5371d67939a1760bd8599/moses/dataset/data/test.csv.gz",
+      "start": null,
+      "end": null,
+      "bytes": 1367572,
+      "etag": "\"f896fbf3764f88d94670b9959e5872c600c12152a18233823e820761b7a791b2\"",
+      "time": 1793774232.027853
+    },
+    {
+      "url": "https://media.githubusercontent.com/media/molecularsets/moses/dd7ed6ab38e23afd3ef5371d67939a1760bd8599/moses/dataset/data/test_scaffolds.csv.gz",
+      "start": null,
+      "end": null,
+      "bytes": 1274114,
+      "etag": "\"adffb2192c1bfe31ab0e13154d4af19a37dc18bdbf3cd7b4491e04405128adde\"",
+      "time": 1793774232.6656508
+    }
+  ],
+  "received_bytes": 90293593
+}

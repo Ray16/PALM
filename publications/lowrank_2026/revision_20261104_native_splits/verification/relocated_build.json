@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "strict_build": true,
+  "root": "/tmp/lowrank_native_clean_review",
+  "scope": "Relocated indexed publication tree builds both PDFs and passes existing/native source, artifact, regression, numerical-replay and reviewed-render gates with no raw metadata/fingerprint cache",
+  "log_tail": "_identities_checked\": true,\n  \"native_creation_times\": \"not supplied and never imputed from loading\",\n  \"author_scientific_approval\": \"Separate author responsibility, not inferred\"\n}\nBuilt and checked /tmp/lowrank_native_clean_review/publications/lowrank_2026/paper/manuscript.pdf and supplement.pdf\n",
+  "final_indexed_sources_verified": true
+}

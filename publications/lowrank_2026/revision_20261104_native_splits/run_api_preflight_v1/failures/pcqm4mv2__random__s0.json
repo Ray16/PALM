@@ -1,0 +1,12 @@
+{
+  "job": {
+    "dataset": "pcqm4mv2",
+    "method": "random",
+    "seed": 0,
+    "name": "pcqm4mv2__random__s0"
+  },
+  "exit_code": 1,
+  "log": "/nfs/lambda_stor_01/homes/rzhu/data_splitting/publication/odac25_revision/publications/lowrank_2026/revision_20261104_native_splits/run/logs/pcqm4mv2__random__s0.log",
+  "status": "failed",
+  "manifest_sha256": "e83bbc88d6c8c976545c36783111e9b8a6c539b26172fbcce6fbe11e2be98700"
+}

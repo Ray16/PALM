@@ -1,0 +1,39 @@
+{
+  "dataset": "molpcba",
+  "seed": 0,
+  "rank": 256,
+  "pair_count": 262144,
+  "results": [
+    {
+      "case": "molpcba__exact_assignment__s0",
+      "mass_relative_error": 0.0034752484464929544,
+      "cut_relative_error": 0.0130789719702916,
+      "mass_error_ci95": [
+        0.003268559167836847,
+        0.003659227783442383
+      ],
+      "cut_error_ci95": [
+        0.01230671186507421,
+        0.013763771625057868
+      ],
+      "row_sha256": "eca88c5675822a661b7739bd3b702e44ad188b74b53242658b3638063c3e780d"
+    },
+    {
+      "case": "molpcba__corridor_plain__s0",
+      "mass_relative_error": 0.003453114252726951,
+      "cut_relative_error": 0.01313203383155207,
+      "mass_error_ci95": [
+        0.003247979221589005,
+        0.003632992423717315
+      ],
+      "cut_error_ci95": [
+        0.012353095775954871,
+        0.013801132109647155
+      ],
+      "row_sha256": "de9ddcec849f878d8d438258290c2b4c93837afb47ca505551b293a882f485db"
+    }
+  ],
+  "source_sha256": "88823cf4ac96b6944f9122504bdb9fd558c658f47c0d60985b95e3c7bb9fe3b5",
+  "manifest_sha256": "e65ddb3d0db889317ef253dc7f6f9093de1321d648df6a11b4cd561116363278",
+  "scope": "Post-hoc returned-cut diagnostic at fixed rank; saved-landmark factor reconstructed with the pinned double-construction/float32-storage formula; approximate Monte Carlo block-bootstrap intervals, not optimizer optimality or uniform cut guarantees"
+}

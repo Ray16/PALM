@@ -1,0 +1,108 @@
+{
+  "job": {
+    "dataset": "moses",
+    "method": "native",
+    "seed": 0,
+    "name": "moses__native__s0"
+  },
+  "status": "ok",
+  "n": 1936962,
+  "fold_names": [
+    "train",
+    "test",
+    "test_scaffolds"
+  ],
+  "native_counts": [
+    1584663,
+    176074,
+    176225
+  ],
+  "realized_counts": [
+    1584663,
+    176074,
+    176225
+  ],
+  "size_tolerance": 0.0,
+  "split_seconds": null,
+  "peak_process_rss_gib": null,
+  "params": null,
+  "diagnostics": {},
+  "input_loading_seconds": 0.004147712141275406,
+  "input_adapter_seconds": 0.0,
+  "audit_seconds": 0.8137765452265739,
+  "metrics": {
+    "global_relative": 1.000360295408025,
+    "global_ci95": [
+      0.9949706327537299,
+      1.005310129570704
+    ],
+    "pair_mean_similarity": 0.14359084941783162,
+    "crossing_pair_mean": 0.0451243016334183,
+    "pair_count": 262144,
+    "bootstrap_blocks": 64,
+    "interval_scope": "Approximate 95% Monte Carlo interval, bootstrap of independent uniform-pair block means; not dataset or seed generalization uncertainty",
+    "counts": [
+      1584663,
+      176074,
+      176225
+    ],
+    "nearest_by_fold": [
+      {
+        "fold": "test",
+        "queries": 128,
+        "training_entities": 1584663,
+        "mean_nearest": 0.7391328980516148,
+        "nearest_ci95": [
+          0.7236696897874889,
+          0.7554947705951549
+        ],
+        "fraction_gt06": 0.9296875,
+        "fraction_eq1": 0.0078125,
+        "interval_scope": "Approximate 95% query-sampling bootstrap interval; each query is searched against every training entity"
+      },
+      {
+        "fold": "test_scaffolds",
+        "queries": 128,
+        "training_entities": 1584663,
+        "mean_nearest": 0.7066056706293964,
+        "nearest_ci95": [
+          0.6895275979300334,
+          0.724282269617208
+        ],
+        "fraction_gt06": 0.8828125,
+        "fraction_eq1": 0.0,
+        "interval_scope": "Approximate 95% query-sampling bootstrap interval; each query is searched against every training entity"
+      }
+    ],
+    "mean_heldout_nearest": 0.7228623135410699
+  },
+  "artifacts": {
+    "assignments/moses__native__s0/labels.npz": "f407c554769f0e48601c150b44d1befdf11c189ce66cf6e840d9efa6947613d7",
+    "assignments/moses__native__s0/nearest_audit.npz": "d028b1c4d516f26fe37d8f965dde6f0d0b790881eb166d3c3a604351f6f4753f",
+    "assignments/moses__native__s0/pair_blocks.npz": "2bcc4ed195c35d67c58c73cc1708ebbd5024de462db5c0fe7e5deb09389ea52b"
+  },
+  "source_input_manifest_sha256": "1e10ab255355d8cb2ec22362e4aa5da97ca5e821b680c007d53505afa9ac76a4",
+  "manifest_sha256": "e65ddb3d0db889317ef253dc7f6f9093de1321d648df6a11b4cd561116363278",
+  "host": "lambda2",
+  "cpu_affinity": [
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39
+  ],
+  "native_construction_time_status": "not supplied; never equated with metadata loading",
+  "original_n": 1936962,
+  "parse_failures": 0
+}
