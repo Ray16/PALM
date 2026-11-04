@@ -95,5 +95,5 @@
     "author scientific approval"
   ],
   "completion_evidence": "verification/completion.json and verification/delivery.json",
-  "new_user_extension": "Additional metadata-only large datasets with native splits are active work, separate from this completed checkpoint."
+  "new_user_extension": "Completed and verified in revision_20261104_native_splits; see its completion and delivery evidence."
 }

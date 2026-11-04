@@ -10,7 +10,7 @@
         "preparation/moses.json",
         "preparation/molpcba.json"
       ],
-      "status": "verified"
+      "status": "verified complete"
     },
     {
       "id": "metadata_budget",
@@ -19,7 +19,7 @@
         "downloaded_archive_metadata.json",
         "verification/reproduced_input_identity.json"
       ],
-      "status": "verified"
+      "status": "verified complete"
     },
     {
       "id": "identities_and_roles",
@@ -29,7 +29,7 @@
         "native_spec.py",
         "verification/tests.json"
       ],
-      "status": "verified"
+      "status": "verified complete"
     },
     {
       "id": "quality_cost_comparison",
@@ -39,7 +39,7 @@
         "run/manifest.json",
         "verification/completion.json"
       ],
-      "status": "verified"
+      "status": "verified complete"
     },
     {
       "id": "independent_original_similarity",
@@ -49,7 +49,7 @@
         "verification/independent_molpcba.json",
         "verification/completion.json"
       ],
-      "status": "verified"
+      "status": "verified complete"
     },
     {
       "id": "fidelity",
@@ -58,7 +58,7 @@
         "verification/completion.json",
         "../paper/native_split_fidelity.tex"
       ],
-      "status": "verified"
+      "status": "verified complete"
     },
     {
       "id": "readable_manuscript",
@@ -68,7 +68,7 @@
         "verification/final_visual_review.json",
         "verification/overleaf_build.json"
       ],
-      "status": "verified"
+      "status": "verified complete"
     },
     {
       "id": "reproducibility",
@@ -77,14 +77,14 @@
         "README.md",
         "verification/relocated_build.json"
       ],
-      "status": "verified"
+      "status": "verified complete"
     },
     {
       "id": "synchronized_delivery",
       "evidence": [
         "verification/delivery.json"
       ],
-      "status": "pending final remote verification"
+      "status": "verified complete"
     }
   ],
   "scope": "Original optimization/manuscript work plus the user-requested metadata-only large native-split extension",
@@ -94,5 +94,11 @@
     "interests",
     "author scientific approval",
     "actual journal submission"
+  ],
+  "completion_evidence": [
+    "verification/completion.json",
+    "verification/delivery.json",
+    "verification/final_visual_review.json",
+    "verification/relocated_build.json"
   ]
 }

@@ -51,14 +51,34 @@
     "timeout_seconds": 1200,
     "all_production_cases_complete": true
   },
-  "remaining": [
-    "Final relocated-build/delivery audit and GitHub synchronization"
-  ],
+  "remaining": [],
   "canonical_paper": "../paper",
   "python": "/homes/rzhu/miniforge3/envs/palm/bin/python",
   "cwd": "/nfs/lambda_stor_01/homes/rzhu/data_splitting",
   "native_extension_complete": true,
   "production_cases": 30,
   "budget_outcomes": 0,
-  "overleaf_commit": "fe70a0ced918ca3ef70c6c8102fbbc66446c7b1f"
+  "overleaf_commit": "fe70a0ced918ca3ef70c6c8102fbbc66446c7b1f",
+  "status": "complete",
+  "delivery": {
+    "passed": true,
+    "manuscript_evidence_commit": "4b4a3a9a7503985f64df18bb3041d8f240c14b68",
+    "github_branch": "main",
+    "github_remote_verified": "4b4a3a9a7503985f64df18bb3041d8f240c14b68",
+    "overleaf_commit": "b065880e0109f8e6b036b20e615a05e6054d914f",
+    "overleaf_remote_verified": "b065880e0109f8e6b036b20e615a05e6054d914f",
+    "main_pages": 24,
+    "supplement_pages": 63,
+    "native_metadata_payload_bytes": 90293593,
+    "native_cases": 30,
+    "earlier_control_cases": 540,
+    "regression_tests": {
+      "controlled_package": 226,
+      "native_extension": 5
+    },
+    "pdf_sha256": {
+      "manuscript.pdf": "1622089f43b8a2ea2f0465e5fd84247b1bdd107656cd165a3360029412988569",
+      "supplement.pdf": "cc9d8fd645f029fc089bfe4d11cea540df6bf801b89018e32d6077caa8dc3a50"
+    }
+  }
 }
