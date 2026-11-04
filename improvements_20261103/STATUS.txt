@@ -1,0 +1,51 @@
+Low-rank improvement work, 3 November 2026
+==========================================
+
+Implemented: packages/lowrank is the canonical v0.2.0.dev4 development package.
+The v0.2.0.dev3 manuscript producer remains immutable. Exact-count swap search
+now batches candidate similarities, restricting evaluation to destination-fold
+rows. Candidate coverage and integer count constraints are preserved; floating
+point near ties may differ between backends. Sparse local-penalty and weighted
+paths retain their previous solvers.
+
+Validation: 237 tests pass, including 14 new dense-reference/block/tie tests.
+The first unrestricted test attempt was interrupted after a native threading
+backend created more threads than requested; the completed rerun pins two cores
+and sets NumPy/OpenMP/MKL/Numba thread limits. The existing TBB-version warning
+is retained in the test log. The development wheel builds successfully.
+
+Paired timings (three seeds; two CPU threads; synthetic signed dense factors):
+20-swap stage, n=2,000/rank64: median 0.1008 -> 0.0519 seconds (1.94x).
+20-swap stage, n=10,000/rank256: median 0.5027 -> 0.2287 seconds (2.20x).
+All six assignment hashes and final costs match.
+
+Complete split calls (three seeds; exact80/10/10; rank256; four restarts;
+two refined candidates; no leakage scoring; source/input records retained):
+FreeSolv: median 0.2059 -> 0.1974 seconds (1.04x).
+ESOL: median 0.4136 -> 0.2914 seconds (1.42x).
+BACE: median 0.4319 -> 0.3842 seconds (1.12x).
+All nine paired assignments match. These short timings are development evidence,
+not stable cross-hardware speed guarantees or manuscript headline results.
+
+Powered-kernel exploratory work:
+A single sampled global-mean residual direction worsens cut fidelity on the
+original optimized partitions in all nine tested cases. It is rejected as a
+default. A three-fold-mean residual extension improves fidelity after
+reoptimization in all nine dense-oracle cases, but FreeSolv's exact powered cut
+worsens. No aggregate correction is shipped in the public package. The pilot
+uses a dense oracle; scalable construction, held-out datasets, independent
+accuracy audits, cost comparisons and optimizer-quality checks remain required.
+
+Manuscript: the complete main article has received a prose edit for direct
+scientific English, logical flow and precise interpretation. All equations,
+citations, literal numerical values and result macros in the editorial pass
+are preserved. No pilot results have been inserted into the paper.
+
+Remaining broader improvement work:
+- Develop and validate a scalable powered-kernel correction without worsening
+  exact objective quality; retain independent returned-partition audits.
+- Assess larger exact-count split cases and cost/quality trade-offs.
+- Real dated/external evaluation is still needed for deployment-validity claims;
+  the current manuscript makes no such claim.
+- Author names, affiliations, funding/interests and scientific approval remain
+  author responsibilities. The document is a review draft.

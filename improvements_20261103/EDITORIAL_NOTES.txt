@@ -1,0 +1,22 @@
+Editorial revision, 3 November 2026
+=================================
+
+The revised main article includes the abstract, introduction, framework,
+current-code results, ODAC25 results, discussion, methods and figure captions.
+The supplementary article was rebuilt for consistency but was not rewritten.
+Equations, citations, numerical values, result macros and the strength of the
+scientific claims were preserved. A redundant standalone conclusion was merged
+into the discussion during the preceding improvement pass. No new development
+benchmark or exploratory powered-kernel result is presented as manuscript evidence.
+
+Author attention:
+1. The main text refers to a 1% capacity corridor without explicitly defining
+   the denominator there. Confirm that the supplementary definition is sufficient
+   or state the relative fold-target definition in the main framework section.
+2. 'Family' denotes a known generator label in the synthetic experiment and a
+   metadata-derived relation in ODAC25. These are separate operational definitions;
+   readers should not infer that they identify equivalent physical relationships.
+3. The study does not validate prospective performance on real dated outcomes.
+   This evidence gap remains explicit and cannot be resolved through prose edits.
+4. Author information, funding, competing interests and final scientific approval
+   remain pending.

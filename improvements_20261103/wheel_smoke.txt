@@ -1,0 +1,4 @@
+Processing /tmp/lowrank_dev4_wheel/lowrank_split-0.2.0.dev4-py3-none-any.whl
+Installing collected packages: lowrank-split
+Successfully installed lowrank-split-0.2.0.dev4
+Installed wheel 0.2.0.dev4 imports from /tmp/lowrank_dev4_install/lowrank/__init__.py and preserves exact counts

@@ -1,0 +1,20 @@
+{
+  "manuscript.tex": {
+    "citations": true,
+    "equations": true,
+    "numbers": true,
+    "numeric_macros": true
+  },
+  "results_systematic.tex": {
+    "citations": true,
+    "equations": true,
+    "numbers": true,
+    "numeric_macros": true
+  },
+  "odac25_results.tex": {
+    "citations": true,
+    "equations": true,
+    "numbers": true,
+    "numeric_macros": true
+  }
+}

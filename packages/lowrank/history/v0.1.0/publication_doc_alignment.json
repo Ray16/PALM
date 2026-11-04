@@ -1,0 +1,13 @@
+{
+  "changed": [
+    "lowrank/__init__.py",
+    "lowrank/grouped.py",
+    "lowrank/nystrom.py",
+    "lowrank/optimize.py",
+    "lowrank/target_gap.py",
+    "lowrank/splitters/__init__.py",
+    "lowrank/splitters/base.py"
+  ],
+  "non_doc_executable_ast_unchanged": true,
+  "scope": "documentation and package description only; working experiment sources unchanged"
+}

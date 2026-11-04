@@ -1,12 +1,32 @@
 # PALM — Physics-Aware Leakage Minimizer
 
+## Low-rank method and manuscript
+
+- **Current development package:** [`packages/lowrank`](packages/lowrank), version
+  `0.2.0.dev4`. Install with `python -m pip install ./packages/lowrank`.
+  Run imports from outside the repository root, whose legacy `lowrank/` directory
+  can shadow an installed package.
+- **Reviewed manuscript and frozen evidence:**
+  [`publications/lowrank_2026`](publications/lowrank_2026). Its `package/` remains
+  the immutable v0.2.0.dev3 producer; existing manuscript results do not describe
+  subsequent development code.
+- **Improvement evidence and remaining work:**
+  [`improvements_20261103/STATUS.txt`](improvements_20261103/STATUS.txt).
+
+The method constructs representation-defined evaluation boundaries. Lower
+cross-fold similarity or a harder prediction task does not establish better
+prospective evaluation. Global overlap, local analogue exposure, target
+composition, fold capacities and intended transfer task must be considered together.
+
+The remaining sections describe the legacy PALM application.
+
 PALM creates train/test splits for scientific ML datasets with reduced data leakage using [DataSAIL](https://github.com/kalininalab/DataSAIL). It supports **molecules, biomolecules, materials, and genes** through a single configuration interface and an easy-to-use web app.
 
 ## Why PALM?
 
-Random train/test splits allow structurally similar entities into both sets, inflating model performance. PALM uses cluster-based splitting to ensure test samples are genuinely novel:
+Random splits can place structurally similar entities in both sets. Cluster-based splits change that transfer task and can change prediction scores. The historical results below illustrate score differences; they do not isolate leakage from target or domain shift:
 
-| Dataset | Random R² | Cluster R² | Inflation |
+| Dataset | Random R² | Cluster R² | Score difference |
 |---------|-----------|------------|-----------|
 | ESOL (1,128 molecules) | 0.667 | 0.333 | +0.334 |
 | Lipophilicity (1,000 molecules) | 0.362 | 0.131 | +0.231 |

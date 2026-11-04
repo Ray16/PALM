@@ -1,0 +1,189 @@
+{
+  "scope": "20-swap refinement only; not full split-call timing",
+  "threads": 2,
+  "cuda_visible": "",
+  "torch": "2.8.0+cu128",
+  "numpy": "1.26.4",
+  "rows": [
+    {
+      "n": 2000,
+      "rank": 64,
+      "seed": 0,
+      "batched": false,
+      "seconds": 0.10020103119313717,
+      "moves": 20,
+      "cost": -666.2538597419004,
+      "counts": [
+        1600,
+        200,
+        200
+      ],
+      "assignment_sha256": "1ccad47ffc2f4fc0119336a820aa7c0fd8d28d3cf02258abdd1e6dee51795e34"
+    },
+    {
+      "n": 2000,
+      "rank": 64,
+      "seed": 0,
+      "batched": true,
+      "seconds": 0.045486148446798325,
+      "moves": 20,
+      "cost": -666.2538597419004,
+      "counts": [
+        1600,
+        200,
+        200
+      ],
+      "assignment_sha256": "1ccad47ffc2f4fc0119336a820aa7c0fd8d28d3cf02258abdd1e6dee51795e34"
+    },
+    {
+      "n": 2000,
+      "rank": 64,
+      "seed": 1,
+      "batched": true,
+      "seconds": 0.051947107538580894,
+      "moves": 20,
+      "cost": -755.6876111881504,
+      "counts": [
+        1600,
+        200,
+        200
+      ],
+      "assignment_sha256": "df09e4f61aa14c6df58a64f8688b0e92e7fccc7e8661da05588f3853f7d9b439"
+    },
+    {
+      "n": 2000,
+      "rank": 64,
+      "seed": 1,
+      "batched": false,
+      "seconds": 0.10470912791788578,
+      "moves": 20,
+      "cost": -755.6876111881504,
+      "counts": [
+        1600,
+        200,
+        200
+      ],
+      "assignment_sha256": "df09e4f61aa14c6df58a64f8688b0e92e7fccc7e8661da05588f3853f7d9b439"
+    },
+    {
+      "n": 2000,
+      "rank": 64,
+      "seed": 2,
+      "batched": false,
+      "seconds": 0.10083385556936264,
+      "moves": 20,
+      "cost": -609.2658213474075,
+      "counts": [
+        1600,
+        200,
+        200
+      ],
+      "assignment_sha256": "567256613fc008ed385ecb11589c7f7bf1cef7b3514e7d3b18056bc96631fae2"
+    },
+    {
+      "n": 2000,
+      "rank": 64,
+      "seed": 2,
+      "batched": true,
+      "seconds": 0.0614321231842041,
+      "moves": 20,
+      "cost": -609.2658213474075,
+      "counts": [
+        1600,
+        200,
+        200
+      ],
+      "assignment_sha256": "567256613fc008ed385ecb11589c7f7bf1cef7b3514e7d3b18056bc96631fae2"
+    },
+    {
+      "n": 10000,
+      "rank": 256,
+      "seed": 0,
+      "batched": false,
+      "seconds": 0.5026576798409224,
+      "moves": 20,
+      "cost": -654.0332588532896,
+      "counts": [
+        8000,
+        1000,
+        1000
+      ],
+      "assignment_sha256": "4198387e524560ef072b847a8a214db658871d03430111ed0fdf215b5734f1c5"
+    },
+    {
+      "n": 10000,
+      "rank": 256,
+      "seed": 0,
+      "batched": true,
+      "seconds": 0.22912528365850449,
+      "moves": 20,
+      "cost": -654.0332588532896,
+      "counts": [
+        8000,
+        1000,
+        1000
+      ],
+      "assignment_sha256": "4198387e524560ef072b847a8a214db658871d03430111ed0fdf215b5734f1c5"
+    },
+    {
+      "n": 10000,
+      "rank": 256,
+      "seed": 1,
+      "batched": true,
+      "seconds": 0.22870509140193462,
+      "moves": 20,
+      "cost": -636.7407455074407,
+      "counts": [
+        8000,
+        1000,
+        1000
+      ],
+      "assignment_sha256": "1a6d6387533a150ca70b7b666a6161a2edd577b74da39430a008817a524f8afc"
+    },
+    {
+      "n": 10000,
+      "rank": 256,
+      "seed": 1,
+      "batched": false,
+      "seconds": 0.508943809196353,
+      "moves": 20,
+      "cost": -636.7407455074407,
+      "counts": [
+        8000,
+        1000,
+        1000
+      ],
+      "assignment_sha256": "1a6d6387533a150ca70b7b666a6161a2edd577b74da39430a008817a524f8afc"
+    },
+    {
+      "n": 10000,
+      "rank": 256,
+      "seed": 2,
+      "batched": false,
+      "seconds": 0.4810267295688391,
+      "moves": 20,
+      "cost": -352.5549599202287,
+      "counts": [
+        8000,
+        1000,
+        1000
+      ],
+      "assignment_sha256": "e838cd526c9e3a88e4d22900478404a2f1764397f41199a3ef3123daff70e355"
+    },
+    {
+      "n": 10000,
+      "rank": 256,
+      "seed": 2,
+      "batched": true,
+      "seconds": 0.2008728887885809,
+      "moves": 20,
+      "cost": -352.5549599202287,
+      "counts": [
+        8000,
+        1000,
+        1000
+      ],
+      "assignment_sha256": "e838cd526c9e3a88e4d22900478404a2f1764397f41199a3ef3123daff70e355"
+    }
+  ]
+}
