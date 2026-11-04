@@ -1,0 +1,52 @@
+\subsection{Direct dense-kernel optimization controls}
+
+Compression fidelity and optimization quality answer different questions.
+The six-dataset controls compare the factorized and direct dense
+implementations with identical starting assignments, capacity constraints,
+search routines and iteration limits. All final quality values are evaluated
+with the original kernel. At rank 256 and a 1\% size corridor, the mean ratio
+of the factor solution's true cut to the dense solution's true cut is
+\ControlsCutRatio{}, averaging seeds within each dataset before averaging the
+six datasets; per-dataset quality and timing values are in the supplement.
+Neither heuristic solution establishes an optimum. Higher rank
+can improve objective fidelity without producing a monotonically better
+optimized partition.
+
+The comparison also exposes a size-dependent computational benefit. Dense
+optimization is faster on the smaller molecular datasets, while compact
+factors become faster as the number of entities grows. At 32,000 ChEMBL
+fingerprints, rank 256 takes \ControlsLargeFactorSeconds{} seconds versus
+\ControlsLargeDenseSeconds{} seconds for the dense arm, with mean peak process
+memory of \ControlsLargeFactorRSS{} versus \ControlsLargeDenseRSS{} GiB
+(Table~\ref{tab:dense-scaling}). These two-core controls use the same initial
+assignments and search limits. They are separate from the four-restart,
+32-core two-million-entity public-API experiment below.
+
+\input{controls_scaling_table.tex}
+
+Equal-time controls complement the iteration-matched results. Their timed
+optimizer is stopped externally at the deadline, and only a feasible
+checkpoint completed before that deadline is scored. Representation
+construction consumes the same budget as search. The supplement also retains
+the earlier cooperative-deadline sensitivity cases and their overruns.
+
+Error relative to the optimized cut can be appreciably larger than error
+relative to all kernel mass. Reanalysing the 900 existing full-kernel
+comparisons, the largest rank-256 cut-relative errors are
+\ControlsPlainCutError{}\% for ordinary similarity and
+\ControlsPowerCutError{}\% for cubed similarity. These are approximation
+errors at tested partitions, not optimization gaps or uniform guarantees.
+The supplementary tables retain both normalizations and distinguish the
+returned partition from count-preserving perturbations.
+
+Current-version component controls further separate feasible initialization,
+balanced assignment, local refinement, restart budget and landmark sampling.
+Assignment accounts for most of the observed global reduction: the average
+score changes from 1.001 for feasible initialization to 0.626 for assignment
+alone, versus 0.625 with four restarts and two refined candidates. Extra search
+does not consistently improve nearest-training exposure, because that is not
+the ordinary factor objective.
+The grouping controls fix and strictly preserve the same groups before
+comparing their feasible initialization with ordinary- and cubed-factor
+optimization. Their complete global, local and timing results accompany the
+rank and dense controls in the supplement.

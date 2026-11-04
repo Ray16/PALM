@@ -1,0 +1,46 @@
+{
+  "job": {
+    "study": "clock",
+    "dataset": "moleculenet_freesolv",
+    "seed": 1,
+    "power": 1,
+    "epsilon": 0.01,
+    "arm": "dense",
+    "rank": 256,
+    "budget_seconds": 5.0,
+    "name": "preempted__clock__moleculenet_freesolv__s1__power1__epsilon0.01__armdense__rank256__budget_seconds5.0"
+  },
+  "status": "ok",
+  "n": 642,
+  "metrics": {
+    "counts": [
+      514,
+      64,
+      64
+    ],
+    "retention": 1.0,
+    "true_cut": 2309.8818616136537,
+    "true_powered_cut": 2309.8818616136537,
+    "kernel_mass": 16205.125145471437,
+    "powered_kernel_mass": 16205.125145471437,
+    "global_relative": 0.4196602440742423,
+    "mean_nearest": 0.251593934592016,
+    "nearest_gt06": 0.0
+  },
+  "timed_process_seconds": 5.063715239986777,
+  "checkpoint": {
+    "path": "candidate_14.npy",
+    "elapsed": 3.6996991094201803,
+    "initial": false
+  },
+  "termination_overrun_seconds": 0.0637152399867773,
+  "manifest_sha256": "5d4212c94a35b66cff200ab3a1e86ff67c2fb976359946e2b7c190bd160bc6fa",
+  "artifacts": {
+    "assignments/preempted__clock__moleculenet_freesolv__s1__power1__epsilon0.01__armdense__rank256__budget_seconds5.0/labels.npy": "91998b20c665b0d2c3d75478b20b7df9b7d4ed34923de3997776dcf725480d46"
+  },
+  "cpu_affinity": [
+    10,
+    11
+  ],
+  "host": "lambda2"
+}

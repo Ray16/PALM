@@ -1,0 +1,391 @@
+{
+  "job": {
+    "study": "ablation",
+    "dataset": "moleculenet_tox21",
+    "seed": 1,
+    "name": "ablation__moleculenet_tox21__s1"
+  },
+  "status": "ok",
+  "n": 7823,
+  "result": {
+    "variants": [
+      {
+        "variant": "initial",
+        "metrics": {
+          "counts": [
+            6259,
+            782,
+            782
+          ],
+          "retention": 1.0,
+          "true_cut": 923317.4382937406,
+          "true_powered_cut": 923317.4382937406,
+          "kernel_mass": 2684689.815153038,
+          "powered_kernel_mass": 2684689.815153038,
+          "global_relative": 1.0117184614573227,
+          "mean_nearest": 0.5873595728098113,
+          "nearest_gt06": 0.43861892583120204,
+          "approximate_cut": 896591.2199865247,
+          "absolute_cut_error": 26726.218307215953,
+          "cut_relative_error": 0.028945861086090933,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.009955048868724692
+        },
+        "optimization_seconds": 2.6104971766471863e-05,
+        "construction_seconds": 1.4465105589479208,
+        "diagnostics": {}
+      },
+      {
+        "variant": "assignment_only",
+        "metrics": {
+          "counts": [
+            6273,
+            775,
+            775
+          ],
+          "retention": 1.0,
+          "true_cut": 511585.35496992804,
+          "true_powered_cut": 511585.35496992804,
+          "kernel_mass": 2684689.815153038,
+          "powered_kernel_mass": 2684689.815153038,
+          "global_relative": 0.5647374697707647,
+          "mean_nearest": 0.31878867692083507,
+          "nearest_gt06": 0.04774193548387097,
+          "approximate_cut": 502757.23455520597,
+          "absolute_cut_error": 8828.12041472207,
+          "cut_relative_error": 0.01725639784047572,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.003288320447633848
+        },
+        "optimization_seconds": 0.06827865913510323,
+        "construction_seconds": 1.4465105589479208,
+        "diagnostics": {}
+      },
+      {
+        "variant": "refinement_only",
+        "metrics": {
+          "counts": [
+            6273,
+            775,
+            775
+          ],
+          "retention": 1.0,
+          "true_cut": 912049.2214731505,
+          "true_powered_cut": 912049.2214731505,
+          "kernel_mass": 2684689.815153038,
+          "powered_kernel_mass": 2684689.815153038,
+          "global_relative": 1.006808276736967,
+          "mean_nearest": 0.5852161933485501,
+          "nearest_gt06": 0.4335483870967742,
+          "approximate_cut": 885543.1473256715,
+          "absolute_cut_error": 26506.074147479027,
+          "cut_relative_error": 0.029062109284700845,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.00987304901961945
+        },
+        "optimization_seconds": 0.043982699513435364,
+        "construction_seconds": 1.4465105589479208,
+        "diagnostics": 14
+      },
+      {
+        "variant": "one_restart",
+        "metrics": {
+          "counts": [
+            6273,
+            775,
+            775
+          ],
+          "retention": 1.0,
+          "true_cut": 511585.35496992804,
+          "true_powered_cut": 511585.35496992804,
+          "kernel_mass": 2684689.815153038,
+          "powered_kernel_mass": 2684689.815153038,
+          "global_relative": 0.5647374697707647,
+          "mean_nearest": 0.31878867692083507,
+          "nearest_gt06": 0.04774193548387097,
+          "approximate_cut": 502757.23455520597,
+          "absolute_cut_error": 8828.12041472207,
+          "cut_relative_error": 0.01725639784047572,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.003288320447633848
+        },
+        "optimization_seconds": 0.09219714254140854,
+        "construction_seconds": 1.4465105589479208,
+        "diagnostics": 0
+      },
+      {
+        "variant": "four_restarts",
+        "metrics": {
+          "counts": [
+            6273,
+            775,
+            775
+          ],
+          "retention": 1.0,
+          "true_cut": 511427.54695276957,
+          "true_powered_cut": 511427.54695276957,
+          "kernel_mass": 2684689.815153038,
+          "powered_kernel_mass": 2684689.815153038,
+          "global_relative": 0.5645632659952776,
+          "mean_nearest": 0.3961059245817078,
+          "nearest_gt06": 0.04903225806451613,
+          "approximate_cut": 502685.01730353985,
+          "absolute_cut_error": 8742.52964922972,
+          "cut_relative_error": 0.01709436595920613,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.003256439384499755
+        },
+        "optimization_seconds": 0.3001568950712681,
+        "construction_seconds": 1.4465105589479208,
+        "diagnostics": {
+          "factor_storage": "dense",
+          "optimizer_device": "cpu",
+          "winning_restart_seed": 3,
+          "best_unrefined_objective": 502685.01730353985,
+          "refined_restarts": 2,
+          "fm_moves": 0,
+          "refinement_candidates": [
+            {
+              "seed": 3,
+              "before": 502685.01730353985,
+              "after": 502685.01730353985,
+              "moves": 0
+            },
+            {
+              "seed": 2,
+              "before": 502710.9080309373,
+              "after": 502710.9080309373,
+              "moves": 0
+            }
+          ]
+        }
+      },
+      {
+        "variant": "uniform_landmarks",
+        "metrics": {
+          "counts": [
+            6273,
+            775,
+            775
+          ],
+          "retention": 1.0,
+          "true_cut": 511260.50875463,
+          "true_powered_cut": 511260.50875463,
+          "kernel_mass": 2684689.815153038,
+          "powered_kernel_mass": 2684689.815153038,
+          "global_relative": 0.5643788730519379,
+          "mean_nearest": 0.3219841673944432,
+          "nearest_gt06": 0.05290322580645161,
+          "approximate_cut": 500086.12243409955,
+          "absolute_cut_error": 11174.386320530437,
+          "cut_relative_error": 0.02185654109633838,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.0041622634605530595
+        },
+        "optimization_seconds": 0.26012770272791386,
+        "construction_seconds": 0.20533043146133423,
+        "diagnostics": {
+          "factor_storage": "dense",
+          "optimizer_device": "cpu",
+          "winning_restart_seed": 1,
+          "best_unrefined_objective": 500086.1224340995,
+          "refined_restarts": 2,
+          "fm_moves": 0,
+          "refinement_candidates": [
+            {
+              "seed": 1,
+              "before": 500086.1224340995,
+              "after": 500086.1224340995,
+              "moves": 0
+            },
+            {
+              "seed": 4,
+              "before": 500117.55204933864,
+              "after": 500117.55204933864,
+              "moves": 0
+            }
+          ]
+        }
+      },
+      {
+        "variant": "power_only",
+        "metrics": {
+          "counts": [
+            6273,
+            775,
+            775
+          ],
+          "retention": 1.0,
+          "true_cut": 547373.2680639235,
+          "true_powered_cut": 5020.424634681482,
+          "kernel_mass": 2684689.815153038,
+          "powered_kernel_mass": 57934.130363924254,
+          "global_relative": 0.6042436348568763,
+          "mean_nearest": 0.3687824444845016,
+          "nearest_gt06": 0.10064516129032258,
+          "approximate_cut": 1713.1746058111542,
+          "absolute_cut_error": 3307.2500288703277,
+          "cut_relative_error": 0.6587590232952784,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.05708638427978823
+        },
+        "optimization_seconds": 0.3594140838831663,
+        "construction_seconds": 1.2564379181712866,
+        "diagnostics": {
+          "factor_storage": "dense",
+          "optimizer_device": "cpu",
+          "winning_restart_seed": 1,
+          "best_unrefined_objective": 1713.174605811154,
+          "refined_restarts": 2,
+          "fm_moves": 0,
+          "refinement_candidates": [
+            {
+              "seed": 1,
+              "before": 1713.174605811154,
+              "after": 1713.174605811154,
+              "moves": 0
+            },
+            {
+              "seed": 2,
+              "before": 1713.3749348293845,
+              "after": 1713.3749348293845,
+              "moves": 0
+            }
+          ]
+        }
+      },
+      {
+        "variant": "group_initial",
+        "metrics": {
+          "counts": [
+            6243,
+            790,
+            790
+          ],
+          "retention": 1.0,
+          "true_cut": 864524.7654576116,
+          "true_powered_cut": 864524.7654576116,
+          "kernel_mass": 2684689.815153038,
+          "powered_kernel_mass": 2684689.815153038,
+          "global_relative": 0.9393990889713034,
+          "mean_nearest": 0.40272208490424133,
+          "nearest_gt06": 0.007594936708860759,
+          "approximate_cut": 842094.5318851582,
+          "absolute_cut_error": 22430.233572453493,
+          "cut_relative_error": 0.02594516024139654,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.008354869693270274
+        },
+        "optimization_seconds": 8.270144462585449e-07,
+        "construction_seconds": 3.0380784943699837,
+        "diagnostics": {}
+      },
+      {
+        "variant": "groups_plain",
+        "metrics": {
+          "counts": [
+            6273,
+            775,
+            775
+          ],
+          "retention": 1.0,
+          "true_cut": 772236.8850906661,
+          "true_powered_cut": 772236.8850906661,
+          "kernel_mass": 2684689.815153038,
+          "powered_kernel_mass": 2684689.815153038,
+          "global_relative": 0.8524698768505501,
+          "mean_nearest": 0.35501698060179315,
+          "nearest_gt06": 0.0012903225806451613,
+          "approximate_cut": 752880.9541022019,
+          "absolute_cut_error": 19355.93098846427,
+          "cut_relative_error": 0.025064758446744936,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.007209745751339584
+        },
+        "optimization_seconds": 0.2002232950180769,
+        "construction_seconds": 3.0380784943699837,
+        "diagnostics": {
+          "factor_leakage": 752880.954102202,
+          "n_groups": 1833,
+          "largest_group": 380,
+          "grouped_points": 6508,
+          "broken_groups": 0,
+          "fm_moves": 40,
+          "warm_start_won": true,
+          "corridor_ok": true,
+          "group_policy": "strict",
+          "all_groups_preserved": true,
+          "refined_group_restarts": 1,
+          "feasibility_solves": 0,
+          "rejected_capacity_proposals": 0
+        }
+      },
+      {
+        "variant": "groups_power",
+        "metrics": {
+          "counts": [
+            6273,
+            775,
+            775
+          ],
+          "retention": 1.0,
+          "true_cut": 723232.1840648586,
+          "true_powered_cut": 9339.764311747796,
+          "kernel_mass": 2684689.815153038,
+          "powered_kernel_mass": 57934.130363924254,
+          "global_relative": 0.7983737409949526,
+          "mean_nearest": 0.33355969910911676,
+          "nearest_gt06": 0.0012903225806451613,
+          "approximate_cut": 3355.352907099951,
+          "absolute_cut_error": 5984.411404647845,
+          "cut_relative_error": 0.6407454412013908,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.10329681945781576
+        },
+        "optimization_seconds": 0.1283500324934721,
+        "construction_seconds": 2.8480058535933495,
+        "diagnostics": {
+          "factor_leakage": 3355.352907099951,
+          "n_groups": 1833,
+          "largest_group": 380,
+          "grouped_points": 6508,
+          "broken_groups": 0,
+          "fm_moves": 15,
+          "warm_start_won": true,
+          "corridor_ok": true,
+          "group_policy": "strict",
+          "all_groups_preserved": true,
+          "refined_group_restarts": 1,
+          "feasibility_solves": 0,
+          "rejected_capacity_proposals": 0
+        }
+      }
+    ],
+    "group_count": 1833,
+    "largest_group": 380,
+    "group_construction_seconds": 1.5915679354220629,
+    "timing_scope": "component calls; shared representations; no per-variant RSS comparison"
+  },
+  "artifacts": {
+    "assignments/ablation__moleculenet_tox21__s1/initial.npy": "d453170b8973658dac3dfedc441828127981e96228e54503d3c0b16a02ae3551",
+    "assignments/ablation__moleculenet_tox21__s1/assignment_only.npy": "fdc1fa94d6f9ede853c67397158abcbd065c1415ecdb0644da3ad05432807855",
+    "assignments/ablation__moleculenet_tox21__s1/refinement_only.npy": "baf7902147b012e19567a9852150c0ab6ffe3cf732ff14737a8878f4c3a1a303",
+    "assignments/ablation__moleculenet_tox21__s1/one_restart.npy": "fdc1fa94d6f9ede853c67397158abcbd065c1415ecdb0644da3ad05432807855",
+    "assignments/ablation__moleculenet_tox21__s1/four_restarts.npy": "0c465d035b93921c19e4d496d5cda7da9d699fc5e4c3c457d9c37562b3df9630",
+    "assignments/ablation__moleculenet_tox21__s1/uniform_landmarks.npy": "8aa2ac4beff2a49105dd4d423771bd37aabea3f409284d90a76de1c7bab580a0",
+    "assignments/ablation__moleculenet_tox21__s1/power_only.npy": "f9b445f29d67289266c268675992a8dd7f5090b1ffb412e8e49317e50c1ae377",
+    "assignments/ablation__moleculenet_tox21__s1/groups.npy": "e915ec4949ee1f285ad9e7013a31ccfedafb51acebb0487d18d901fca1679363",
+    "assignments/ablation__moleculenet_tox21__s1/group_initial.npy": "c887e84c4761d0f0f4fae0c0acc6b39130ea79adb89e7e1aa4862efb0e563e5c",
+    "assignments/ablation__moleculenet_tox21__s1/groups_plain.npy": "b8439e5f2bc5ed1475a18a1ff415f442bc0dae504cdaf6864571a21a0ac353a4",
+    "assignments/ablation__moleculenet_tox21__s1/groups_power.npy": "589ae2725179686f2b3d07ba774f80e6f99f58ea7a9d8414affda5ccdb926343"
+  },
+  "manifest_sha256": "c9fc6c41061d77a45459f0f2fb92b5f49a4e318569ec662bed8f29ce267ccaa8",
+  "host": "lambda2",
+  "pid": 2696762,
+  "cpu_affinity": [
+    10,
+    11
+  ],
+  "started": 1793771441.2680047,
+  "finished": 1793771477.8267152
+}

@@ -1,0 +1,6 @@
+{
+  "passed": true,
+  "root": "/tmp/lowrank_controls_clean_review",
+  "scope": "Fresh tree materialized from indexed publication files; strict main/SI build, source/assignment checks, replay/test/PDF gates pass",
+  "log_sha256": "fd97a57b25dad73c5afdff2f94d0243c2dce2beb58bb360e8d189c9f8b08d45b"
+}

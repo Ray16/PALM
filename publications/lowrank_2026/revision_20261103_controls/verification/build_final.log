@@ -1,0 +1,64 @@
+generated current-version figures and numbers; preliminary= False
+Validated ODAC25 case and generated manuscript values/tables.
+{
+  "expected": 432,
+  "completed": 432,
+  "failures": 0,
+  "per_study": {
+    "iterations": 288,
+    "clock": 72,
+    "ablation": 18,
+    "ccpart": 54
+  },
+  "matched_dense_rank256": {
+    "true_cut_ratio": 0.9996413811759964,
+    "time_ratio": 2.127119023401699,
+    "rss_ratio": 0.9032578357576412
+  },
+  "worst_clock_overrun": 0.9948034826666117,
+  "ccpart_empty_folds": 0,
+  "fidelity_comparisons": 900
+}
+{
+  "technical_checks_passed": true,
+  "issues": [],
+  "source_checks": {
+    "run": true,
+    "fidelity/run": true,
+    "publication_checks/run": true,
+    "scaling/cpu_run": true,
+    "scaling/large_cpu_run": true
+  },
+  "rendered": {
+    "manuscript.pdf": {
+      "pages": 23,
+      "render_sha256": "1746d7e4afd84929b40d563fa0918edc391bcba119129f36a8409a33d9831263",
+      "minimum_figure_font_pt": 18.0,
+      "all_figure_fonts_at_least_18": true,
+      "clipped_figure_text": []
+    },
+    "supplement.pdf": {
+      "pages": 58,
+      "render_sha256": "f5e32548073f1f52724b9e8b9bc8698b585c8e45df4804edbb5f2f3070e08d78",
+      "minimum_figure_font_pt": 18.0,
+      "all_figure_fonts_at_least_18": true,
+      "clipped_figure_text": []
+    }
+  },
+  "author_submission_metadata_pending": true,
+  "submission_ready": false,
+  "scope": "Technical/reproducibility checks; author metadata was explicitly deferred and is never invented."
+}
+{
+  "passed": true,
+  "primary_cases": 432,
+  "nested_scaling_cases": 36,
+  "preempted_clock_cases": 72,
+  "independently_replayed_assignments": 810,
+  "tests_passed": 226,
+  "full_kernel_fidelity_comparisons": 900,
+  "source_and_provenance_checked": true,
+  "pdf_review_gate_passed": true,
+  "author_scientific_approval": "Separate author responsibility; not inferred from technical checks"
+}
+Built and checked /nfs/lambda_stor_01/homes/rzhu/data_splitting/publication/odac25_revision/publications/lowrank_2026/paper/manuscript.pdf and supplement.pdf

@@ -1,0 +1,23 @@
+\begin{longtable}{lrrrrr}
+\caption{Equal-time controls with an externally stopped optimizer. Representation construction and search share the budget; only a feasible checkpoint whose evaluation and serialization finished before the deadline is scored. Late work cannot improve the selected partition. Times include scheduling and termination overshoot; scores and times average three seeds. The initial feasible partition is available before timing starts.}\\
+\toprule
+Dataset & Budget (s) & Dense & Factor & Dense (s) & Factor (s)\\\midrule
+\endfirsthead
+\toprule
+Dataset & Budget (s) & Dense & Factor & Dense (s) & Factor (s)\\\midrule
+\endhead
+\midrule\endfoot
+\bottomrule\endlastfoot
+FreeSolv & 1 & 0.420 & 0.420 & 1.064 & 1.064\\
+FreeSolv & 5 & 0.419 & 0.420 & 5.064 & 5.064\\
+ESOL & 1 & 0.526 & 0.526 & 1.064 & 1.064\\
+ESOL & 5 & 0.526 & 0.526 & 5.064 & 5.064\\
+BACE & 1 & 0.750 & 0.750 & 1.064 & 1.064\\
+BACE & 5 & 0.750 & 0.750 & 5.064 & 5.064\\
+BBBP & 1 & 0.693 & 0.693 & 1.064 & 1.064\\
+BBBP & 5 & 0.693 & 0.693 & 5.064 & 5.064\\
+Lipophilicity & 1 & 0.797 & 0.795 & 1.064 & 1.064\\
+Lipophilicity & 5 & 0.794 & 0.794 & 5.064 & 5.064\\
+Tox21 & 1 & 1.002 & 0.857 & 1.080 & 1.064\\
+Tox21 & 5 & 0.569 & 0.564 & 5.064 & 5.064\\
+\end{longtable}

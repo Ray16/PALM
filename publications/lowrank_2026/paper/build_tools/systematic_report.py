@@ -273,13 +273,13 @@ def figures(summary, helper):
             [r["max_error"] for r in rows],
             "o-",
             color=color,
-            label=f"Kernel power {power}",
+            label="Original" if power == 1 else "Cubed",
             ms=8,
         )
     ax.set_xscale("log", base=2)
     ax.set_xticks([32, 64, 128, 256, 512], ["32", "64", "128", "256", "512"])
-    ax.set(xlabel="Landmark count", ylabel="Cut error / kernel mass", ylim=(0, 0.25))
-    ax.set_yticks([0, 0.1, 0.2])
+    ax.set(xlabel="Reference molecules used", ylabel="Error in similarity\nbetween sets", ylim=(0, 0.25))
+    ax.set_yticks([0, 0.1, 0.2], ["0%", "10%", "20%"])
     ax.grid(alpha=0.2)
     fig.legend(
         *ax.get_legend_handles_labels(),
@@ -289,7 +289,7 @@ def figures(summary, helper):
     )
     helper.save(fig, "fidelity")
 
-    fig, axes = plt.subplots(2, 1, figsize=(6.5, 7.3), layout="constrained")
+    fig, axes = plt.subplots(2, 1, figsize=(6.5, 7.1), layout="constrained")
     methods = [
         ("plain", None, "Plain", "#0072B2", "o"),
         ("combined", None, "Combined", "#D55E00", "D"),
@@ -301,7 +301,7 @@ def figures(summary, helper):
     for ax, field, title in zip(
         axes,
         ["global_relative", "mean_nearest"],
-        ["a  Dense global overlap", "b  Nearest-training similarity"],
+        ["a  Similarity between sets", "b  Similarity to training data"],
     ):
         for index, (method, degree, label, color, marker) in enumerate(methods):
             for y, dataset in enumerate(datasets):
@@ -328,10 +328,10 @@ def figures(summary, helper):
         ax.invert_yaxis()
         ax.set_title(title)
         ax.grid(axis="x", alpha=0.2)
-    axes[0].set_xlabel("Overlap / count-matched random")
+    axes[0].set_xlabel("Similarity relative to random")
     axes[0].set_xlim(0.2, 1.05)
     axes[0].set_xticks([0.2, 0.4, 0.6, 0.8, 1.0])
-    axes[1].set_xlabel("Mean maximum similarity")
+    axes[1].set_xlabel("Closest training match")
     axes[1].set_xlim(0.05, 0.85)
     axes[1].set_xticks([0.2, 0.4, 0.6, 0.8])
     fig.legend(
@@ -381,12 +381,12 @@ def figures(summary, helper):
         ax.set_xticks(range(4), labels)
         ax.grid(axis="y", alpha=0.2)
     axes[0].set(
-        title="a  Model-ranking agreement",
-        ylabel="Agreement",
+        title="a  Choosing the better model",
+        ylabel="Correct choices",
         ylim=(-0.05, 1.05),
     )
-    axes[0].set_yticks([0, 0.5, 1.0])
-    axes[1].set(title="b  Family-model error estimate", ylabel="RMSE bias")
+    axes[0].set_yticks([0, 0.5, 1.0], ["0%", "50%", "100%"])
+    axes[1].set(title="b  Error in the test estimate", ylabel="Error difference")
     axes[1].axhline(0, color="gray", ls=":", lw=1)
     fig.legend(
         *axes[0].get_legend_handles_labels(),
@@ -449,12 +449,14 @@ def main(args):
     helper = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(helper)
     helper.FIG = FIG
-    helper.concept()
+    from concept_figure import draw_concept
+
+    draw_concept(helper.save)
     figures(summary, helper)
     fig, ax = plt.subplots(figsize=(6.5, 5.0), layout="constrained")
     for epsilon, color, label in [
-        (0.0, "#0072B2", "2 cores, exact"),
-        (0.01, "#D55E00", "2 cores, 1%"),
+        (0.0, "#0072B2", "2 cores: fixed sizes"),
+        (0.01, "#D55E00", "2 cores: ±1%"),
     ]:
         values = [
             r for r in scale_rows if r["method"] == "plain" and r["epsilon"] == epsilon
@@ -468,7 +470,7 @@ def main(args):
             [np.median([r["seconds"] for r in large_rows])],
             "D",
             color="#CC79A7",
-            label="32 cores, 1%",
+            label="32 cores: ±1%",
             ms=9,
         )
     ax.set_xscale("log")

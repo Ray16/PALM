@@ -1,0 +1,97 @@
+{
+  "scope": "Complete agreed optimization/benchmark/manuscript work and synchronization; no journal submission or invented author declarations",
+  "requirements": [
+    {
+      "id": "dense_control",
+      "requirement": "Identical entities, initial labels, capacity and optimization procedures; separate fixed-iteration and equal-time protocols",
+      "authoritative_evidence": [
+        "run/manifest.json",
+        "scaling_run/manifest.json",
+        "strict_clock_run/manifest.json",
+        "test_controls.py",
+        "analysis/dense_factor_pairs.csv"
+      ],
+      "status": "pending final completion/delivery audit"
+    },
+    {
+      "id": "approximation_vs_optimization",
+      "requirement": "Absolute, mass-relative and true-cut-relative errors; original-kernel returned quality and finite exact optimizer gaps",
+      "authoritative_evidence": [
+        "analysis/full_fidelity_cut_errors.csv",
+        "analysis/all_observations.csv",
+        "../revision_20261026/analysis/summary.json",
+        "../paper/theory.tex"
+      ],
+      "status": "pending final completion/delivery audit"
+    },
+    {
+      "id": "component_attribution",
+      "requirement": "Current-code initialization, assignment, refinement, restart, landmark, power and strictly retained group controls",
+      "authoritative_evidence": [
+        "analysis/all_observations.csv",
+        "../paper/controls_ablation_table.tex",
+        "suite.py"
+      ],
+      "status": "pending final completion/delivery audit"
+    },
+    {
+      "id": "ccpart",
+      "requirement": "Pinned upstream implementation, exhaustive similarities, native counts/retention and count/group interventions",
+      "authoritative_evidence": [
+        "vendor/HESTIA_COMMIT",
+        "vendor/hestia/partition.py",
+        "analysis/all_observations.csv",
+        "../paper/controls_ccpart_native.tex",
+        "../paper/controls_ccpart_counts.tex"
+      ],
+      "status": "pending final completion/delivery audit"
+    },
+    {
+      "id": "scale_and_rank",
+      "requirement": "Measured size/rank cost trade-offs and distinctly labelled two-million evidence",
+      "authoritative_evidence": [
+        "analysis/scaling_observations.csv",
+        "../revision_20261026/scaling/large_cpu_run/manifest.json",
+        "../paper/results_systematic.tex"
+      ],
+      "status": "pending final completion/delivery audit"
+    },
+    {
+      "id": "readable_manuscript",
+      "requirement": "Agreed title, explicit global/local distinction, matched-group limitations and coherent results order",
+      "authoritative_evidence": [
+        "../paper/manuscript.tex",
+        "../paper/controls_results.tex",
+        "../paper/controls_methods.tex",
+        "../paper/controls_supplement.tex",
+        "verification/final_visual_review.json"
+      ],
+      "status": "pending final completion/delivery audit"
+    },
+    {
+      "id": "verification",
+      "requirement": "Complete outcome inventories, 810 independently replayed assignments, 226 tests and strict PDF checks",
+      "authoritative_evidence": [
+        "verification/completion.json",
+        "verification/tests.log",
+        "verification/replay_scaling_addition.json",
+        "verification/replay_clock_addition.json"
+      ],
+      "status": "pending final completion/delivery audit"
+    },
+    {
+      "id": "delivery",
+      "requirement": "Completed source/evidence/PDFs on GitHub main and synchronized existing Overleaf project",
+      "authoritative_evidence": [
+        "verification/delivery.json"
+      ],
+      "status": "pending final completion/delivery audit"
+    }
+  ],
+  "author_responsibilities_outside_technical_completion": [
+    "contributions",
+    "funding",
+    "competing interests",
+    "author scientific approval"
+  ]
+}

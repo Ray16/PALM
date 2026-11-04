@@ -1,0 +1,6 @@
+{
+  "passed": true,
+  "python_files": 16,
+  "upstream_commit": "54b83e28b54e3680bd4f4cc17a2a3a57790746ad",
+  "license": "MIT; included in vendor/HESTIA_LICENSE"
+}

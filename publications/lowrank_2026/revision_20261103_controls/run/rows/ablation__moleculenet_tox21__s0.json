@@ -1,0 +1,391 @@
+{
+  "job": {
+    "study": "ablation",
+    "dataset": "moleculenet_tox21",
+    "seed": 0,
+    "name": "ablation__moleculenet_tox21__s0"
+  },
+  "status": "ok",
+  "n": 7823,
+  "result": {
+    "variants": [
+      {
+        "variant": "initial",
+        "metrics": {
+          "counts": [
+            6259,
+            782,
+            782
+          ],
+          "retention": 1.0,
+          "true_cut": 912345.981653795,
+          "true_powered_cut": 912345.981653795,
+          "kernel_mass": 2684689.815153038,
+          "powered_kernel_mass": 2684689.815153038,
+          "global_relative": 0.99969656652569,
+          "mean_nearest": 0.5950449341335253,
+          "nearest_gt06": 0.44501278772378516,
+          "approximate_cut": 888803.4472024718,
+          "absolute_cut_error": 23542.534451323212,
+          "cut_relative_error": 0.02580439320689289,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.008769182316125855
+        },
+        "optimization_seconds": 4.900433123111725e-05,
+        "construction_seconds": 1.0847185272723436,
+        "diagnostics": {}
+      },
+      {
+        "variant": "assignment_only",
+        "metrics": {
+          "counts": [
+            6273,
+            775,
+            775
+          ],
+          "retention": 1.0,
+          "true_cut": 511516.10961167543,
+          "true_powered_cut": 511516.10961167543,
+          "kernel_mass": 2684689.815153038,
+          "powered_kernel_mass": 2684689.815153038,
+          "global_relative": 0.5646610300368413,
+          "mean_nearest": 0.39142830469982925,
+          "nearest_gt06": 0.03741935483870968,
+          "approximate_cut": 502693.10043313366,
+          "absolute_cut_error": 8823.009178541775,
+          "cut_relative_error": 0.017248741560143405,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.0032864166015539593
+        },
+        "optimization_seconds": 0.1025321502238512,
+        "construction_seconds": 1.0847185272723436,
+        "diagnostics": {}
+      },
+      {
+        "variant": "refinement_only",
+        "metrics": {
+          "counts": [
+            6273,
+            775,
+            775
+          ],
+          "retention": 1.0,
+          "true_cut": 900912.3179828493,
+          "true_powered_cut": 900912.3179828493,
+          "kernel_mass": 2684689.815153038,
+          "powered_kernel_mass": 2684689.815153038,
+          "global_relative": 0.9945142838830011,
+          "mean_nearest": 0.5936741048686006,
+          "nearest_gt06": 0.44,
+          "approximate_cut": 877606.847782667,
+          "absolute_cut_error": 23305.470200182288,
+          "cut_relative_error": 0.025868744088618348,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.00868088002891082
+        },
+        "optimization_seconds": 0.043707599863409996,
+        "construction_seconds": 1.0847185272723436,
+        "diagnostics": 14
+      },
+      {
+        "variant": "one_restart",
+        "metrics": {
+          "counts": [
+            6273,
+            775,
+            775
+          ],
+          "retention": 1.0,
+          "true_cut": 511516.10961167543,
+          "true_powered_cut": 511516.10961167543,
+          "kernel_mass": 2684689.815153038,
+          "powered_kernel_mass": 2684689.815153038,
+          "global_relative": 0.5646610300368413,
+          "mean_nearest": 0.39142830469982925,
+          "nearest_gt06": 0.03741935483870968,
+          "approximate_cut": 502693.10043313366,
+          "absolute_cut_error": 8823.009178541775,
+          "cut_relative_error": 0.017248741560143405,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.0032864166015539593
+        },
+        "optimization_seconds": 0.116867795586586,
+        "construction_seconds": 1.0847185272723436,
+        "diagnostics": 0
+      },
+      {
+        "variant": "four_restarts",
+        "metrics": {
+          "counts": [
+            6273,
+            775,
+            775
+          ],
+          "retention": 1.0,
+          "true_cut": 511217.04126676306,
+          "true_powered_cut": 511217.04126676306,
+          "kernel_mass": 2684689.815153038,
+          "powered_kernel_mass": 2684689.815153038,
+          "global_relative": 0.5643308894283319,
+          "mean_nearest": 0.3993219119549046,
+          "nearest_gt06": 0.05419354838709677,
+          "approximate_cut": 502421.32069536584,
+          "absolute_cut_error": 8795.720571397222,
+          "cut_relative_error": 0.017205452599158254,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.0032762520726797
+        },
+        "optimization_seconds": 0.28814725391566753,
+        "construction_seconds": 1.0847185272723436,
+        "diagnostics": {
+          "factor_storage": "dense",
+          "optimizer_device": "cpu",
+          "winning_restart_seed": 3,
+          "best_unrefined_objective": 502421.3206953658,
+          "refined_restarts": 2,
+          "fm_moves": 0,
+          "refinement_candidates": [
+            {
+              "seed": 3,
+              "before": 502421.3206953658,
+              "after": 502421.3206953658,
+              "moves": 0
+            },
+            {
+              "seed": 2,
+              "before": 502527.35725530534,
+              "after": 502527.35725530534,
+              "moves": 0
+            }
+          ]
+        }
+      },
+      {
+        "variant": "uniform_landmarks",
+        "metrics": {
+          "counts": [
+            6273,
+            775,
+            775
+          ],
+          "retention": 1.0,
+          "true_cut": 511216.4283082867,
+          "true_powered_cut": 511216.4283082867,
+          "kernel_mass": 2684689.815153038,
+          "powered_kernel_mass": 2684689.815153038,
+          "global_relative": 0.5643302127853912,
+          "mean_nearest": 0.39582865715022075,
+          "nearest_gt06": 0.04645161290322581,
+          "approximate_cut": 501260.1705771902,
+          "absolute_cut_error": 9956.257731096528,
+          "cut_relative_error": 0.019475621634546636,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.003708531866475227
+        },
+        "optimization_seconds": 0.2898518331348896,
+        "construction_seconds": 0.15690581873059273,
+        "diagnostics": {
+          "factor_storage": "dense",
+          "optimizer_device": "cpu",
+          "winning_restart_seed": 3,
+          "best_unrefined_objective": 501260.1705771901,
+          "refined_restarts": 2,
+          "fm_moves": 0,
+          "refinement_candidates": [
+            {
+              "seed": 3,
+              "before": 501260.1705771901,
+              "after": 501260.1705771901,
+              "moves": 0
+            },
+            {
+              "seed": 2,
+              "before": 501354.2997421974,
+              "after": 501354.2997421974,
+              "moves": 0
+            }
+          ]
+        }
+      },
+      {
+        "variant": "power_only",
+        "metrics": {
+          "counts": [
+            6273,
+            775,
+            775
+          ],
+          "retention": 1.0,
+          "true_cut": 548114.3767233251,
+          "true_powered_cut": 5040.68276607829,
+          "kernel_mass": 2684689.815153038,
+          "powered_kernel_mass": 57934.130363924254,
+          "global_relative": 0.6050617423829611,
+          "mean_nearest": 0.3816312664682042,
+          "nearest_gt06": 0.07354838709677419,
+          "approximate_cut": 1788.5815501288605,
+          "absolute_cut_error": 3252.1012159494294,
+          "cut_relative_error": 0.6451707768310129,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.056134461594930955
+        },
+        "optimization_seconds": 0.3571935314685106,
+        "construction_seconds": 1.1268360130488873,
+        "diagnostics": {
+          "factor_storage": "dense",
+          "optimizer_device": "cpu",
+          "winning_restart_seed": 2,
+          "best_unrefined_objective": 1788.5815501288605,
+          "refined_restarts": 2,
+          "fm_moves": 0,
+          "refinement_candidates": [
+            {
+              "seed": 2,
+              "before": 1788.5815501288605,
+              "after": 1788.5815501288605,
+              "moves": 0
+            },
+            {
+              "seed": 0,
+              "before": 1791.4575465596522,
+              "after": 1791.4575465596522,
+              "moves": 0
+            }
+          ]
+        }
+      },
+      {
+        "variant": "group_initial",
+        "metrics": {
+          "counts": [
+            6243,
+            790,
+            790
+          ],
+          "retention": 1.0,
+          "true_cut": 786869.9628857896,
+          "true_powered_cut": 786869.9628857896,
+          "kernel_mass": 2684689.815153038,
+          "powered_kernel_mass": 2684689.815153038,
+          "global_relative": 0.8550187985448023,
+          "mean_nearest": 0.40269362542292275,
+          "nearest_gt06": 0.0,
+          "approximate_cut": 769243.8097178179,
+          "absolute_cut_error": 17626.153167971643,
+          "cut_relative_error": 0.022400338047380765,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.0065654337676126955
+        },
+        "optimization_seconds": 9.387731552124023e-07,
+        "construction_seconds": 2.645356435328722,
+        "diagnostics": {}
+      },
+      {
+        "variant": "groups_plain",
+        "metrics": {
+          "counts": [
+            6273,
+            775,
+            775
+          ],
+          "retention": 1.0,
+          "true_cut": 769787.1098453408,
+          "true_powered_cut": 769787.1098453408,
+          "kernel_mass": 2684689.815153038,
+          "powered_kernel_mass": 2684689.815153038,
+          "global_relative": 0.8497655776361338,
+          "mean_nearest": 0.310269376200728,
+          "nearest_gt06": 0.0,
+          "approximate_cut": 751550.3342568461,
+          "absolute_cut_error": 18236.775588494726,
+          "cut_relative_error": 0.02369067415555803,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.006792879939262241
+        },
+        "optimization_seconds": 0.5067496318370104,
+        "construction_seconds": 2.645356435328722,
+        "diagnostics": {
+          "factor_leakage": 751550.3342568461,
+          "n_groups": 1833,
+          "largest_group": 380,
+          "grouped_points": 6508,
+          "broken_groups": 0,
+          "fm_moves": 142,
+          "warm_start_won": true,
+          "corridor_ok": true,
+          "group_policy": "strict",
+          "all_groups_preserved": true,
+          "refined_group_restarts": 1,
+          "feasibility_solves": 0,
+          "rejected_capacity_proposals": 0
+        }
+      },
+      {
+        "variant": "groups_power",
+        "metrics": {
+          "counts": [
+            6273,
+            775,
+            775
+          ],
+          "retention": 1.0,
+          "true_cut": 712852.0173961692,
+          "true_powered_cut": 8982.212324957609,
+          "kernel_mass": 2684689.815153038,
+          "powered_kernel_mass": 57934.130363924254,
+          "global_relative": 0.7869151075463483,
+          "mean_nearest": 0.3012929798105752,
+          "nearest_gt06": 0.0,
+          "approximate_cut": 3454.310889095373,
+          "absolute_cut_error": 5527.901435862235,
+          "cut_relative_error": 0.6154276069051089,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.09541700895720141
+        },
+        "optimization_seconds": 0.24491240829229355,
+        "construction_seconds": 2.6874739211052656,
+        "diagnostics": {
+          "factor_leakage": 3454.3108890953727,
+          "n_groups": 1833,
+          "largest_group": 380,
+          "grouped_points": 6508,
+          "broken_groups": 0,
+          "fm_moves": 60,
+          "warm_start_won": true,
+          "corridor_ok": true,
+          "group_policy": "strict",
+          "all_groups_preserved": true,
+          "refined_group_restarts": 1,
+          "feasibility_solves": 0,
+          "rejected_capacity_proposals": 0
+        }
+      }
+    ],
+    "group_count": 1833,
+    "largest_group": 380,
+    "group_construction_seconds": 1.5606379080563784,
+    "timing_scope": "component calls; shared representations; no per-variant RSS comparison"
+  },
+  "artifacts": {
+    "assignments/ablation__moleculenet_tox21__s0/initial.npy": "83819c46756631fdd785d30cfa3ced0980d147ae51d8e15203b214d736861fdc",
+    "assignments/ablation__moleculenet_tox21__s0/assignment_only.npy": "5eb05d0b0a75cf04bb598102f5240fa70e46372be8ccb47e25f78ebae282529f",
+    "assignments/ablation__moleculenet_tox21__s0/refinement_only.npy": "c0c9595e606155d907575d2d059aee96290395655d2945593e413a0a91c6b4e0",
+    "assignments/ablation__moleculenet_tox21__s0/one_restart.npy": "5eb05d0b0a75cf04bb598102f5240fa70e46372be8ccb47e25f78ebae282529f",
+    "assignments/ablation__moleculenet_tox21__s0/four_restarts.npy": "a80b01df96fcd932c28b6861b47b132190b6a02874942b3245dd8c3f1d74168e",
+    "assignments/ablation__moleculenet_tox21__s0/uniform_landmarks.npy": "1060c22ff7688a900bf9cf6c43a757eda2a4880ead16331c75fd22a1dd708a41",
+    "assignments/ablation__moleculenet_tox21__s0/power_only.npy": "55216bbe6e46a22316a4968cb3a4d28891f97beeeb00152a2c1b46a59db6f51d",
+    "assignments/ablation__moleculenet_tox21__s0/groups.npy": "e915ec4949ee1f285ad9e7013a31ccfedafb51acebb0487d18d901fca1679363",
+    "assignments/ablation__moleculenet_tox21__s0/group_initial.npy": "71e38e4531a1970ddd9eec9b19e8e794d782e887fbec6bb65ebe9e63f6bc1c26",
+    "assignments/ablation__moleculenet_tox21__s0/groups_plain.npy": "1c2d94f62533c21786f2fdd7ec7048c255eb6786625ea59fad9da17f790637e1",
+    "assignments/ablation__moleculenet_tox21__s0/groups_power.npy": "928fbe1b7765647b0634a3549a91151f54596f2c531940dc60f9c47714e695c2"
+  },
+  "manifest_sha256": "c9fc6c41061d77a45459f0f2fb92b5f49a4e318569ec662bed8f29ce267ccaa8",
+  "host": "lambda2",
+  "pid": 2690449,
+  "cpu_affinity": [
+    8,
+    9
+  ],
+  "started": 1793771372.2498868,
+  "finished": 1793771403.3511431
+}

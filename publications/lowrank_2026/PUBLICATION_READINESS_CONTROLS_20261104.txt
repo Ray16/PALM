@@ -1,0 +1,62 @@
+Controlled optimization revision — 4 November 2026
+=================================================
+
+The requested methodological controls are complete: 432 primary CPU cases,
+36 nested ChEMBL dense/factor cases and 72 externally stopped equal-time cases.
+The current package remains pinned to f7e0866. No new biological capabilities
+or real-world deployment-performance claims were added.
+
+The paper now uses the title:
+Scalable Dataset Splitting through Constrained Low-Rank Similarity Optimization
+
+Main findings and scope
+----------------------
+* Original-kernel quality is competitive with the same dense heuristic when
+  initialization, capacities and search procedures match. Approximation error
+  is reported separately from optimized partition quality and exact small-case
+  optimizer gaps.
+* Cost crosses over with dataset size. Small dense problems can be faster.
+  At 32,000 ChEMBL fingerprints on two CPU cores, rank 256 averages 8.74 s
+  versus 82.68 s for the direct dense arm, and 1.83 versus 12.04 GiB process RSS.
+  Their original-kernel cut ratio averages 1.0004. These are implementation
+  profiles, including construction and temporary allocations, not theoretical
+  lower bounds for dense optimization.
+* The earlier two-million-entity result retains its separate 32-core protocol,
+  three seeds, 243.9 s median split-call time and 58.8 GiB peak RSS. Loading,
+  warm-up and independent evaluation remain outside that clock.
+* Matching DataSAIL groups removes the average global advantage seen with only
+  count matching. Its coarsened objective still differs from the entity-level
+  objective. CCPart controls retain native sizes and groups, with no silent
+  sample removal or size repair. Native cost includes all threshold similarities.
+* All 900 previous fidelity comparisons now include true-cut-relative errors.
+  At rank 256, their maxima are 2.71% for ordinary similarity and 64.47% for
+  cubed similarity. Accuracy of one kernel cannot establish accuracy of another.
+* Assignment accounts for most of the measured global reduction. Extra restarts
+  and refinement do not establish a consistent nearest-neighbour advantage.
+  The global/local distinction is observed behavior, not an impossibility theorem.
+
+Evidence and readability
+------------------------
+The main paper follows formulation, accuracy/optimization, scaling and matched
+benchmarking. It defines the global and local measures separately, gives a
+concrete CCPart example, and moves full grids and ablations to the supplement.
+Per-case observations, assignments, input/source hashes, upstream CCPart source
+and independent RDKit replay accompany the paper. The test suite passes 226
+CPU-only tests. Technical completion is recorded in the new control revision's
+verification/completion.json after all replay and reviewed-PDF checks pass.
+
+Remaining author responsibilities before journal submission
+----------------------------------------------------------
+Author contributions, funding, competing interests and author scientific
+approval are still required. They have not been invented or inferred from
+technical checks. No journal submission has been made. The focused methods
+claims do not require adding new downstream biological experiments; broader
+claims about deployment performance would require independent real outcomes.
+
+Reproduction and delivery
+-------------------------
+See revision_20261103_controls/README.md and its manifests, independent replay
+records, analysis tables and completion audit. The original primary and archival
+studies retain their producer versions. GitHub main and the existing Overleaf
+project carry the completed manuscript revision. Synchronization commit hashes
+are reported separately after the final build and pull/merge checks.

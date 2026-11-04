@@ -1,0 +1,17 @@
+{
+  "title": "Effect of dataset partitioning strategies for evaluating out-of-distribution generalisation for predictive models in biochemistry",
+  "authors": [
+    "Raúl Fernández Díaz",
+    "Lam Thanh Hoang",
+    "Vanessa Lopez",
+    "Denis Shields"
+  ],
+  "date": "2024-07-12",
+  "kind": "ISMB 2024 poster",
+  "publisher": "IBM Research",
+  "url": "https://research.ibm.com/publications/effect-of-dataset-partitioning-strategies-for-evaluating-out-of-distribution-generalisation-for-predictive-models-in-biochemistry--1",
+  "software_url": "https://github.com/IBM/Hestia-GOOD",
+  "commit": "54b83e28b54e3680bd4f4cc17a2a3a57790746ad",
+  "version": "1.2.2",
+  "verification": "Publisher presentation page and upstream source inspected; no inferred journal publication"
+}

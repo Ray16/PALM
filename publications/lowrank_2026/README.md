@@ -1,3 +1,13 @@
+## Constrained optimization controls, 4 November 2026
+
+The revised paper is **Scalable Dataset Splitting through Constrained Low-Rank
+Similarity Optimization**. It adds same-procedure dense controls, current-code
+component ablations, CCPart with matched count/group interventions, true-cut
+approximation errors, and preempted equal-time comparisons. See
+[control evidence and reproduction](revision_20261103_controls/README.md) and
+[updated readiness assessment](PUBLICATION_READINESS_CONTROLS_20261104.txt).
+The older revision notes below retain their historical scope and page counts.
+
 ## ODAC25 manuscript update, 3 November 2026
 
 The manuscript now includes the audited metadata-only ODAC25 case, with the

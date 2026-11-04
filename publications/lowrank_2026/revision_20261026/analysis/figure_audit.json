@@ -2,7 +2,7 @@
   {
     "figure": "concept",
     "width_inches": 6.5,
-    "height_inches": 7.2,
+    "height_inches": 3.6,
     "minimum_source_font_pt": 18.0,
     "detected_text_overlaps": [],
     "detected_panel_overlaps": [],
@@ -26,7 +26,7 @@
   {
     "figure": "quality",
     "width_inches": 6.5,
-    "height_inches": 7.3,
+    "height_inches": 7.1,
     "minimum_source_font_pt": 18.0,
     "detected_text_overlaps": [],
     "detected_panel_overlaps": [],

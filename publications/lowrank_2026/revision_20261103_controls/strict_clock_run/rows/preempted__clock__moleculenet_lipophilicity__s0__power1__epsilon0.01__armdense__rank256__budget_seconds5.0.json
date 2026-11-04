@@ -1,0 +1,46 @@
+{
+  "job": {
+    "study": "clock",
+    "dataset": "moleculenet_lipophilicity",
+    "seed": 0,
+    "power": 1,
+    "epsilon": 0.01,
+    "arm": "dense",
+    "rank": 256,
+    "budget_seconds": 5.0,
+    "name": "preempted__clock__moleculenet_lipophilicity__s0__power1__epsilon0.01__armdense__rank256__budget_seconds5.0"
+  },
+  "status": "ok",
+  "n": 4200,
+  "metrics": {
+    "counts": [
+      3368,
+      416,
+      416
+    ],
+    "retention": 1.0,
+    "true_cut": 307293.0338383317,
+    "true_powered_cut": 307293.0338383317,
+    "kernel_mass": 1145827.8023611023,
+    "powered_kernel_mass": 1145827.8023611023,
+    "global_relative": 0.7948362987662505,
+    "mean_nearest": 0.3893365495790248,
+    "nearest_gt06": 0.13701923076923078
+  },
+  "timed_process_seconds": 5.063761102035642,
+  "checkpoint": {
+    "path": "candidate_9.npy",
+    "elapsed": 4.892265340313315,
+    "initial": false
+  },
+  "termination_overrun_seconds": 0.06376110203564167,
+  "manifest_sha256": "5d4212c94a35b66cff200ab3a1e86ff67c2fb976359946e2b7c190bd160bc6fa",
+  "artifacts": {
+    "assignments/preempted__clock__moleculenet_lipophilicity__s0__power1__epsilon0.01__armdense__rank256__budget_seconds5.0/labels.npy": "d24721a519c272d171971a3fd3c0ab46beeff655228f99fc02310280290890d6"
+  },
+  "cpu_affinity": [
+    12,
+    13
+  ],
+  "host": "lambda2"
+}

@@ -10,15 +10,15 @@
   },
   "rendered": {
     "manuscript.pdf": {
-      "pages": 19,
-      "render_sha256": "aa0630bddc2f85bf443dd7c0ed5a610d22096ed337246d9cfd8d822acbe364dc",
+      "pages": 23,
+      "render_sha256": "1746d7e4afd84929b40d563fa0918edc391bcba119129f36a8409a33d9831263",
       "minimum_figure_font_pt": 18.0,
       "all_figure_fonts_at_least_18": true,
       "clipped_figure_text": []
     },
     "supplement.pdf": {
-      "pages": 51,
-      "render_sha256": "58067d5af2329cb940349113109b5298aa800290fd7cd8b3b07aa460c28323bc",
+      "pages": 58,
+      "render_sha256": "f5e32548073f1f52724b9e8b9bc8698b585c8e45df4804edbb5f2f3070e08d78",
       "minimum_figure_font_pt": 18.0,
       "all_figure_fonts_at_least_18": true,
       "clipped_figure_text": []

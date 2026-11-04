@@ -1,0 +1,122 @@
+{
+  "job": {
+    "study": "ccpart",
+    "dataset": "moleculenet_lipophilicity",
+    "seed": 2,
+    "threshold": 0.6,
+    "name": "ccpart__moleculenet_lipophilicity__s2__threshold0.6"
+  },
+  "status": "ok",
+  "n": 4200,
+  "result": {
+    "variants": [
+      {
+        "variant": "ccpart",
+        "metrics": {
+          "counts": [
+            3362,
+            419,
+            419
+          ],
+          "retention": 1.0,
+          "true_cut": 367581.5730666232,
+          "true_powered_cut": 367581.5730666232,
+          "kernel_mass": 1145827.8023611023,
+          "powered_kernel_mass": 1145827.8023611023,
+          "global_relative": 0.9451589964812332,
+          "mean_nearest": 0.397177294312283,
+          "nearest_gt06": 0.0
+        },
+        "seconds": 0.9348213002085686,
+        "similarity_seconds": 0.7738863546401262,
+        "native_peak_rss_gib": 0.7605018615722656
+      },
+      {
+        "variant": "matched_counts",
+        "metrics": {
+          "counts": [
+            3362,
+            419,
+            419
+          ],
+          "retention": 1.0,
+          "true_cut": 309143.8912750518,
+          "true_powered_cut": 309143.8912750518,
+          "kernel_mass": 1145827.8023611023,
+          "powered_kernel_mass": 1145827.8023611023,
+          "global_relative": 0.7948987420892091,
+          "mean_nearest": 0.411845168565566,
+          "nearest_gt06": 0.2052505966587112,
+          "approximate_cut": 305881.27676484466,
+          "absolute_cut_error": 3262.614510207146,
+          "cut_relative_error": 0.010553708490731034,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.002847386407874006
+        },
+        "seconds": 1.3011340610682964,
+        "diagnostics": {
+          "refinement_operations": 36
+        }
+      },
+      {
+        "variant": "matched_groups",
+        "metrics": {
+          "counts": [
+            3362,
+            419,
+            419
+          ],
+          "retention": 1.0,
+          "true_cut": 332126.58124609885,
+          "true_powered_cut": 332126.58124609885,
+          "kernel_mass": 1145827.8023611023,
+          "powered_kernel_mass": 1145827.8023611023,
+          "global_relative": 0.8539939138309575,
+          "mean_nearest": 0.3417113984719359,
+          "nearest_gt06": 0.0,
+          "approximate_cut": 328155.00818507734,
+          "absolute_cut_error": 3971.5730610215105,
+          "cut_relative_error": 0.011958010244529804,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.0034661168570335387
+        },
+        "seconds": 0.9098886717110872,
+        "diagnostics": {
+          "factor_leakage": 328155.00818507734,
+          "n_groups": 1788,
+          "largest_group": 136,
+          "grouped_points": 2815,
+          "broken_groups": 0,
+          "fm_moves": 6,
+          "warm_start_won": true,
+          "corridor_ok": true,
+          "group_policy": "strict",
+          "all_groups_preserved": true,
+          "refined_group_restarts": 1,
+          "feasibility_solves": 0,
+          "rejected_capacity_proposals": 0
+        }
+      }
+    ],
+    "matched_status": "ok",
+    "group_count": 1788,
+    "largest_group": 136,
+    "timing_scope": "native includes complete threshold similarities and components; matched controls reuse native groups"
+  },
+  "artifacts": {
+    "assignments/ccpart__moleculenet_lipophilicity__s2__threshold0.6/permutation.npy": "513a2252096399dcc2f4684ea7bb51993dafc34d1b6ad602b3ad02b80df59202",
+    "assignments/ccpart__moleculenet_lipophilicity__s2__threshold0.6/ccpart.npy": "855204f496facb92b8ec5d81e284f8db84baa8e4b530ef2cee0eb3e946cf8c46",
+    "assignments/ccpart__moleculenet_lipophilicity__s2__threshold0.6/groups.npy": "07fba981f69ea2dba6fc4f11c7203dce022202d79128fc185b4df763a7c7910e",
+    "assignments/ccpart__moleculenet_lipophilicity__s2__threshold0.6/matched_counts.npy": "f170afef93c9c4373c9bac74f07dbe0fe9742fb32ce9663a30d44bf0b5151d1d",
+    "assignments/ccpart__moleculenet_lipophilicity__s2__threshold0.6/matched_groups.npy": "af158ffbb8b4ab4482a5511500d5b825f3945b69b8f173e2b7b01c44e9da6f22"
+  },
+  "manifest_sha256": "c9fc6c41061d77a45459f0f2fb92b5f49a4e318569ec662bed8f29ce267ccaa8",
+  "host": "lambda2",
+  "pid": 2688980,
+  "cpu_affinity": [
+    10,
+    11
+  ],
+  "started": 1793771321.8821719,
+  "finished": 1793771329.1861732
+}

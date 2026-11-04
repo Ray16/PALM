@@ -1,0 +1,16 @@
+{
+  "pid": 2710346,
+  "command": [
+    "taskset",
+    "-c",
+    "16,17",
+    "/homes/rzhu/miniforge3/envs/palm/bin/python",
+    "/nfs/lambda_stor_01/homes/rzhu/data_splitting/publication/odac25_revision/publications/lowrank_2026/revision_20261103_controls/dense_scaling.py",
+    "case",
+    "--output",
+    "/nfs/lambda_stor_01/homes/rzhu/data_splitting/publication/odac25_revision/publications/lowrank_2026/revision_20261103_controls/scaling_run",
+    "--index",
+    "31"
+  ],
+  "start_ticks": "1457235760"
+}

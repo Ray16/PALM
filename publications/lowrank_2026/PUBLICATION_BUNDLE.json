@@ -7,7 +7,10 @@
   "author_metadata": "pending author input; technically reviewed draft",
   "base_commit": "3f8f5a9451b5058e2cd24c1bb226b0a21be981b2",
   "base_release_tag": "lowrank-v0.2.0-review-20261026",
-  "revision_branch": "lowrank-odac25-20261103",
+  "revision_branch": "main",
   "primary_method_source": "f7e0866",
-  "odac25_case": "odac25_case"
+  "odac25_case": "odac25_case",
+  "controls_revision": "revision_20261103_controls",
+  "controls_scope": "540 CPU cases; dense/factor, components, CCPart, cut-relative error and preempted equal-time controls",
+  "title": "Scalable Dataset Splitting through Constrained Low-Rank Similarity Optimization"
 }

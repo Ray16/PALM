@@ -1,0 +1,55 @@
+{
+  "job": {
+    "name": "chembl__n16000__s0__dense__r0",
+    "study": "iterations",
+    "dataset": "chembl37",
+    "n": 16000,
+    "seed": 0,
+    "arm": "dense",
+    "rank": 0,
+    "power": 1,
+    "epsilon": 0.01
+  },
+  "n": 16000,
+  "status": "ok",
+  "result": {
+    "seconds": 25.531963912770152,
+    "construction_seconds": 9.38394845277071,
+    "assignment_endpoint_seconds": 22.849789634346962,
+    "native_peak_rss_gib": 3.9317398071289062,
+    "refinement_operations": 0,
+    "overrun_seconds": 0.0,
+    "metrics": {
+      "counts": [
+        12832,
+        1584,
+        1584
+      ],
+      "retention": 1.0,
+      "true_cut": 3781038.539387699,
+      "true_powered_cut": 3781038.539387699,
+      "kernel_mass": 14295578.306955745,
+      "powered_kernel_mass": 14295578.306955745,
+      "global_relative": 0.7843364402369517,
+      "mean_nearest": 0.33401847153906183,
+      "nearest_gt06": 0.02904040404040404
+    },
+    "diagnostics": {
+      "storage_bytes": 1024000000,
+      "assignment_iteration_limit": 25,
+      "refinement_limit": 16000
+    }
+  },
+  "artifacts": {
+    "assignments/chembl__n16000__s0__dense__r0/indices.npy": "46be2d4f128283bd19bdb51651c6103306e3c01c7945bc2a433f479077398970",
+    "assignments/chembl__n16000__s0__dense__r0/initial.npy": "5e7c3bfbc057ec840557c47d036c8f0832b61354ce5e4cfcdba0e05887ce2a89",
+    "assignments/chembl__n16000__s0__dense__r0/labels.npy": "b98e71b605c8a73a70ac18548d87786071dc900692ec852eba93edaa6d352073"
+  },
+  "feature_sha256": "a9b5b82543620f04f3c890d7e3de0cd82364fcf522ef43703b57c43e22b043f9",
+  "manifest_sha256": "02cdf002cb08fc24c0011f74697e6e3b19bc476728750400f76286a736733442",
+  "host": "lambda2",
+  "cpu_affinity": [
+    16,
+    17
+  ]
+}

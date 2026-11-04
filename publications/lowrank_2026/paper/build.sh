@@ -13,6 +13,7 @@ if [[ "${1:-}" == "--allow-partial" ]]; then
 fi
 "$mlst_python" "$paper_dir/build_tools/systematic_report.py" "${report_flags[@]}"
 "$mlst_python" "$paper_dir/build_tools/odac25_report.py"
+"$mlst_python" "$paper_dir/../revision_20261103_controls/report.py"
 cd -- "$paper_dir"
 mkdir -p logs
 for document in manuscript supplement; do
@@ -22,4 +23,5 @@ for document in manuscript supplement; do
   pdflatex -interaction=nonstopmode -halt-on-error "$document.tex" > "logs/${document}_pass3.log" 2>&1
 done
 "$mlst_python" "$paper_dir/build_tools/validate_systematic.py" "${report_flags[@]}"
+"$mlst_python" "$paper_dir/../revision_20261103_controls/completion_check.py"
 printf "%s\n" "Built and checked $paper_dir/manuscript.pdf and supplement.pdf"

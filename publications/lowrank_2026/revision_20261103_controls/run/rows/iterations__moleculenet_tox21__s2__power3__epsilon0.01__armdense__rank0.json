@@ -1,0 +1,55 @@
+{
+  "job": {
+    "study": "iterations",
+    "dataset": "moleculenet_tox21",
+    "seed": 2,
+    "power": 3,
+    "epsilon": 0.01,
+    "arm": "dense",
+    "rank": 0,
+    "name": "iterations__moleculenet_tox21__s2__power3__epsilon0.01__armdense__rank0"
+  },
+  "status": "ok",
+  "n": 7823,
+  "result": {
+    "seconds": 8.305894868448377,
+    "construction_seconds": 1.6046021487563848,
+    "assignment_endpoint_seconds": 7.737258704379201,
+    "native_peak_rss_gib": 1.1713104248046875,
+    "refinement_operations": 0,
+    "overrun_seconds": 0.0,
+    "metrics": {
+      "counts": [
+        6273,
+        775,
+        775
+      ],
+      "retention": 1.0,
+      "true_cut": 541487.0310101329,
+      "true_powered_cut": 4744.742654710637,
+      "kernel_mass": 2684689.815153038,
+      "powered_kernel_mass": 57934.130363924254,
+      "global_relative": 0.5977458362237937,
+      "mean_nearest": 0.3650382341323113,
+      "nearest_gt06": 0.05290322580645161
+    },
+    "diagnostics": {
+      "storage_bytes": 244797316,
+      "assignment_iteration_limit": 25,
+      "refinement_limit": 7823
+    }
+  },
+  "artifacts": {
+    "assignments/iterations__moleculenet_tox21__s2__power3__epsilon0.01__armdense__rank0/initial.npy": "4d5d2d22c945e9cf8e47a55f7aff3b9c2a31070bff662bd2d323986f741df522",
+    "assignments/iterations__moleculenet_tox21__s2__power3__epsilon0.01__armdense__rank0/labels.npy": "b5238e310eaf6ecc1c20be9a303d24d451c92380786b06a15a009f5512234851"
+  },
+  "manifest_sha256": "c9fc6c41061d77a45459f0f2fb92b5f49a4e318569ec662bed8f29ce267ccaa8",
+  "host": "lambda2",
+  "pid": 2698717,
+  "cpu_affinity": [
+    8,
+    9
+  ],
+  "started": 1793771492.0002544,
+  "finished": 1793771503.3955333
+}

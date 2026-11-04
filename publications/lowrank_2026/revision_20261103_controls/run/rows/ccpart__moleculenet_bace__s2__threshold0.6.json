@@ -1,0 +1,122 @@
+{
+  "job": {
+    "study": "ccpart",
+    "dataset": "moleculenet_bace",
+    "seed": 2,
+    "threshold": 0.6,
+    "name": "ccpart__moleculenet_bace__s2__threshold0.6"
+  },
+  "status": "ok",
+  "n": 1513,
+  "result": {
+    "variants": [
+      {
+        "variant": "ccpart",
+        "metrics": {
+          "counts": [
+            1226,
+            140,
+            147
+          ],
+          "retention": 1.0,
+          "true_cut": 54533.701420578385,
+          "true_powered_cut": 54533.701420578385,
+          "kernel_mass": 201183.17413950988,
+          "powered_kernel_mass": 201183.17413950988,
+          "global_relative": 0.8324830381246444,
+          "mean_nearest": 0.37460575902569854,
+          "nearest_gt06": 0.0
+        },
+        "seconds": 0.10627168230712414,
+        "similarity_seconds": 0.08689632825553417,
+        "native_peak_rss_gib": 0.7042083740234375
+      },
+      {
+        "variant": "matched_counts",
+        "metrics": {
+          "counts": [
+            1226,
+            140,
+            147
+          ],
+          "retention": 1.0,
+          "true_cut": 48953.85177351266,
+          "true_powered_cut": 48953.85177351266,
+          "kernel_mass": 201183.17413950988,
+          "powered_kernel_mass": 201183.17413950988,
+          "global_relative": 0.7473039641673583,
+          "mean_nearest": 0.5495010296562639,
+          "nearest_gt06": 0.3469387755102041,
+          "approximate_cut": 48888.148468136955,
+          "absolute_cut_error": 65.70330537570408,
+          "cut_relative_error": 0.0013421478187188123,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.00032658449523289814
+        },
+        "seconds": 0.3376265410333872,
+        "diagnostics": {
+          "refinement_operations": 10
+        }
+      },
+      {
+        "variant": "matched_groups",
+        "metrics": {
+          "counts": [
+            1226,
+            140,
+            147
+          ],
+          "retention": 1.0,
+          "true_cut": 54210.2077603766,
+          "true_powered_cut": 54210.2077603766,
+          "kernel_mass": 201183.17413950988,
+          "powered_kernel_mass": 201183.17413950988,
+          "global_relative": 0.8275447526599936,
+          "mean_nearest": 0.40950414007945374,
+          "nearest_gt06": 0.0,
+          "approximate_cut": 54129.362349260926,
+          "absolute_cut_error": 80.84541111567523,
+          "cut_relative_error": 0.0014913318811289795,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.00040184976433274295
+        },
+        "seconds": 0.2810359764844179,
+        "diagnostics": {
+          "factor_leakage": 54129.36234926091,
+          "n_groups": 120,
+          "largest_group": 308,
+          "grouped_points": 1447,
+          "broken_groups": 0,
+          "fm_moves": 16,
+          "warm_start_won": true,
+          "corridor_ok": true,
+          "group_policy": "strict",
+          "all_groups_preserved": true,
+          "refined_group_restarts": 1,
+          "feasibility_solves": 0,
+          "rejected_capacity_proposals": 0
+        }
+      }
+    ],
+    "matched_status": "ok",
+    "group_count": 120,
+    "largest_group": 308,
+    "timing_scope": "native includes complete threshold similarities and components; matched controls reuse native groups"
+  },
+  "artifacts": {
+    "assignments/ccpart__moleculenet_bace__s2__threshold0.6/permutation.npy": "319a858448e5ccee808ac3db2f94054857da5429a9ead66526e16c7583b3e4db",
+    "assignments/ccpart__moleculenet_bace__s2__threshold0.6/ccpart.npy": "bfc14bb00013724cbd3f15739d856aad54d05e639d4fe74f633e589877cfe2a3",
+    "assignments/ccpart__moleculenet_bace__s2__threshold0.6/groups.npy": "bd204cef7219f0016b28973fa74fe03c8620540d6d75bdba1379463e0ca3b16b",
+    "assignments/ccpart__moleculenet_bace__s2__threshold0.6/matched_counts.npy": "2db8204adfe1b93b5bc43425b6bda0f7e62f9085e9cdc6d4601a4e3aea734f05",
+    "assignments/ccpart__moleculenet_bace__s2__threshold0.6/matched_groups.npy": "fb2dcd2db361335ccefbc769c97d0b59f823f63c1c9e3abcdda7496a8371edf3"
+  },
+  "manifest_sha256": "c9fc6c41061d77a45459f0f2fb92b5f49a4e318569ec662bed8f29ce267ccaa8",
+  "host": "lambda2",
+  "pid": 2680669,
+  "cpu_affinity": [
+    8,
+    9
+  ],
+  "started": 1793771127.0351353,
+  "finished": 1793771129.9030595
+}

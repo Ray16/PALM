@@ -1,0 +1,108 @@
+\section{Additional current-version optimization controls}
+
+The added primary control grid contains \ControlsCases{} completed cases: 288
+iteration-controlled dense/factor cases, 72 equal-clock cases, 18 component
+cases containing ten settings each, and 54 CCPart cases containing native
+and matched interventions where feasible. Separate additions provide 36 nested
+ChEMBL dense controls and 72 preempted wall-clock controls. Cases and within-case settings are
+not independent datasets. All use the unchanged primary numerical package;
+the control source, upstream Hestia source and complete input/assignment
+identities are frozen separately in \path{revision_20261103_controls}.
+
+\subsection{Original-cut error and true-kernel optimization quality}
+
+For a returned partition $z$ with positive true cut, we calculate
+\[
+ \epsilon_{\mathrm{cut}}(z)=
+ \frac{|\cut_S(z)-\cut_{BB^\top}(z)|}{\cut_S(z)}.
+\]
+For powered factors, both $S$ and the denominator use the stated power.
+Absolute and kernel-mass-normalized errors remain available in the numerical
+records. A zero true cut has undefined cut-relative error, with an explicit
+status rather than an arbitrary denominator offset. All 900 earlier
+full-kernel comparisons have positive true cuts.
+
+The maximum errors below characterize only tested assignments. A small
+cut-value error does not certify optimizer quality or bound any individual
+nearest-neighbour exposure. The exact small-instance enumeration in the
+preceding sections separately establishes approximation and optimization
+gaps over its finite feasible sets.
+
+\input{controls_cut_error_table.tex}
+\input{controls_dense_table.tex}
+\input{controls_rank_table.tex}
+\input{controls_scaling_details.tex}
+
+\subsection{Time, memory and equal-clock controls}
+
+The dense oracle stores the kernel directly, without a full-kernel
+eigendecomposition. Its float32 operations supply the same interface as the
+factor to the unchanged assignment and refinement routines. Final original-kernel
+scoring is independent and uses float64 division and summation. Native peak
+RSS is captured before scoring and includes input and framework costs. The
+array column measures just the representation, so these memory quantities
+must not be interchanged.
+
+The direct oracle sums crossing kernel blocks with indexed array operations,
+which allocate temporary arrays. Its peak RSS measures this implementation,
+including those temporaries; it is not a lower bound on memory for all possible
+dense optimizers. The cost comparison likewise measures the declared
+implementations and budgets rather than an implementation-independent speedup.
+
+\input{controls_memory_table.tex}
+
+The primary equal-time protocol runs construction and search in a timed
+subprocess. An external supervisor stops that process at the deadline and
+scores its last serialized feasible checkpoint completed before the cutoff.
+Scheduling and termination can finish slightly after that cutoff, but late
+work cannot improve the selected partition. The largest measured termination
+overshoot is \ControlsPreemptedOverrun{} seconds.
+
+\input{controls_preempted_clock_table.tex}
+
+An earlier cooperative sensitivity protocol checks deadlines between single-step
+calls to the same assignment/refinement routines and uses the same ordered
+restart seeds. Construction is charged to the budget, and an operation already
+started is allowed to finish. Its largest observed overrun is
+\ControlsClockOverrun{} seconds. Actual work counts, construction times and
+construction-exhausted outcomes are retained per case. This earlier protocol
+cannot be interpreted as a hard real-time resource comparison.
+
+\input{controls_clock_table.tex}
+
+\subsection{Current-version component controls}
+
+Omitting assignment or refinement leaves a feasible initial partition in
+place, rather than relaxing the capacity constraint. Four-restart controls
+refine two candidates; group controls use one warm start, one additional
+restart and one refined candidate. Timing the optimizer with reused factors
+isolates component cost, while construction costs remain explicit per case.
+The three grouped rows share their groups and feasible packing. Comparisons
+between grouped and ungrouped rows change the admissible partition set and
+are interpreted accordingly.
+
+\input{controls_ablation_table.tex}
+
+\subsection{CCPart native sizes and group-preserving interventions}
+
+The native CCPart result is produced by the pinned upstream implementation,
+not by a reimplementation of component packing. Threshold similarities are
+exhaustively constructed, without response labels, and construction belongs
+to its native runtime. Every entity is retained. The unmodified packing
+routine need not realize the exact requested counts or the low-rank corridor.
+Three deterministic input permutations characterize order sensitivity.
+
+The count-matched low-rank intervention may split components. The second
+intervention preserves all native components and their exact realized counts;
+it therefore retains the original threshold separation. Both start from the
+native assignment. Timings for the interventions reuse components and must
+not be presented as complete standalone pipelines with free group construction.
+Native memory is recorded before independent scoring or matched optimization.
+
+\input{controls_ccpart_counts.tex}
+\input{controls_ccpart_native.tex}
+
+Full per-seed quality, costs, native groups, assignments and checksums are
+included in the control records. An independent RDKit replay checks all
+original-kernel scores and verifies the absence of crossing native threshold
+edges against every original pair, as well as count and group preservation.

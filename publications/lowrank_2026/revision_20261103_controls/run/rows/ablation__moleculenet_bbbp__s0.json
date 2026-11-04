@@ -1,0 +1,391 @@
+{
+  "job": {
+    "study": "ablation",
+    "dataset": "moleculenet_bbbp",
+    "seed": 0,
+    "name": "ablation__moleculenet_bbbp__s0"
+  },
+  "status": "ok",
+  "n": 2039,
+  "result": {
+    "variants": [
+      {
+        "variant": "initial",
+        "metrics": {
+          "counts": [
+            1631,
+            204,
+            204
+          ],
+          "retention": 1.0,
+          "true_cut": 80512.3101941575,
+          "true_powered_cut": 80512.3101941575,
+          "kernel_mass": 233332.42380214395,
+          "powered_kernel_mass": 233332.42380214395,
+          "global_relative": 1.01395779873692,
+          "mean_nearest": 0.6000051342358088,
+          "nearest_gt06": 0.5,
+          "approximate_cut": 79229.39935621053,
+          "absolute_cut_error": 1282.910837946969,
+          "cut_relative_error": 0.01593434388919156,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.005498210737461945
+        },
+        "optimization_seconds": 1.3997778296470642e-05,
+        "construction_seconds": 0.2689909115433693,
+        "diagnostics": {}
+      },
+      {
+        "variant": "assignment_only",
+        "metrics": {
+          "counts": [
+            1635,
+            202,
+            202
+          ],
+          "retention": 1.0,
+          "true_cut": 54766.17389920325,
+          "true_powered_cut": 54766.17389920325,
+          "kernel_mass": 233332.42380214395,
+          "powered_kernel_mass": 233332.42380214395,
+          "global_relative": 0.6953406712824554,
+          "mean_nearest": 0.3101597143213701,
+          "nearest_gt06": 0.039603960396039604,
+          "approximate_cut": 54184.61306311499,
+          "absolute_cut_error": 581.5608360882543,
+          "cut_relative_error": 0.010618978736009801,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.0024924132986395126
+        },
+        "optimization_seconds": 0.019491732120513916,
+        "construction_seconds": 0.2689909115433693,
+        "diagnostics": {}
+      },
+      {
+        "variant": "refinement_only",
+        "metrics": {
+          "counts": [
+            1635,
+            202,
+            202
+          ],
+          "retention": 1.0,
+          "true_cut": 79599.80997802255,
+          "true_powered_cut": 79599.80997802255,
+          "kernel_mass": 233332.42380214395,
+          "powered_kernel_mass": 233332.42380214395,
+          "global_relative": 1.0106418134292803,
+          "mean_nearest": 0.5974728164483492,
+          "nearest_gt06": 0.49504950495049505,
+          "approximate_cut": 78327.34827843017,
+          "absolute_cut_error": 1272.4616995923716,
+          "cut_relative_error": 0.015985737904948484,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.005453428541381653
+        },
+        "optimization_seconds": 0.10764656774699688,
+        "construction_seconds": 0.2689909115433693,
+        "diagnostics": 4
+      },
+      {
+        "variant": "one_restart",
+        "metrics": {
+          "counts": [
+            1635,
+            202,
+            202
+          ],
+          "retention": 1.0,
+          "true_cut": 54766.17389920325,
+          "true_powered_cut": 54766.17389920325,
+          "kernel_mass": 233332.42380214395,
+          "powered_kernel_mass": 233332.42380214395,
+          "global_relative": 0.6953406712824554,
+          "mean_nearest": 0.3101597143213701,
+          "nearest_gt06": 0.039603960396039604,
+          "approximate_cut": 54184.61306311499,
+          "absolute_cut_error": 581.5608360882543,
+          "cut_relative_error": 0.010618978736009801,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.0024924132986395126
+        },
+        "optimization_seconds": 0.02294900082051754,
+        "construction_seconds": 0.2689909115433693,
+        "diagnostics": 0
+      },
+      {
+        "variant": "four_restarts",
+        "metrics": {
+          "counts": [
+            1635,
+            202,
+            202
+          ],
+          "retention": 1.0,
+          "true_cut": 54568.696645944365,
+          "true_powered_cut": 54568.696645944365,
+          "kernel_mass": 233332.42380214395,
+          "powered_kernel_mass": 233332.42380214395,
+          "global_relative": 0.692833394325391,
+          "mean_nearest": 0.24559353161836742,
+          "nearest_gt06": 0.0049504950495049506,
+          "approximate_cut": 54032.23312779659,
+          "absolute_cut_error": 536.4635181477715,
+          "cut_relative_error": 0.009830975469846454,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.002299138325510517
+        },
+        "optimization_seconds": 0.15332392789423466,
+        "construction_seconds": 0.2689909115433693,
+        "diagnostics": {
+          "factor_storage": "dense",
+          "optimizer_device": "cpu",
+          "winning_restart_seed": 1,
+          "best_unrefined_objective": 54032.23312779659,
+          "refined_restarts": 2,
+          "fm_moves": 0,
+          "refinement_candidates": [
+            {
+              "seed": 1,
+              "before": 54032.23312779659,
+              "after": 54032.23312779659,
+              "moves": 0
+            },
+            {
+              "seed": 3,
+              "before": 54032.71908128078,
+              "after": 54032.71908128078,
+              "moves": 0
+            }
+          ]
+        }
+      },
+      {
+        "variant": "uniform_landmarks",
+        "metrics": {
+          "counts": [
+            1635,
+            202,
+            202
+          ],
+          "retention": 1.0,
+          "true_cut": 54566.104521866444,
+          "true_powered_cut": 54566.104521866444,
+          "kernel_mass": 233332.42380214395,
+          "powered_kernel_mass": 233332.42380214395,
+          "global_relative": 0.6928004833300072,
+          "mean_nearest": 0.3586869651838613,
+          "nearest_gt06": 0.07920792079207921,
+          "approximate_cut": 53911.74544402864,
+          "absolute_cut_error": 654.3590778378057,
+          "cut_relative_error": 0.011992043111224522,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.002804406979428948
+        },
+        "optimization_seconds": 0.163983054459095,
+        "construction_seconds": 0.07213491573929787,
+        "diagnostics": {
+          "factor_storage": "dense",
+          "optimizer_device": "cpu",
+          "winning_restart_seed": 0,
+          "best_unrefined_objective": 53911.74544402864,
+          "refined_restarts": 2,
+          "fm_moves": 0,
+          "refinement_candidates": [
+            {
+              "seed": 0,
+              "before": 53911.74544402864,
+              "after": 53911.74544402864,
+              "moves": 0
+            },
+            {
+              "seed": 1,
+              "before": 53911.74544402864,
+              "after": 53911.74544402864,
+              "moves": 0
+            }
+          ]
+        }
+      },
+      {
+        "variant": "power_only",
+        "metrics": {
+          "counts": [
+            1635,
+            202,
+            202
+          ],
+          "retention": 1.0,
+          "true_cut": 55833.36689439362,
+          "true_powered_cut": 657.1230886808249,
+          "kernel_mass": 233332.42380214395,
+          "powered_kernel_mass": 6345.471877396007,
+          "global_relative": 0.7088903250345939,
+          "mean_nearest": 0.2894926762034096,
+          "nearest_gt06": 0.034653465346534656,
+          "approximate_cut": 363.6671213915175,
+          "absolute_cut_error": 293.4559672893074,
+          "cut_relative_error": 0.4465768626063961,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.04624651609199677
+        },
+        "optimization_seconds": 0.07070151157677174,
+        "construction_seconds": 0.2872885391116142,
+        "diagnostics": {
+          "factor_storage": "dense",
+          "optimizer_device": "cpu",
+          "winning_restart_seed": 0,
+          "best_unrefined_objective": 363.6671213915175,
+          "refined_restarts": 2,
+          "fm_moves": 0,
+          "refinement_candidates": [
+            {
+              "seed": 0,
+              "before": 363.6671213915175,
+              "after": 363.6671213915175,
+              "moves": 0
+            },
+            {
+              "seed": 2,
+              "before": 364.7500126436445,
+              "after": 364.7500126436445,
+              "moves": 0
+            }
+          ]
+        }
+      },
+      {
+        "variant": "group_initial",
+        "metrics": {
+          "counts": [
+            1629,
+            205,
+            205
+          ],
+          "retention": 1.0,
+          "true_cut": 78999.96315916165,
+          "true_powered_cut": 78999.96315916165,
+          "kernel_mass": 233332.42380214395,
+          "powered_kernel_mass": 233332.42380214395,
+          "global_relative": 0.9909160288526665,
+          "mean_nearest": 0.36865905973083624,
+          "nearest_gt06": 0.0,
+          "approximate_cut": 78337.40774329526,
+          "absolute_cut_error": 662.5554158663872,
+          "cut_relative_error": 0.008386781327119524,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.002839534279334475
+        },
+        "optimization_seconds": 6.835907697677612e-07,
+        "construction_seconds": 0.4454137496650219,
+        "diagnostics": {}
+      },
+      {
+        "variant": "groups_plain",
+        "metrics": {
+          "counts": [
+            1635,
+            202,
+            202
+          ],
+          "retention": 1.0,
+          "true_cut": 66226.94201640456,
+          "true_powered_cut": 66226.94201640456,
+          "kernel_mass": 233332.42380214395,
+          "powered_kernel_mass": 233332.42380214395,
+          "global_relative": 0.8408527205757741,
+          "mean_nearest": 0.32418162132065104,
+          "nearest_gt06": 0.0,
+          "approximate_cut": 65363.18991440052,
+          "absolute_cut_error": 863.7521020040367,
+          "cut_relative_error": 0.013042306887581847,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.003701809152492506
+        },
+        "optimization_seconds": 0.04720368981361389,
+        "construction_seconds": 0.4454137496650219,
+        "diagnostics": {
+          "factor_leakage": 65363.189914400515,
+          "n_groups": 593,
+          "largest_group": 101,
+          "grouped_points": 1649,
+          "broken_groups": 0,
+          "fm_moves": 1,
+          "warm_start_won": true,
+          "corridor_ok": true,
+          "group_policy": "strict",
+          "all_groups_preserved": true,
+          "refined_group_restarts": 1,
+          "feasibility_solves": 0,
+          "rejected_capacity_proposals": 0
+        }
+      },
+      {
+        "variant": "groups_power",
+        "metrics": {
+          "counts": [
+            1635,
+            202,
+            202
+          ],
+          "retention": 1.0,
+          "true_cut": 62219.459749983595,
+          "true_powered_cut": 922.183736036366,
+          "kernel_mass": 233332.42380214395,
+          "powered_kernel_mass": 6345.471877396007,
+          "global_relative": 0.7899715797019503,
+          "mean_nearest": 0.3098491266337331,
+          "nearest_gt06": 0.0,
+          "approximate_cut": 520.5424458655363,
+          "absolute_cut_error": 401.64129017082973,
+          "cut_relative_error": 0.4355328276522447,
+          "cut_relative_status": "defined",
+          "mass_relative_error": 0.06329573244214762
+        },
+        "optimization_seconds": 0.04015655256807804,
+        "construction_seconds": 0.46371137723326683,
+        "diagnostics": {
+          "factor_leakage": 520.5424458655364,
+          "n_groups": 593,
+          "largest_group": 101,
+          "grouped_points": 1649,
+          "broken_groups": 0,
+          "fm_moves": 0,
+          "warm_start_won": true,
+          "corridor_ok": true,
+          "group_policy": "strict",
+          "all_groups_preserved": true,
+          "refined_group_restarts": 1,
+          "feasibility_solves": 0,
+          "rejected_capacity_proposals": 0
+        }
+      }
+    ],
+    "group_count": 593,
+    "largest_group": 101,
+    "group_construction_seconds": 0.1764228381216526,
+    "timing_scope": "component calls; shared representations; no per-variant RSS comparison"
+  },
+  "artifacts": {
+    "assignments/ablation__moleculenet_bbbp__s0/initial.npy": "00ffaa08d16af6ef36c850944a4929b2a3ee172228ab8176cdad7fbc0314886a",
+    "assignments/ablation__moleculenet_bbbp__s0/assignment_only.npy": "25dde0387814353a1c8b03801e4602cba5d73ded06a147485bc97032a45a25fa",
+    "assignments/ablation__moleculenet_bbbp__s0/refinement_only.npy": "3aca4cdb687a912e668bc7b7a5170c7a4c4a98c101bc120503110bd1908fc31b",
+    "assignments/ablation__moleculenet_bbbp__s0/one_restart.npy": "25dde0387814353a1c8b03801e4602cba5d73ded06a147485bc97032a45a25fa",
+    "assignments/ablation__moleculenet_bbbp__s0/four_restarts.npy": "261fed513b90882a4376394b545c84e56593cc24270ff51d56840ee8071e8153",
+    "assignments/ablation__moleculenet_bbbp__s0/uniform_landmarks.npy": "c1e29b710ad0da4b02d75347a3253b25b78092aa5a7c3db3fa0eff86a1ea55da",
+    "assignments/ablation__moleculenet_bbbp__s0/power_only.npy": "26cb00cf2f42b0d463dda854f60b772c11955c4fb0c1e2d519dfd63403dba0e2",
+    "assignments/ablation__moleculenet_bbbp__s0/groups.npy": "2ccb5ee5b0bc2926cd8fe6da00ac79045817e61d5f9d1dd12e240b6ef8c807b5",
+    "assignments/ablation__moleculenet_bbbp__s0/group_initial.npy": "8b1fa76f68f45fda56dc0f3394f2d79a2e2b9fcf4758ff3cb505f693927d4156",
+    "assignments/ablation__moleculenet_bbbp__s0/groups_plain.npy": "648367a7ca57f03efcf401192010de508f6ee7db3594be7e46e509ad8aac37f7",
+    "assignments/ablation__moleculenet_bbbp__s0/groups_power.npy": "5b59e9cc06ed350a320bd577475420e77e4e0791ad67263403b8a5fbbfb11c76"
+  },
+  "manifest_sha256": "c9fc6c41061d77a45459f0f2fb92b5f49a4e318569ec662bed8f29ce267ccaa8",
+  "host": "lambda2",
+  "pid": 2682243,
+  "cpu_affinity": [
+    8,
+    9
+  ],
+  "started": 1793771147.232505,
+  "finished": 1793771150.5413895
+}
