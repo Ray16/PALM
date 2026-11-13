@@ -115,12 +115,26 @@ def compute_dist_matrix(data_dict, use_cosine=False, use_pca=False,
     return names, dist
 
 
+def _require_solution(splits, technique, kwargs):
+    """DataSAIL returns ``None`` instead of raising when its solver finds no split."""
+    if splits is None or technique not in splits or not splits[technique]:
+        n_e = len(kwargs.get("e_data") or {})
+        n_f = len(kwargs.get("f_data") or {})
+        sizes = f"{n_e} e1" + (f" / {n_f} e2" if n_f else "") + " entities"
+        raise RuntimeError(
+            f"DataSAIL found no feasible {technique} split for ratio "
+            f"{list(kwargs.get('splits', []))} with {sizes} (its solver returned no "
+            "assignment). Try a larger test fraction tolerance (epsilon), more entities, "
+            "or a different technique.")
+    return splits[technique]
+
+
 def run_technique(technique, common_kwargs):
     """Run a single DataSAIL technique. Module-level for multiprocessing."""
     t0 = time.time()
     try:
         e_s, f_s, i_s = datasail(techniques=[technique], **common_kwargs)
-        return technique, i_s[technique], time.time() - t0, None
+        return technique, _require_solution(i_s, technique, common_kwargs), time.time() - t0, None
     except (RuntimeError, ValueError, TypeError) as exc:
         return technique, None, time.time() - t0, str(exc)
 
@@ -268,10 +282,10 @@ def run_technique_1d(technique, common_kwargs, use_self_inter):
         e_s, f_s, i_s = datasail(techniques=[technique], **common_kwargs)
         if use_self_inter:
             # R technique: extract from i_splits, convert (e,e) -> e
-            result = {k[0]: v for k, v in i_s[technique][0].items()}
+            result = {k[0]: v for k, v in _require_solution(i_s, technique, common_kwargs)[0].items()}
         else:
             # C1e / I1e: extract from e_splits
-            result = e_s[technique][0]
+            result = _require_solution(e_s, technique, common_kwargs)[0]
         return technique, result, time.time() - t0, None
     except (RuntimeError, ValueError, TypeError) as exc:
         return technique, None, time.time() - t0, str(exc)

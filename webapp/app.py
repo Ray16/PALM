@@ -115,7 +115,7 @@ async def access_control(request: Request, call_next):
         _owner.reset(token)
 
 # CORS: configurable via env var, defaults to permissive for local dev
-_allowed_origins = [x.strip() for x in os.environ.get("PALM_CORS_ORIGINS", "*").split(",") if x.strip()]
+_allowed_origins = [x.strip() for x in os.environ.get("PALM_CORS_ORIGINS", "").split(",") if x.strip()]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_allowed_origins, allow_methods=["*"], allow_headers=["*"],
@@ -396,6 +396,12 @@ async def submit_run(dataset_id: str, req: RunRequest, request: Request = None):
     body = req.model_dump()
     name = _safe_dataset_name(req.dataset_name, dataset_id)
     body["dataset_name"] = name
+    # Entity names also become output directories: same character set, and distinct.
+    for key in ("e1", "e2"):
+        if body.get(key):
+            body[key]["name"] = _safe_dataset_name(body[key]["name"], key)
+    if body.get("e2") and body["e2"]["name"] == body["e1"]["name"]:
+        body["e2"]["name"] += "_2"
     label = ds.get("display_name") or ds["file_name"]
     try:
         run = store.submit(dataset_id, body, _client(request), label)

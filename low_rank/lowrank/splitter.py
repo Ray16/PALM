@@ -416,7 +416,7 @@ class LowRankSplitter(BaseSplitter):
                     n_restarts=p.n_restarts,
                     n_iter=p.n_iter,
                     seed=spec.seed,
-                    fm=p.fm,
+                    fm=p.fm and len(ids) <= p.fm_max_n,
                     init_labels=labels,
                     group_policy=p.group_policy,
                     feasibility_seconds=p.group_feasibility_seconds,

@@ -27,7 +27,6 @@ lowrank_leakage = factor_leakage
 
 __all__ = [
     "nystrom_features",
-    "_kmeanspp_landmarks",
     "factor_leakage",
     "lowrank_leakage",
     "realized_imbalance",

@@ -18,8 +18,8 @@ import os
 
 import numpy as np
 import pandas as pd
-from rdkit import Chem, DataStructs, RDLogger
-from rdkit.Chem import AllChem
+from rdkit import Chem, RDLogger
+from rdkit.Chem import rdFingerprintGenerator
 
 RDLogger.DisableLog("rdApp.*")
 logger = logging.getLogger(__name__)
@@ -33,7 +33,7 @@ def _morgan(smiles, n_bits=2048, radius=2):
     m = Chem.MolFromSmiles(str(smiles))
     if m is None:
         return None
-    fp = AllChem.GetMorganFingerprintAsBitVect(m, radius, nBits=n_bits)
+    fp = rdFingerprintGenerator.GetMorganGenerator(radius=radius, fpSize=n_bits).GetFingerprint(m)
     a = np.zeros(n_bits, dtype=np.int8)
     a[list(fp.GetOnBits())] = 1          # avoids ConvertToNumpyArray (numpy-2.x ABI issue)
     return a

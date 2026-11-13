@@ -94,7 +94,7 @@ def scaled_lpi_smiles(
     ``(leakage_ratio, n_scored)``.
     """
     from rdkit import Chem, DataStructs, RDLogger
-    from rdkit.Chem import AllChem
+    from rdkit.Chem import rdFingerprintGenerator
 
     RDLogger.DisableLog("rdApp.*")
 
@@ -104,7 +104,7 @@ def scaled_lpi_smiles(
             return None
         a = np.zeros(1024, dtype=np.float32)
         DataStructs.ConvertToNumpyArray(
-            AllChem.GetMorganFingerprintAsBitVect(m, 2, nBits=1024), a
+            rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=1024).GetFingerprint(m), a
         )
         return a
 

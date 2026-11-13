@@ -117,7 +117,7 @@ python PALM/webapp/demo_data/prewarm.py
   `PALM_JOB_MAX_AGE_HOURS` (24).
 
 Other settings: `PALM_MAX_UPLOAD_MB` (500), `PALM_RATE_LIMIT` (30 req/min/IP),
-`PALM_CORS_ORIGINS` (`*`), `WEBAPP_SPLITTER_THREADS` (Mt-KaHyPar threads, 2),
+`PALM_CORS_ORIGINS` (empty = same-origin only; list origins to allow cross-origin use), `WEBAPP_SPLITTER_THREADS` (Mt-KaHyPar threads, 2),
 `WEBAPP_MAX_CONCURRENT_RUNS` (2).
 
 ## Layout

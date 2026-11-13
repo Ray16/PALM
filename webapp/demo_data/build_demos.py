@@ -59,7 +59,7 @@ def lp_pdbbind_proteins(per_class=75, max_len=1000):
 
 
 def davis():
-    d = pd.read_csv(ROOT / "PALM/tests/data/davis_large/interactions.csv")
+    d = pd.read_csv(PALM_DIR / "tests/data/davis_large/interactions.csv")
     d["pKd"] = (9 - np.log10(d["Kd_nM"])).round(3)
     return d[["drug_id", "smiles", "target_id", "sequence", "Kd_nM", "pKd"]]
 

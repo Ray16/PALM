@@ -23,7 +23,7 @@ def ecfp_matrix(smiles: Sequence[str], n_bits: int = 1024, radius: int = 2
     input that were kept (so callers can align ids/labels).
     """
     from rdkit import Chem, RDLogger
-    from rdkit.Chem import AllChem
+    from rdkit.Chem import rdFingerprintGenerator
     RDLogger.DisableLog("rdApp.*")
 
     kept, rows = [], []
@@ -31,7 +31,7 @@ def ecfp_matrix(smiles: Sequence[str], n_bits: int = 1024, radius: int = 2
         m = Chem.MolFromSmiles(str(s))
         if m is None:
             continue
-        fp = AllChem.GetMorganFingerprintAsBitVect(m, radius, nBits=n_bits)
+        fp = rdFingerprintGenerator.GetMorganGenerator(radius=radius, fpSize=n_bits).GetFingerprint(m)
         a = np.zeros(n_bits, dtype=np.float32)
         a[list(fp.GetOnBits())] = 1.0        # avoids ConvertToNumpyArray (numpy-2 ABI)
         kept.append(i)

@@ -69,8 +69,8 @@ class SplitResult:
     diagnostics: Dict[str, Any] = field(default_factory=dict)
 
     def split_indices(self, ids: Optional[Sequence[Hashable]] = None) -> Dict[str, List[int]]:
-        """``{split_name: [positional index, ...]}`` over ``ids`` (or sorted keys)."""
-        ids = list(ids) if ids is not None else sorted(self.assignment.keys())
+        """``{split_name: [positional index, ...]}`` over ``ids`` (default: input order)."""
+        ids = list(ids) if ids is not None else list(self.assignment)
         out: Dict[str, List[int]] = {}
         for i, k in enumerate(ids):
             out.setdefault(self.assignment[k], []).append(i)

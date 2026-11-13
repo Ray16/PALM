@@ -27,6 +27,8 @@ def check(label, condition, detail=""):
     else:
         FAIL += 1
         print(f"  FAIL  {label}  {detail}")
+        if "pytest" in sys.modules:      # under pytest a failed check fails the test
+            raise AssertionError(f"{label}: {detail}")
 
 
 # ── Config validation tests ───────────────────────────────────────────────

@@ -1,5 +1,19 @@
 # Changes
 
+## Unreleased
+
+- Cut-relative audit: `cut_relative_error`, an `acceptance` verdict with an
+  absolute-error floor, and an explicit `unresolved_low_cut_mass` state (the
+  mass-normalized `relative_pair_mae` is kept for comparison).
+- `SplitResult.split_indices()` without `ids` now uses input (insertion) order;
+  sorted keys put string IDs in text order (`"10"` before `"2"`).
+- The grouped path applies the same `fm_max_n` cap to FM polishing as the
+  ungrouped path.
+- ECFP fingerprints use RDKit's `MorganGenerator` (bit-identical to the
+  deprecated `GetMorganFingerprintAsBitVect`, checked on 4,200 molecules).
+- Build requires `setuptools>=77` (the PEP 639 `license = "MIT"` string form).
+- `_kmeanspp_landmarks` is no longer listed in `lowrank.__all__` (still importable).
+
 ## Development and repository usability: 0.2.0.dev4
 
 - Batched exact-count shortlist similarity evaluation; paired correctness and

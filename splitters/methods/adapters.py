@@ -245,6 +245,15 @@ class ScaffoldSplitter(BaseSplitter):
                             balance_ok=balance_ok, giant_group=bool(giant))
 
 
+def _require_two_way(spec: SplitSpec, method: str) -> None:
+    """astartes / Lo-Hi produce a train and a test set only."""
+    if len(spec.splits) != 2:
+        raise ValueError(
+            f"{method} supports two-way (train/test) splits only; got {len(spec.splits)} "
+            f"splits {list(spec.names)}. Use e.g. 'lowrank', 'hypergraph' or 'random' for "
+            "three-way splits.")
+
+
 @register("astartes")
 class AstartesSplitter(BaseSplitter):
     description = "astartes clustering cold-split (KMeans sampler) — external leakage-min baseline"
@@ -256,6 +265,7 @@ class AstartesSplitter(BaseSplitter):
         metric: Optional[str] = None
 
     def split(self, feature_data, spec: SplitSpec) -> SplitResult:
+        _require_two_way(spec, "astartes")
         p = self.params
         t0 = time.time()
         ids, X = feature_matrix_from_dict(feature_data, min_rows=len(spec.splits))
@@ -287,6 +297,7 @@ class LohiSplitter(BaseSplitter):
 
     def split(self, entities, spec: SplitSpec) -> SplitResult:
         """``entities``: ``{entity_id: SMILES}`` (molecule-only baseline)."""
+        _require_two_way(spec, "lohi")
         p = self.params
         t0 = time.time()
         ids = list(entities)
@@ -306,15 +317,16 @@ class LohiSplitter(BaseSplitter):
         assigned = [i for i in ids if i in assignment]
         if 0 < len(assigned) <= _LEAKAGE_MAX_N:
             from rdkit import Chem, RDLogger
-            from rdkit.Chem import AllChem
+            from rdkit.Chem import rdFingerprintGenerator
             RDLogger.DisableLog("rdApp.*")
+            ecfp = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=1024)
             rows, labs = [], []
             for i in assigned:
                 m = Chem.MolFromSmiles(str(entities[i]))
                 if m is None:
                     continue
                 a = np.zeros(1024, dtype=np.float32)
-                a[list(AllChem.GetMorganFingerprintAsBitVect(m, 2, nBits=1024).GetOnBits())] = 1.0
+                a[list(ecfp.GetFingerprint(m).GetOnBits())] = 1.0
                 rows.append(a); labs.append(assignment[i])
             if rows:
                 leak = round(scaled_lpi(np.asarray(rows), labs, metric="tanimoto"), 6)

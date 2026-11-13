@@ -19,6 +19,25 @@ ENTITY_FEATURE_SETS = {
 }
 
 
+def check_path_component(value, field_name: str) -> str:
+    """Validate a name that becomes one path component of the output tree.
+
+    ``dataset_name`` and entity names are joined into output paths, so they must
+    not be able to escape ``output_dir``: no separators, no ``.``/``..``, no NUL,
+    not absolute. Anything else (spaces, unicode, dots inside the name) is fine.
+    """
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"{field_name} must be a non-empty string, got {value!r}")
+    if len(value) > 100:
+        raise ValueError(f"{field_name} must be at most 100 characters, got {len(value)}")
+    bad = [c for c in ("/", "\\", "\0") if c in value]
+    if bad or value in (".", "..") or os.path.isabs(value):
+        raise ValueError(
+            f"{field_name} {value!r} is used as a directory/file name and must not contain "
+            "path separators, be '.' or '..', or be an absolute path")
+    return value
+
+
 @dataclass
 class EntityConfig:
     name: str
@@ -38,6 +57,7 @@ class EntityConfig:
     feature_n_jobs: int = 1
 
     def __post_init__(self):
+        check_path_component(self.name, "entity name")
         if self.type not in ENTITY_FEATURE_SETS:
             raise ValueError(
                 f"Entity type must be one of {list(ENTITY_FEATURE_SETS.keys())}, got '{self.type}'"
@@ -191,6 +211,13 @@ class PipelineConfig:
     e2: Optional[EntityConfig] = None
     splitting: SplittingConfig = field(default_factory=SplittingConfig)
     filters: list = field(default_factory=list)
+
+    def __post_init__(self):
+        check_path_component(self.dataset_name, "dataset_name")
+        if self.e2 is not None and self.e2.name == self.e1.name:
+            raise ValueError(
+                f"e1 and e2 must have different names (both {self.e1.name!r}); each "
+                "entity's features are written to a directory named after it")
 
 
 def _parse_entity(raw: dict) -> EntityConfig:
