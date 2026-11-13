@@ -176,6 +176,65 @@ def ratio_summary(
     )
 
 
+def _fold_to_absolute(summary):
+    """Report a signed-residual ratio as an error magnitude with a folded interval."""
+    if summary.get("estimate") is not None:
+        summary["estimate"] = abs(summary["estimate"])
+        if summary.get("ci95") is not None:
+            lo, hi = summary["ci95"]
+            summary["ci95"] = [
+                0.0 if lo <= 0 <= hi else min(abs(lo), abs(hi)),
+                max(abs(lo), abs(hi)),
+            ]
+    return summary
+
+
+def _absolute_cut_error(signed, bounds, confidence, exact):
+    """Point and conservative upper estimate of |mean(signed cut residual)|.
+
+    This is the cut error in raw powered-kernel units (not normalized), used to
+    apply an absolute-error floor below which relative error is not meaningful.
+    """
+    signed = np.asarray(signed, dtype=np.float64)
+    if not len(signed):
+        return 0.0, 0.0
+    point = abs(float(signed.mean()))
+    if exact or len(signed) < 2:
+        return point, point
+    lo, hi = _mean_interval(signed, bounds, 1.0 - confidence)
+    return point, max(abs(lo), abs(hi))
+
+
+def _cut_acceptance(cut_rel, abs_upper, cut_mass, rel_tol, abs_floor):
+    """Decide whether the returned cut is trustworthy at the audited tolerance.
+
+    Accept when the (upper-bounded) cut-relative error clears ``rel_tol`` OR the
+    absolute cut error is below ``abs_floor``. When the cut mass is too small to
+    estimate a relative error and the absolute error is not below the floor, the
+    outcome is explicitly ``unresolved`` rather than a spuriously small ratio.
+    """
+    rel_est = cut_rel.get("estimate")
+    ci = cut_rel.get("ci95")
+    rel_upper = ci[1] if ci is not None else rel_est
+    below_floor = abs_upper <= abs_floor
+    if rel_est is None:
+        accepted = below_floor
+        status = "accepted_below_abs_floor" if accepted else "unresolved_low_cut_mass"
+    else:
+        rel_ok = rel_upper is not None and rel_upper <= rel_tol
+        accepted = bool(rel_ok or below_floor)
+        status = "accepted" if accepted else "rejected"
+    return dict(
+        accepted=bool(accepted),
+        status=status,
+        cut_relative_upper=None if rel_upper is None else float(rel_upper),
+        cut_absolute_upper=float(abs_upper),
+        cut_mass=float(cut_mass),
+        rel_tol=float(rel_tol),
+        abs_floor=float(abs_floor),
+    )
+
+
 def factor_pair_error(
     B,
     ref,
@@ -188,12 +247,25 @@ def factor_pair_error(
     confidence=0.95,
     labels=None,
     fold_weights=None,
+    cut_rel_tol=0.1,
+    cut_abs_floor=1e-3,
 ):
     """Entrywise MAE, or the absolute returned-cut error, relative to |kernel| mass.
 
     Exact checks enumerate the analytically nonzero support for small populations.
     For sampled cuts, bound the signed residual mean before taking its absolute
     value; this estimates cut error rather than the larger entrywise MAE.
+
+    When ``labels`` are given the result reports two complementary cut diagnostics:
+
+    * ``relative_pair_mae`` -- the historical normalization: absolute cut residual
+      relative to the *total* mean |kernel| mass across all audited pairs. A small
+      cut can pass a tolerance here while being badly wrong relative to its own size.
+    * ``cut_relative_error`` -- the signed cut residual relative to the *cut mass*
+      itself (|kernel| summed over crossing pairs). This is the quantity that
+      actually governs the split decision. It carries an ``acceptance`` verdict
+      combining ``cut_rel_tol`` with an absolute-error floor ``cut_abs_floor``, and
+      reports ``unresolved_low_cut_mass`` when the cut mass is too small to rank.
     """
     B = np.asarray(B)
     if B.ndim != 2 or len(B) != len(ref) or not np.isfinite(B).all():
@@ -235,8 +307,10 @@ def factor_pair_error(
         default=0.0,
     )
     bound = 1.0 + maximum_norm
+    weight_bound = 1.0
     if labels is None:
         numerator, nb = np.abs(residual), (0.0, bound)
+        weights = None
     else:
         labels = np.asarray(labels)
         weights = (
@@ -245,11 +319,13 @@ def factor_pair_error(
             else fold_weights[labels[i], labels[j]]
         )
         numerator = residual * weights
-        bound *= (
+        weight_bound = (
             max(1.0, float(np.max(fold_weights))) if fold_weights is not None else 1.0
         )
+        bound *= weight_bound
         nb = (-bound, bound)
-    if exact_population and np.all(truth == 0) and np.all(residual == 0):
+    proven_zero = exact_population and np.all(truth == 0) and np.all(residual == 0)
+    if proven_zero:
         summary = dict(
             estimate=0.0,
             standard_error=0.0,
@@ -265,15 +341,7 @@ def factor_pair_error(
             confidence=confidence,
             exact=exact_population,
         )
-    if labels is not None and summary["estimate"] is not None:
-        summary["estimate"] = abs(summary["estimate"])
-        if summary["ci95"] is not None:
-            lo, hi = summary["ci95"]
-            summary["ci95"] = [
-                0.0 if lo <= 0 <= hi else min(abs(lo), abs(hi)),
-                max(abs(lo), abs(hi)),
-            ]
-    return dict(
+    result = dict(
         relative_pair_mae=summary,
         criterion="cut_error" if labels is not None else "pair_mae",
         sample_pairs=len(i),
@@ -283,6 +351,43 @@ def factor_pair_error(
         exact=exact_population,
         confidence=float(confidence),
     )
+    if labels is None:
+        return result
+    # Historical metric: fold the signed cut residual to a magnitude.
+    _fold_to_absolute(summary)
+    # Cut-relative metric: residual normalized by the cut's own mass, plus the
+    # absolute cut error used for the acceptance floor.
+    cut_denominator = np.abs(truth) * weights
+    if proven_zero:
+        cut_relative = dict(
+            estimate=0.0,
+            standard_error=0.0,
+            ci95=[0.0, 0.0],
+            status="proven_zero_offdiagonal",
+            exact=True,
+        )
+    else:
+        cut_relative = _fold_to_absolute(
+            ratio_summary(
+                numerator,
+                cut_denominator,
+                numerator_bounds=nb,
+                denominator_bounds=(0.0, weight_bound),
+                confidence=confidence,
+                exact=exact_population,
+            )
+        )
+    abs_point, abs_upper = _absolute_cut_error(
+        numerator, nb, confidence, exact_population
+    )
+    cut_mass = float(cut_denominator.mean()) if len(cut_denominator) else 0.0
+    result["cut_relative_error"] = cut_relative
+    result["cut_absolute_error"] = dict(estimate=abs_point, upper=abs_upper)
+    result["acceptance"] = _cut_acceptance(
+        cut_relative, abs_upper, cut_mass, cut_rel_tol, cut_abs_floor
+    )
+    result["cut_normalization"] = "mean |kernel| mass over crossing pairs (the cut)"
+    return result
 
 
 def sampled_leakage(

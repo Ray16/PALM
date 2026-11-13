@@ -105,6 +105,61 @@ def test_invalid_input_is_not_silently_imputed(value):
         feature_matrix_from_dict({"a": [1.0, value], "b": [0.0, 1.0]})
 
 
+def test_small_cut_passes_mass_norm_but_fails_cut_relative_audit():
+    # A near-empty factor (gets the cut 100% wrong). The cut carries only a small
+    # fraction of total kernel mass, so the historical mass-normalized metric looks
+    # acceptable while the cut-relative metric correctly reports ~100% error.
+    a = np.zeros(15, dtype=np.float32)
+    a[:8] = 1.0
+    b = np.zeros(15, dtype=np.float32)
+    b[7:15] = 1.0  # tanimoto(a, b) = 1/15
+    X = np.vstack([a] * 5 + [b] * 5)
+    labels = np.array([0] * 5 + [1] * 5)
+    ref = prepare_reference(X, "tanimoto")
+    result = factor_pair_error(
+        np.zeros((10, 0), dtype=np.float32), ref, "tanimoto", labels=labels
+    )
+    assert result["exact"] and result["criterion"] == "cut_error"
+    # Mass-normalized metric is small (would "pass" a naive 0.1 tolerance)...
+    assert result["relative_pair_mae"]["estimate"] == pytest.approx(1 / 13, rel=1e-6)
+    # ...but the cut-relative metric exposes the ~100% error on the cut itself.
+    assert result["cut_relative_error"]["estimate"] == pytest.approx(1.0, rel=1e-6)
+    assert result["relative_pair_mae"]["estimate"] < 0.1 < result[
+        "cut_relative_error"
+    ]["estimate"]
+    assert result["acceptance"]["accepted"] is False
+    assert result["acceptance"]["status"] == "rejected"
+
+
+def test_near_zero_cut_mass_is_unresolved_not_spuriously_small():
+    # Orthogonal folds (zero true cut mass) with a nonzero factor: the cut residual
+    # is real but cannot be normalized by a vanishing cut mass -> unresolved.
+    X = np.eye(2, dtype=np.float32)[np.array([0] * 3 + [1] * 3)]
+    labels = np.array([0] * 3 + [1] * 3)
+    ref = prepare_reference(X, "tanimoto")
+    result = factor_pair_error(
+        np.full((6, 1), 0.5, dtype=np.float32), ref, "tanimoto", labels=labels
+    )
+    assert result["cut_relative_error"]["estimate"] is None
+    assert result["cut_absolute_error"]["upper"] > result["acceptance"]["abs_floor"]
+    assert result["acceptance"]["accepted"] is False
+    assert result["acceptance"]["status"] == "unresolved_low_cut_mass"
+
+
+def test_zero_cut_error_is_accepted_below_absolute_floor():
+    # Orthogonal folds with a factor that leaves no cut residual: the cut mass is
+    # zero but the absolute cut error is zero too, so the split is accepted.
+    X = np.eye(2, dtype=np.float32)[np.array([0] * 3 + [1] * 3)]
+    labels = np.array([0] * 3 + [1] * 3)
+    ref = prepare_reference(X, "tanimoto")
+    result = factor_pair_error(
+        np.zeros((6, 0), dtype=np.float32), ref, "tanimoto", labels=labels
+    )
+    assert result["cut_absolute_error"]["upper"] <= result["acceptance"]["abs_floor"]
+    assert result["acceptance"]["accepted"] is True
+    assert result["acceptance"]["status"] == "accepted_below_abs_floor"
+
+
 def test_exact_small_population_leakage_matches_dense_reference():
     X = np.eye(4, dtype=np.float32)[np.arange(40) % 4]
     labels = np.arange(40) % 3
