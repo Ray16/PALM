@@ -23,8 +23,14 @@ from PALM.splitters.common.pairwise_similarity import (pairwise_similarity,
 logger = logging.getLogger(__name__)
 
 # Similarity weights are floats in [0, 1]; Mt-KaHyPar needs positive integer
-# edge weights, so we scale before rounding.
+# edge weights, so we scale before rounding. Zero-similarity edges are dropped
+# (not given a baseline weight) and any positive similarity maps to >= 1.
 WEIGHT_SCALE = 1000
+
+
+def _sim_weight(sim: float) -> int:
+    """Integer Mt-KaHyPar weight ``max(1, round(sim * WEIGHT_SCALE))`` for sim > 0."""
+    return max(1, int(round(float(sim) * WEIGHT_SCALE)))
 
 
 def knn_torch(X, k, metric, block=4096):
@@ -68,7 +74,13 @@ def knn_sklearn(X, k, metric):
         Xf = StandardScaler().fit_transform(X)
     nn.fit(Xf)
     dist, idx = nn.kneighbors(Xf)
-    idx, dist = idx[:, 1:], dist[:, 1:]      # drop the self column
+    # Drop each row's own index explicitly: with duplicate vectors sklearn may
+    # rank a duplicate (distance 0) ahead of self, so "column 0 is self" is not
+    # safe. If self is absent from the k+1, drop the last (farthest) column.
+    drop = idx == np.arange(n)[:, None]
+    drop[~drop.any(axis=1), -1] = True
+    keep = ~drop
+    idx, dist = idx[keep].reshape(n, k), dist[keep].reshape(n, k)
     sim = 1.0 - dist if metric in ("tanimoto", "cosine") else 1.0 / (1.0 + dist)
     return idx, np.clip(sim, 0, None)
 
@@ -129,24 +141,29 @@ def build_knn_hyperedges(X, k=15, metric="tanimoto", use_gpu=True):
     """One weighted k-NN similarity hyperedge per node ({node} U k neighbours).
 
     Returns ``(hyperedges: list[list[int]], weights: list[int])``, weight =
-    ``round(mean_sim * WEIGHT_SCALE) + 1`` (>= 1).
+    ``max(1, round(mean_sim * WEIGHT_SCALE))`` over the k neighbours. Zero-
+    similarity neighbours are not pins, and a node with no positive-similarity
+    neighbour gets no hyperedge (so fewer than n hyperedges is possible).
     """
     neigh, sims = k_nearest_neighbors(X, k, metric, use_gpu=use_gpu)
     hyperedges, weights = [], []
     for i in range(neigh.shape[0]):
-        members = [i] + [int(j) for j in neigh[i]]
-        w = int(round(float(sims[i].mean()) * WEIGHT_SCALE)) + 1
+        pos = sims[i] > 0
+        if not pos.any():
+            continue
+        members = [i] + [int(j) for j in neigh[i][pos]]
         hyperedges.append(members)
-        weights.append(w)
+        weights.append(_sim_weight(sims[i].mean()))
     return hyperedges, weights
 
 
 def build_knn_graph(X, k=15, metric="tanimoto", threshold=None, max_deg=256, use_gpu=True):
     """Symmetrized weighted k-NN graph. Returns ``(edges, weights)``.
 
-    Each undirected edge weight is ``round(sim * WEIGHT_SCALE) + 1`` (keeping the
-    max similarity per pair) so an integer CUT objective sums to the (scaled)
-    cross-split similarity — the leakage numerator.
+    Each undirected edge weight is ``max(1, round(sim * WEIGHT_SCALE))`` (keeping
+    the max similarity per pair; zero-similarity pairs are dropped) so an integer
+    CUT objective sums to the (scaled) cross-split similarity — the leakage
+    numerator.
     """
     n = X.shape[0]
     if use_gpu:
@@ -167,6 +184,10 @@ def build_knn_graph(X, k=15, metric="tanimoto", threshold=None, max_deg=256, use
     if len(rows) == 0:
         return [], []
 
+    pos = (sims > 0) & (rows != cols)
+    rows, cols, sims = rows[pos], cols[pos], sims[pos]
+    if len(rows) == 0:
+        return [], []
     a = np.minimum(rows, cols).astype(np.int64)
     b = np.maximum(rows, cols).astype(np.int64)
     key = a * n + b
@@ -176,5 +197,5 @@ def build_knn_graph(X, k=15, metric="tanimoto", threshold=None, max_deg=256, use
     ua = (uniq // n).astype(int)
     ub = (uniq % n).astype(int)
     edges = list(zip(ua.tolist(), ub.tolist()))
-    weights = [int(round(float(x) * WEIGHT_SCALE)) + 1 for x in w]
+    weights = [_sim_weight(x) for x in w]
     return edges, weights

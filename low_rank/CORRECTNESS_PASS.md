@@ -59,7 +59,7 @@ all-restarts study has 242/243 completed observations and one confirmed 600-s
 QM8 timeout; that observation is not counted as a success. Its cost informed the
 bounded default before any predictive outcomes were examined.
 
-See [../../publications/lowrank_2026/correctness_20261025/FINDINGS.md](../../publications/lowrank_2026/correctness_20261025/FINDINGS.md),
+See [publications/lowrank_2026/correctness_20261025/FINDINGS.md](https://github.com/Ray16/PALM/blob/a171cfd0a3cc42feefa10b05a41c6eff1f80c5ff/publications/lowrank_2026/correctness_20261025/FINDINGS.md),
 `summary.json`, per-case records, `verified_run/pipeline_review.json` and the
 verification directory. No hypergraph baseline is used. The running app and
 published manuscript remain on their separately reviewed release.

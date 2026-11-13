@@ -1,8 +1,0 @@
-{
-  "passed": true,
-  "rows": 4,
-  "max_metric_discrepancy": 0.0,
-  "scope": "Fresh offline recorded-formula evaluation with included original numerical implementation; timings excluded",
-  "additional_download_bytes": 0,
-  "tests": "11 metadata and weighted-comparison tests passed"
-}

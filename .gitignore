@@ -261,3 +261,7 @@ tests/output/
 # Local reference material (third-party papers, slides) - not for the public repo
 docs/paper/
 docs/presentation/
+
+# Frozen manuscript evidence: kept locally. The published copy is preserved at
+# commit a171cfd (cited by the manuscript); do not re-add it to main.
+/publications/

@@ -1,6 +1,6 @@
 # Multi-molecule SDF file — 1D molecule splitting
-input_file: "/nfs/lambda_stor_01/homes/rzhu/PALM/tests/data/molecules.sdf"
-output_dir: "/nfs/lambda_stor_01/homes/rzhu/PALM/tests/output/sdf_molecules"
+input_file: "PALM/tests/data/molecules.sdf"
+output_dir: "PALM/tests/output/sdf_molecules"
 dataset_name: "sdf_molecules"
 
 e1:

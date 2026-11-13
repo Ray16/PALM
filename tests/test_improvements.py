@@ -1,5 +1,5 @@
 """Tests for improvement features: config validation, cache versioning,
-error handling, webapp security, and edge cases.
+error handling and edge cases.
 
 Run: python -m pytest PALM/tests/test_improvements.py -v
   or: python PALM/tests/test_improvements.py
@@ -101,7 +101,7 @@ def test_cache_versioning():
     entities = {"a": "CCO", "b": "CC"}
 
     # Check that CACHE_VERSION exists
-    check("CACHE_VERSION exists", hasattr(sys.modules['PALM.cache'], 'CACHE_VERSION'))
+    check("CACHE_VERSION exists", hasattr(sys.modules['PALM.benchmarks.datasail_pipeline.cache'], 'CACHE_VERSION'))
 
     # Same inputs should give same key
     key1 = _cache_key(entities, "molecule", ["rdkit_descriptors"])
@@ -278,25 +278,6 @@ def test_biomolecule_features():
     check("Empty sequence returns zeros", sp_empty["length"] == 0)
 
 
-# ── Webapp security tests ────────────────────────────────────────────────
-
-def test_webapp_security():
-    """Test webapp security measures."""
-    print("\n=== Webapp Security ===")
-    from pathlib import Path
-
-    # Test path traversal prevention
-    safe = Path("../../../etc/passwd").name
-    check("Path traversal sanitized", safe == "passwd")
-    check("Path traversal detected", safe != "../../../etc/passwd")
-
-    # Test that PALM_CORS_ORIGINS env var is respected
-    from PALM.webapp.app import _allowed_origins, MAX_UPLOAD_BYTES, RATE_LIMIT_MAX
-    check("CORS origins configured", _allowed_origins is not None)
-    check("Upload size limit set", MAX_UPLOAD_BYTES > 0)
-    check("Rate limit configured", RATE_LIMIT_MAX > 0)
-
-
 # ── ML export tests ──────────────────────────────────────────────────────
 
 def test_ml_exports():
@@ -358,7 +339,6 @@ if __name__ == "__main__":
     test_molecule_features()
     test_gene_features()
     test_biomolecule_features()
-    test_webapp_security()
     test_ml_exports()
 
     print(f"\n{'='*50}")

@@ -22,6 +22,7 @@ from __future__ import annotations
 import logging
 import time
 from collections import defaultdict
+from itertools import combinations
 from dataclasses import dataclass
 from typing import Dict, List, Optional
 
@@ -32,7 +33,7 @@ from PALM.splitters.common.feature_preparation import choose_metric
 from PALM.splitters.common.leakage_metrics import macro_axis_lpi
 from PALM.splitters.common.split_naming import assign_split_names
 
-from .knn import build_knn_hyperedges
+from .knn import WEIGHT_SCALE, build_knn_hyperedges
 from .partition import partition_hypergraph
 
 logger = logging.getLogger(__name__)
@@ -47,7 +48,8 @@ class NDInput:
 
     ``records``: list of ``{axis_name: component_value}`` (one per record).
     ``axis_feature_maps``: ``{axis_name: {value: feature_vector or None}}``;
-    None / all-zero features -> identity-only hyperedges on that axis.
+    None / all-zero features -> identity hyperedges (records sharing the value)
+    on that axis, in both n-D splitters.
     """
 
     records: List[dict]
@@ -69,6 +71,11 @@ def _cluster_axis(values, feat, sim_threshold):
     Returns ``{value: cluster_label}``. Values with no feature vector (or an
     all-zero one) fall back to their own identity cluster. ``sim_threshold`` is
     the minimum similarity to merge; 1.0 -> pure identity (no merging).
+
+    Average linkage on the distance ``d`` paired with each metric's similarity
+    (as in :mod:`.knn`): ``d = 1 - sim`` for tanimoto/cosine, and for euclidean
+    ``sim = 1 / (1 + d)`` on z-scored columns, i.e. ``d_max = 1/sim_threshold - 1``
+    — so raising ``sim_threshold`` always permits only *closer* merges.
     """
     feats = [feat.get(v) for v in values]
     has_feat = [f is not None and np.any(f) for f in feats]
@@ -78,19 +85,18 @@ def _cluster_axis(values, feat, sim_threshold):
 
     X = np.asarray([feats[i] for i in idx], dtype=float)
     metric = choose_metric(X)
+    from scipy.spatial.distance import pdist, squareform
     from sklearn.cluster import AgglomerativeClustering
     from sklearn.preprocessing import StandardScaler
     if metric in ("tanimoto", "cosine"):
-        from scipy.spatial.distance import pdist, squareform
         D = squareform(pdist(X, metric="jaccard" if metric == "tanimoto" else "cosine"))
-        cl = AgglomerativeClustering(n_clusters=None, metric="precomputed",
-                                     linkage="average", distance_threshold=1.0 - sim_threshold)
-        lab = cl.fit_predict(D)
+        d_max = 1.0 - sim_threshold
     else:
-        Xs = StandardScaler().fit_transform(X)
-        cl = AgglomerativeClustering(n_clusters=None, linkage="ward",
-                                     distance_threshold=float(sim_threshold))
-        lab = cl.fit_predict(Xs)
+        D = squareform(pdist(StandardScaler().fit_transform(X), metric="euclidean"))
+        d_max = 1.0 / sim_threshold - 1.0 if sim_threshold > 0 else np.inf
+    cl = AgglomerativeClustering(n_clusters=None, metric="precomputed",
+                                 linkage="average", distance_threshold=float(d_max))
+    lab = cl.fit_predict(D)
 
     labels = {}
     for j, i in enumerate(idx):
@@ -99,6 +105,32 @@ def _cluster_axis(values, feat, sim_threshold):
         if not h:
             labels[values[i]] = f"id::{values[i]}"
     return labels
+
+
+def _axis_overlap(records, axes, assignment, names):
+    """Per-axis component-value overlap between splits.
+
+    ``shared_across_splits`` counts values appearing in >1 split (the leakage-
+    relevant count), ``shared_all_splits`` those in every split, and
+    ``pairwise_shared`` the count for each split pair ``"a|b"``.
+    """
+    overlap = {}
+    for axis in axes:
+        by_split = {nm: set() for nm in names}
+        for i, r in enumerate(records):
+            by_split[assignment[i]].add(str(r[axis]))
+        n_in = defaultdict(int)
+        for vals in by_split.values():
+            for v in vals:
+                n_in[v] += 1
+        overlap[axis] = {
+            "n_values": len(n_in),
+            "shared_across_splits": sum(1 for c in n_in.values() if c > 1),
+            "shared_all_splits": sum(1 for c in n_in.values() if c == len(names)),
+            "pairwise_shared": {f"{a}|{b}": len(by_split[a] & by_split[b])
+                                for a, b in combinations(names, 2)},
+        }
+    return overlap
 
 
 def _nd_leakage(records, afm, labels):
@@ -151,26 +183,18 @@ class HypergraphNDSplitter(BaseSplitter):
         if not hyperedges:
             raise ValueError("No non-trivial hyperedges; cannot split (check component variety)")
 
-        block_of, km1, imbalance = partition_hypergraph(
+        block_of, km1, imbalance, binfo = partition_hypergraph(
             n, hyperedges, weights, spec.splits, seed=spec.seed,
-            threads=p.threads, epsilon=spec.epsilon, preset=p.preset)
+            threads=p.threads, epsilon=spec.epsilon, preset=p.preset, return_info=True)
         labels = np.asarray(block_of)
         assignment = assign_split_names(list(range(n)), labels, spec.splits, spec.names)
-
-        # per-axis identity overlap (values appearing in >1 split)
-        overlap = {}
-        for axis in axes:
-            by_split = defaultdict(set)
-            for i, r in enumerate(records):
-                by_split[assignment[i]].add(str(r[axis]))
-            shared = set.intersection(*by_split.values()) if len(by_split) > 1 else set()
-            overlap[axis] = {"n_values": len({str(r[axis]) for r in records}),
-                             "shared_across_splits": len(shared)}
+        overlap = _axis_overlap(records, axes, assignment, spec.names)
 
         leak, per_axis = _nd_leakage(records, afm, labels)
         return self._result(assignment, spec, time.time() - t0, km1=int(km1),
                             imbalance=round(imbalance, 4), n_hyperedges=len(hyperedges),
-                            axis_overlap=overlap, leakage=leak, axis_leakage=per_axis)
+                            axis_overlap=overlap, leakage=leak, axis_leakage=per_axis,
+                            **binfo)
 
 
 @register("hypergraph_nd_knn")
@@ -191,39 +215,48 @@ class HypergraphNDKnnSplitter(BaseSplitter):
         records, afm = nd.records, nd.axis_feature_maps
         n = len(records)
 
-        all_edges, all_w = [], []
+        # Per axis: k-NN hyperedges over records that carry a (non-zero) feature
+        # vector, and identity hyperedges (records sharing the same value) for
+        # the rest — the same feature-or-identity similarity macro_axis_lpi
+        # reports, so the optimized and reported objectives agree.
+        all_edges, all_w, coverage = [], [], {}
         for axis in afm:
             vals = [str(r[axis]) for r in records]
             feat_map = afm[axis]
-            dim = 0
-            for v in vals:
-                f = feat_map.get(v)
-                if f is not None and np.any(f):
-                    dim = len(np.asarray(f).ravel()); break
-            if not dim:
-                continue
             idx_keep, rows = [], []
             for i, v in enumerate(vals):
                 f = feat_map.get(v)
                 if f is not None and np.any(f):
                     idx_keep.append(i); rows.append(np.asarray(f, dtype=np.float32).ravel())
-            if len(idx_keep) < 3:
-                continue
-            X = np.vstack(rows)
-            edges, w = build_knn_hyperedges(X, k=min(p.k, len(idx_keep) - 1),
-                                            metric=choose_metric(X), use_gpu=True)
-            remap = np.asarray(idx_keep)
-            for e, ww in zip(edges, w):
-                all_edges.append([int(remap[j]) for j in e]); all_w.append(ww)
+            if len(idx_keep) < 3:          # too few for k-NN: identity only
+                idx_keep, rows = [], []
+            coverage[axis] = round(len(idx_keep) / n, 4) if n else 0.0
+            if idx_keep:
+                X = np.vstack(rows)
+                edges, w = build_knn_hyperedges(X, k=min(p.k, len(idx_keep) - 1),
+                                                metric=choose_metric(X), use_gpu=True)
+                remap = np.asarray(idx_keep)
+                for e, ww in zip(edges, w):
+                    all_edges.append([int(remap[j]) for j in e]); all_w.append(ww)
+            has = set(idx_keep)
+            groups = defaultdict(list)
+            for i, v in enumerate(vals):
+                if i not in has:
+                    groups[v].append(i)
+            for members in groups.values():   # identity similarity 1 -> full weight
+                if 2 <= len(members) < n:
+                    all_edges.append(members); all_w.append(WEIGHT_SCALE)
         if not all_edges:
-            raise ValueError("No k-NN hyperedges built (no axis had usable features)")
+            raise ValueError("No hyperedges built (no axis had usable features or "
+                             "recurring values)")
 
-        block_of, km1, imbalance = partition_hypergraph(
+        block_of, km1, imbalance, binfo = partition_hypergraph(
             n, all_edges, all_w, spec.splits, seed=spec.seed,
-            threads=p.threads, epsilon=spec.epsilon, preset=p.preset)
+            threads=p.threads, epsilon=spec.epsilon, preset=p.preset, return_info=True)
         labels = np.asarray(block_of)
         assignment = assign_split_names(list(range(n)), labels, spec.splits, spec.names)
         leak, per_axis = _nd_leakage(records, afm, labels)
         return self._result(assignment, spec, time.time() - t0, km1=int(km1),
                             imbalance=round(imbalance, 4), n_hyperedges=len(all_edges),
-                            leakage=leak, axis_leakage=per_axis)
+                            leakage=leak, axis_leakage=per_axis,
+                            axis_feature_coverage=coverage, **binfo)

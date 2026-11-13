@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PALM Data Splitting — leakage-aware train/test splits</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%232a78d6'/%3E%3Cpath d='M5 7h6M5 12h6M5 17h6M14 7h5M14 12h5M14 17h5' stroke='white' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/app.css">
+<script src="/static/vendor/plotly.min.js" defer></script>
+<script src="/static/app.js" defer></script>
+</head>
+<body>
+
+<header class="appbar">
+  <div class="appbar-inner">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h7M4 12h7M4 18h7M15 6h5M15 12h5M15 18h5"/></svg>
+      </div>
+      <div>
+        <div class="brand-name">PALM Data Splitting</div>
+        <div class="brand-sub">Leakage-aware splits · DataSAIL · Hypergraph · Low-rank</div>
+      </div>
+    </div>
+    <div class="appbar-spacer"></div>
+    <nav class="stepper" aria-label="Progress">
+      <button class="step active" data-step="1"><span class="dot">1</span>Data</button>
+      <span class="step-sep"></span>
+      <button class="step" data-step="2"><span class="dot">2</span>Configure</button>
+      <span class="step-sep"></span>
+      <button class="step" data-step="3"><span class="dot">3</span>Run</button>
+      <span class="step-sep"></span>
+      <button class="step" data-step="4"><span class="dot">4</span>Results</button>
+    </nav>
+    <button class="runs-btn" id="runs-btn" title="All splitting runs">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+      Runs <span class="count hidden" id="runs-count"></span>
+    </button>
+    <button class="icon-btn" id="theme-btn" title="Toggle light/dark theme" aria-label="Toggle theme">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+
+<!-- ═══════════════ 1 · DATA ═══════════════ -->
+<section class="panel active" id="p1">
+  <div class="page-head">
+    <h1>Bring your dataset</h1>
+    <p>Upload molecules, proteins, materials, nucleic acids or interaction data, or start from a curated demo.
+       Compare how each method controls similarity across train, validation and test.</p>
+  </div>
+
+  <div id="upload-error" class="alert alert-error hidden"></div>
+
+  <div class="cols cols-2">
+    <div class="card">
+      <div class="card-head"><div class="card-title">Upload a file</div></div>
+      <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Upload a dataset file">
+        <div class="dropzone-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+        </div>
+        <h3>Drop a file here or <span class="linkish">browse</span></h3>
+        <p>or <button class="linkish" id="folder-link" type="button">upload a folder</button> of structure files (SDF, CIF, PDB, XYZ)</p>
+        <div class="formats">
+          <span>CSV</span><span>JSON</span><span>SDF</span><span>SMI</span><span>FASTA</span><span>PDB</span>
+          <span>mmCIF</span><span>CIF</span><span>XYZ</span><span>MOL2</span><span>ASE DB</span><span>ZIP</span>
+        </div>
+      </div>
+      <input type="file" id="file-input" class="hidden" multiple
+             accept=".csv,.tsv,.json,.sdf,.smi,.smiles,.fasta,.fa,.faa,.pdb,.cif,.mmcif,.mol,.mol2,.xyz,.db,.zip">
+      <input type="file" id="folder-input" class="hidden" webkitdirectory>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">Try a demo dataset</div>
+        <div class="card-sub">Pre-configured, public benchmarks</div>
+      </div>
+      <div class="demo-grid" id="demo-grid"><div class="hint">Loading demos…</div></div>
+    </div>
+  </div>
+
+  <div class="card hidden" id="dataset-card">
+    <div class="card-head">
+      <div class="file-chip" id="file-chip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>
+        <span id="file-chip-text"></span>
+      </div>
+      <div class="card-sub" id="detect-text"></div>
+    </div>
+    <div class="stats" id="stats"></div>
+    <div class="section-label">Preview · first 10 rows</div>
+    <div class="table-wrap"><table class="data" id="preview-table"></table></div>
+    <div class="actions">
+      <button class="btn btn-primary" id="to-config">Continue to configuration
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ 2 · CONFIGURE ═══════════════ -->
+<section class="panel" id="p2">
+  <div class="page-head">
+    <h1>Configure the split</h1>
+    <p>Choose what to split on, how to featurize it, and which methods to compare. The data map on the right shows
+       the embedding the splitters see.</p>
+  </div>
+
+  <div class="cols cols-config">
+    <div>
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Entities</div>
+          <div class="segmented" id="mode-seg" role="radiogroup" aria-label="Splitting mode">
+            <button data-mode="1d">Single entity · 1D</button>
+            <button data-mode="2d">Interaction · 2D</button>
+          </div>
+        </div>
+        <p class="hint" id="mode-hint" style="margin-bottom:.85rem"></p>
+
+        <div class="entity" id="entity-e1">
+          <div class="entity-head"><span class="axis-tag">e1</span><span id="e1-title">Entity</span></div>
+          <div class="row">
+            <div class="field"><label for="e1-name">Name</label><input class="input" id="e1-name" value="entity_1"></div>
+            <div class="field"><label for="e1-type">Type</label>
+              <select class="input" id="e1-type">
+                <option value="molecule">Molecule (SMILES)</option>
+                <option value="biomolecule">Protein (sequence)</option>
+                <option value="gene">DNA / RNA (sequence)</option>
+                <option value="material">Material (formula / structure)</option>
+              </select></div>
+          </div>
+          <div class="field"><label for="e1-col">Column</label><select class="input" id="e1-col"></select></div>
+          <div class="field"><span class="field-label">Features</span><div class="pills" id="e1-feats"></div></div>
+        </div>
+
+        <div class="entity" id="entity-e2">
+          <div class="entity-head"><span class="axis-tag">e2</span><span>Second entity</span></div>
+          <div class="row">
+            <div class="field"><label for="e2-name">Name</label><input class="input" id="e2-name" value="entity_2"></div>
+            <div class="field"><label for="e2-type">Type</label>
+              <select class="input" id="e2-type">
+                <option value="molecule">Molecule (SMILES)</option>
+                <option value="biomolecule" selected>Protein (sequence)</option>
+                <option value="gene">DNA / RNA (sequence)</option>
+                <option value="material">Material (formula / structure)</option>
+              </select></div>
+          </div>
+          <div class="field"><label for="e2-col">Column</label><select class="input" id="e2-col"></select></div>
+          <div class="field"><span class="field-label">Features</span><div class="pills" id="e2-feats"></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div class="card-title">Split</div></div>
+        <div class="row">
+          <div class="field"><label for="ratio">Proportions</label>
+            <select class="input" id="ratio">
+              <option value="70/30">Train 70 · Test 30</option>
+              <option value="80/20" selected>Train 80 · Test 20</option>
+              <option value="90/10">Train 90 · Test 10</option>
+              <option value="70/15/15">Train 70 · Val 15 · Test 15</option>
+              <option value="80/10/10">Train 80 · Val 10 · Test 10</option>
+            </select></div>
+          <div class="field"><label for="dataset-name">Dataset name</label>
+            <input class="input" id="dataset-name" value="dataset" spellcheck="false"></div>
+        </div>
+        <div class="divider"></div>
+        <div class="section-label">Methods to compare</div>
+        <div id="tech-groups"></div>
+        <label class="tech hidden" id="incomplete-opt" style="margin-top:.85rem">
+          <input type="checkbox" id="allow-incomplete">
+          <div>
+            <div class="tech-name">Allow incomplete splits</div>
+            <div class="tech-desc">Double-cold DataSAIL methods (I2, C2) drop every interaction whose two entities land in
+              different splits. Enable to accept those partial splits instead of rejecting them.</div>
+          </div>
+        </label>
+        <div id="config-error" class="alert alert-error hidden" style="margin-top:1rem"></div>
+        <div class="actions between">
+          <button class="btn btn-ghost" data-goto="1">Back</button>
+          <button class="btn btn-primary" id="run-btn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg>Run splitting</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sticky">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Data distribution</div>
+            <div class="card-sub">t-SNE of the entity embedding</div>
+          </div>
+          <div class="segmented hidden" id="explore-axis"></div>
+        </div>
+        <div class="map-toolbar">
+          <button class="btn btn-secondary btn-sm" id="map-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="7" r="2"/><circle cx="17" cy="6" r="2"/><circle cx="9" cy="17" r="2"/><circle cx="18" cy="16" r="2"/></svg>
+            Compute map</button>
+          <span class="grow"></span>
+          <label class="hint" for="color-by">Colour by</label>
+          <select class="input" id="color-by"></select>
+          <select class="input hidden" id="highlight" aria-label="Highlight category"></select>
+        </div>
+        <div class="map-box">
+          <div class="map-plot" id="explore-plot"></div>
+          <div class="map-empty" id="explore-empty">
+            <div class="inner">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round"><circle cx="6" cy="7" r="2"/><circle cx="17" cy="6" r="2"/><circle cx="9" cy="17" r="2"/><circle cx="18" cy="16" r="2"/><circle cx="12" cy="11" r="1.5"/></svg>
+              <div id="explore-msg">Compute a 2-D map of the selected entity column using the features chosen on the left.</div>
+            </div>
+          </div>
+        </div>
+        <div id="explore-legend"></div>
+        <div class="map-meta"><span id="explore-meta"></span><span>Scroll or pinch to zoom · drag to pan · double-click to reset</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ 3 · RUN ═══════════════ -->
+<section class="panel" id="p3">
+  <div class="page-head head-row">
+    <div>
+      <h1 id="run-title">Run</h1>
+      <p id="run-sub"></p>
+    </div>
+    <div class="head-actions">
+      <button class="btn btn-secondary" id="another-run">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Submit another run</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="run-status">
+      <span class="badge running" id="run-badge"><span class="bdot"></span><span id="run-badge-text">Running</span></span>
+      <span class="hint" id="run-elapsed"></span>
+    </div>
+    <div class="progress"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="progress-meta"><span id="progress-label">Starting…</span><span id="progress-pct">0%</span></div>
+    <div class="phases" id="phases">
+      <div class="phase" data-at="0"><span class="pdot"></span>Load data</div>
+      <div class="phase" data-at="20"><span class="pdot"></span>Extract entities</div>
+      <div class="phase" data-at="30"><span class="pdot"></span>Featurize</div>
+      <div class="phase" data-at="72"><span class="pdot"></span>Split</div>
+      <div class="phase" data-at="92"><span class="pdot"></span>Evaluate &amp; export</div>
+    </div>
+    <div class="section-label">Log</div>
+    <div class="console" id="console" role="log" aria-live="polite"></div>
+    <div class="actions between">
+      <button class="btn btn-ghost hidden" id="cancel-run">Cancel run</button>
+      <span></span>
+      <button class="btn btn-primary hidden" id="to-results">View results</button>
+    </div>
+    <p class="hint" style="margin-top:.6rem">You can leave this page — runs keep going on the server. Find them any time under <b>Runs</b>.</p>
+  </div>
+</section>
+
+<!-- ═══════════════ 4 · RESULTS ═══════════════ -->
+<section class="panel" id="p4">
+  <div class="page-head">
+    <h1>Results</h1>
+    <p id="results-sub">Compare leakage across methods, inspect where each split puts your data, and download.</p>
+  </div>
+
+  <div class="rec hidden" id="rec">
+    <div class="rec-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.6" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+    <div><div class="rec-title" id="rec-title"></div><div class="rec-sub" id="rec-sub"></div></div>
+  </div>
+
+  <div class="tiles" id="tiles"></div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">Method comparison</div>
+      <div class="card-sub">Recommended first, then other Pareto-optimal methods · ✓ = Pareto-optimal (not dominated among valid splits)</div>
+    </div>
+    <div class="cmp-wrap"><table class="cmp" id="cmp-table"></table></div>
+    <div class="metric-note" id="metric-note"></div>
+    <div class="failed-list" id="failed-list"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <div class="card-title">Where each split puts your data</div>
+        <div class="card-sub">Same t-SNE layout as the data map, coloured by assigned split</div>
+      </div>
+      <div class="segmented hidden" id="result-axis"></div>
+    </div>
+    <div class="map-toolbar"><div class="segmented" id="tech-seg"></div></div>
+    <div class="result-grid">
+      <div>
+        <div class="map-box map-box-tall">
+          <div class="map-plot" id="result-plot"></div>
+          <div class="map-empty" id="result-empty"><div class="inner" id="result-msg">Preparing map…</div></div>
+        </div>
+        <div id="result-legend"></div>
+      </div>
+      <aside class="method-panel" id="method-panel" aria-live="polite"></aside>
+    </div>
+    <div class="map-meta"><span id="result-meta"></span><span id="result-meta-2d" class="hidden">“multiple” = entity with rows in more than one split</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">Downloads</div>
+      <button class="btn btn-primary btn-sm" id="dl-all">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 4v12M7 11l5 5 5-5M4 20h16"/></svg>All results (.zip)</button>
+    </div>
+    <div class="downloads" id="downloads"></div>
+  </div>
+
+  <div class="card">
+    <details class="figs">
+      <summary>Pipeline figures (static PNGs, included in the download)</summary>
+      <div class="fig-grid" id="figs"></div>
+    </details>
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-secondary" data-goto="2">Adjust configuration</button>
+    <button class="btn btn-ghost" id="restart">Start over</button>
+  </div>
+</section>
+
+<!-- ═══════════════ RUNS ═══════════════ -->
+<section class="panel" id="p5">
+  <div class="page-head head-row">
+    <div>
+      <h1>Runs</h1>
+      <p id="runs-sub">Every splitting run you submit from this browser.</p>
+    </div>
+    <div class="head-actions">
+      <button class="btn btn-primary" id="runs-new">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>New run</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="runs-list" id="runs-list"></div>
+    <div class="map-empty-static hidden" id="runs-empty">
+      No runs yet. Load a dataset, configure it and press <b>Run splitting</b> — you can submit several and come back here to follow them.
+    </div>
+  </div>
+</section>
+
+</main>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<footer>Splitters: DataSAIL (Joeres et al.) · PALM hypergraph (Mt-KaHyPar) · low-rank Nyström. <span id="retention"></span></footer>
+</body>
+</html>

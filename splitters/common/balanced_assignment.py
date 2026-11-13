@@ -1,10 +1,11 @@
 """Split-ratio bookkeeping: exact target sizes, the capacity corridor, and a
 balanced greedy assignment.
 
-Extracted from ``lowrank_split`` (``_target_sizes``, ``_capacities``,
-``_balanced_assign``) — the cleanest existing copies. The hypergraph backend's
-inline ``block_caps``/floors were the same expressions and now call
-:func:`capacity_corridor`.
+Shared by the splitter backends. :func:`capacity_corridor` is the loose
+corridor used as move bounds by the FM polish; the hypergraph partitioner
+enforces the strict two-sided corridor (``PALM.hypergraph.partition.balance_corridor``)
+on its final labels. Extracted from ``lowrank_split`` (``_target_sizes``,
+``_capacities``, ``_balanced_assign``) — the cleanest existing copies.
 """
 
 from __future__ import annotations

@@ -1,0 +1,18 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:7860:7860"
+    volumes:
+      - palm-data:/data
+    environment:
+      PALM_AUTH_USER: ${PALM_AUTH_USER:-palm}
+      PALM_AUTH_PASSWORD: ${PALM_AUTH_PASSWORD:?Set a private app password before starting}
+    cpus: 2.0
+    mem_limit: 8g
+    pids_limit: 128
+    security_opt:
+      - no-new-privileges:true
+volumes:
+  palm-data:

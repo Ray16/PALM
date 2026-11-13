@@ -2,7 +2,7 @@
 
 This is the canonical development package. In the PALM repository the manuscript
 producer remains frozen in
-[`../publications/lowrank_2026/package`](../publications/lowrank_2026/package) (v0.2.0.dev3).
+[`publications/lowrank_2026/package` at commit a171cfd](https://github.com/Ray16/PALM/tree/a171cfd0a3cc42feefa10b05a41c6eff1f80c5ff/publications/lowrank_2026/package) (v0.2.0.dev3).
 
 Exact-count refinement now batches shortlist similarity calculations for dense
 and CSR factors. Candidate coverage and count constraints are unchanged. The

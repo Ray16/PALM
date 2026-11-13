@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 def generate_split_plots(feature_data, split_assignments, output_dir,
                          dataset_name, entity_name, technique,
                          split_names=("train", "test"), method="tsne",
-                         precomputed_coords=None):
+                         precomputed_coords=None, seed=42):
     """Generate a 2D scatter plot of entities colored by split assignment.
 
     Args:
@@ -25,6 +25,7 @@ def generate_split_plots(feature_data, split_assignments, output_dir,
         method: "tsne" or "umap"
         precomputed_coords: optional (names, coords) tuple from a previous
             dimensionality reduction to avoid recomputing t-SNE/UMAP.
+        seed: random_state for t-SNE/UMAP.
 
     Returns:
         Path to the saved PNG, or None on failure.
@@ -50,9 +51,9 @@ def generate_split_plots(feature_data, split_assignments, output_dir,
         if list(pre_names) == names:
             coords = pre_xy
         else:
-            coords = _reduce(X, method)
+            coords = _reduce(X, method, seed=seed)
     else:
-        coords = _reduce(X, method)
+        coords = _reduce(X, method, seed=seed)
     if coords is None:
         logger.warning("  Dimensionality reduction returned None for %s/%s, skipping plot",
                         technique, entity_name)
@@ -69,6 +70,8 @@ def generate_split_plots(feature_data, split_assignments, output_dir,
         "validation": "#d97706",
         "unassigned": "#94a3b8",
         "not selected": "#94a3b8",
+        # 2D: entity whose interactions span more than one split
+        "multiple": "#111827",
     }
     default_colors = ["#2563eb", "#dc2626", "#d97706", "#16a34a", "#7c3aed"]
     for i, sn in enumerate(split_names):
@@ -77,7 +80,7 @@ def generate_split_plots(feature_data, split_assignments, output_dir,
 
     # Plot
     fig, ax = plt.subplots(figsize=(8, 6))
-    for sn in list(split_names) + ["unassigned", "not selected"]:
+    for sn in list(split_names) + ["multiple", "unassigned", "not selected"]:
         mask = [l == sn for l in labels]
         if not any(mask):
             continue
@@ -105,7 +108,7 @@ def generate_split_plots(feature_data, split_assignments, output_dir,
     return path
 
 
-def _reduce(X, method):
+def _reduce(X, method, seed=42):
     """Reduce feature matrix to 2D."""
     from sklearn.preprocessing import StandardScaler
 
@@ -131,7 +134,7 @@ def _reduce(X, method):
     if method == "umap":
         try:
             from umap import UMAP
-            reducer = UMAP(n_components=2, random_state=42, n_neighbors=min(15, X_scaled.shape[0] - 1))
+            reducer = UMAP(n_components=2, random_state=seed, n_neighbors=min(15, X_scaled.shape[0] - 1))
             return reducer.fit_transform(X_scaled)
         except ImportError:
             logger.info("  umap-learn not installed, falling back to t-SNE")
@@ -140,8 +143,12 @@ def _reduce(X, method):
     if method == "tsne":
         from sklearn.manifold import TSNE
         perplexity = min(30, max(2, X_scaled.shape[0] // 4))
-        tsne = TSNE(n_components=2, random_state=42, perplexity=perplexity,
-                     max_iter=1000)
+        # sklearn >= 1.5 renamed n_iter -> max_iter; support both.
+        import inspect
+        iter_kw = ("max_iter" if "max_iter" in inspect.signature(TSNE).parameters
+                   else "n_iter")
+        tsne = TSNE(n_components=2, random_state=seed, perplexity=perplexity,
+                    **{iter_kw: 1000})
         return tsne.fit_transform(X_scaled)
 
     logger.warning(f"  Unknown reduction method: {method}")

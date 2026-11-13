@@ -1,6 +1,6 @@
 # SMILES file — 1D molecule splitting
-input_file: "/nfs/lambda_stor_01/homes/rzhu/PALM/tests/data/molecules.smi"
-output_dir: "/nfs/lambda_stor_01/homes/rzhu/PALM/tests/output/smiles_molecules"
+input_file: "PALM/tests/data/molecules.smi"
+output_dir: "PALM/tests/output/smiles_molecules"
 dataset_name: "smiles_molecules"
 
 e1:

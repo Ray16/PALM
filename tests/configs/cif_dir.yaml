@@ -1,6 +1,6 @@
 # Directory of material CIF files — 1D material splitting
-input_file: "/nfs/lambda_stor_01/homes/rzhu/PALM/tests/data/cif_dir"
-output_dir: "/nfs/lambda_stor_01/homes/rzhu/PALM/tests/output/cif_dir"
+input_file: "PALM/tests/data/cif_dir"
+output_dir: "PALM/tests/output/cif_dir"
 dataset_name: "cif_dir"
 
 e1:

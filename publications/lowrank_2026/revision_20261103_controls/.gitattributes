@@ -1,3 +1,0 @@
-# Preserve byte-for-byte upstream source, including its original whitespace.
-vendor/** -whitespace
-*.csv text eol=lf

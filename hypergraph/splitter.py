@@ -28,7 +28,8 @@ from PALM.splitters.common.leakage_metrics import scaled_lpi
 from PALM.splitters.common.split_naming import assign_split_names
 
 from .knn import build_knn_graph, build_knn_hyperedges
-from .partition import partition_graph, partition_hypergraph
+from .partition import (connectivity_objective, imbalance_of, partition_graph,
+                        partition_hypergraph, rebalance)
 
 logger = logging.getLogger(__name__)
 
@@ -64,15 +65,15 @@ class HypergraphSplitter(BaseSplitter):
         metric = p.metric or choose_metric(X)
         hyperedges, weights = build_knn_hyperedges(X, k=p.k, metric=metric, use_gpu=p.use_gpu)
         logger.info("  Hypergraph: %d nodes, %d hyperedges, metric=%s", n, len(hyperedges), metric)
-        block_of, km1, imbalance = partition_hypergraph(
+        block_of, km1, imbalance, binfo = partition_hypergraph(
             n, hyperedges, weights, spec.splits, seed=spec.seed,
-            threads=p.threads, epsilon=spec.epsilon, preset=p.preset)
+            threads=p.threads, epsilon=spec.epsilon, preset=p.preset, return_info=True)
         labels = np.asarray(block_of)
         assignment = assign_split_names(ids, labels, spec.splits, spec.names)
         return self._result(assignment, spec, time.time() - t0, metric=metric,
                             imbalance=round(imbalance, 4), km1=int(km1),
                             n_hyperedges=len(hyperedges),
-                            leakage=_leakage(X, labels, metric))
+                            leakage=_leakage(X, labels, metric), **binfo)
 
 
 @register("graph")
@@ -102,9 +103,9 @@ class GraphSplitter(BaseSplitter):
         edges, weights = build_knn_graph(X, k=p.k, metric=metric, threshold=p.threshold,
                                    max_deg=p.max_deg, use_gpu=p.use_gpu)
         logger.info("  Graph: %d nodes, %d edges, metric=%s", n, len(edges), metric)
-        block_of, cut, imbalance = partition_graph(
+        block_of, cut, imbalance, binfo = partition_graph(
             n, edges, weights, spec.splits, seed=spec.seed,
-            threads=p.threads, epsilon=spec.epsilon, preset=p.preset)
+            threads=p.threads, epsilon=spec.epsilon, preset=p.preset, return_info=True)
         labels = np.asarray(block_of)
         moves = 0
         if p.fm and n <= p.fm_max_n:
@@ -112,8 +113,14 @@ class GraphSplitter(BaseSplitter):
                 labels, X, spec.splits, metric=metric, epsilon=spec.epsilon,
                 max_moves=p.fm_max_moves)
             logger.info("  FM polish: %d moves", moves)
+            # FM uses the shared (looser) capacity corridor: re-validate against
+            # ours, then recompute cut/imbalance from the FINAL labels.
+            labels, fixed = rebalance(n, edges, weights, labels, spec.splits, spec.epsilon)
+            binfo["balance_repair_moves"] += int(fixed)
+            cut = connectivity_objective(edges, weights, labels)
+            imbalance = imbalance_of(labels, spec.splits)
         assignment = assign_split_names(ids, labels, spec.splits, spec.names)
         return self._result(assignment, spec, time.time() - t0, metric=metric,
                             imbalance=round(imbalance, 4), cut=int(cut),
                             n_edges=len(edges), fm_moves=int(moves),
-                            leakage=_leakage(X, labels, metric))
+                            leakage=_leakage(X, labels, metric), **binfo)

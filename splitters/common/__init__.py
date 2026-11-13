@@ -10,7 +10,7 @@ and the benchmark tree:
 - :mod:`.balanced_assignment`  — target sizes, capacity corridor, balanced assign
 - :mod:`.split_naming`         — block-index → split-name mapping
 - :mod:`.fiduccia_mattheyses`  — Fiduccia–Mattheyses single-move polish loop
-- :mod:`.leakage_metrics`      — canonical scaled ``L(pi)`` leakage scorers
+- :mod:`.leakage_metrics`      — canonical scaled ``L(pi)`` + nearest-neighbour leakage scorers
 
 Method-specific kernels live with their package: the k-NN construction and
 Mt-KaHyPar partitioning in :mod:`PALM.hypergraph`, the Nyström factorization and

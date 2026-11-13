@@ -1,4 +1,0 @@
-This is BibTeX, Version 0.99d (TeX Live 2022/dev/Debian)
-The top-level auxiliary file: supplement.aux
-The style file: unsrtnat.bst
-Database file #1: references.bib

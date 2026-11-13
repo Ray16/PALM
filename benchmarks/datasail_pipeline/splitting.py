@@ -8,7 +8,7 @@ import numpy as np
 from scipy.spatial.distance import pdist, squareform
 from sklearn.preprocessing import StandardScaler
 
-from .cache import get_cached_dist, save_cached_dist
+from .cache import get_cached_dist, save_cached_dist, dist_spec
 
 # grakel (a DataSAIL dep) still does `from numpy import ComplexWarning`, removed
 # in numpy>=1.25; restore the alias so the import succeeds.
@@ -36,8 +36,37 @@ def _is_binary_fingerprint(X):
     return X.shape[1] >= 128 and np.all((X == 0) | (X == 1))
 
 
+PCA_COMPONENTS = 20
+
+
+def _cached_dist_matrix(data_dict, label, use_cosine, use_pca,
+                        pca_components=PCA_COMPONENTS, use_tanimoto=None):
+    """compute_dist_matrix with a cache keyed on feature values + full spec."""
+    spec = dist_spec(use_cosine, use_pca, pca_components, use_tanimoto)
+    cached = get_cached_dist(data_dict, label, [], spec)
+    if cached is not None:
+        return cached
+    names, dist = compute_dist_matrix(data_dict, use_cosine=use_cosine, use_pca=use_pca,
+                                      pca_components=pca_components,
+                                      use_tanimoto=use_tanimoto)
+    save_cached_dist(data_dict, label, [], names, dist, spec)
+    return names, dist
+
+
+def _run_all(run_fn, techniques, n_jobs):
+    """Run ``run_fn(t) -> (technique, result, elapsed, error)`` for each technique.
+
+    Sequential when n_jobs == 1; otherwise a thread pool of n_jobs workers.
+    """
+    if n_jobs <= 1 or len(techniques) <= 1:
+        return [run_fn(t) for t in techniques]
+    from concurrent.futures import ThreadPoolExecutor
+    with ThreadPoolExecutor(max_workers=n_jobs) as pool:
+        return list(pool.map(run_fn, techniques))
+
+
 def compute_dist_matrix(data_dict, use_cosine=False, use_pca=False,
-                        pca_components=20, use_tanimoto=None):
+                        pca_components=PCA_COMPONENTS, use_tanimoto=None):
     """Compute normalized distance matrix from entity embeddings.
 
     Args:
@@ -96,7 +125,7 @@ def run_technique(technique, common_kwargs):
         return technique, None, time.time() - t0, str(exc)
 
 
-def run_splitting(e1_data, e2_data, interactions, config):
+def run_splitting(e1_data, e2_data, interactions, config, failures=None):
     """Run DataSAIL splitting with adaptive sparsity handling.
 
     Args:
@@ -104,6 +133,8 @@ def run_splitting(e1_data, e2_data, interactions, config):
         e2_data: dict {entity_name: feature_vector} for e2-entities
         interactions: list of (e1_name, e2_name) tuples
         config: SplittingConfig object
+        failures: optional dict, filled with {technique: error message} for
+            techniques DataSAIL itself failed on
 
     Returns:
         dict mapping technique -> dict mapping (e1_id, e2_id) -> split_name
@@ -127,20 +158,9 @@ def run_splitting(e1_data, e2_data, interactions, config):
     if use_cosine_e1 or use_cosine_e2:
         logger.info(f"  Using cosine distance for: {'E1' if use_cosine_e1 else ''}{' E2' if use_cosine_e2 else ''}")
 
-    # Compute distance matrices (with caching)
-    cached_e1 = get_cached_dist(e1_data, "e1", config.techniques)
-    if cached_e1 is not None:
-        e1_names, e1_dist = cached_e1
-    else:
-        e1_names, e1_dist = compute_dist_matrix(e1_data, use_cosine=use_cosine_e1, use_pca=use_pca_e1)
-        save_cached_dist(e1_data, "e1", config.techniques, e1_names, e1_dist)
-
-    cached_e2 = get_cached_dist(e2_data, "e2", config.techniques)
-    if cached_e2 is not None:
-        e2_names, e2_dist = cached_e2
-    else:
-        e2_names, e2_dist = compute_dist_matrix(e2_data, use_cosine=use_cosine_e2, use_pca=use_pca_e2)
-        save_cached_dist(e2_data, "e2", config.techniques, e2_names, e2_dist)
+    # Compute distance matrices (cached on feature values + preprocessing spec)
+    e1_names, e1_dist = _cached_dist_matrix(e1_data, "e1", use_cosine_e1, use_pca_e1)
+    e2_names, e2_dist = _cached_dist_matrix(e2_data, "e2", use_cosine_e2, use_pca_e2)
 
     logger.info(f"  Distance matrices: e1={e1_dist.shape}, e2={e2_dist.shape}")
 
@@ -187,21 +207,29 @@ def run_splitting(e1_data, e2_data, interactions, config):
         f_data=e2_data,
         f_dist=(e2_names, e2_dist),
         f_clusters=adaptive_e2_clusters,
-        inter=interactions,
+        # Deduplicate: DataSAIL returns one label per (e1, e2) key, and its R
+        # technique slices the shuffled list by position, so repeated pairs
+        # (multiple rows per pair) land in several slices and the last one
+        # wins — skewing R towards the final split (e.g. 20/80 instead of 80/20).
+        inter=list(dict.fromkeys(interactions)),
         delta=adaptive_delta,
         epsilon=adaptive_epsilon,
+        threads=config.threads,
     )
 
-    # Run techniques sequentially (ProcessPoolExecutor causes hangs due to
-    # SCIP solver child processes not terminating cleanly on shutdown)
+    # Sequential by default; n_jobs > 1 uses threads (ProcessPoolExecutor
+    # causes hangs due to SCIP solver child processes not terminating cleanly)
     logger.info(f"  Running {len(config.techniques)} techniques...")
     all_inter_splits = {}
     t_start = time.time()
 
-    for t in config.techniques:
-        technique, result, elapsed, error = run_technique(t, common_kwargs)
+    outcomes = _run_all(lambda t: run_technique(t, common_kwargs),
+                        list(config.techniques), config.n_jobs)
+    for technique, result, elapsed, error in outcomes:
         if error is not None:
             logger.warning(f"    {technique} FAILED after {elapsed:.1f}s: {error}")
+            if failures is not None:
+                failures[technique] = f"DataSAIL error: {error}"
         else:
             all_inter_splits[technique] = result
             logger.info(f"    {technique} finished in {elapsed:.1f}s")
@@ -249,12 +277,14 @@ def run_technique_1d(technique, common_kwargs, use_self_inter):
         return technique, None, time.time() - t0, str(exc)
 
 
-def run_splitting_1d(e_data, config):
+def run_splitting_1d(e_data, config, failures=None):
     """Run DataSAIL splitting for 1D data (single entity, no interactions).
 
     Args:
         e_data: dict {entity_name: feature_vector}
         config: SplittingConfig object
+        failures: optional dict, filled with {technique: error message} for
+            techniques DataSAIL itself failed on
 
     Returns:
         dict mapping technique -> dict mapping entity_id -> split_name
@@ -283,13 +313,8 @@ def run_splitting_1d(e_data, config):
     use_pca = e_sparsity > 0.9
     use_cosine = e_sparsity > 0.5 and not use_pca
 
-    # Compute distance matrix (with caching)
-    cached = get_cached_dist(e_data, "e1", list(mapped.keys()))
-    if cached is not None:
-        e_names, e_dist = cached
-    else:
-        e_names, e_dist = compute_dist_matrix(e_data, use_cosine=use_cosine, use_pca=use_pca)
-        save_cached_dist(e_data, "e1", list(mapped.keys()), e_names, e_dist)
+    # Compute distance matrix (cached on feature values + preprocessing spec)
+    e_names, e_dist = _cached_dist_matrix(e_data, "e1", use_cosine, use_pca)
     logger.info(f"  Distance matrix: {e_dist.shape}")
 
     adaptive_e_clusters = min(max(9, len(e_data) // 20), len(e_data))
@@ -307,6 +332,7 @@ def run_splitting_1d(e_data, config):
         e_clusters=adaptive_e_clusters,
         delta=0.1,
         epsilon=0.1,
+        threads=config.threads,
     )
 
     # R technique needs self-interactions + f_data
@@ -322,12 +348,17 @@ def run_splitting_1d(e_data, config):
     results = {}
     t_start = time.time()
 
-    for t in techniques_to_run:
+    def _run_one(t):
         use_self_inter = (t == "R")
         kwargs = r_kwargs if use_self_inter else base_kwargs
-        technique, result, elapsed, error = run_technique_1d(t, kwargs, use_self_inter)
+        return run_technique_1d(t, kwargs, use_self_inter)
+
+    for technique, result, elapsed, error in _run_all(_run_one, techniques_to_run,
+                                                      config.n_jobs):
         if error is not None:
             logger.warning(f"    {technique} FAILED after {elapsed:.1f}s: {error}")
+            if failures is not None:
+                failures[technique] = f"DataSAIL error: {error}"
         else:
             results[technique] = result
             logger.info(f"    {technique} finished in {elapsed:.1f}s")

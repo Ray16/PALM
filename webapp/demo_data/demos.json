@@ -1,0 +1,82 @@
+[
+  {
+    "id": "esol",
+    "title": "ESOL aqueous solubility",
+    "domain": "Small molecules",
+    "description": "1,128 molecules (SMILES) with measured log solubility. Classic MoleculeNet regression benchmark.",
+    "source": "MoleculeNet / Delaney 2004",
+    "file": "esol.csv",
+    "dataset_name": "esol",
+    "e1": {"name": "molecule", "type": "molecule", "column": "smiles",
+           "feature_sets": ["rdkit_descriptors", "composition", "physicochemical", "morgan_fingerprint"]},
+    "color_by": {"e1": "logS"},
+    "techniques": ["R", "scaffold", "C1e", "hypergraph", "lowrank"]
+  },
+  {
+    "id": "bbbp",
+    "title": "BBBP blood-brain barrier",
+    "domain": "Small molecules",
+    "description": "2,050 molecules labelled permeable / non-permeable. MoleculeNet classification benchmark.",
+    "source": "MoleculeNet / Martins et al. 2012",
+    "file": "bbbp.csv",
+    "dataset_name": "bbbp",
+    "e1": {"name": "molecule", "type": "molecule", "column": "smiles",
+           "feature_sets": ["rdkit_descriptors", "composition", "physicochemical", "morgan_fingerprint"]},
+    "color_by": {"e1": "permeable"},
+    "techniques": ["R", "scaffold", "C1e", "hypergraph", "lowrank"]
+  },
+  {
+    "id": "lp_pdbbind_proteins",
+    "title": "PDBBind proteins by enzyme class",
+    "domain": "Proteins",
+    "description": "585 protein sequences from 8 functional classes, embedded with ESM2-650M.",
+    "source": "LP-PDBBind (Li et al. 2024)",
+    "file": "lp_pdbbind_proteins.csv",
+    "dataset_name": "lp_pdbbind_proteins",
+    "e1": {"name": "protein", "type": "biomolecule", "column": "sequence",
+           "feature_sets": ["esm_embedding"]},
+    "color_by": {"e1": "protein_class"},
+    "techniques": ["R", "C1e", "hypergraph", "lowrank"]
+  },
+  {
+    "id": "davis",
+    "title": "Davis kinase-inhibitor binding",
+    "domain": "Drug-target (2D)",
+    "description": "4,000 drug-kinase pairs (40 inhibitors x 100 kinases) with Kd. Splits both axes at once.",
+    "source": "Davis et al. 2011",
+    "file": "davis.csv",
+    "dataset_name": "davis",
+    "e1": {"name": "drug", "type": "molecule", "column": "smiles",
+           "feature_sets": ["rdkit_descriptors", "composition", "physicochemical", "morgan_fingerprint"]},
+    "e2": {"name": "kinase", "type": "biomolecule", "column": "sequence",
+           "feature_sets": ["esm_embedding"]},
+    "color_by": {"e1": "pKd", "e2": "pKd"},
+    "techniques": ["R", "I1e", "I1f", "hypergraph", "lowrank"]
+  },
+  {
+    "id": "materials_project",
+    "title": "Materials Project band gaps",
+    "domain": "Inorganic materials",
+    "description": "1,500 inorganic compositions with DFT band gap and stability.",
+    "source": "Materials Project (Jain et al. 2013)",
+    "file": "materials_project.csv",
+    "dataset_name": "materials_project",
+    "e1": {"name": "material", "type": "material", "column": "formula",
+           "feature_sets": ["magpie_properties", "stoichiometry", "electronic", "bonding", "thermodynamic", "classification"]},
+    "color_by": {"e1": "band_gap_eV"},
+    "techniques": ["R", "C1e", "hypergraph", "lowrank"]
+  },
+  {
+    "id": "rfam_rna",
+    "title": "Rfam non-coding RNA families",
+    "domain": "RNA",
+    "description": "1,040 non-coding RNA sequences from 13 Rfam families.",
+    "source": "Rfam (DataSAIL benchmark subset)",
+    "file": "rfam_rna.csv",
+    "dataset_name": "rfam_rna",
+    "e1": {"name": "rna", "type": "gene", "column": "sequence",
+           "feature_sets": ["nucleotide_composition", "kmer_frequencies"]},
+    "color_by": {"e1": "family"},
+    "techniques": ["R", "C1e", "hypergraph", "lowrank"]
+  }
+]

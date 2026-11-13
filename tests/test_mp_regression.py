@@ -7,7 +7,7 @@ featurizes with PALM's material features, splits with R (random) and C1e
 MAE / RMSE / R² to demonstrate metric inflation from random splits.
 
 Usage:
-    cd /nfs/lambda_stor_01/homes/rzhu
+    cd <directory containing PALM/>
     conda run -n palm python3 PALM/tests/test_mp_regression.py
 """
 
@@ -27,7 +27,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 from PALM.benchmarks.datasail_pipeline.config import EntityConfig, SplittingConfig, PipelineConfig
 from PALM.benchmarks.datasail_pipeline.pipeline import run_pipeline
 
-MP_API_KEY = "7538q37K3CJFCqUWwqYfTiLis7ZzPp2r"
+MP_API_KEY = os.environ.get("MP_API_KEY") or os.environ.get("PMG_MAPI_KEY")
 
 TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(TESTS_DIR, "data", "mp_cifs_regression")
@@ -58,6 +58,10 @@ def download_mp_data():
         if n >= TARGET_COUNT - 50:
             print(f"  Already have {n} structures in {DATA_DIR}, skipping download.")
             return
+
+    if not MP_API_KEY:
+        print("SKIP: set MP_API_KEY (or PMG_MAPI_KEY) to download from Materials Project.")
+        sys.exit(0)
 
     os.makedirs(DATA_DIR, exist_ok=True)
 

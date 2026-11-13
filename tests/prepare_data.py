@@ -157,7 +157,7 @@ _DRUG_SMILES = {
     "tamoxifen":      "CCC(=C1C=CC(=CC1)OCCN(C)C)C1=CC=CC=C1",
     "codeine":        "CN1CC[C@]23C=C[C@@H](O)C[C@H]2OC4=C3C1=CC=C4OC",
     "azathioprine":   "Cn1cnc2c(N)ncnc12",
-    "mercaptopurine": "S=c1[nH]cnc2c1ncn2",
+    "mercaptopurine": "S=c1[nH]cnc2[nH]cnc12",
     "fluorouracil":   "O=C1C=C(F)C(=O)N1",
     "capecitabine":   "CCCC(=O)Oc1nc(N)c(F)cn1",
     "methotrexate":   "CN(CC1=CN=C2C(=N1)C(=NC(N)=N2)N)C3=CC=C(C=C3)C(=O)N[C@@H](CCC(=O)O)C(=O)O",
@@ -252,9 +252,14 @@ def prepare_gene_drug():
 # ── Write YAML configs ─────────────────────────────────────────────────────
 
 def write_configs(davis_path, ads_path, gene_path):
-    davis_out = os.path.join(OUT_DIR, "davis")
-    ads_out   = os.path.join(OUT_DIR, "adsorbate_surface")
-    gene_out  = os.path.join(OUT_DIR, "gene_drug")
+    # Configs are invoked from the umbrella repository root. Keep their paths
+    # portable instead of serializing this checkout's absolute location.
+    davis_path = "PALM/tests/data/davis/interactions.csv"
+    ads_path = "PALM/tests/data/adsorbate_surface/interactions.csv"
+    gene_path = "PALM/tests/data/gene_drug/interactions.csv"
+    davis_out = "PALM/tests/output/davis"
+    ads_out = "PALM/tests/output/adsorbate_surface"
+    gene_out = "PALM/tests/output/gene_drug"
 
     _write("molecule_biomolecule", f"""\
 # Davis Drug-Target Interaction — molecule (drug) + biomolecule (protein)

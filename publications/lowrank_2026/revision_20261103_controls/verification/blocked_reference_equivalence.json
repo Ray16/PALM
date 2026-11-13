@@ -1,7 +1,0 @@
-{
-  "passed": true,
-  "cases": 40,
-  "max_absolute_discrepancy": 3.552713678800501e-15,
-  "validator_sha256": "9bcbd7033b36bc8f25d761445fd6b40e4c4a9350962e10a37fa951126f3e5710",
-  "reference": "Direct full crossing-block definition; random and empty-held-out partitions"
-}

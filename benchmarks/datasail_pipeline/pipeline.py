@@ -2,21 +2,24 @@
 
 import json
 import logging
+import math
 import os
+import random
 import shutil
+import time
 import numpy as np
 import pandas as pd
 
 logger = logging.getLogger(__name__)
 
-from .config import PipelineConfig
+from .config import EXTERNAL_TECHNIQUES, PipelineConfig, SplitContext
 from .loaders import load_data, _detect_format
 from PALM.features.material_features import compute_material_features
 from PALM.features.molecule_features import compute_molecule_features
 from PALM.features.biomolecule_features import compute_biomolecule_features
 from PALM.features.gene_features import compute_gene_features
-from .cache import get_cached_features, save_cached_features
-from .metrics import compute_split_metrics, save_metrics
+from .cache import get_cached_features, save_cached_features, file_fingerprint
+from .metrics import compute_row_split_metrics, save_metrics
 from .splitting import run_splitting, run_splitting_1d, run_scaffold_splitting
 from .visualization import generate_split_plots, generate_comparison_chart, _reduce
 
@@ -30,24 +33,37 @@ def _extract_entities(df, entity_config):
     return entities
 
 
+def _feature_cache_spec(entity_config):
+    """Every EntityConfig setting that changes the feature matrix, plus content
+    fingerprints of the files/dirs features are read from (batch sizes and
+    n_jobs only affect speed and are left out)."""
+    return {
+        "type": entity_config.type,
+        "feature_sets": sorted(entity_config.feature_sets or []),
+        "smiles_map": (json.dumps(entity_config.smiles_map, sort_keys=True, default=str)
+                       if entity_config.smiles_map else None),
+        "esm_model": entity_config.esm_model,
+        "nt_model": entity_config.nt_model,
+        "chemberta_model": entity_config.chemberta_model,
+        "embedding_file": file_fingerprint(entity_config.embedding_file),
+        "structure_dir": file_fingerprint(entity_config.structure_dir),
+    }
+
+
 def _featurize(entities, entity_config):
     """Generate features for entities based on their type (with caching)."""
     feature_sets = entity_config.feature_sets or None
-
-    # Include structure_dir in cache key when set
-    cache_sets = list(feature_sets or [])
-    if getattr(entity_config, "structure_dir", None):
-        cache_sets.append(f"_structdir:{entity_config.structure_dir}")
+    spec = _feature_cache_spec(entity_config)
 
     # Check cache
-    cached = get_cached_features(entities, entity_config.type, cache_sets)
+    cached = get_cached_features(entities, entity_config.type, feature_sets, spec)
     if cached is not None:
         return cached
 
     result = _featurize_uncached(entities, entity_config)
 
     # Save to cache
-    save_cached_features(entities, entity_config.type, cache_sets, result)
+    save_cached_features(entities, entity_config.type, feature_sets, result, spec)
     return result
 
 
@@ -305,43 +321,217 @@ def _save_ml_exports(df, out_df, output_dir, dataset_name, split_names):
     return export_dir
 
 
-def _build_comparison_summary(all_metrics, split_names):
+def _target_fractions(splitting):
+    total = float(sum(splitting.splits))
+    return {n: s / total for n, s in zip(splitting.names, splitting.splits)}
+
+
+def _validate_split(split_labels, splitting):
+    """Check a row-level split against the requested configuration.
+
+    Returns a list of human-readable failure reasons (empty list = valid):
+      - rows left unassigned ("not selected"), unless allow_incomplete is set
+      - any requested split empty
+      - any split's row fraction (among assigned rows) further than
+        size_tolerance from its target fraction
+    """
+    names = list(splitting.names)
+    labels = list(split_labels)
+    n_rows = len(labels)
+    counts = {n: sum(1 for l in labels if l == n) for n in names}
+    n_assigned = sum(counts.values())
+    reasons = []
+
+    if n_rows == 0:
+        return ["no rows to split"]
+    n_unassigned = n_rows - n_assigned
+    if n_unassigned and not splitting.allow_incomplete:
+        reasons.append(
+            f"incomplete assignment: {n_unassigned}/{n_rows} rows "
+            f"({100 * n_unassigned / n_rows:.1f}%) not assigned to any split "
+            f"(set splitting.allow_incomplete to accept partial splits)"
+        )
+    for n in names:
+        if counts[n] == 0:
+            reasons.append(f"split '{n}' is empty")
+    if n_assigned:
+        for n, target in _target_fractions(splitting).items():
+            frac = counts[n] / n_assigned
+            if abs(frac - target) > splitting.size_tolerance:
+                reasons.append(
+                    f"split '{n}' has {frac:.1%} of assigned rows, target "
+                    f"{target:.1%} (tolerance ±{splitting.size_tolerance:.0%})"
+                )
+    return reasons
+
+
+def _random_row_labels(n_rows, splitting, seed):
+    """Seeded random row split at the target proportions (largest remainder)."""
+    fracs = _target_fractions(splitting)
+    raw = {n: fracs[n] * n_rows for n in splitting.names}
+    sizes = {n: int(math.floor(v)) for n, v in raw.items()}
+    leftover = n_rows - sum(sizes.values())
+    for n in sorted(raw, key=lambda k: raw[k] - sizes[k], reverse=True)[:leftover]:
+        sizes[n] += 1
+    labels = [n for n in splitting.names for _ in range(sizes[n])]
+    rng = np.random.default_rng(seed)
+    return list(rng.permutation(labels))
+
+
+def _nan_to_none(v):
+    return None if v is None or (isinstance(v, float) and math.isnan(v)) else v
+
+
+# Pareto criteria: (name suffix, direction). "max" = higher is better.
+_PARETO_DOC = (
+    "Non-dominated techniques among VALID splits only. Criteria: coverage (max); "
+    "size_dev = max |split fraction - target| (min); per entity axis: "
+    "overlap_frac = entities appearing in >1 split / entities seen (min) and "
+    "nn_sep = primary-pair mean NN distance divided by that of a seeded random "
+    "split of the same rows (max; falls back to the raw mean NN distance, which "
+    "is comparable within one dataset, when the random baseline is 0). "
+    "Distribution shift is reported but not used for dominance because its "
+    "desired direction is task-dependent. Missing metrics are null and that "
+    "criterion is skipped for the pair being compared, never treated as 0."
+)
+_RECOMMENDATION_BASIS = (
+    "Among the Pareto set: best mean within-dataset rank of nn_sep over entity "
+    "axes (rank 1 = largest separation among valid techniques; ranks keep axes "
+    "with relative and raw nn_sep from being mixed); ties broken by lower mean "
+    "overlap_frac, then lower size_dev, then name."
+)
+
+
+def _technique_criteria(metrics, targets, baseline):
+    """Size-normalized criteria for one technique (NaN when unavailable)."""
+    nan = float("nan")
+    crit = {"coverage": metrics.get("coverage", nan)}
+    fracs = metrics.get("split_fractions") or {}
+    devs = [abs(fracs[n] - t) for n, t in targets.items() if n in fracs]
+    crit["size_dev"] = max(devs) if devs else nan
+    report = {}
+    for ax, am in (metrics.get("axes") or {}).items():
+        of = am.get("multi_split_frac")
+        crit[f"overlap_frac_{ax}"] = nan if of is None else of
+        nn = (am.get("nn_leakage") or {}).get("mean_nn_dist")
+        base = (baseline or {}).get(ax)
+        if nn is None:
+            crit[f"nn_sep_{ax}"] = nan
+            report[f"nn_rel_{ax}"] = nan
+        elif base:
+            crit[f"nn_sep_{ax}"] = nn / base
+            report[f"nn_rel_{ax}"] = nn / base
+        else:
+            crit[f"nn_sep_{ax}"] = nn
+            report[f"nn_rel_{ax}"] = nan
+        report[f"nn_mean_dist_{ax}"] = nan if nn is None else nn
+        ds = (am.get("distribution_shift") or {}).get("mean_normalized_shift")
+        report[f"dist_shift_{ax}"] = nan if ds is None else ds
+    return crit, report
+
+
+def _direction(criterion):
+    return "max" if criterion == "coverage" or criterion.startswith("nn_sep_") else "min"
+
+
+def _dominates(a, b):
+    """True if criteria dict ``a`` Pareto-dominates ``b`` (NaNs skipped)."""
+    comparable = False
+    strictly = False
+    for c, va in a.items():
+        vb = b.get(c, float("nan"))
+        if math.isnan(va) or math.isnan(vb):
+            continue
+        comparable = True
+        better, worse = (va > vb, va < vb) if _direction(c) == "max" else (va < vb, va > vb)
+        if worse:
+            return False
+        strictly = strictly or better
+    return comparable and strictly
+
+
+def _build_comparison_summary(all_metrics, split_names, failed=None,
+                              targets=None, baseline=None):
     """Build a comparison summary across all techniques.
 
-    Returns dict with per-technique scores and a recommendation.
+    Invalid techniques (``failed``: {technique: [reasons]}) are listed but never
+    ranked. Valid techniques get a Pareto table over size-normalized criteria
+    (see ``pareto_criteria`` in the output); a single ``recommendation`` is
+    kept for API compatibility and derived from the Pareto set by the
+    documented ``recommendation_basis``.
     """
-    summary = {"techniques": {}, "recommendation": None}
-    scores = {}
+    failed = failed or {}
+    targets = targets or {}
+    summary = {
+        "status": {**{t: "valid" for t in all_metrics},
+                   **{t: "failed" for t in failed}},
+        "failed": failed,
+        "random_baseline_nn_mean_dist": baseline,
+        "pareto_criteria": _PARETO_DOC,
+        "techniques": {},
+        "pareto_set": [],
+        "recommendation": None,
+        "recommendation_basis": _RECOMMENDATION_BASIS,
+    }
 
+    criteria = {}
     for technique, metrics in all_metrics.items():
-        coverage = metrics.get("coverage", 0)
-        nn = metrics.get("nn_leakage", {})
-        nn_sep = nn.get("mean_nn_dist", 0) if nn else 0
-        ds = metrics.get("distribution_shift", {})
-        dist_shift = ds.get("mean_normalized_shift", 0) if ds else 0
-        eo = metrics.get("entity_overlap", {})
-        e1_overlap = eo.get("e1_overlap", 0) if eo else 0
-
+        crit, report = _technique_criteria(metrics, targets, baseline)
+        criteria[technique] = crit
         summary["techniques"][technique] = {
-            "coverage": round(coverage, 4),
-            "nn_separation": round(nn_sep, 6) if nn_sep else None,
-            "dist_shift": round(dist_shift, 4) if dist_shift else None,
-            "entity_overlap": e1_overlap,
+            k: _nan_to_none(round(v, 6) if isinstance(v, float) else v)
+            for k, v in {**crit, **report}.items()
         }
 
-        # Score: higher NN separation + lower overlap + lower dist shift + high coverage
-        # Normalize: NN sep is good (higher=better), overlap is bad (lower=better),
-        # dist shift is bad (lower=better), coverage is good (higher=better)
-        score = nn_sep * 100 - e1_overlap * 10 - dist_shift * 5 + coverage * 10
-        scores[technique] = score
+    pareto = [t for t in criteria
+              if not any(_dominates(criteria[o], criteria[t]) for o in criteria if o != t)]
+    for t in summary["techniques"]:
+        summary["techniques"][t]["pareto_optimal"] = t in pareto
+    summary["pareto_set"] = sorted(pareto)
 
-    if scores:
-        best = max(scores, key=scores.get)
-        summary["recommendation"] = (
-            f"{best} (best overall balance of leakage prevention and coverage)"
-        )
+    def _mean(vals):
+        vals = [v for v in vals if not math.isnan(v)]
+        return sum(vals) / len(vals) if vals else float("nan")
+
+    # Within-dataset rank of nn_sep per axis (1 = best; ties share the best rank)
+    nn_rank = {t: [] for t in criteria}
+    nn_axes = {c for crit in criteria.values() for c in crit if c.startswith("nn_sep_")}
+    for c in nn_axes:
+        vals = {t: criteria[t].get(c, float("nan")) for t in criteria}
+        for t, v in vals.items():
+            if not math.isnan(v):
+                nn_rank[t].append(1 + sum(1 for o in vals.values()
+                                          if not math.isnan(o) and o > v))
+
+    def _rank_key(t):
+        rk = _mean(nn_rank[t])
+        ov = _mean([v for c, v in criteria[t].items() if c.startswith("overlap_frac_")])
+        sd = criteria[t]["size_dev"]
+        return (rk if not math.isnan(rk) else math.inf,
+                ov if not math.isnan(ov) else math.inf,
+                sd if not math.isnan(sd) else math.inf,
+                t)
+
+    if pareto:
+        summary["recommendation"] = min(pareto, key=_rank_key)
 
     return summary
+
+
+def _run_external(names, ctx, failures, report):
+    """Run registered non-DataSAIL techniques; failures go into ``failures``."""
+    results = {}
+    for name in names:
+        t0 = time.time()
+        report(f"  Running {name}...")
+        try:
+            results[name] = EXTERNAL_TECHNIQUES[name].fn(ctx)
+            report(f"  {name} finished in {time.time() - t0:.1f}s")
+        except Exception as exc:
+            logger.warning(f"{name} failed: {exc}", exc_info=True)
+            report(f"  Warning: {name} failed: {exc}")
+            failures[name] = f"{name} error: {exc}"
+    return results
 
 
 def run_pipeline(config: PipelineConfig, progress_callback=None):
@@ -355,8 +545,21 @@ def run_pipeline(config: PipelineConfig, progress_callback=None):
         progress_callback: optional callable(percent: int, message: str).
             Called at each major step so callers (e.g. the web UI) can track
             progress. The pipeline still prints to stdout regardless.
+
+    Returns:
+        dict with "valid" (list of techniques whose split passed validation),
+        "failed" ({technique: [reasons]}) and "comparison" (the summary saved
+        to metrics/comparison_<dataset>.json).
+
+    Raises:
+        RuntimeError if no technique produced a valid split.
     """
     is_1d = config.e2 is None
+
+    # Seed global RNGs (see SplittingConfig.seed for what this does and does
+    # not control — DataSAIL reseeds internally).
+    random.seed(config.splitting.seed)
+    np.random.seed(config.splitting.seed)
 
     def _report(pct: int, msg: str):
         print(msg)
@@ -416,7 +619,8 @@ def run_pipeline(config: PipelineConfig, progress_callback=None):
         _report(70, f"  Saved: {e2_feat_path}")
 
     # 4. Run DataSAIL splitting
-    _report(72, f"\n[4/5] Running DataSAIL splitting")
+    _report(72, f"\n[4/5] Running splitting")
+    external = [t for t in config.splitting.techniques if t in EXTERNAL_TECHNIQUES]
     e1_col = config.e1.extract_column
 
     # Replace NaN/Inf with 0 to prevent downstream clustering errors
@@ -425,16 +629,16 @@ def run_pipeline(config: PipelineConfig, progress_callback=None):
     _e1_matrix = e1_feat_df.to_numpy(dtype=float)
     e1_data = {name: row for name, row in zip(e1_feat_df.index, _e1_matrix)}
 
+    solver_failures = {}
+    row_ids = df["_row_id"].astype(str).tolist()
+    e1_ids = df[e1_col].astype(str).tolist()
     if is_1d:
         # 1D mode: split by entity only
-        row_ids = df["_row_id"].astype(str)
-        e1_ids = df[e1_col].astype(str)
-        row_to_entity = dict(zip(row_ids, e1_ids))
-
         _report(75, f"  Entities: {len(e1_data)} unique")
 
         # Separate scaffold technique from DataSAIL techniques
-        datasail_techniques = [t for t in config.splitting.techniques if t != "scaffold"]
+        datasail_techniques = [t for t in config.splitting.techniques
+                               if t != "scaffold" and t not in EXTERNAL_TECHNIQUES]
         has_scaffold = "scaffold" in config.splitting.techniques
 
         split_results = {}
@@ -442,7 +646,13 @@ def run_pipeline(config: PipelineConfig, progress_callback=None):
             from copy import copy
             ds_config = copy(config.splitting)
             ds_config.techniques = datasail_techniques
-            split_results = run_splitting_1d(e1_data, ds_config)
+            try:
+                split_results = run_splitting_1d(e1_data, ds_config, failures=solver_failures)
+            except RuntimeError:
+                # every DataSAIL technique failed (each recorded in solver_failures);
+                # still run the other techniques before deciding the run failed
+                if not (external or has_scaffold):
+                    raise
 
         if has_scaffold and config.e1.type == "molecule":
             try:
@@ -452,14 +662,19 @@ def run_pipeline(config: PipelineConfig, progress_callback=None):
             except Exception as exc:
                 logger.warning(f"Scaffold splitting failed: {exc}")
                 _report(78, f"  Warning: scaffold splitting failed: {exc}")
+                solver_failures["scaffold"] = f"scaffold splitting error: {exc}"
+        if external:
+            ctx = SplitContext(True, e1_data, None, None, e1_entities,
+                               config.e1, None, config.splitting)
+            split_results.update(_run_external(
+                external, ctx, solver_failures, lambda m: _report(80, m)))
+        row_keys = e1_ids
+        axes_spec = [("e1", config.e1.name, e1_data, e1_ids)]
     else:
         # 2D mode: split by interactions
         e2_col = config.e2.extract_column
-        e1_ids = df[e1_col].astype(str)
-        e2_ids = df[e2_col].astype(str)
-        row_ids = df["_row_id"].astype(str)
+        e2_ids = df[e2_col].astype(str).tolist()
         interactions = list(zip(e1_ids, e2_ids))
-        row_to_inter = dict(zip(row_ids, interactions))
 
         _report(75, f"  Interactions: {len(interactions)} (unique pairs: {len(set(interactions))})")
 
@@ -467,17 +682,53 @@ def run_pipeline(config: PipelineConfig, progress_callback=None):
         _e2_matrix = e2_feat_df.to_numpy(dtype=float)
         e2_data = {name: row for name, row in zip(e2_feat_df.index, _e2_matrix)}
 
-        split_results = run_splitting(e1_data, e2_data, interactions, config.splitting)
+        datasail_techniques = [t for t in config.splitting.techniques
+                               if t not in EXTERNAL_TECHNIQUES]
+        split_results = {}
+        if datasail_techniques:
+            from copy import copy
+            ds_config = copy(config.splitting)
+            ds_config.techniques = datasail_techniques
+            try:
+                split_results = run_splitting(e1_data, e2_data, interactions, ds_config,
+                                              failures=solver_failures)
+            except RuntimeError:
+                if not external:
+                    raise
+        if external:
+            ctx = SplitContext(False, e1_data, e2_data, interactions, e1_entities,
+                               config.e1, config.e2, config.splitting)
+            split_results.update(_run_external(
+                external, ctx, solver_failures, lambda m: _report(80, m)))
+        row_keys = interactions
+        axes_spec = [("e1", config.e1.name, e1_data, e1_ids),
+                     ("e2", config.e2.name, e2_data, e2_ids)]
 
-    _report(90, "  DataSAIL splitting complete")
+    _report(90, "  Splitting complete")
 
-    # 5. Map splits back to row IDs and save
+    # 5. Map splits back to row IDs, validate, and save
     _report(92, f"\n[5/5] Saving split results")
     split_dir = os.path.join(config.output_dir, "split_result")
     os.makedirs(split_dir, exist_ok=True)
-
+    failed_dir = os.path.join(split_dir, "failed")
 
     all_technique_metrics = {}
+    failed = {t: [msg] for t, msg in solver_failures.items()}
+    split_names = config.splitting.names
+    axis_names = {"e1": config.e1.name}
+    if not is_1d:
+        axis_names["e2"] = config.e2.name
+
+    # Random-split baseline on the same rows, for size-normalized NN separation
+    baseline = None
+    try:
+        rand_labels = _random_row_labels(len(row_ids), config.splitting,
+                                         config.splitting.seed)
+        rand_metrics = compute_row_split_metrics(axes_spec, rand_labels, split_names)
+        baseline = {ax: (am.get("nn_leakage") or {}).get("mean_nn_dist")
+                    for ax, am in rand_metrics["axes"].items()}
+    except Exception as exc:
+        logger.warning(f"Random baseline computation failed: {exc}")
 
     # Pre-compute dimensionality reduction once for all techniques
     _viz_coords = None
@@ -485,7 +736,7 @@ def run_pipeline(config: PipelineConfig, progress_callback=None):
         _sorted_names = sorted(e1_data.keys())
         _X_viz = np.array([e1_data[n] for n in _sorted_names])
         if _X_viz.shape[0] >= 3:
-            _reduced = _reduce(_X_viz, "tsne")
+            _reduced = _reduce(_X_viz, "tsne", seed=config.splitting.seed)
             if _reduced is not None:
                 _viz_coords = (_sorted_names, _reduced)
     except (ValueError, ImportError):
@@ -494,56 +745,41 @@ def run_pipeline(config: PipelineConfig, progress_callback=None):
     for technique in sorted(split_results.keys()):
         result = split_results[technique]
 
-        records = []
-        if is_1d:
-            for row_id, entity_id in row_to_entity.items():
-                split = result.get(entity_id, "not selected")
-                records.append({"_row_id": row_id, "split": split})
-        else:
-            for row_id, inter_key in row_to_inter.items():
-                split = result.get(inter_key, "not selected")
-                records.append({"_row_id": row_id, "split": split})
-
-        out_df = pd.DataFrame(records)
-        assigned = out_df[out_df["split"].isin(config.splitting.names)]
+        labels = [result.get(k, "not selected") for k in row_keys]
+        out_df = pd.DataFrame({"_row_id": row_ids, "split": labels})
 
         summary = [f"\n  --- {technique} ---"]
-        for name in config.splitting.names:
-            n = (assigned["split"] == name).sum()
+        for name in split_names:
+            n = labels.count(name)
             pct = 100 * n / len(df)
             summary.append(f"    {name.capitalize()}: {n:,} ({pct:.1f}%)")
 
-        n_not = (out_df["split"] == "not selected").sum()
+        n_not = labels.count("not selected")
         if n_not > 0:
             summary.append(f"    Not selected: {n_not:,}")
 
-        # Entity overlap analysis between splits
-        overlap_info = {}
-        if len(config.splitting.names) >= 2:
-            split_entities = {}
-            for name in config.splitting.names:
-                mask = assigned["split"] == name
-                sids = assigned.loc[mask, "_row_id"].values
-                rows_in_split = df[df["_row_id"].isin(sids)]
-                split_entities[name] = {
-                    "e1": set(rows_in_split[e1_col].astype(str)),
-                }
-                if not is_1d:
-                    split_entities[name]["e2"] = set(rows_in_split[e2_col].astype(str))
-
-            n0, n1 = config.splitting.names[0], config.splitting.names[1]
-            if n0 in split_entities and n1 in split_entities:
-                e1_overlap = split_entities[n0]["e1"] & split_entities[n1]["e1"]
-                e1_total = len(split_entities[n0]["e1"] | split_entities[n1]["e1"])
-                overlap_info["e1_overlap"] = len(e1_overlap)
-                overlap_info["e1_total"] = e1_total
-                summary.append(f"    {config.e1.name} overlap ({n0}∩{n1}): {len(e1_overlap)}")
-                if not is_1d:
-                    e2_overlap = split_entities[n0]["e2"] & split_entities[n1]["e2"]
-                    e2_total = len(split_entities[n0]["e2"] | split_entities[n1]["e2"])
-                    overlap_info["e2_overlap"] = len(e2_overlap)
-                    overlap_info["e2_total"] = e2_total
-                    summary.append(f"    {config.e2.name} overlap ({n0}∩{n1}): {len(e2_overlap)}")
+        # Validate before publishing anything: incomplete / empty / off-size
+        # splits are marked failed, kept only under split_result/failed/ for
+        # inspection, and excluded from exports, metrics and recommendation.
+        reasons = _validate_split(labels, config.splitting)
+        if reasons:
+            failed[technique] = reasons
+            os.makedirs(failed_dir, exist_ok=True)
+            fail_csv = os.path.join(
+                failed_dir, f"datasail_split_{technique}_{config.dataset_name}.csv")
+            out_df.to_csv(fail_csv, index=False)
+            with open(os.path.join(failed_dir,
+                                   f"{technique}_{config.dataset_name}.json"), "w") as fh:
+                json.dump({"technique": technique, "status": "failed",
+                           "reasons": reasons,
+                           "split_counts": {n: labels.count(n) for n in split_names},
+                           "not_selected": n_not, "n_rows": len(labels)}, fh, indent=2)
+            summary.append(f"    FAILED (invalid split, not exported):")
+            summary.extend(f"      - {r}" for r in reasons)
+            summary.append(f"    Raw assignment kept for inspection: {fail_csv}")
+            for line in summary:
+                _report(95, line)
+            continue
 
         out_path = os.path.join(split_dir, f"datasail_split_{technique}_{config.dataset_name}.csv")
         out_df.to_csv(out_path, index=False)
@@ -553,7 +789,7 @@ def run_pipeline(config: PipelineConfig, progress_callback=None):
         try:
             _save_split_data(df, out_df, split_dir, technique,
                              config.dataset_name, config.input_file,
-                             fmt, config.splitting.names)
+                             fmt, split_names)
             data_dir = os.path.join(split_dir, f"{technique}_{config.dataset_name}")
             summary.append(f"    Split data saved to {data_dir}/")
         except Exception as exc:
@@ -564,55 +800,58 @@ def run_pipeline(config: PipelineConfig, progress_callback=None):
         try:
             ml_dir = _save_ml_exports(df, out_df, config.output_dir,
                                       f"{technique}_{config.dataset_name}",
-                                      config.splitting.names)
+                                      split_names)
             summary.append(f"    ML exports saved to {ml_dir}/")
         except Exception as exc:
             logger.warning(f"ML export failed: {exc}")
             summary.append(f"    Warning: ML export failed: {exc}")
 
-        # Build entity-level split assignments for metrics & visualization
-        if is_1d:
-            entity_splits = result  # entity_id -> split_name
-        else:
-            # Majority vote: each entity gets the split it appears in most often
-            from collections import Counter
-            entity_vote = {}
-            for (e1_id, e2_id), split in result.items():
-                entity_vote.setdefault(e1_id, []).append(split)
-            entity_splits = {eid: Counter(votes).most_common(1)[0][0]
-                             for eid, votes in entity_vote.items()}
-
-        # Compute split quality metrics
+        # Compute split quality metrics directly on the row-level assignment,
+        # per entity axis (no per-entity majority vote).
+        split_metrics = None
         try:
-            split_metrics = compute_split_metrics(
-                e1_data, entity_splits, config.splitting.names,
-                entity_overlap=overlap_info if overlap_info else None,
-            )
-            metrics_path = save_metrics(
-                split_metrics, config.output_dir, technique, config.dataset_name,
-            )
+            split_metrics = compute_row_split_metrics(axes_spec, labels, split_names)
+            split_metrics["status"] = "valid"
+            save_metrics(split_metrics, config.output_dir, technique, config.dataset_name)
             all_technique_metrics[technique] = split_metrics
-            nn = split_metrics.get("nn_leakage", {})
-            if nn:
-                summary.append(f"    NN leakage: {nn.get('zero_dist_count', 0)} zero-dist pairs "
-                               f"(mean dist: {nn.get('mean_nn_dist', 'N/A')})")
-            ds = split_metrics.get("distribution_shift", {})
-            if ds:
-                summary.append(f"    Distribution shift: {ds.get('mean_normalized_shift', 'N/A')} "
-                               f"(max: {ds.get('max_normalized_shift', 'N/A')})")
-            cov = split_metrics.get("coverage", 0)
-            summary.append(f"    Coverage: {cov * 100:.1f}%")
+            for ax, am in split_metrics["axes"].items():
+                pair_txt = ", ".join(f"{p}={v['count']}" for p, v in am["overlap_pairs"].items())
+                summary.append(f"    {axis_names[ax]} in >1 split: {am['multi_split_count']}"
+                               f"/{am['n_entities']} ({pair_txt})")
+                nn = am.get("nn_leakage", {})
+                if nn:
+                    summary.append(f"    {axis_names[ax]} NN leakage: {nn.get('zero_dist_count', 0)} "
+                                   f"zero-dist (mean dist: {nn.get('mean_nn_dist', 'N/A')})")
+                ds = am.get("distribution_shift", {})
+                if ds:
+                    summary.append(f"    {axis_names[ax]} distribution shift: "
+                                   f"{ds.get('mean_normalized_shift', 'N/A')} "
+                                   f"(max: {ds.get('max_normalized_shift', 'N/A')})")
+            summary.append(f"    Coverage: {split_metrics['coverage'] * 100:.1f}%")
         except Exception as exc:
             logger.warning(f"Metrics computation failed: {exc}")
             summary.append(f"    Warning: metrics computation failed: {exc}")
+            # Still a valid split; its criteria are reported as missing (null).
+            all_technique_metrics[technique] = {"status": "valid"}
 
-        # Generate visualization
+        # Visualization of e1 entities. In 2D an entity whose interactions
+        # span several splits is labelled "multiple" rather than hidden.
         try:
+            if is_1d:
+                entity_splits = result
+            else:
+                seen = {}
+                for eid, lab in zip(e1_ids, labels):
+                    if lab in split_names:
+                        seen.setdefault(eid, set()).add(lab)
+                entity_splits = {eid: (next(iter(labs)) if len(labs) == 1 else "multiple")
+                                 for eid, labs in seen.items()}
             plot_path = generate_split_plots(
                 e1_data, entity_splits, config.output_dir,
                 config.dataset_name, config.e1.name, technique,
-                split_names=config.splitting.names,
+                split_names=split_names,
                 precomputed_coords=_viz_coords,
+                seed=config.splitting.seed,
             )
             if plot_path:
                 summary.append(f"    Plot: {plot_path}")
@@ -623,7 +862,7 @@ def run_pipeline(config: PipelineConfig, progress_callback=None):
         for line in summary:
             _report(95, line)
 
-    # Generate comparison chart across all techniques
+    # Generate comparison chart across valid techniques
     if all_technique_metrics:
         try:
             chart_path = generate_comparison_chart(
@@ -635,32 +874,48 @@ def run_pipeline(config: PipelineConfig, progress_callback=None):
             logger.warning(f"Comparison chart failed: {exc}")
             _report(98, f"  Warning: comparison chart failed: {exc}")
 
-    # Generate benchmark comparison summary
-    if all_technique_metrics and len(all_technique_metrics) > 1:
-        try:
-            summary_data = _build_comparison_summary(all_technique_metrics, config.splitting.names)
-            summary_dir = os.path.join(config.output_dir, "metrics")
-            os.makedirs(summary_dir, exist_ok=True)
+    # Comparison summary: validity status for every technique + Pareto table
+    summary_data = _build_comparison_summary(
+        all_technique_metrics, split_names, failed=failed,
+        targets=_target_fractions(config.splitting), baseline=baseline,
+    )
+    summary_dir = os.path.join(config.output_dir, "metrics")
+    os.makedirs(summary_dir, exist_ok=True)
+    summary_path = os.path.join(summary_dir, f"comparison_{config.dataset_name}.json")
+    with open(summary_path, "w") as f:
+        json.dump(summary_data, f, indent=2)
 
-            # Save as JSON
-            summary_path = os.path.join(summary_dir, f"comparison_{config.dataset_name}.json")
-            with open(summary_path, "w") as f:
-                json.dump(summary_data, f, indent=2)
+    def _fmt(v, pct=False):
+        if v is None:
+            return "N/A"
+        return f"{v * 100:.1f}%" if pct else f"{v:.4f}"
 
-            # Print summary table
-            _report(99, "\n  === Technique Comparison ===")
-            _report(99, f"  {'Technique':<12} {'Coverage':>10} {'NN Sep':>10} {'Dist Shift':>12} {'Overlap':>10}")
-            _report(99, f"  {'\u2500'*12} {'\u2500'*10} {'\u2500'*10} {'\u2500'*12} {'\u2500'*10}")
-            for t_name, t_data in summary_data["techniques"].items():
-                cov = f"{t_data['coverage']*100:.1f}%"
-                nn = f"{t_data['nn_separation']:.4f}" if t_data['nn_separation'] else "N/A"
-                ds = f"{t_data['dist_shift']:.4f}" if t_data['dist_shift'] else "N/A"
-                ov = str(t_data.get('entity_overlap', 'N/A'))
-                _report(99, f"  {t_name:<12} {cov:>10} {nn:>10} {ds:>12} {ov:>10}")
+    _report(99, "\n  === Technique Comparison (valid splits) ===")
+    axes_keys = list(axis_names)
+    header = f"  {'Technique':<12} {'Pareto':>6} {'SizeDev':>8}"
+    for ax in axes_keys:
+        header += f" {ax + ' ovl':>9} {ax + ' nnRel':>9}"
+    _report(99, header)
+    for t_name, t_data in summary_data["techniques"].items():
+        line = (f"  {t_name:<12} {'*' if t_data['pareto_optimal'] else '':>6} "
+                f"{_fmt(t_data.get('size_dev'), pct=True):>8}")
+        for ax in axes_keys:
+            line += (f" {_fmt(t_data.get(f'overlap_frac_{ax}'), pct=True):>9}"
+                     f" {_fmt(t_data.get(f'nn_rel_{ax}')):>9}")
+        _report(99, line)
+    for t_name, reasons in failed.items():
+        _report(99, f"  {t_name:<12} FAILED: {'; '.join(reasons)}")
+    if summary_data.get("recommendation"):
+        _report(99, f"\n  Recommended: {summary_data['recommendation']} "
+                    f"({summary_data['recommendation_basis']})")
+    _report(99, f"  Comparison saved to {summary_path}")
 
-            if summary_data.get("recommendation"):
-                _report(99, f"\n  Recommended: {summary_data['recommendation']}")
-        except Exception as exc:
-            logger.warning(f"Comparison summary failed: {exc}")
+    if not all_technique_metrics:
+        raise RuntimeError(
+            "No technique produced a valid split: "
+            + "; ".join(f"{t}: {' / '.join(r)}" for t, r in failed.items())
+        )
 
     _report(100, f"\nDone! Results saved to {config.output_dir}/")
+    return {"valid": sorted(all_technique_metrics), "failed": failed,
+            "comparison": summary_data}

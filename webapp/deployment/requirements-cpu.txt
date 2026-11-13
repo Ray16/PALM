@@ -1,0 +1,21 @@
+# Python 3.11 provides binary wheels for DataSAIL's scikit-learn 1.2 API.
+fastapi==0.129.0
+uvicorn==0.40.0
+pydantic==2.12.5
+python-multipart==0.0.22
+numpy==1.26.4
+pandas==2.3.3
+scipy==1.17.0
+scikit-learn==1.2.2
+datasail==1.4.0
+grakel==0.1.10
+cvxpy==1.5.3
+pyscipopt==6.1.0
+mtkahypar==1.6.1
+rdkit==2026.3.5
+matplotlib==3.10.8
+plotly==6.9.0
+ase==3.27.0
+biopython==1.86
+transformers==4.57.6
+pyyaml==6.0.3

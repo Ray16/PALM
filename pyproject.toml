@@ -1,6 +1,6 @@
 [build-system]
 requires = ["setuptools>=68.0", "wheel"]
-build-backend = "setuptools.backends._legacy:_Backend"
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "palm"
@@ -76,5 +76,27 @@ dev = [
 [project.scripts]
 palm-datasail = "PALM.benchmarks.datasail_pipeline.__main__:main"
 
-[tool.setuptools.packages.find]
-include = ["PALM*"]
+[tool.setuptools]
+# pyproject.toml lives inside the PALM package directory itself, so map the
+# top-level package `PALM` to "." and list subpackages explicitly.
+package-dir = {"PALM" = "."}
+packages = [
+    "PALM",
+    "PALM.benchmarks",
+    "PALM.benchmarks.archive",
+    "PALM.benchmarks.charts",
+    "PALM.benchmarks.common",
+    "PALM.benchmarks.datasail_pipeline",
+    "PALM.benchmarks.master",
+    "PALM.benchmarks.moleculenet",
+    "PALM.benchmarks.omol25",
+    "PALM.benchmarks.reactions",
+    "PALM.data",
+    "PALM.features",
+    "PALM.hypergraph",
+    "PALM.lowrank",
+    "PALM.splitters",
+    "PALM.splitters.common",
+    "PALM.splitters.methods",
+    "PALM.webapp",
+]

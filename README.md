@@ -10,10 +10,10 @@
   are not vendored here; regenerate datasets via `low_rank/lowrank/datasets/sources.py`.
   See [`low_rank/CRITICAL_REVIEW.md`](low_rank/CRITICAL_REVIEW.md) for the current
   improvement roadmap.
-- **Reviewed manuscript and frozen evidence:**
-  [`publications/lowrank_2026`](publications/lowrank_2026). Its `package/` remains
-  the immutable v0.2.0.dev3 producer; existing manuscript results do not describe
-  subsequent development code.
+- **Reviewed manuscript and frozen evidence:** kept out of the working tree and
+  preserved at commit [`a171cfd` → `publications/lowrank_2026`](https://github.com/Ray16/PALM/tree/a171cfd0a3cc42feefa10b05a41c6eff1f80c5ff/publications/lowrank_2026), which the
+  manuscript cites. Its `package/` is the immutable v0.2.0.dev3 producer; existing
+  manuscript results do not describe subsequent development code.
 - **Improvement evidence and remaining work:**
   [`low_rank/history/v0.2.0.dev4-evidence/STATUS.txt`](low_rank/history/v0.2.0.dev4-evidence/STATUS.txt).
 
@@ -24,10 +24,10 @@
 | `splitters/`, `hypergraph/`, `features/`, `data/` | The `PALM` package: splitter registry, hypergraph backend, featurizers, dataset loaders (incl. `data/reactions.py`) |
 | `lowrank/` | `PALM.lowrank`: the low-rank splitter integrated into `PALM.splitters` (registers `"lowrank"`; used by the benchmarks) |
 | `low_rank/` | Standalone low-rank development package `lowrank-split` (v0.2.0.dev4), its tests, docs and version history |
-| `benchmarks/` | DataSAIL pipeline + web app, master benchmark, cross-method and complexity studies |
+| `webapp/` | **Data Splitting Lab** web app (`PALM.webapp`): upload or pick a demo, compare DataSAIL / hypergraph / low-rank splits side by side; see [`webapp/README.md`](webapp/README.md) |
+| `benchmarks/` | DataSAIL pipeline, master benchmark, cross-method and complexity studies |
 | `tests/` | PALM integration tests and small input fixtures (generated `tests/output/` is not tracked) |
 | `docs/` | Benchmark insights (`docs/insights.md`) and the PALM technical report (`docs/report/`) |
-| `publications/lowrank_2026/` | Frozen, checksummed manuscript evidence cited by the paper (do not restructure) |
 
 The method constructs representation-defined evaluation boundaries. Lower
 cross-fold similarity or a harder prediction task does not establish better
@@ -77,23 +77,17 @@ python -m PALM.benchmarks.datasail_pipeline config.yaml
 
 ### Web App
 
+The Data Splitting Lab lives in [`webapp/`](webapp/README.md). From the directory that
+*contains* this checkout (the folder must be named `PALM`):
+
 ```bash
-uvicorn PALM.benchmarks.datasail_pipeline.webapp.app:app --host 0.0.0.0 --port 8080
+bash PALM/webapp/run.sh          # http://localhost:8080 (CPU only; --dev, --gpu, port)
 ```
 
-Open `http://localhost:8080` → Upload dataset → Configure entities → Run splitting → Download results.
-
-The web app includes guided tooltips, technique recommendations, data preview, real-time progress streaming, interactive metrics dashboards, and t-SNE visualizations.
-
-#### Web App Configuration (Environment Variables)
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `DATASAIL_JOBS_DIR` | `/tmp/datasail_webapp` | Directory for job storage |
-| `PALM_CORS_ORIGINS` | `*` | Comma-separated allowed CORS origins |
-| `PALM_MAX_UPLOAD_MB` | `500` | Maximum upload file size in MB |
-| `PALM_RATE_LIMIT` | `30` | Max requests per IP per 60-second window |
-| `PALM_JOB_MAX_AGE_HOURS` | `24` | Auto-delete jobs older than this |
+Upload a dataset or pick one of six public demos → configure entities and feature sets →
+compare DataSAIL techniques, hypergraph and low-rank splits side by side on an interactive
+t-SNE map → download splits. Setup, settings and deployment are in
+[`webapp/README.md`](webapp/README.md).
 
 ## Configuration
 

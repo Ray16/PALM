@@ -1,6 +1,6 @@
 # FASTA protein sequences — 1D biomolecule splitting
-input_file: "/nfs/lambda_stor_01/homes/rzhu/PALM/tests/data/sequences.fasta"
-output_dir: "/nfs/lambda_stor_01/homes/rzhu/PALM/tests/output/fasta_sequences"
+input_file: "PALM/tests/data/sequences.fasta"
+output_dir: "PALM/tests/output/fasta_sequences"
 dataset_name: "fasta_sequences"
 
 e1:

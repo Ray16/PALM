@@ -1,6 +1,6 @@
 # Directory of SDF files — 1D molecule splitting
-input_file: "/nfs/lambda_stor_01/homes/rzhu/PALM/tests/data/sdf_dir"
-output_dir: "/nfs/lambda_stor_01/homes/rzhu/PALM/tests/output/sdf_dir"
+input_file: "PALM/tests/data/sdf_dir"
+output_dir: "PALM/tests/output/sdf_dir"
 dataset_name: "sdf_dir"
 
 e1:

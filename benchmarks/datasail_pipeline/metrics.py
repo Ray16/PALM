@@ -78,6 +78,56 @@ def _pair_distribution_shift(X, idx_a, idx_b, overall_std):
     }
 
 
+def _pairwise_quality(X_clean, metric, split_idx, split_names):
+    """NN leakage + distribution shift for every pair of named splits.
+
+    ``split_idx`` maps split name -> row indices into ``X_clean``. Returns a
+    dict with ``nn_leakage_pairs`` / ``nn_leakage`` (primary pair) and
+    ``distribution_shift_pairs`` / ``distribution_shift`` when computable.
+    """
+    out = {}
+    if len(split_names) < 2:
+        return out
+
+    # 1. Nearest-neighbor leakage for every ordered pair of named splits.
+    # Reference = the split listed first (train-like); query = listed later
+    # (eval-like). Pairs follow the order in split_names.
+    pair_leakage = {}
+    for ref, query in itertools.combinations(split_names, 2):
+        res = _pair_leakage(X_clean, split_idx[ref], split_idx[query], metric)
+        if res is not None:
+            pair_leakage[f"{ref}->{query}"] = res
+    if pair_leakage:
+        out["nn_leakage_pairs"] = pair_leakage
+        # Primary pair for backward-compatible consumers
+        if "train" in split_names:
+            eval_name = "test" if "test" in split_names else split_names[-1]
+            primary = pair_leakage.get(f"train->{eval_name}")
+            if primary is not None:
+                out["nn_leakage"] = primary
+        if "nn_leakage" not in out:
+            # Fall back to the worst (smallest separation) pair
+            worst = min(pair_leakage.values(), key=lambda d: d["mean_nn_dist"])
+            out["nn_leakage"] = worst
+
+    # 2. Feature distribution comparison for every pair of named splits.
+    overall_std = X_clean.std(axis=0)
+    overall_std[overall_std == 0] = 1.0
+    pair_shift = {}
+    for a, b in itertools.combinations(split_names, 2):
+        res = _pair_distribution_shift(X_clean, split_idx[a], split_idx[b], overall_std)
+        if res is not None:
+            pair_shift[f"{a}->{b}"] = res
+    if pair_shift:
+        out["distribution_shift_pairs"] = pair_shift
+        # Primary: first vs last named split (train vs test)
+        primary_key = f"{split_names[0]}->{split_names[-1]}"
+        out["distribution_shift"] = pair_shift.get(
+            primary_key, next(iter(pair_shift.values()))
+        )
+    return out
+
+
 def compute_split_metrics(feature_data, split_assignments, split_names,
                           entity_overlap=None):
     """Compute quality metrics for a split.
@@ -130,46 +180,100 @@ def compute_split_metrics(feature_data, split_assignments, split_names,
     # Precompute per-split index lists
     split_idx = {sn: [i for i, l in enumerate(labels) if l == sn]
                  for sn in split_names}
+    metrics.update(_pairwise_quality(X_clean, metric, split_idx, split_names))
+    return metrics
 
-    # 2. Nearest-neighbor leakage for every ordered pair of named splits.
-    # Reference = the split listed first (train-like); query = listed later
-    # (eval-like). Pairs follow the order in split_names.
-    if len(split_names) >= 2:
-        pair_leakage = {}
-        for ref, query in itertools.combinations(split_names, 2):
-            res = _pair_leakage(X_clean, split_idx[ref], split_idx[query], metric)
-            if res is not None:
-                pair_leakage[f"{ref}->{query}"] = res
-        if pair_leakage:
-            metrics["nn_leakage_pairs"] = pair_leakage
-            # Primary pair for backward-compatible consumers
-            if "train" in split_names:
-                eval_name = "test" if "test" in split_names else split_names[-1]
-                primary = pair_leakage.get(f"train->{eval_name}")
-                if primary is not None:
-                    metrics["nn_leakage"] = primary
-            if "nn_leakage" not in metrics:
-                # Fall back to the worst (smallest separation) pair
-                worst = min(pair_leakage.values(), key=lambda d: d["mean_nn_dist"])
-                metrics["nn_leakage"] = worst
 
-    # 3. Feature distribution comparison for every pair of named splits.
-    if len(split_names) >= 2:
-        overall_std = X_clean.std(axis=0)
-        overall_std[overall_std == 0] = 1.0
-        pair_shift = {}
+def compute_row_split_metrics(axes, row_splits, split_names):
+    """Quality metrics computed directly on a row-level (interaction) split.
+
+    Unlike ``compute_split_metrics`` this does not collapse rows to one label
+    per entity: for each entity axis (e1, and e2 in 2D) it builds the set of
+    entities that occur in each split's rows, so an entity appearing in more
+    than one split is counted as overlap on every pair it spans, and NN
+    leakage / distribution shift are measured between those per-split entity
+    sets (a shared entity has NN distance 0, i.e. leakage).
+
+    Args:
+        axes: list of (axis_key, axis_name, feature_data, row_entity_ids),
+            where feature_data is {entity_id: feature_vector} and
+            row_entity_ids is the entity id of that axis for every row.
+        row_splits: split label for every row (same order as row_entity_ids).
+        split_names: list of split names.
+
+    Returns:
+        dict of metrics. Top-level ``nn_leakage*`` / ``distribution_shift*``
+        mirror the first axis for backward compatibility; ``axes`` holds the
+        full per-axis results and ``entity_overlap`` has every axis.
+    """
+    row_splits = list(row_splits)
+    n_rows = len(row_splits)
+    counts = {sn: sum(1 for l in row_splits if l == sn) for sn in split_names}
+    n_assigned = sum(counts.values())
+
+    metrics = {
+        "split_counts": counts,
+        "split_fractions": {sn: round(c / n_assigned, 4) if n_assigned > 0 else 0
+                            for sn, c in counts.items()},
+        "coverage": round(n_assigned / n_rows, 4) if n_rows > 0 else 0,
+        "n_rows": n_rows,
+    }
+
+    overlap_summary = {}
+    per_axis = {}
+    for axis_key, axis_name, feature_data, row_entity_ids in axes:
+        names = sorted(feature_data.keys())
+        index = {n: i for i, n in enumerate(names)}
+        X = np.array([feature_data[n] for n in names])
+        X_clean = np.nan_to_num(X, nan=0.0, posinf=0.0, neginf=0.0)
+        metric = _choose_metric(X_clean)
+
+        sets = {sn: set() for sn in split_names}
+        for eid, sn in zip(row_entity_ids, row_splits):
+            if sn in sets:
+                sets[sn].add(str(eid))
+
+        # Overlap for every pair of splits (not just the first two)
+        pairs = {}
         for a, b in itertools.combinations(split_names, 2):
-            res = _pair_distribution_shift(X_clean, split_idx[a], split_idx[b], overall_std)
-            if res is not None:
-                pair_shift[f"{a}->{b}"] = res
-        if pair_shift:
-            metrics["distribution_shift_pairs"] = pair_shift
-            # Primary: first vs last named split (train vs test)
-            primary_key = f"{split_names[0]}->{split_names[-1]}"
-            metrics["distribution_shift"] = pair_shift.get(
-                primary_key, next(iter(pair_shift.values()))
-            )
+            inter = sets[a] & sets[b]
+            union = sets[a] | sets[b]
+            pairs[f"{a}&{b}"] = {
+                "count": len(inter),
+                "frac": round(len(inter) / len(union), 4) if union else 0.0,
+            }
+        seen = set().union(*sets.values()) if sets else set()
+        multi = [e for e in seen if sum(e in sets[sn] for sn in split_names) > 1]
+        n_multi = len(multi)
+        frac_multi = round(n_multi / len(seen), 4) if seen else None
 
+        split_idx = {sn: sorted(index[e] for e in sets[sn] if e in index)
+                     for sn in split_names}
+        axis_metrics = {
+            "name": axis_name,
+            "distance_metric": metric,
+            "entity_counts": {sn: len(sets[sn]) for sn in split_names},
+            "n_entities": len(seen),
+            "multi_split_count": n_multi,
+            "multi_split_frac": frac_multi,
+            "overlap_pairs": pairs,
+        }
+        axis_metrics.update(_pairwise_quality(X_clean, metric, split_idx, split_names))
+        per_axis[axis_key] = axis_metrics
+
+        overlap_summary[f"{axis_key}_overlap"] = n_multi
+        overlap_summary[f"{axis_key}_total"] = len(seen)
+        overlap_summary[f"{axis_key}_overlap_frac"] = frac_multi
+        overlap_summary[f"{axis_key}_pairs"] = pairs
+
+    metrics["entity_overlap"] = overlap_summary
+    metrics["axes"] = per_axis
+    if axes:
+        first = per_axis[axes[0][0]]
+        for k in ("nn_leakage", "nn_leakage_pairs",
+                  "distribution_shift", "distribution_shift_pairs"):
+            if k in first:
+                metrics[k] = first[k]
     return metrics
 
 

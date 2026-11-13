@@ -57,6 +57,59 @@ VALID_TECHNIQUES_1D = {"R", "I1e", "C1e", "scaffold"}
 
 
 @dataclass
+class ExternalTechnique:
+    """A non-DataSAIL splitter plugged into the pipeline by name.
+
+    ``fn(ctx)`` receives a :class:`SplitContext` and returns the assignment in
+    the same shape DataSAIL results use: ``{entity_id: split_name}`` in 1D,
+    ``{(e1_id, e2_id): split_name}`` in 2D. Its output then goes through the
+    same validation, metrics, plots and exports as every DataSAIL technique.
+    """
+    fn: object
+    supports_1d: bool = True
+    supports_2d: bool = True
+    description: str = ""
+
+
+@dataclass
+class SplitContext:
+    """Everything an external technique needs to produce a split.
+
+    ``e1_data``/``e2_data`` are the featurized entities ({id: vector}, NaN/Inf
+    already zeroed); ``interactions`` is the per-row (e1_id, e2_id) list in 2D
+    (None in 1D); ``e1_entities`` is the raw entity map (e.g. id -> SMILES).
+    """
+    is_1d: bool
+    e1_data: dict
+    e2_data: Optional[dict]
+    interactions: Optional[list]
+    e1_entities: dict
+    e1_config: "EntityConfig"
+    e2_config: Optional["EntityConfig"]
+    splitting: "SplittingConfig"
+
+
+# name -> ExternalTechnique. Populated by register_technique(); this package
+# itself registers nothing, so it carries no dependency on other splitters.
+EXTERNAL_TECHNIQUES = {}
+
+
+def register_technique(name, fn, supports_1d=True, supports_2d=True, description=""):
+    """Make ``name`` a valid technique that the pipeline runs via ``fn(ctx)``."""
+    if name in VALID_TECHNIQUES_1D | VALID_TECHNIQUES_2D:
+        raise ValueError(f"'{name}' is a built-in technique and cannot be re-registered")
+    EXTERNAL_TECHNIQUES[name] = ExternalTechnique(fn, supports_1d, supports_2d, description)
+
+
+def valid_techniques(is_1d):
+    """All technique names valid for a 1D (single-entity) or 2D dataset."""
+    builtin = VALID_TECHNIQUES_1D if is_1d else VALID_TECHNIQUES_2D
+    external = {n for n, t in EXTERNAL_TECHNIQUES.items()
+                if (t.supports_1d if is_1d else t.supports_2d)}
+    return builtin | external
+
+
+@dataclass
 class SplittingConfig:
     techniques: list = field(default_factory=lambda: ["R", "I1e", "I1f", "I2", "C1e", "C1f", "C2"])
     splits: list = field(default_factory=lambda: [8, 2])
@@ -64,15 +117,35 @@ class SplittingConfig:
     e2_clusters: int = 30
     max_sec: int = 300
     solver: str = "SCIP"
-    # Reproducibility: seeds numpy/random before splitting so the R baseline,
-    # t-SNE/UMAP layouts and any sampling are deterministic across runs.
+    # Reproducibility: seeds Python's `random` and numpy's global RNG at
+    # pipeline start, the random-split baseline used by the comparison, and
+    # the t-SNE/UMAP layouts. It does NOT change DataSAIL's output: the
+    # installed datasail() has no seed argument and its main routine
+    # unconditionally calls random.seed(42) / np.random.seed(42) on every
+    # call, so DataSAIL splits (including its R technique) are deterministic
+    # but fixed at DataSAIL's internal seed regardless of this value.
     seed: int = 42
-    # Number of threads handed to DataSAIL's clustering/solver step.
+    # Forwarded to datasail(threads=...), which DataSAIL uses for its external
+    # clustering tools (CD-HIT, MMseqs2, DIAMOND, ...). With the precomputed
+    # distance matrices this pipeline passes, those tools are not invoked, and
+    # DataSAIL's MILP solver thread count is hard-coded inside datasail
+    # (solver/utils.py, num_threads=14) — it cannot be set from here.
     threads: int = 1
     # Run multiple techniques concurrently via a thread pool. Off by default:
     # the SCIP solver can spawn child processes that don't always shut down
     # cleanly, so sequential is the safe default. Set >1 to overlap techniques.
+    # Concurrent techniques share numpy's global RNG (which DataSAIL reseeds
+    # per call), so n_jobs > 1 is not guaranteed to be bit-reproducible.
     n_jobs: int = 1
+    # Split validation. By default every row must be assigned to a named
+    # split; techniques that leave rows "not selected" are marked failed and
+    # excluded from exports and the recommendation. Note that double-cold 2D
+    # techniques (I2, C2) inherently drop cross-split interactions, so they
+    # only pass when allow_incomplete is set.
+    allow_incomplete: bool = False
+    # Max absolute deviation of each split's row fraction (among assigned
+    # rows) from its target fraction splits[i] / sum(splits).
+    size_tolerance: float = 0.1
 
     def __post_init__(self):
         if not isinstance(self.splits, list) or len(self.splits) not in (2, 3):
@@ -86,14 +159,20 @@ class SplittingConfig:
             )
         if not isinstance(self.techniques, list) or not self.techniques:
             raise ValueError("'techniques' must be a non-empty list of strings")
-        all_valid = VALID_TECHNIQUES_2D | VALID_TECHNIQUES_1D
+        all_valid = valid_techniques(True) | valid_techniques(False)
         for t in self.techniques:
             if t not in all_valid:
                 raise ValueError(
                     f"Invalid splitting technique '{t}'. "
-                    f"Valid 2D techniques: {sorted(VALID_TECHNIQUES_2D)}. "
-                    f"Valid 1D techniques: {sorted(VALID_TECHNIQUES_1D)}."
+                    f"Valid 2D techniques: {sorted(valid_techniques(False))}. "
+                    f"Valid 1D techniques: {sorted(valid_techniques(True))}."
                 )
+        if not (0 < self.size_tolerance <= 1):
+            raise ValueError(
+                f"'size_tolerance' must be in (0, 1], got {self.size_tolerance}"
+            )
+        if self.threads < 1 or self.n_jobs < 1:
+            raise ValueError("'threads' and 'n_jobs' must be >= 1")
 
 
 @dataclass
@@ -221,16 +300,18 @@ def load_config(path):
         seed=split_raw.get("seed", 42),
         threads=split_raw.get("threads", 1),
         n_jobs=split_raw.get("n_jobs", 1),
+        allow_incomplete=bool(split_raw.get("allow_incomplete", False)),
+        size_tolerance=float(split_raw.get("size_tolerance", 0.1)),
     )
 
     # Cross-validate techniques against dimensionality (1D vs 2D)
     is_1d = e2_cfg is None
     if is_1d:
-        invalid = [t for t in splitting.techniques if t not in VALID_TECHNIQUES_1D]
+        invalid = [t for t in splitting.techniques if t not in valid_techniques(True)]
         if invalid:
             raise ValueError(
                 f"Techniques {invalid} are not valid for 1D (single-entity) datasets. "
-                f"Valid 1D techniques: {sorted(VALID_TECHNIQUES_1D)}"
+                f"Valid 1D techniques: {sorted(valid_techniques(True))}"
             )
 
     cfg = PipelineConfig(

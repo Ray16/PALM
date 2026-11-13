@@ -1,6 +1,6 @@
 # Materials Project CIF files — 1D material splitting
-input_file: "/nfs/lambda_stor_01/homes/rzhu/PALM/tests/data/mp_cifs"
-output_dir: "/nfs/lambda_stor_01/homes/rzhu/PALM/tests/output/mp_cifs"
+input_file: "PALM/tests/data/mp_cifs"
+output_dir: "PALM/tests/output/mp_cifs"
 dataset_name: "mp_cifs"
 
 e1:

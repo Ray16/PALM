@@ -1,5 +1,0 @@
-{
-  "reason": "SplitSpec validates only 2/3 folds; PCQM4Mv2 has four native folds. All three failed cases stopped in warm-up; no large numerical optimization started.",
-  "owner_and_child_termination_verified": true,
-  "production_outputs_preserved": true
-}

@@ -7,17 +7,29 @@ back to and mine for insights. It answers two questions per (dataset × splitter
 1. **Split quality** — how much does the split leak? (`leakage` = scaled
    cross-split similarity `L(π)`, plus `imbalance`, realized `test_fraction`,
    partition `runtime_s`).
-2. **Generalization gap** — is the split genuinely *harder*? A fixed
+2. **Generalization gap** — does the split change held-out performance? A fixed
    RandomForest is trained on the split's train bucket and scored on its test
-   bucket (`test_metric` = ROC-AUC for classification, R² for regression);
-   `gen_gap = train_metric − test_metric`. The model + features are held constant
-   across splitters, so any change in the gap is attributable to the **split**,
-   not the model.
+   bucket (`test_metric` = ROC-AUC for classification, R² for regression;
+   accuracy when a test bucket is single-class); `gen_gap = train_metric −
+   test_metric`.
 
-The headline hypothesis: a leakage-minimizing split should push the test
-molecules further from training, *lowering* the held-out metric and *raising* the
-gap relative to a random split — i.e. it produces a more honest OOD evaluation.
-`analyze.py` measures the Pearson correlation between leakage and gap directly.
+**What the gap does and does not establish.** Holding the model + features fixed
+removes *model* choice as an explanation, but it does **not** make a gap change
+attributable to "OOD-ness" alone. A split simultaneously changes (a) the train↔test
+similarity (what we want to measure), (b) the test **label distribution** — test
+positive rate, test label mean/variance (R² is normalized by test variance, so a
+narrower test set lowers R² at identical error), (c) the **effective train size**
+(the non-random splitters realize a 0.77–0.89 train fraction vs 0.80 for random), and
+(d) class balance / test difficulty. A larger gap therefore shows that the split is
+*harder for this model*, not that it is a more honest estimate of deployment error,
+and a lower L(π) is not by itself evidence of a better benchmark. Pooling points
+across heterogeneous datasets (different metrics, scales, and unequal method
+coverage — DataSAIL only runs at n ≤ 3000, scaffold only on SMILES sets) compounds
+this: cross-dataset correlations and method means mix dataset difficulty with
+split effect. `analyze.py`'s pooled Pearson r(leakage, gap) is descriptive only.
+
+`paired_analysis.py` re-reads the saved results (no retraining) and reports what
+*is* supported — see [Paired, coverage-matched re-analysis](#paired-coverage-matched-re-analysis).
 
 ## Coverage
 
@@ -50,8 +62,8 @@ with the reason recorded.
 benchmarks/master/run_all.sh 3
 
 # just the registry sweep, custom seeds/limit
-CUDA_VISIBLE_DEVICES=3 LD_LIBRARY_PATH=/homes/rzhu/miniforge3/envs/palm/lib \
-/homes/rzhu/miniforge3/envs/palm/bin/python -m PALM.benchmarks.master.run_benchmark \
+CUDA_VISIBLE_DEVICES=3 LD_LIBRARY_PATH=$CONDA_PREFIX/lib \
+python -m PALM.benchmarks.master.run_benchmark \
     --datasets moleculenet_esol qmof --seeds 0 1 2 --limit 5000
 ```
 
@@ -68,6 +80,9 @@ results/figures/
     gengap_by_method.png          mean train−test gap per method
     leakage_vs_gap.png            the headline correlation
     test_metric_by_method.png     mean held-out metric per method
+results/paired_effects_per_dataset.csv   paired_analysis.py: method − random per dataset
+results/paired_effects_summary.csv       paired_analysis.py: coverage-matched aggregates
+results/label_shift.csv                  paired_analysis.py: train/test label stats per verified split
 master/INSIGHTS.md                the numbers, in words
 ```
 
@@ -79,6 +94,87 @@ test_metric, gen_gap, n_train_lab, n_test_lab, extra, reason`
 
 Aggregate over `seed` (mean ± std) for headline numbers; `status != "ok"` rows
 carry a `reason`.
+
+## Paired, coverage-matched re-analysis
+
+`python -m PALM.benchmarks.master.paired_analysis [--reconstruct]` (CPU, no model
+retraining) re-reads `master_benchmark.csv`. Numbers below are from the current
+results (seeds 0–2, 1-D datasets with a target).
+
+**Design.** Effects are *within dataset*: `method − random` on `test_metric` and
+`gen_gap`, paired by seed, and a pair is dropped unless both runs used the same
+metric (MUV silently falls back to accuracy on single-class test buckets, so it
+drops out). Intervals are 95% t-intervals over the 3 paired seeds — note the
+non-random splitters are deterministic, so their replicates are the *same*
+partition with a re-seeded RandomForest; the interval is model + random-split
+variance, not method variance. Aggregates are per metric family, only over
+datasets where every compared method has a paired effect, with a
+bootstrap-over-datasets 95% CI.
+
+**Coverage-matched mean Δ held-out metric vs random (95% bootstrap CI; datasets below random)**
+
+| method set / datasets | graph | hypergraph | lowrank | datasail | scaffold |
+|---|--:|--:|--:|--:|--:|
+| R², 7 sets (mp, esol, freesolv, lipo, qm8, openpolymer26, qmof) | −0.46 [−0.62, −0.33] 7/7 | −0.50 [−0.65, −0.36] 7/7 | −0.45 [−0.57, −0.34] 7/7 | n/a | n/a |
+| ROC-AUC, 6 sets (bace, bbbp, clintox, hiv, sider, tox21) | −0.22 [−0.29, −0.15] 6/6 | −0.24 [−0.34, −0.16] 6/6 | −0.14 [−0.18, −0.11] 6/6 | n/a | n/a |
+| R², all 6 methods (esol, freesolv) | −0.48 | −0.64 | −0.47 | −0.44 | −0.47 |
+| ROC-AUC, all 6 methods (bace, bbbp, clintox, sider) | −0.24 [−0.33, −0.15] | −0.30 [−0.40, −0.23] | −0.16 [−0.20, −0.13] | −0.17 [−0.19, −0.12] | −0.05 [−0.09, −0.01] |
+
+(Δgap mirrors Δtest because train metrics barely move.) Per-dataset cells with
+seed CIs are in `results/paired_effects_per_dataset.csv`; the only per-dataset
+CIs that include 0 are scaffold on bbbp/clintox/hiv/sider, hypergraph/lowrank
+on hiv/tox21, and lowrank on openpolymer26.
+
+**Leakage ↔ gap.** Pooled r = −0.55 (63 dataset×method points), within-dataset
+(centered) r = −0.59, but **within-dataset among non-random methods only r = +0.25**:
+the negative correlation is carried by the random-vs-everything contrast, not by
+lower-L(π) methods producing larger gaps. The leakage ranking (lowrank lowest on
+most sets) does not predict the gap ranking (hypergraph largest drop).
+
+**Label shift and train size** (`results/label_shift.csv`). Only splits whose
+assignment could be recovered *and* matched to the master row (identical labeled
+train/test counts and, where recorded, identical L(π)) are used: saved seed-0
+assignments for bace and esol (all methods), recomputed random seeds everywhere,
+legacy scaffold on most SMILES sets, and hypergraph/graph on openpolymer26/qmof
+(the other hypergraph/graph recomputations no longer reproduce the saved rows and
+were dropped). Random splits keep test labels within ±0.14 SD of train (and
+positive rate within ±0.05). Similarity-driven splits do not:
+
+| dataset | method | test vs train label | Δ test metric vs random (seed 0) |
+|---|---|---|---|
+| bace | hypergraph | positive rate 0.28 vs 0.50 | AUC 0.47 vs 0.89 (below chance) |
+| bace | lowrank | positive rate 0.27 vs 0.50 | AUC 0.77 vs 0.89 |
+| bace | datasail | positive rate 0.57 vs 0.43 | AUC 0.71 vs 0.89 |
+| esol | graph / lowrank | mean shift +0.60 / +0.47 SD | R² 0.29 / 0.09 vs 0.66 |
+| esol | hypergraph | test std 1.65 vs 2.29 (random test) | R² −0.06 vs 0.66 |
+| freesolv | scaffold (legacy) | mean shift −0.61 SD | R² 0.12 vs 0.59 |
+| openpolymer26 | hypergraph | mean shift +0.62 SD, test std 0.43× random's | R² 0.55 vs 0.85 |
+| qmof | graph | mean shift +0.75 SD | R² 0.33 vs 0.68 |
+
+Train size runs the other way: non-random splits leave *more* training data
+(train fraction 0.80–0.89; scaffold 0.77–0.82), which should make them easier, so
+it does not explain the drop.
+
+**What survives.** (1) Every leakage-minimizing splitter lowers the held-out
+metric relative to random on every coverage-matched dataset, well outside seed
+noise — the splits are reliably *harder for this model*. **What does not.**
+(2) "Attributable to the split's OOD-ness": the split also moves the test label
+distribution substantially (and R² is normalized by the test variance it shrinks),
+so part of the drop is label shift, not similarity alone; a below-chance AUC (bace
+hypergraph) is a label/structure artefact, not an honest OOD estimate.
+(3) "Lower leakage ⇒ larger / more honest gap": not supported among non-random
+methods (r = +0.25). (4) Cross-method rankings from `INSIGHTS.md` §2 pooled means
+are not coverage-matched; on matched sets most method CIs overlap — the
+separable differences are on ROC-AUC, where hypergraph's drop exceeds lowrank's
+and datasail's and scaffold's is the smallest. None of this ranks methods by
+benchmark *validity*.
+
+**Missing to go further:** per-seed assignments are not saved by
+`run_benchmark.py`, so label-shift diagnostics for lowrank/datasail on 14 of 16
+datasets, and for hypergraph/graph on most, cannot be recovered without
+re-partitioning at the exact code version used; a label-shift-controlled
+comparison (e.g. stratifying the test label distribution, or reporting RMSE/MAE
+alongside R²) needs new runs.
 
 ## Default featurizers per entity type  ← the canonical table
 
@@ -122,10 +218,10 @@ exposes the table to an MCP/agent, and LLM overrides are logged to
 `data/routing_overrides.jsonl`. To regenerate from scratch:
 
 ```bash
-CUDA_VISIBLE_DEVICES=<gpu> LD_LIBRARY_PATH=/homes/rzhu/miniforge3/envs/palm/lib \
-/homes/rzhu/miniforge3/envs/palm/bin/python -m PALM.benchmarks.master.feature_sweep --seeds 0 1 2
-/homes/rzhu/miniforge3/envs/palm/bin/python -m PALM.benchmarks.master.derive_heuristics
-/homes/rzhu/miniforge3/envs/palm/bin/python -m PALM.benchmarks.master.demonstrate_features
+CUDA_VISIBLE_DEVICES=<gpu> LD_LIBRARY_PATH=$CONDA_PREFIX/lib \
+python -m PALM.benchmarks.master.feature_sweep --seeds 0 1 2
+python -m PALM.benchmarks.master.derive_heuristics
+python -m PALM.benchmarks.master.demonstrate_features
 ```
 
 ## Extending
