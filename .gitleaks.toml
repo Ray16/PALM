@@ -1,0 +1,11 @@
+# Secret scanning (gitleaks; run by .github/workflows/secret-scan.yml on every
+# push and pull request). Uses gitleaks' default rules.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Historical credentials that were revoked; they remain only in old history"
+# Materials Project API key committed in d184f90 (tests/test_mp_regression.py:23).
+# Revoked 2026-09-29 (returns 401); the code reads MP_API_KEY from the environment
+# since 5f4ed41. Do not add live credentials here: revoke them instead.
+commits = ["d184f90fb91f35fd0583e058e17a05e9c12d2424"]
