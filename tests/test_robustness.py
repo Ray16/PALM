@@ -212,3 +212,11 @@ def test_split_spec_validation():
         ps.SplitSpec([8, 2], ["train"])
     with pytest.raises(ValueError):
         ps.SplitSpec([8, -2], ["train", "test"])
+
+
+def test_bundled_feature_resources_are_present():
+    """Featurizers load these at run time; a missing file only fails when used."""
+    palm = Path(__file__).resolve().parents[1]
+    for path in (palm / "features" / "data" / "mat2vec_embeddings.json",
+                 palm / "low_rank" / "lowrank" / "features" / "data" / "mat2vec_embeddings.json"):
+        assert path.is_file() and path.stat().st_size > 0, f"missing {path}"

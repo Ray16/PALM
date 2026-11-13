@@ -98,3 +98,7 @@ packages = [
     "PALM.splitters.methods",
     "PALM.webapp",
 ]
+
+[tool.setuptools.package-data]
+"PALM.features" = ["data/*.json"]
+"PALM.webapp" = ["static/*", "demo_data/*.csv", "demo_data/*.json"]
