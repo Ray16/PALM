@@ -265,3 +265,7 @@ docs/presentation/
 # Frozen manuscript evidence: kept locally. The published copy is preserved at
 # commit a171cfd (cited by the manuscript); do not re-add it to main.
 /publications/
+
+# PDBbind v2013 core set (CASF-2013): not used by any code, no recorded source, and
+# PDBbind terms restrict redistribution. Kept locally only; obtain from pdbbind-plus.org.cn.
+data/DataSAIL_data/2D/pdbbind_core/

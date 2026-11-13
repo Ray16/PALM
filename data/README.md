@@ -6,8 +6,11 @@ Everything needed to go from a fresh clone to running the master benchmark.
 
 - **Committed to the repo** (a fresh clone already has them): the small/medium
   DataSAIL sets under `DataSAIL_data/` — MoleculeNet, Rfam, NASA, LP-PDBBind, the
-  gold-standard PPI set, PDBBind-core, USPTO-MCR records — plus the 21 MB
+  gold-standard PPI set, USPTO-MCR records — plus the 21 MB
   `qmof/qmof.csv` derived table.
+- **Not distributed**: the PDBbind v2013 core set (`DataSAIL_data/2D/pdbbind_core/`) is
+  git-ignored — no code uses it and PDBbind's terms restrict redistribution. Obtain it
+  from <http://www.pdbbind-plus.org.cn> (registration required) if needed.
 - **Fetched on demand** (git-ignored, regenerable): the large / API / streamed
   sources — TDC, Materials Project, OpenPolymer26, and the new modalities
   (genomic, OC22, LINCS L1000). One command fetches them all (below).
