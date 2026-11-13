@@ -111,6 +111,6 @@ def fiduccia_mattheyses_exact(labels, X, splits: Sequence[float], metric: str,
     return lab.cpu().numpy(), moves, {}
 
 
-# NOTE: ``fiduccia_mattheyses_lowrank`` (factor-space FM polish) moved to the
-# standalone package: ``PALM.lowrank.optimize.fm_polish``. The shared move loop
-# (``fiduccia_mattheyses_loop``) stays here and is imported by that package.
+# NOTE: the factor-space FM polish lives in the lowrank-split package
+# (``lowrank.optimize.fm_polish``, ``PALM/low_rank``). The generic move loop
+# (``fiduccia_mattheyses_loop``) stays here.

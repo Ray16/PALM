@@ -15,8 +15,8 @@ Part B (targeted grid). On the anchor config, sweep rank in {64,256,1024} and
 n_restarts in {1,4,16} (one axis at a time). Question: does the tuning-neutrality
 found on leakage (Steps 2 & 4) also hold for the gap?
 
-    CUDA_VISIBLE_DEVICES=0 LD_LIBRARY_PATH=/homes/rzhu/miniforge3/envs/palm/lib \
-    /homes/rzhu/miniforge3/envs/palm/bin/python -m PALM.lowrank.experiments.ablation \
+    CUDA_VISIBLE_DEVICES=0 LD_LIBRARY_PATH=$CONDA_PREFIX/lib \
+    python -m PALM.lowrank.experiments.ablation \
         --seeds 0 1 2
 """
 

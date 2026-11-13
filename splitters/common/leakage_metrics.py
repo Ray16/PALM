@@ -15,7 +15,7 @@ Lower is better; 0 = no cross-split similarity. This matches DataSAIL's
 - :func:`nn_leakage` — nearest-neighbour leakage: per held-out point, background-
   ramped similarity to its closest train neighbour, normalized to a random split.
   Tail-sensitive where ``scaled_lpi`` (a mean over all pairs) is not.
-- :func:`factor_leakage` — the low-rank factor-space proxy (the optimizer's cheap
+- ``factor_leakage`` (in ``lowrank.objective``) — the low-rank factor-space proxy (the optimizer's cheap
   objective; correlates ~0.995–1.0 with the ECFP metric at rank 128–256).
 """
 
@@ -272,5 +272,5 @@ def nn_leakage(X, labels: Sequence, metric: str = "tanimoto", reference="train",
     return out
 
 
-# NOTE: ``factor_leakage`` (the low-rank factor-space objective) moved to the
-# standalone package: ``PALM.lowrank.objective.factor_leakage``.
+# NOTE: ``factor_leakage`` (the low-rank factor-space objective) lives in the
+# lowrank-split package: ``lowrank.objective.factor_leakage`` (``PALM/low_rank``).

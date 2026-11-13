@@ -30,9 +30,8 @@ bash PALM/webapp/run.sh --gpu 8090    # reserve one free GPU via a gpu_reserve g
 `run.sh` works from any directory: it `cd`s to the folder containing `PALM/`, so
 `PALM` and `lowrank` import correctly. It runs in the `palm` conda env; set
 `PALM_CONDA_ENV=""` to use your active environment instead. Equivalent manual start:
-`uvicorn PALM.webapp.app:app --port 8080`, run from the folder that contains `PALM/`.
-Do not start it from *inside* `PALM/`: PALM's own `lowrank/` folder would shadow the
-`lowrank-split` package.
+`uvicorn PALM.webapp.app:app --port 8080`, run from the folder that contains `PALM/`
+(`PALM` is imported as a package, so its parent directory must be on the path).
 
 Tests: `pip install pytest`, then `CUDA_VISIBLE_DEVICES= python -m pytest PALM/webapp/tests`
 (same directory).

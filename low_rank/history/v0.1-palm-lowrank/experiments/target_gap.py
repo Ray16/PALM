@@ -11,8 +11,8 @@ This experiment closes the loop with the inversion workflow (``target_gap.py``):
 If the flagship's within-dataset control is real, requested and realized gaps
 line up on ``y = x``. Uses the same estimator/datasets as hardness_control.py.
 
-    CUDA_VISIBLE_DEVICES=<gpu> LD_LIBRARY_PATH=/homes/rzhu/miniforge3/envs/palm/lib \
-    /homes/rzhu/miniforge3/envs/palm/bin/python -m PALM.lowrank.experiments.target_gap \
+    CUDA_VISIBLE_DEVICES=<gpu> LD_LIBRARY_PATH=$CONDA_PREFIX/lib \
+    python -m PALM.lowrank.experiments.target_gap \
         --datasets moleculenet_esol moleculenet_bace moleculenet_freesolv --seeds 0 1 2
 """
 

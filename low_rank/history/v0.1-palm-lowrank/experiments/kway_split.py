@@ -8,7 +8,7 @@ Two questions, mirroring Steps 1 and 3 but for a 3-way [8,1,1] split:
 
 One single-panel PNG per dataset per question (no titles/subplots).
 
-    CUDA_VISIBLE_DEVICES=0 LD_LIBRARY_PATH=/homes/rzhu/miniforge3/envs/palm/lib \
+    CUDA_VISIBLE_DEVICES=0 LD_LIBRARY_PATH=$CONDA_PREFIX/lib \
     python -m PALM.lowrank.experiments.kway_split --seeds 0 1 2
 """
 

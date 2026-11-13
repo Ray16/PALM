@@ -93,7 +93,6 @@ packages = [
     "PALM.data",
     "PALM.features",
     "PALM.hypergraph",
-    "PALM.lowrank",
     "PALM.splitters",
     "PALM.splitters.common",
     "PALM.splitters.methods",

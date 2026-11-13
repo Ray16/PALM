@@ -4,8 +4,11 @@
 
 - **Current development package:** [`low_rank`](low_rank), version
   `0.2.0.dev4`. Install with `python -m pip install ./low_rank`.
-  Run imports from outside the repository root, whose `lowrank/` directory
-  (the integrated `PALM.lowrank` package) can shadow the installed package.
+  It is also PALM's `"lowrank"` / `"lowrank_nd"` method (`PALM.splitters`), registered
+  through `splitters/methods/lowrank_adapter.py`; no separate install is needed.
+  It hits the requested split counts exactly by default. The former in-tree v0.1
+  implementation used a 5% corridor (≈19% instead of 20% test sets); low-rank rows in
+  the committed `benchmarks/results/` were produced with v0.1.
   Large datasets (`low_rank/data/`) and the publication build tree (`low_rank/paper/`)
   are not vendored here; regenerate datasets via `low_rank/lowrank/datasets/sources.py`.
   See [`low_rank/CRITICAL_REVIEW.md`](low_rank/CRITICAL_REVIEW.md) for the current
@@ -22,8 +25,7 @@
 | Path | Contents |
 |------|----------|
 | `splitters/`, `hypergraph/`, `features/`, `data/` | The `PALM` package: splitter registry, hypergraph backend, featurizers, dataset loaders (incl. `data/reactions.py`) |
-| `lowrank/` | `PALM.lowrank`: the low-rank splitter integrated into `PALM.splitters` (registers `"lowrank"`; used by the benchmarks) |
-| `low_rank/` | Standalone low-rank development package `lowrank-split` (v0.2.0.dev4), its tests, docs and version history |
+| `low_rank/` | Low-rank package `lowrank-split` (v0.2.0.dev4): PALM's `"lowrank"` method, its tests, docs and version history |
 | `webapp/` | **Data Splitting Lab** web app (`PALM.webapp`): upload or pick a demo, compare DataSAIL / hypergraph / low-rank splits side by side; see [`webapp/README.md`](webapp/README.md) |
 | `benchmarks/` | DataSAIL pipeline, master benchmark, cross-method and complexity studies |
 | `tests/` | PALM integration tests and small input fixtures (generated `tests/output/` is not tracked) |

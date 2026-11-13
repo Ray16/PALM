@@ -5,7 +5,7 @@ On the one ``kind=nd`` dataset (uspto_mcr, 3-reactant reactions), does the new
 (``macro_axis_lpi``) is recomputed identically from every method's assignment so the
 comparison is fair regardless of what each splitter reports.
 
-    CUDA_VISIBLE_DEVICES=0 LD_LIBRARY_PATH=/homes/rzhu/miniforge3/envs/palm/lib \
+    CUDA_VISIBLE_DEVICES=0 LD_LIBRARY_PATH=$CONDA_PREFIX/lib \
     python -m PALM.lowrank.experiments.nd_compare
 """
 

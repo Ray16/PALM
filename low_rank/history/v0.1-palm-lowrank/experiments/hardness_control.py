@@ -7,8 +7,8 @@ score, via the benchmark's ``evaluate_gap``). Validates that the gap rises
 monotonically as hardness rises, and fits a per-dataset calibration gap = f(alpha)
 so a target difficulty can be requested.
 
-    CUDA_VISIBLE_DEVICES=<gpu> LD_LIBRARY_PATH=/homes/rzhu/miniforge3/envs/palm/lib \
-    /homes/rzhu/miniforge3/envs/palm/bin/python -m PALM.lowrank.experiments.hardness_control \
+    CUDA_VISIBLE_DEVICES=<gpu> LD_LIBRARY_PATH=$CONDA_PREFIX/lib \
+    python -m PALM.lowrank.experiments.hardness_control \
         --datasets moleculenet_esol moleculenet_bace moleculenet_freesolv --seeds 0 1 2
 """
 

@@ -5,8 +5,8 @@ Sweeps the low-rank splitter's ``balance_slack`` knob (0 = exact target sizes,
 dataset, the resulting leakage vs the realized size imbalance — the first
 multi-objective result of the low-rank method-development track.
 
-    CUDA_VISIBLE_DEVICES=<gpu> LD_LIBRARY_PATH=/homes/rzhu/miniforge3/envs/palm/lib \
-    /homes/rzhu/miniforge3/envs/palm/bin/python -m PALM.lowrank.experiments.balance_pareto \
+    CUDA_VISIBLE_DEVICES=<gpu> LD_LIBRARY_PATH=$CONDA_PREFIX/lib \
+    python -m PALM.lowrank.experiments.balance_pareto \
         --datasets moleculenet_bace moleculenet_esol qmof materials_project \
         --seeds 0 1 2 --limit 2000
 """

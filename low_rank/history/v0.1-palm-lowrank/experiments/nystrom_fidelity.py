@@ -10,8 +10,8 @@ The fidelity bound says a tighter ‖S − BBᵀ‖ tightens how faithfully the 
 objective tracks true leakage; this shows which strategy buys the most fidelity (and
 lowest leakage) per unit rank.
 
-    CUDA_VISIBLE_DEVICES=<gpu> LD_LIBRARY_PATH=/homes/rzhu/miniforge3/envs/palm/lib \
-    /homes/rzhu/miniforge3/envs/palm/bin/python -m PALM.lowrank.experiments.nystrom_fidelity \
+    CUDA_VISIBLE_DEVICES=<gpu> LD_LIBRARY_PATH=$CONDA_PREFIX/lib \
+    python -m PALM.lowrank.experiments.nystrom_fidelity \
         --datasets moleculenet_bace moleculenet_esol qmof --seeds 0 1 2
 """
 

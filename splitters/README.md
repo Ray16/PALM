@@ -88,7 +88,7 @@ independently, registering into this registry on import:
 ```
 PALM/hypergraph/     hypergraph, graph, hypergraph_nd, hypergraph_nd_knn
                      (knn construction + Mt-KaHyPar KM1/CUT partitioning)
-PALM/lowrank/        lowrank (Nyström factorization + balanced-Lloyd + FM)
+PALM/low_rank/       lowrank-split: lowrank / lowrank_nd (Nyström + balanced-Lloyd + FM), via methods/lowrank_adapter.py
 ```
 
 ## Test

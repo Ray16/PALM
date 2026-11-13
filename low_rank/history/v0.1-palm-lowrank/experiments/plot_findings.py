@@ -3,7 +3,7 @@
 Reads the experiment CSVs and emits clean single-panel PNGs (no titles/annotations;
 explanation belongs in the caption). Regenerate after re-running the experiments.
 
-    /homes/rzhu/miniforge3/envs/palm/bin/python -m PALM.lowrank.experiments.plot_findings
+    python -m PALM.lowrank.experiments.plot_findings
 """
 
 from __future__ import annotations

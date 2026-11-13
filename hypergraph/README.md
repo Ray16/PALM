@@ -3,7 +3,7 @@
 Standalone package for developing the hypergraph data splitters (the original PALM
 approach: build a k-NN similarity structure and cut it with Mt-KaHyPar so few
 similar pairs land on opposite sides of the split). Kept separate from
-`PALM.splitters.methods` — like [`PALM.lowrank`](../lowrank/README.md) — so the
+`PALM.splitters.methods` — like the [low-rank package](../low_rank/README.md) — so the
 algorithm can evolve on its own; it still registers its four methods into the
 shared `PALM.splitters` registry on import.
 

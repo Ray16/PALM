@@ -22,8 +22,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[3]))  # directory contai
 
 from PALM.splitters import (SplitSpec, describe_splitters, get_splitter,
                             list_splitters, split)
-from PALM.lowrank import (balanced_lloyd, fm_polish,
-                                            lowrank_leakage, nystrom_features)
+from PALM.splitters.methods.lowrank_adapter import (balanced_lloyd, fm_polish,
+                                                    lowrank_leakage, nystrom_features)
 from PALM.splitters.tool import describe_splitters_tool, run_split_tool
 
 
@@ -75,7 +75,11 @@ def test_registry_and_describe():
         assert d["params_schema"]["type"] == "object"
     # types resolve (not all "string")
     lr = next(d for d in describe_splitters() if d["name"] == "lowrank")
-    assert lr["params_schema"]["properties"]["rank"]["type"] == "integer"
+    rank = lr["params_schema"]["properties"]["rank"]
+    # lowrank-split: an integer rank, or "auto" for adaptive rank
+    assert rank.get("type") == "integer" or any(
+        alt.get("type") == "integer" for alt in rank.get("oneOf", []))
+    assert lr["params_schema"]["properties"]["n_restarts"]["type"] == "integer"
     print("[OK] registry + describe")
 
 

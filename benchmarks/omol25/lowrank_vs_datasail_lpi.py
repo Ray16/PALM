@@ -13,7 +13,7 @@ import numpy as np
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))  # directory containing PALM/
 from PALM.benchmarks.omol25 import omol25_leakage as LK
-from PALM.lowrank import balanced_lloyd, fm_polish
+from PALM.splitters.methods.lowrank_adapter import balanced_lloyd, fm_polish
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 RES = os.path.join(HERE, "results")

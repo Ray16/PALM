@@ -13,8 +13,8 @@ Two questions:
 
 Conclusion: the actionable win is raising ``fm_max_n``, not multilevel. See report.
 
-    CUDA_VISIBLE_DEVICES=0 LD_LIBRARY_PATH=/homes/rzhu/miniforge3/envs/palm/lib \
-    /homes/rzhu/miniforge3/envs/palm/bin/python -m PALM.lowrank.experiments.multilevel_fm \
+    CUDA_VISIBLE_DEVICES=0 LD_LIBRARY_PATH=$CONDA_PREFIX/lib \
+    python -m PALM.lowrank.experiments.multilevel_fm \
         --datasets moleculenet_bace moleculenet_esol moleculenet_freesolv qmof --seeds 0 1 2
 """
 

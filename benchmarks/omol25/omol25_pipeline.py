@@ -27,7 +27,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))  # directory containing PALM/
 import logging
 logging.disable(logging.CRITICAL)
-from PALM.lowrank import balanced_lloyd
+from PALM.splitters.methods.lowrank_adapter import balanced_lloyd
 from PALM.benchmarks.omol25 import omol25_leakage as LK
 
 RESULTS = os.path.join(os.path.dirname(__file__), "results")
@@ -69,7 +69,7 @@ def main():
     best_lab, best_obj = None, np.inf
     for r in range(N_RESTARTS):
         lab = balanced_lloyd(B, native_sizes.tolist(), epsilon=0.0, n_iter=20, seed=r)
-        from PALM.lowrank import lowrank_leakage
+        from PALM.splitters.methods.lowrank_adapter import lowrank_leakage
         obj = lowrank_leakage(B, lab, 3)
         if obj < best_obj:
             best_obj, best_lab = obj, lab

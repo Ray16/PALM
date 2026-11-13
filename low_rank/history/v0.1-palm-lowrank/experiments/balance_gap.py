@@ -7,8 +7,8 @@ if they lie on the *same* curve, leakage is the single causal channel and the tw
 knobs are one capability; if the balance points sit above (more gap at matched
 leakage), the size imbalance adds difficulty of its own.
 
-    CUDA_VISIBLE_DEVICES=<gpu> LD_LIBRARY_PATH=/homes/rzhu/miniforge3/envs/palm/lib \
-    /homes/rzhu/miniforge3/envs/palm/bin/python -m PALM.lowrank.experiments.balance_gap \
+    CUDA_VISIBLE_DEVICES=<gpu> LD_LIBRARY_PATH=$CONDA_PREFIX/lib \
+    python -m PALM.lowrank.experiments.balance_gap \
         --datasets moleculenet_esol moleculenet_bace moleculenet_freesolv --seeds 0 1 2
 """
 

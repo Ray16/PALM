@@ -1,7 +1,7 @@
 """Shared numerical kernels for the PALM splitters.
 
 These modules are the single home for logic shared across the splitter methods
-(the standalone ``PALM.hypergraph`` / ``PALM.lowrank`` packages and the adapters)
+(the standalone ``PALM.hypergraph`` package and the adapters)
 and the benchmark tree:
 
 - :mod:`.feature_preparation`  — feature-matrix prep, binary-fingerprint /
@@ -13,6 +13,7 @@ and the benchmark tree:
 - :mod:`.leakage_metrics`      — canonical scaled ``L(pi)`` + nearest-neighbour leakage scorers
 
 Method-specific kernels live with their package: the k-NN construction and
-Mt-KaHyPar partitioning in :mod:`PALM.hypergraph`, the Nyström factorization and
-balanced-Lloyd optimizer in :mod:`PALM.lowrank`.
+Mt-KaHyPar partitioning in :mod:`PALM.hypergraph`; the Nyström factorization and
+balanced-Lloyd optimizer in the ``lowrank-split`` package (``PALM/low_rank``),
+registered through :mod:`PALM.splitters.methods.lowrank_adapter`.
 """

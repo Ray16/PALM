@@ -82,14 +82,12 @@ def _split_lowrank(ctx):
         from lowrank.splitters import SplitSpec, split
     except ModuleNotFoundError as exc:
         if exc.name == "lowrank.splitters":
-            # Some other `lowrank` won the import, typically PALM's own
-            # PALM/lowrank/ because the server was started from inside the
-            # checkout. Retrying cannot replace a module already imported.
+            # Some other package named `lowrank` won the import. Retrying
+            # cannot replace a module that is already imported.
             found = getattr(sys.modules.get("lowrank"), "__file__", "?")
             raise ImportError(
                 f"`lowrank` resolved to {found}, not the lowrank-split package. "
-                "Start the app from the directory that contains PALM/ "
-                "(see PALM/webapp/run.sh) or `pip install ./PALM/low_rank`.") from exc
+                "Install the bundled package with `pip install ./PALM/low_rank`.") from exc
         if exc.name != "lowrank":
             raise
         # Not installed: use the copy bundled in PALM/low_rank. Appended so an
