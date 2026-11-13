@@ -1,9 +1,10 @@
 #!/bin/bash
 # Lo-Hi Hi-split across MoleculeNet, 4 at a time, 25 min cap each.
 # A timeout is a RESULT (the MILP does not scale) -- recorded, not hidden.
-cd /nfs/lambda_stor_01/homes/rzhu
-PY=/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/bin/python
-RES=/nfs/lambda_stor_01/homes/rzhu/PALM/benchmarks/results
+HERE="$(cd "$(dirname "$0")" && pwd)"
+RES="$HERE/../results"
+cd "$HERE/../../.."                          # directory containing PALM/
+PY="${PYTHON:-python}"
 for d in freesolv esol sider clintox bace bbbp lipophilicity tox21 qm8 hiv muv; do
   ( timeout 1500 $PY -m PALM.benchmarks.moleculenet.benchmark_lohi --dataset $d \
       > $RES/lohi_$d.log 2>&1

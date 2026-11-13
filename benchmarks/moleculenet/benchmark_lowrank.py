@@ -76,7 +76,8 @@ def _run_one_dataset(dataset: str, gpu_id: int = 0) -> dict:
     from rdkit.Chem import AllChem
     RDLogger.DisableLog("rdApp.*")
 
-    sys.path.insert(0, "/nfs/lambda_stor_01/homes/rzhu")
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))  # directory containing PALM/
     from PALM.splitters import SplitSpec, split as run_split
     from PALM.benchmarks.common.datasets import load_smiles
     from PALM.benchmarks.common.featurize import ecfp1024

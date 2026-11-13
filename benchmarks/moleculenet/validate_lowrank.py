@@ -24,7 +24,8 @@ Run (palm env):  python -m PALM.benchmarks.moleculenet.validate_lowrank
 import sys
 import numpy as np
 
-sys.path.insert(0, "/nfs/lambda_stor_01/homes/rzhu")
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))  # directory containing PALM/
 import logging
 logging.disable(logging.CRITICAL)
 from rdkit import Chem, DataStructs, RDLogger

@@ -11,7 +11,8 @@ import os, sys, json, time
 import numpy as np
 import pandas as pd
 
-sys.path.insert(0, "/nfs/lambda_stor_01/homes/rzhu")
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))  # directory containing PALM/
 from PALM.lowrank import balanced_lloyd, lowrank_leakage
 from PALM.benchmarks.omol25 import uma_leakage as UL   # reuse rbf_factor / median_sigma / lpi_from_factor
 

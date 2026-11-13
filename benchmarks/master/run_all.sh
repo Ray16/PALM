@@ -11,8 +11,8 @@
 set -euo pipefail
 
 GPU="${1:?usage: run_all.sh <gpu_id> [extra args to run_benchmark]}"; shift || true
-PY=/homes/rzhu/miniforge3/envs/palm/bin/python
-export LD_LIBRARY_PATH=/homes/rzhu/miniforge3/envs/palm/lib
+PY="${PYTHON:-python}"                     # env with torch + mtkahypar + rdkit + datasail
+if [ -n "${CONDA_PREFIX:-}" ]; then export LD_LIBRARY_PATH="$CONDA_PREFIX/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"; fi
 cd "$(dirname "$0")/../.."/..              # -> PALM parent (so `python -m PALM...` resolves)
 
 echo "== [1/3] registry sweep (GPU $GPU) =="

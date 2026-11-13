@@ -22,7 +22,7 @@ leakage across buckets, which is exactly what the two engines minimize.
 
 Run (GPU recommended):
     CUDA_VISIBLE_DEVICES=<free gpu> \
-    /homes/rzhu/miniforge3/envs/palm/bin/python make_chemixhub_splits.py \
+    python make_chemixhub_splits.py \
         --data-root <clone>/datasets --out <this dir>
 """
 from __future__ import annotations
@@ -39,7 +39,8 @@ import numpy as np
 import pandas as pd
 
 # PALM lives one dir above the repo root on this box.
-sys.path.insert(0, "/nfs/lambda_stor_01/homes/rzhu")
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))  # directory containing PALM/
 from PALM.splitters import split, SplitSpec  # noqa: E402
 from PALM.splitters.common.leakage_metrics import scaled_lpi  # noqa: E402
 

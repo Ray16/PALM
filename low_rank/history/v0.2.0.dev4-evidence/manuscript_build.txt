@@ -30,4 +30,4 @@ Validated ODAC25 case and generated manuscript values/tables.
   "submission_ready": false,
   "scope": "Technical/reproducibility checks; author metadata was explicitly deferred and is never invented."
 }
-Built and checked /nfs/lambda_stor_01/homes/rzhu/data_splitting/publication/odac25_revision/publications/lowrank_2026/paper/manuscript.pdf and supplement.pdf
+Built and checked ~/data_splitting/publication/odac25_revision/publications/lowrank_2026/paper/manuscript.pdf and supplement.pdf

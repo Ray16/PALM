@@ -10,8 +10,8 @@ Outputs:
   figures/chemixhub_timing_bars.png     (per-task grouped bars, log y)
   figures/chemixhub_timing_scaling.png  (runtime vs #unique mixtures, log-log)
 
-    CUDA_VISIBLE_DEVICES=<gpu> LD_LIBRARY_PATH=/homes/rzhu/miniforge3/envs/palm/lib \
-    /homes/rzhu/miniforge3/envs/palm/bin/python benchmark_split_timing.py \
+    CUDA_VISIBLE_DEVICES=<gpu> LD_LIBRARY_PATH=$CONDA_PREFIX/lib \
+    python benchmark_split_timing.py \
         --data-root <clone>/datasets
 """
 from __future__ import annotations

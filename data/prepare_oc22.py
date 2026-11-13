@@ -16,7 +16,7 @@ stubs the PyG classes so it reads them WITHOUT installing torch_geometric (only
 ``torch`` + ``lmdb`` + ``ase``, all present in the ``uma`` env).
 
 Run:
-    TMPDIR=/nfs/.../.tmp /homes/rzhu/miniforge3/envs/uma/bin/python -m PALM.data.prepare_oc22
+    TMPDIR=<scratch dir> python -m PALM.data.prepare_oc22   # in an env with fairchem/UMA
 """
 
 import csv

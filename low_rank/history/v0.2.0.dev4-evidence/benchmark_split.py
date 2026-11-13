@@ -2,6 +2,7 @@
 import hashlib
 import json
 from pathlib import Path
+import os
 import sys
 import time
 import numpy as np
@@ -10,7 +11,9 @@ sys.path.insert(0, str(ROOT))
 import torch
 from lowrank import split, SplitSpec
 import lowrank.optimize as optimizer
-CACHE=Path('/nfs/lambda_stor_01/homes/rzhu/data_splitting_lowrank_reviewed/publications/lowrank_2026/correctness_20261025/verified_run/cache')
+CACHE=Path(os.environ.get('LOWRANK_EVIDENCE_CACHE') or sys.exit(
+    'Set LOWRANK_EVIDENCE_CACHE to publications/lowrank_2026/correctness_20261025/verified_run/cache '
+    '(the frozen evidence bundle, PALM commit a171cfd).'))
 torch.set_num_threads(2)
 original=optimizer.swap_polish
 

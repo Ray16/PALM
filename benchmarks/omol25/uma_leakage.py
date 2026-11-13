@@ -11,7 +11,8 @@ import os, sys, time
 import numpy as np
 import torch
 
-sys.path.insert(0, "/nfs/lambda_stor_01/homes/rzhu")
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))  # directory containing PALM/
 from PALM.lowrank import balanced_lloyd, lowrank_leakage
 
 HERE = os.path.dirname(os.path.abspath(__file__))

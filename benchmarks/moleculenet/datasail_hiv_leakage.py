@@ -3,7 +3,8 @@ a timeout, but DataSAIL does complete it (~46 min); this scores that split with
 the SAME ECFP scaled_lpi the benchmark uses, so the poster figure is consistent
 (DataSAIL bar for hiv, not a spurious n/a). Writes results/datasail_extra.json."""
 import os, sys, json, time
-sys.path.insert(0, "/nfs/lambda_stor_01/homes/rzhu")
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))  # directory containing PALM/
 import logging; logging.disable(logging.CRITICAL)
 import numpy as np
 from PALM.benchmarks.common.datasail import datasail_fingerprint

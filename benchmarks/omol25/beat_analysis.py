@@ -21,7 +21,8 @@ import os, sys, glob, json
 import numpy as np
 import pandas as pd
 
-sys.path.insert(0, "/nfs/lambda_stor_01/homes/rzhu")
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))  # directory containing PALM/
 import torch
 from scipy.stats import pearsonr, spearmanr
 from PALM.benchmarks.omol25 import omol25_leakage as LK

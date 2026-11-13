@@ -49,7 +49,8 @@ def main():
     from rdkit.Chem import AllChem
     RDLogger.DisableLog("rdApp.*")
 
-    sys.path.insert(0, "/nfs/lambda_stor_01/homes/rzhu")
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))  # directory containing PALM/
     import lohi_splitter as lohi
     from PALM.splitters import SplitSpec, split
     from PALM.benchmarks.common.datasets import load_smiles

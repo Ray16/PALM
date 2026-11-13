@@ -9,6 +9,7 @@ and after correction, including partitions optimized under either factor.
 import hashlib
 import json
 from pathlib import Path
+import os
 import sys
 import time
 import numpy as np
@@ -20,7 +21,9 @@ from lowrank.optimize import optimize_restarts
 from lowrank.splitters.common.pairwise_similarity import pairwise_similarity
 
 torch.set_num_threads(2)
-CACHE=Path('/nfs/lambda_stor_01/homes/rzhu/data_splitting_lowrank_reviewed/publications/lowrank_2026/correctness_20261025/verified_run/cache')
+CACHE=Path(os.environ.get('LOWRANK_EVIDENCE_CACHE') or sys.exit(
+    'Set LOWRANK_EVIDENCE_CACHE to publications/lowrank_2026/correctness_20261025/verified_run/cache '
+    '(the frozen evidence bundle, PALM commit a171cfd).'))
 rows=[]
 for dataset in ['freesolv','esol','bace']:
     source=CACHE/f'moleculenet_{dataset}.npz'

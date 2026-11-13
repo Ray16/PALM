@@ -17,7 +17,8 @@ import sys
 
 import numpy as np
 
-sys.path.insert(0, "/nfs/lambda_stor_01/homes/rzhu")
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))  # directory containing PALM/
 
 from PALM.splitters import (SplitSpec, describe_splitters, get_splitter,
                             list_splitters, split)

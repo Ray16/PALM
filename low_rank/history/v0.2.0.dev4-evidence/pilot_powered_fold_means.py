@@ -3,6 +3,7 @@ Dense oracle implementation: not a scalable timing result or production feature.
 """
 import json
 from pathlib import Path
+import os
 import sys
 import numpy as np
 ROOT = Path(__file__).resolve().parents[2]  # the low_rank/ package root
@@ -13,7 +14,9 @@ from lowrank.optimize import optimize_restarts
 from lowrank.splitters.common.pairwise_similarity import pairwise_similarity
 
 torch.set_num_threads(2)
-CACHE=Path('/nfs/lambda_stor_01/homes/rzhu/data_splitting_lowrank_reviewed/publications/lowrank_2026/correctness_20261025/verified_run/cache')
+CACHE=Path(os.environ.get('LOWRANK_EVIDENCE_CACHE') or sys.exit(
+    'Set LOWRANK_EVIDENCE_CACHE to publications/lowrank_2026/correctness_20261025/verified_run/cache '
+    '(the frozen evidence bundle, PALM commit a171cfd).'))
 rows=[]
 for dataset in ['freesolv','esol','bace']:
  X=np.load(CACHE/f'moleculenet_{dataset}.npz')['X']

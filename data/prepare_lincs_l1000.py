@@ -13,7 +13,7 @@ expression-space split against a structure-space split. Outputs (in data/lincs_l
     landmark_genes.txt   the 978 gene ids (feature order)
 
 Run (palm env has h5py + pandas; keep TMPDIR off the full root disk):
-    TMPDIR=/nfs/.../.tmp /homes/rzhu/miniforge3/envs/palm/bin/python -m PALM.data.prepare_lincs_l1000 --limit 20000
+    TMPDIR=<scratch dir> python -m PALM.data.prepare_lincs_l1000 --limit 20000
 """
 
 import argparse

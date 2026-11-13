@@ -22,8 +22,8 @@ Two design points that make the result trustworthy (vs. the naive first pass):
 
 One GPU only, and NOT the one any other sweep is using:
 
-    CUDA_VISIBLE_DEVICES=<free gpu> LD_LIBRARY_PATH=/homes/rzhu/miniforge3/envs/palm/lib \
-    /homes/rzhu/miniforge3/envs/palm/bin/python -m PALM.benchmarks.master.feature_sweep \
+    CUDA_VISIBLE_DEVICES=<free gpu> LD_LIBRARY_PATH=$CONDA_PREFIX/lib \
+    python -m PALM.benchmarks.master.feature_sweep \
         --seeds 0 1 2 --pool-limit 4000 --limit 2500
 """
 

@@ -195,8 +195,8 @@ Once weighted, PALM keeps its large L(π) advantage *and* matches Butina's balan
 
 ```bash
 git clone https://github.com/chemcognition-lab/chemixhub   # provides datasets/
-CUDA_VISIBLE_DEVICES=<free gpu> LD_LIBRARY_PATH=/homes/rzhu/miniforge3/envs/palm/lib \
-/homes/rzhu/miniforge3/envs/palm/bin/python make_chemixhub_splits.py \
+CUDA_VISIBLE_DEVICES=<free gpu> LD_LIBRARY_PATH=$CONDA_PREFIX/lib \
+python make_chemixhub_splits.py \
     --data-root <clone>/datasets --out ./splits
 ```
 

@@ -15,7 +15,8 @@ Writes results/omol25_datasail_finemode.csv
 import os, sys, csv, time
 import numpy as np
 
-sys.path.insert(0, "/nfs/lambda_stor_01/homes/rzhu")
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))  # directory containing PALM/
 import logging
 logging.disable(logging.CRITICAL)
 from PALM.benchmarks.common.datasail import datasail_distance

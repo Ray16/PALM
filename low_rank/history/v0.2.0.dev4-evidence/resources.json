@@ -24,7 +24,7 @@
     "swap_available_gb": 0.0
   },
   "disk": {
-    "path": "/nfs/lambda_stor_01/homes/rzhu/data_splitting",
+    "path": "~/data_splitting",
     "total_gb": 409598.01,
     "available_gb": 852.52,
     "used_gb": 408745.49,

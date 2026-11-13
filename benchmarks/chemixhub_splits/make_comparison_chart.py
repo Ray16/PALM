@@ -7,7 +7,7 @@ Two figures, numbers straight from splits/leakage_report.json:
      whole-mixture chem-OOD split (== 0 by construction)
      -> figures/chemixhub_identity_leakage.png
 
-    /homes/rzhu/miniforge3/envs/palm/bin/python make_comparison_chart.py
+    python make_comparison_chart.py
 """
 import json
 import os

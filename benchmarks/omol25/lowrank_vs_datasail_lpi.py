@@ -10,7 +10,8 @@ Outputs results/lowrank_vs_datasail_lpi.csv
 """
 import os, sys, csv, time
 import numpy as np
-sys.path.insert(0, "/nfs/lambda_stor_01/homes/rzhu")
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))  # directory containing PALM/
 from PALM.benchmarks.omol25 import omol25_leakage as LK
 from PALM.lowrank import balanced_lloyd, fm_polish
 

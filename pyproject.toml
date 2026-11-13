@@ -83,7 +83,6 @@ package-dir = {"PALM" = "."}
 packages = [
     "PALM",
     "PALM.benchmarks",
-    "PALM.benchmarks.archive",
     "PALM.benchmarks.charts",
     "PALM.benchmarks.common",
     "PALM.benchmarks.datasail_pipeline",

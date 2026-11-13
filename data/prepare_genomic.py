@@ -11,7 +11,7 @@ Rfam loader — or hand to a genomic embedding model.
 
 Run (palm env has HF `datasets`; keep caches off the full root disk):
     HF_HOME=/nfs/.../.hf_cache TMPDIR=/nfs/.../.tmp \
-        /homes/rzhu/miniforge3/envs/palm/bin/python -m PALM.data.prepare_genomic
+        python -m PALM.data.prepare_genomic
 """
 
 import argparse

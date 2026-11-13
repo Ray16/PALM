@@ -5,7 +5,7 @@
 # extracted dirs. Usage:  bash download_omol25.sh
 set -uo pipefail
 
-DEST=/nfs/lambda_stor_01/homes/rzhu/PALM/data/DataSAIL_data/1D/omol25
+DEST="${OMOL25_DEST:-$(cd "$(dirname "$0")/../.." && pwd)/data/DataSAIL_data/1D/omol25}"
 BASE=https://dl.fbaipublicfiles.com/opencatalystproject/data/omol/250514
 SPLITS=(train_4M val test)
 

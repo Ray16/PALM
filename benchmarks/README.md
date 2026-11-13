@@ -33,7 +33,6 @@ benchmarks/
   omol25/       OMol25 + UMA-embedding studies (keeps its own _cache_uma/ & results/)
   charts/       figure generators (read the results/ CSVs, do not recompute)
   results/      committed CSV/JSON/PNG outputs for moleculenet + reactions + lowrank
-  archive/      superseded scripts (not repointed — see archive/README.md)
 ```
 
 Leakage scoring is centralized in `PALM.splitters.common.leakage_metrics`
@@ -42,7 +41,7 @@ Leakage scoring is centralized in `PALM.splitters.common.leakage_metrics`
 
 ## Running
 
-Run from the PALM **parent** directory (`/nfs/lambda_stor_01/homes/rzhu`) in an
+Run from the PALM **parent** directory (the directory that contains `PALM/`) in an
 env with torch + mtkahypar + rdkit (e.g. `boltz-2`):
 
 ```bash

@@ -7,7 +7,7 @@
 
 set -e
 
-PYBIN=/nfs/lambda_stor_01/homes/rzhu/miniforge3/envs/palm/bin/python
+PYBIN="${PYTHON:-python}"                          # env with PALM's dependencies
 TESTS_DIR="$(cd "$(dirname "$0")" && pwd)"        # PALM/tests/
 PALM_DIR="$(cd "$TESTS_DIR/.." && pwd)"            # PALM root (one level up)
 PARENT_DIR="$(cd "$PALM_DIR/.." && pwd)"           # Parent of PALM (for -m invocation)
