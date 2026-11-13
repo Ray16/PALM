@@ -23,7 +23,7 @@ import numpy as np
 import pandas as pd
 from joblib import Parallel, delayed
 
-from PALM import reactions as R
+from PALM.data import reactions as R
 from PALM.splitters import SplitSpec, split
 from .benchmark_reactions import random_split
 from .leakage_nd import macro_axis_lpi_gpu

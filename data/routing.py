@@ -36,7 +36,7 @@ OVERRIDE_LOG = os.path.join(HERE, "routing_overrides.jsonl")
 
 # Candidate representations per entity type. FIRST ENTRY IS THE DEMONSTRATED
 # DEFAULT (via the feature sweep + predictive-validity gate; see
-# benchmarks/master/README.md "Default featurizers per entity type" and insight.md
+# benchmarks/master/README.md "Default featurizers per entity type" and docs/insights.md
 # §5/§5b). Validated per-dataset exceptions live in data/feature_heuristics.json
 # (currently: moleculenet_bace→chemberta, qmof→mat2vec).
 #   molecule→ecfp1024  material→magpie  mof→magpie  polymer→magpie

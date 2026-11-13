@@ -3,7 +3,7 @@
 ## Development and repository usability: 0.2.0.dev4
 
 - Batched exact-count shortlist similarity evaluation; paired correctness and
-  cost evidence is retained under `improvements_20261103`.
+  cost evidence is retained under `history/v0.2.0.dev4-evidence`.
 - Installed `lowrank-split` command, actionable CLI input errors, and rejection
   of malformed fold geometry/duplicate IDs before assignment construction.
 - Scientific kernels, valid-input defaults and frozen publication producers are

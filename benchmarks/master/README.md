@@ -87,7 +87,7 @@ feature sweep (`feature_sweep.py` → `derive_heuristics.py`) under a
 **predictive-validity gate** (a representation qualifies only if a model on a
 *random* split still learns; among those, pick lowest reference-space leakage that
 doesn't hurt held-out prediction). Full evidence + tradeoff figures:
-`../../insight.md` §5/§5b, `figures/feature_tradeoff_*.png`.
+`../../docs/insights.md` §5/§5b, `figures/feature_tradeoff_*.png`.
 
 | entity type | **default featurizer** | candidates considered | validated per-dataset exception |
 |---|---|---|---|

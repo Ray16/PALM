@@ -264,7 +264,7 @@ def load_uspto_mcr(limit=DEFAULT_LIMIT):
     recs_path = os.path.join(DSAIL, "3D+", "uspto_mcr", "records.csv")
     if not os.path.exists(recs_path):
         return _unavailable("uspto_mcr", "reaction", "nd", "uspto_mcr/records.csv not found")
-    from PALM import reactions as R
+    from . import reactions as R
     records, afm, _target = R.load_uspto_mcr()
     idx = _subsample_indices(len(records), limit)
     records = [records[int(i)] for i in idx]

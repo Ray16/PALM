@@ -37,7 +37,7 @@ import time
 
 import numpy as np
 
-from PALM import reactions as R
+from PALM.data import reactions as R
 from PALM.splitters import SplitSpec, split
 from PALM.benchmarks.common.random_split import random_split_names as random_split
 

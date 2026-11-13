@@ -16,7 +16,7 @@ import csv
 import os
 import time
 
-from PALM import reactions as R
+from PALM.data import reactions as R
 from PALM.splitters import SplitSpec, split
 from .benchmark_reactions import evaluate, random_split
 

@@ -4,6 +4,8 @@
 
 - **Current development package:** [`low_rank`](low_rank), version
   `0.2.0.dev4`. Install with `python -m pip install ./low_rank`.
+  Run imports from outside the repository root, whose `lowrank/` directory
+  (the integrated `PALM.lowrank` package) can shadow the installed package.
   Large datasets (`low_rank/data/`) and the publication build tree (`low_rank/paper/`)
   are not vendored here; regenerate datasets via `low_rank/lowrank/datasets/sources.py`.
   See [`low_rank/CRITICAL_REVIEW.md`](low_rank/CRITICAL_REVIEW.md) for the current
@@ -13,7 +15,19 @@
   the immutable v0.2.0.dev3 producer; existing manuscript results do not describe
   subsequent development code.
 - **Improvement evidence and remaining work:**
-  [`improvements_20261103/STATUS.txt`](improvements_20261103/STATUS.txt).
+  [`low_rank/history/v0.2.0.dev4-evidence/STATUS.txt`](low_rank/history/v0.2.0.dev4-evidence/STATUS.txt).
+
+## Repository layout
+
+| Path | Contents |
+|------|----------|
+| `splitters/`, `hypergraph/`, `features/`, `data/` | The `PALM` package: splitter registry, hypergraph backend, featurizers, dataset loaders (incl. `data/reactions.py`) |
+| `lowrank/` | `PALM.lowrank`: the low-rank splitter integrated into `PALM.splitters` (registers `"lowrank"`; used by the benchmarks) |
+| `low_rank/` | Standalone low-rank development package `lowrank-split` (v0.2.0.dev4), its tests, docs and version history |
+| `benchmarks/` | DataSAIL pipeline + web app, master benchmark, cross-method and complexity studies |
+| `tests/` | PALM integration tests and small input fixtures (generated `tests/output/` is not tracked) |
+| `docs/` | Benchmark insights (`docs/insights.md`) and the PALM technical report (`docs/report/`) |
+| `publications/lowrank_2026/` | Frozen, checksummed manuscript evidence cited by the paper (do not restructure) |
 
 The method constructs representation-defined evaluation boundaries. Lower
 cross-fold similarity or a harder prediction task does not establish better
@@ -64,7 +78,7 @@ python -m PALM.benchmarks.datasail_pipeline config.yaml
 ### Web App
 
 ```bash
-uvicorn PALM.webapp.app:app --host 0.0.0.0 --port 8080
+uvicorn PALM.benchmarks.datasail_pipeline.webapp.app:app --host 0.0.0.0 --port 8080
 ```
 
 Open `http://localhost:8080` → Upload dataset → Configure entities → Run splitting → Download results.

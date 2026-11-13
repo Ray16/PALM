@@ -1,0 +1,13 @@
+dataset,task,target_gap,alpha,predicted_gap,realized_gap,realized_gap_std,abs_err,in_range,cal_b,cal_a,cal_r2,cal_spearman,range_lo,range_hi
+moleculenet_esol,regression,0.3983,0.5587,0.3983,0.347,0.0361,0.0513,True,0.2157,0.5033,0.8419,1.0,0.296,0.8073
+moleculenet_esol,regression,0.5005,0.6795,0.5005,0.4134,0.0216,0.0871,True,0.2157,0.5033,0.8419,1.0,0.296,0.8073
+moleculenet_esol,regression,0.6028,0.7931,0.6028,0.4969,0.0471,0.1058,True,0.2157,0.5033,0.8419,1.0,0.296,0.8073
+moleculenet_esol,regression,0.705,0.8966,0.705,0.5912,0.0818,0.1139,True,0.2157,0.5033,0.8419,1.0,0.296,0.8073
+moleculenet_bace,classification,0.1359,0.5115,0.1359,0.1106,0.0229,0.0253,True,0.1004,0.1044,0.7515,0.9,0.1114,0.234
+moleculenet_bace,classification,0.1604,0.7786,0.1604,0.1745,0.0024,0.014,True,0.1004,0.1044,0.7515,0.9,0.1114,0.234
+moleculenet_bace,classification,0.1849,0.8524,0.1849,0.1762,0.0165,0.0087,True,0.1004,0.1044,0.7515,0.9,0.1114,0.234
+moleculenet_bace,classification,0.2095,0.9262,0.2095,0.2002,0.0165,0.0092,True,0.1004,0.1044,0.7515,0.9,0.1114,0.234
+moleculenet_freesolv,regression,0.4009,0.4768,0.4009,0.317,0.0153,0.0839,True,0.2594,0.3956,0.8883,0.9,0.3234,0.7113
+moleculenet_freesolv,regression,0.4785,0.6465,0.4785,0.523,0.0721,0.0445,True,0.2594,0.3956,0.8883,0.9,0.3234,0.7113
+moleculenet_freesolv,regression,0.5561,0.7886,0.5561,0.5229,0.0846,0.0332,True,0.2594,0.3956,0.8883,0.9,0.3234,0.7113
+moleculenet_freesolv,regression,0.6337,0.8943,0.6337,0.5972,0.061,0.0365,True,0.2594,0.3956,0.8883,0.9,0.3234,0.7113

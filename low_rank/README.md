@@ -1,7 +1,8 @@
 # Development release 0.2.0.dev4
 
-This is the canonical development package at `/homes/rzhu/data_splitting/low_rank`. The manuscript producer remains
-frozen in `../maintenance/retired_workspaces/odac25_revision/publications/lowrank_2026/package` (v0.2.0.dev3).
+This is the canonical development package. In the PALM repository the manuscript
+producer remains frozen in
+[`../publications/lowrank_2026/package`](../publications/lowrank_2026/package) (v0.2.0.dev3).
 
 Exact-count refinement now batches shortlist similarity calculations for dense
 and CSR factors. Candidate coverage and count constraints are unchanged. The
@@ -9,7 +10,7 @@ sparse-local-penalty and explicitly weighted paths retain their existing solvers
 Floating-point matrix multiplication can resolve near ties differently across
 backends; bitwise equivalence is not a cross-hardware guarantee.
 
-See [development evidence](../maintenance/retired_workspaces/odac25_revision/improvements_20261103/STATUS.txt) for scoped validation and timing.
+See [development evidence](history/v0.2.0.dev4-evidence/STATUS.txt) for scoped validation and timing.
 No new powered-kernel approximation is enabled by this release.
 
 # lowrank-split
