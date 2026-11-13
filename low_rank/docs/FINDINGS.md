@@ -1,0 +1,347 @@
+# Low-rank splitter — method-development findings
+
+Findings from the multi-objective / controllable-hardness track. Each increment
+has a self-contained experiment under `experiments/`; this file is the synthesis.
+All numbers are triplicate, with hand-picked features per entity type
+(`route=True`).
+
+**Historical scope:** this is the development log, not the final manuscript.
+The audited follow-up and current evidence are in [`paper/mlst_2026/`](../paper/mlst_2026/).
+Small-sample tuning saturation does not establish global optimality, and a model's
+generalization gap is not ground truth for deployment realism or leakage.
+
+**Naming note:** the public option is now `allowed_size_imbalance`, meaning the
+maximum fractional deviation from a target split size. Historical code and result
+tables retain the original `balance_slack` field so prior runs remain reproducible.
+Generated tables live in `results/`; generated plots live in `figures/`.
+
+---
+
+## Step 1 — Multi-objective core: the leakage ↔ balance tradeoff
+*Code: `optimize.py` (`corridor_assign`, `balanced_lloyd(balance_slack=)`).
+Experiment: `experiments/balance_pareto.py` → `results/balance_pareto.csv` and
+`figures/balance_pareto.png`.*
+
+The default splitter pins **exact** train/test sizes. Relaxing that to a tunable
+`balance_slack` corridor lets the optimizer cut cleaner and lowers leakage
+monotonically:
+
+| dataset | slack 0.0 | slack 0.30 | leakage ↓ |
+|---|--:|--:|--:|
+| bace (chemberta) | 0.257 | 0.195 | −24% |
+| esol (ecfp) | 0.160 | 0.109 | −32% |
+| qmof (mat2vec) | 0.194 | 0.141 | −27% |
+
+**Finding:** exact balance costs ~25–30% of achievable leakage reduction. The
+tradeoff is now an explicit knob, not a hard-coded constraint. **Mechanism:**
+`balance_slack` moves leakage *below* the balanced optimum by spending balance.
+
+> **Downstream caveat (see Synthesis):** this lower leakage does **not** translate
+> into a harder evaluation — measuring the gap over the slack sweep shows it flat or
+> *falling*. `balance_slack` is a knob on the leakage↔balance **metric**, not on
+> real OOD difficulty; use `hardness` (Step 3) for the latter.
+
+---
+
+## Step 2 — Tight/adaptive Nyström: an honest negative result
+*Negative result — code archived. Variants (`landmark="leverage"`, `ridge`, `energy`)
+removed from the live `nystrom.py`; the pre-strip snapshot, experiment, and results live
+under `archive/nystrom_variants/` (`nystrom_full.py`, `nystrom_fidelity.py`,
+`results/nystrom_fidelity.csv`, `figures/nystrom_fidelity_{leakage,recon}.png`).*
+
+**Finding:** the Nyström approximation is **not** the bottleneck. Reconstruction
+error `‖S−BBᵀ‖/‖S‖` keeps falling with rank, but **leakage plateaus by rank ≈ 32–64**
+(rank 256 is overkill), and ridge-leverage-score landmarks / ridge `W⁻¹ᐟ²` give
+negligible leakage benefit over plain k-means++. The fidelity bound holds but is
+*loose* — the split objective is robust to approximation error. The practical win
+is **lower/adaptive rank for speed**, not lower leakage.
+
+---
+
+## Step 3 — Controllable OOD-hardness (flagship, validated)
+*Code: `optimize.py` (`interpolate_to_random`), `splitter.py` (`hardness`).
+Experiment: `experiments/hardness_control.py` → `results/hardness_control.csv` and
+`figures/hardness_control.png`.*
+
+A `hardness` dial ∈ [0,1] (1 = leakage-minimized/hardest, 0 = random/easiest),
+implemented as balance-preserving interpolation toward random. It **controls the
+realized generalization gap**:
+
+| dataset | leakage (α 0→1) | gap (α 0→1) | Spearman(α, gap) | calibration |
+|---|--:|--:|--:|--|
+| esol | 0.306 → 0.160 | 0.35 → 0.84 | **+1.00** | gap ≈ 0.22 + 0.50·α |
+| bace | 0.307 → 0.257 | 0.11 → 0.23 | +0.90 | gap ≈ 0.10 + 0.10·α |
+| freesolv | 0.316 → 0.127 | 0.26 → 0.71 | +0.90 | gap ≈ 0.26 + 0.40·α |
+
+**Finding:** within a dataset, hardness controls the gap almost deterministically
+(Spearman +0.90–1.00). Each dataset gets a linear calibration `gap ≈ b + a·α` to
+invert for a target difficulty (slopes are dataset-specific). **Mechanism:**
+`hardness` moves leakage *up* toward random by injecting randomness, holding balance
+fixed — a near-pure leakage→gap effect.
+
+> **Scope (2026-09-29 review).** This is an *empirical, seed-averaged* relationship
+> on three datasets, not a pointwise guarantee: an individual label swap can lower
+> leakage, so leakage need not rise monotonically as α falls for a given seed. The
+> perturbation was changed to a **nested** seeded Fisher–Yates prefix (a lower α
+> extends the higher-α perturbation); rerunning `experiments/hardness_control.py`
+> with it reproduces the table above (same Spearman +0.90/+1.00/+0.90, mean leakage
+> still monotone in α). `target_gap` now fits an isotonic curve in the direction of
+> the calibration slope, so negative-slope calibrations also invert.
+
+---
+
+## Step 4 — Multilevel FM: the optimizer was already optimal (negative), the *cap* was the bug
+*Negative result — code archived. `multilevel.py` (coarsen→refine→uncoarsen V-cycle),
+the experiment, and results live under `archive/multilevel/` (`multilevel.py`,
+`multilevel_fm.py`, `results/multilevel_{small,scale}.csv`, `figures/multilevel_scale.png`).
+The shipped fix is in the live `splitter.py` (`fm_max_n` 200k → 2M).*
+
+Built a multilevel V-cycle to escape single-move-FM local minima (contraction by summing
+B rows preserves `factor_leakage` exactly, so it's provably never worse than flat). It
+gives **zero benefit**:
+
+| dataset (feat) | n | flat Lloyd+FM | multilevel | gain |
+|---|--:|--:|--:|--:|
+| bace (chemberta) | 1513 | 31555.0 | 31555.0 | **+0.00%** |
+| esol (ecfp) | 1128 | 8264.8 | 8264.8 | **+0.00%** |
+| freesolv (ecfp) | 642 | 2055.5 | 2055.5 | **+0.00%** |
+| qmof (mat2vec) | 2000 | 344074.7 | 344074.7 | **+0.00%** |
+
+**Finding:** flat best-of-4 Lloyd + single-move FM reached the *same best observed value*
+as the tested multilevel method (best-of-30 == best-of-4 on ESOL). This is search
+saturation on these examples, not a global optimality certificate or proof that
+other local optima do not exist.
+**The real bug is the conservative `fm_max_n=200_000` cap**: above it the splitter shipped
+an *un-polished Lloyd* split. Removing the cap and running the existing flat FM recovers
+the leakage — at 300k, 367M (capped) → 352.7M (**+3.99%**) in 2.1s; ~12s at 1M. Multilevel
+recovers the identical number ~48× slower. **Shipped change:** `fm_max_n` 200k → 2M (flat
+FM); `multilevel.py` archived as documented negative evidence (`archive/multilevel/`),
+not wired in. This is the
+Step-2 lesson again: the lever is the problem definition, not solver fidelity.
+
+---
+
+## Step 5 — target_gap: inverting the hardness calibration (the α→gap curve is convex)
+*Code: `target_gap.py` (`calibrate_gap`, `GapCalibrator`, `split_for_gap`).
+Experiment: `experiments/target_gap.py` → `results/target_gap.csv` and
+`figures/target_gap_{esol,bace,freesolv}.png`.*
+
+Productizes Step 3: request a target generalization gap, get the split that delivers it.
+`calibrate_gap` runs cheap probe splits (triplicate), `GapCalibrator.invert` returns the α.
+
+| dataset | calibration (linear summary) | requested↔realized corr | MAE |
+|---|--|--:|--:|
+| bace (chemberta) | gap≈0.100+0.104·α, R²0.75 | +0.910 | **0.014** |
+| esol (ecfp) | gap≈0.216+0.503·α, R²0.84 | +0.997 | **0.090** |
+| freesolv (ecfp) | gap≈0.259+0.396·α, R²0.89 | +0.900 | **0.050** |
+
+**Finding:** requested gap tracks realized gap (corr +0.90–0.997). **The α→gap curve is
+markedly *convex*** (esol 0.30→0.35→0.81 across α), so a naive *linear* calibration
+over-predicts interior gaps (esol MAE 0.122); a monotone **piecewise-linear** engine
+through the probe knots cuts MAE 26–55%. esol's residual (0.090) sits at the gap
+estimator's own noise floor (±0.08 at high α), not inversion error — bace, the low-noise
+dataset, is essentially exact (0.014). Calibrate per (dataset, features, model) — the
+honest Step-3 scope.
+
+---
+
+## Step 6 — k>2 (train/val/test): corridor + hardness generalized to multiway
+*Code: `optimize.py` (`corridor_assign` k>2 branch).
+Experiment: `experiments/kway_split.py` → `results/kway_{balance,hardness}.csv` and
+the corresponding plots under `figures/`.*
+
+`corridor_assign` previously fell back to *exact* sizes for k>2, so Step-1's `balance_slack`
+was a silent no-op on 3-way splits. Extended it with a regret-based greedy peel (k==2 stays
+exact; degenerate corridor reproduces exact sizes; feasibility clamps keep every block
+in-corridor). Validated on 3-way [8,1,1], triplicate:
+
+| dataset | leakage slack 0.0→0.30 | Δ | Spearman(slack, leakage) |
+|---|--:|--:|--:|
+| bace | 0.270 → 0.200 | −26% | −1.00 |
+| esol | 0.171 → 0.111 | −35% | −1.00 |
+| freesolv | 0.129 → 0.078 | −39% | −1.00 |
+| qmof | 0.205 → 0.146 | −29% | −1.00 |
+
+**Finding (balance):** the k>2 corridor is a clear win — leakage falls monotonically where
+it was previously frozen. **Finding (hardness):** `interpolate_to_random` and FM were
+already k-agnostic; on 3-way the dial still controls the train→test gap at the endpoints
+(esol ~0.36→1.10) but is **noisier in the interior** — Spearman(α, gap) +0.60/+0.60/+0.90
+vs +0.90–1.00 at k=2 — because the test block is half the size (10% vs 20%), so the gap
+estimate is noisier. Controllable on 3-way; calibrate with more seeds.
+
+---
+
+## Step 7 — Ablation: component consolidation on leakage AND gap (confirms + sharpens the synthesis)
+*Code: `experiments/ablation.py` → `results/ablation_{components,grid}.csv` and the
+corresponding plots under `figures/`.*
+
+A single study reporting **leakage and realized gen-gap side by side** for four configs
+(2-way [8,2], triplicate). Deliberately not an "add-one-in lowers leakage" ladder — because
+leakage and gap turn out to **anti-correlate across mechanisms**:
+
+| dataset | random (L / gap) | lloyd, no FM | lloyd+FM (anchor) | +balance_slack 0.3 |
+|---|--:|--:|--:|--:|
+| esol | 0.307 / 0.30 | 0.166 / 0.72 | 0.160 / **0.81** | **0.109** / 0.51 |
+| bace | 0.308 / 0.11 | 0.269 / 0.26 | 0.257 / 0.23 | **0.194** / 0.22 |
+| freesolv | 0.303 / 0.32 | 0.138 / 0.73 | 0.127 / **0.71** | **0.079** / 0.63 |
+| qmof | 0.310 / 0.42 | 0.206 / 0.56 | 0.195 / 0.54 | **0.142** / 0.52 |
+
+**Findings (Part A — components):**
+1. **`random` is the easy corner everywhere** — highest leakage *and* lowest gap.
+2. **The gap jump is from leakage-minimization itself** (random→lloyd: esol gap 0.30→0.72),
+   *not* from the FM polish on top.
+3. **FM polish** (lloyd→lloyd+FM) is a small leakage drop with a small/noisy gap effect
+   (up on esol, within std on the rest).
+4. **Spending balance** (anchor→slack) reaches the **lowest leakage on all 4** but the gap
+   **falls** (esol 0.81→0.51) — the metric-gaming trap, cleanly reproduced.
+5. **Therefore the min-leakage config (slack) is NOT the max-difficulty config (anchor).**
+   Leakage and gap anti-correlate across mechanisms — the sharpened form of the synthesis
+   below: difficulty is separation at fixed balance, and lowering leakage the other way
+   (imbalance) makes the eval *easier*.
+
+**Findings (Part B — tuning-neutrality extends to the gap):** on the anchor, sweeping
+`rank ∈ {64,256,1024}` moves neither leakage (~0.001 span) nor gap (esol wobble is
+non-monotonic = noise); `n_restarts ∈ {1,4,16}` is **identical** on both metrics (Lloyd+FM
+is effectively deterministic to the optimum — best-of-1 suffices). So the hyperparameters
+were neutral on the gap as well as on leakage in these experiments — reinforcing Step 4's empirical saturation result
+and the decision to skip smarter-init/escape. The only real levers remain **`balance_slack`**
+(leakage↔balance metric tradeoff) and **`hardness`** (difficulty).
+
+---
+
+## Step 8 — Tail (near-duplicate) leakage: the sum leaves it, and closing it helps *conditionally*
+*Code: `experiments/tail_leakage_probe.py` (premise) and `experiments/tail_split.py`
+(arbiter) → `results/tail_leakage_probe.csv`, `results/tail_split.csv`.*
+
+The live objective minimizes the **sum** of cross-split similarity. A sum can be small
+while a few **near-duplicate** pairs (Tanimoto > τ) still straddle the split — the
+contamination that most corrupts a molecular OOD test. Two questions, on ECFP/Tanimoto
+(the strong molecular kernel), 2-way [8,2], triplicate:
+
+**Premise (probe): does the sum-optimized split leave near-twins?** Yes, and it tracks
+chemistry. Fraction of TEST molecules with a train neighbour at Tanimoto > 0.7:
+
+| dataset | random | lowrank (sum) |
+|---|--:|--:|
+| bace (congeneric analog series) | 0.84 | **0.11** |
+| freesolv | 0.14 | 0.03 |
+| esol (diverse) | 0.23 | 0.006 |
+
+Sum-minimization cuts contamination ~8× vs random but leaves a real tail on the
+congeneric set (bace: ~11% of test molecules have a >0.7 twin in train).
+
+**Arbiter (does closing the tail widen the realized gap, at matched balance?).** A
+balance-matched **tail-constraint repair** — assign each `sim>τ` connected component
+wholesale to one side (zeroes the tail), rebalance with singletons (no near-twins, so
+tail stays 0) — vs the sum split:
+
+| dataset | tail (sum→constr) | imbalance | gap (sum→constr) | test (sum→constr) | Δgap |
+|---|--:|--:|--:|--:|--:|
+| **bace** | 0.11 → **0.00** | 0.05 → 0.00 | 0.249 → **0.346** | ROC-AUC 0.750 → 0.653 | **+0.097** |
+| esol | 0.006 → 0.00 | matched | 0.782 → 0.748 | 0.169 → 0.205 | −0.034 |
+| freesolv | 0.025 → 0.00 | matched | 0.714 → 0.684 | 0.281 → 0.281 | −0.029 |
+
+**Findings:**
+1. **On congeneric data (bace) the tail constraint is an honest win** — it zeroes the
+   near-twin tail *and* widens the gap (+0.097, all 3 seeds) with a real test-metric
+   drop (0.750→0.653). The near-duplicates were inflating the score.
+2. **On diverse data (esol/freesolv) it is neutral/slightly negative** — the tail was
+   already ~0, so forcing the few components together adds no difficulty. Applying it
+   blindly would be the metric-gaming trap (cf. `balance_slack`).
+3. **Therefore tail is a *conditional constraint + diagnostic*, gated on the measured
+   tail magnitude — NOT a replacement for the sum objective.** The sum stays the
+   optimizer's smooth target; the tail kills the specific failure the sum ignores,
+   where that failure exists. The gap, not the tail count, remains the arbiter.
+
+*Status: validated prototype (greedy repair, one winning dataset, 3 seeds). A true
+tail-constrained optimizer and more congeneric datasets would confirm before wiring
+into `splitter.py`.*
+
+---
+
+## Step 9 — Tail-aware objective: sharpened kernel + hard must-link (POSITIVE; supersedes Step 8's repair)
+*Code: `lowrank/grouped.py`, `Params.kernel_power` / `must_link` (`nystrom.py` factorizes
+`S**p`). Study: `../comparisons/lowrank_variants.py` + `analyze_lowrank_variants.py`; full
+write-up in `../comparisons/FINDINGS.md` "Tail-aware low-rank". Tests: `tests/test_tail_aware.py`.*
+
+Step 8 showed the sum leaves near-twins, and that a post-hoc repair helps conditionally. Step 9 builds
+the fix into the optimizer and tests it against ground truth (synthetic families) plus 13 real
+datasets, next to hypergraph and DataSAIL.
+
+- **`kernel_power=p`** optimizes Σ cross sim**p (Schur power, PSD for integer p). It suppresses the
+  background pairs that dominate the sum, so families, series and nested hierarchies move whole
+  (synthetic family leak: hierarchy 0.20 → 0, long-tail 0.13 → 0).
+- **`must_link=τ`** never cuts a sim ≥ τ top-k pair. It uses capped single-linkage groups, optimized
+  exactly in factor space: moving group g from a→b changes leakage by `g·p_a − g·p_b − ‖g‖²`.
+  It is warm-started from the point solution, and a repair step breaks a group only if sizes demand
+  it, so it is never infeasible.
+- **Each alone fails at the other's scale.** p3 alone: a rank-r sketch can't resolve many tiny
+  near-dup groups (family leak 0.01 → 0.08). Must-link alone: groups fragment below τ and the sum
+  doesn't care where the pieces go (no gain on families).
+- **Together** (p=3, τ=0.4 tanimoto): real nnl_rel 0.123 → 0.007 and NN>0.6 1.9% → 0.3%, for a
+  leak_ratio cost of 0.663 → 0.707 (hypergraph 0.747, DataSAIL 0.719). It beats hypergraph on both
+  axes on 12/13 datasets. Synthetic family leak 0.283 → 0.140 (DataSAIL 0.114 at relaxed ε). τ and p
+  are dials along a monotone global ↔ local frontier.
+- Defaults are unchanged (`kernel_power=1`, `must_link=None`), so existing results reproduce.
+  Use the tail-aware setting for congeneric / clustered data. Its leak_ratio cost scales with
+  the data's local/global similarity contrast (ρ = 0.80).
+
+**Negatives (archived → `archive/sparse_residual/`):** a low-rank + sparse kernel `BBᵀ + R`, where R
+is the exact k-NN residual, is a mild positive, but hard must-link dominates it. A soft must-link
+boost on R is a clear negative (real nnl_rel 0.229 vs 0.108). An integer power of the kernel is
+not a substitute for must-link on near-duplicates (rank limit).
+
+---
+
+## Synthesis — Steps 1 & 3 are NOT one capability (tested, hypothesis refuted)
+*Experiment: `experiments/balance_gap.py` → `figures/balance_vs_hardness_gap.png`,
+`results/balance_gap.csv`.*
+
+The tempting hypothesis was "both are leakage knobs, so both control difficulty."
+Measuring the gap for the balance_slack sweep **refutes it.** The two knobs share
+one anchor (slack 0 ≡ hardness 1 — the exact-balance, fully-optimized split) and
+agree there exactly, but from that anchor they move the gap in **opposite
+directions**:
+
+| dataset | anchor L/gap | `balance_slack`→0.30 (leakage↓) | `hardness`→0 (leakage↑) |
+|---|--:|--:|--:|
+| esol | 0.160 / 0.81 | L 0.109, gap **0.51 ↓** | L 0.307, gap 0.30 ↓ |
+| freesolv | 0.127 / 0.71 | L 0.079, gap **0.63 ↓** | L 0.303, gap 0.32 ↓ |
+| bace | 0.257 / 0.23 | L 0.194, gap 0.22 (flat) | L 0.308, gap 0.11 ↓ |
+
+**Key findings:**
+
+1. **The anchor is the maximum-difficulty point.** The exact-balance,
+   leakage-minimized split has the largest gap. Moving *either* way makes the eval
+   easier — randomness (Step 3) via higher leakage, imbalance (Step 1) via the
+   evaluation confound.
+
+2. **Leakage is not a sufficient statistic for the gap — the *mechanism* matters.**
+   Step 3 lowers leakage by increasing train/test *separation* at fixed balance →
+   harder (bigger gap). Step 1 lowers leakage by *imbalance* → the gap flattens or
+   **falls**. Same metric, opposite downstream effect. So the naive leakage→gap
+   relation only holds when leakage is changed the *right* way.
+
+3. **`balance_slack` is a metric-gaming trap for difficulty.** It improves the
+   leakage *number* while making the benchmark no harder (often easier). Anyone
+   reducing leakage via imbalance and expecting a harder OOD test would be fooled.
+   `balance_slack` is a legitimate knob **for the leakage↔balance metric tradeoff**,
+   but **not** a difficulty controller. **`hardness` (Step 3) is the only validated
+   difficulty dial** — precisely because it isolates leakage at fixed balance.
+
+4. **The lever is the problem definition, not solver fidelity** (why Step 2 failed).
+   Steps 1 & 3 change *what* is optimized; Step 2 changed *how well*. The objective
+   was already faithful enough.
+
+5. **Leakage is dataset-relative, not a universal unit.** Within-dataset
+   Spearman(hardness, gap) ≈ 1.0 but cross-dataset r(leakage, gap) = −0.56: leakage
+   orders difficulty near-perfectly inside a fixed (dataset, features, model), but
+   the leakage→gap *map* differs by dataset (esol slope 0.50 vs bace 0.10). Hence
+   per-dataset calibration is inherent and the normalized dial α is the right
+   abstraction.
+
+**Takeaway:** controllable OOD difficulty is a real, calibratable capability — but
+it is **`hardness` specifically** (separation at fixed balance), not "lower leakage"
+in general. The balance_slack experiment is the control that proves the point:
+lowering leakage the wrong way does not buy difficulty. The gap, not the leakage
+number, is ground truth.

@@ -2,10 +2,12 @@
 
 ## Low-rank method and manuscript
 
-- **Current development package:** [`packages/lowrank`](packages/lowrank), version
-  `0.2.0.dev4`. Install with `python -m pip install ./packages/lowrank`.
-  Run imports from outside the repository root, whose legacy `lowrank/` directory
-  can shadow an installed package.
+- **Current development package:** [`low_rank`](low_rank), version
+  `0.2.0.dev4`. Install with `python -m pip install ./low_rank`.
+  Large datasets (`low_rank/data/`) and the publication build tree (`low_rank/paper/`)
+  are not vendored here; regenerate datasets via `low_rank/lowrank/datasets/sources.py`.
+  See [`low_rank/CRITICAL_REVIEW.md`](low_rank/CRITICAL_REVIEW.md) for the current
+  improvement roadmap.
 - **Reviewed manuscript and frozen evidence:**
   [`publications/lowrank_2026`](publications/lowrank_2026). Its `package/` remains
   the immutable v0.2.0.dev3 producer; existing manuscript results do not describe

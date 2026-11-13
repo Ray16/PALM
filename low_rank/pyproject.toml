@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lowrank-split"
+version = "0.2.0.dev4"
+description = "Capacity-controlled similarity splitting via low-rank kernel factors"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [{ name = "Ray Zhu" }]
+keywords = ["dataset-splitting", "data-leakage", "train-test-split", "nystrom", "cheminformatics", "materials"]
+dependencies = [
+    "numpy<2",
+    "scipy>=1.9",
+    "scikit-learn",
+    "pandas",
+    # Required: the Nyström factor, objective, Lloyd/FM optimizer and diagnostics
+    # are torch code. Uses CUDA when available, otherwise runs on CPU torch.
+    "torch>=2.0",
+]
+
+[project.scripts]
+lowrank-split = "lowrank.splitters.cli:main"
+
+[project.optional-dependencies]
+# ECFP fingerprints for molecular datasets (MoleculeNet, USPTO reactions).
+molecules = ["rdkit"]
+# Plotting for the experiment/figure scripts.
+plots = ["matplotlib"]
+# Optional packed-bit approximate neighbours for tail-aware grouping.
+ann = ["pynndescent>=0.5.13"]
+# Dependencies for the manuscript's RF/XGB studies and table/figure generation.
+paper = ["lowrank-split[experiments,ann]", "xgboost", "jinja2", "pytest"]
+# Everything needed to reproduce the experiments in experiments/.
+experiments = ["lowrank-split[molecules,plots]"]
+dev = ["lowrank-split[experiments]", "pytest"]
+
+[tool.setuptools.packages.find]
+include = ["lowrank*"]
+
+[tool.setuptools.package-data]
+"lowrank.features" = ["data/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
