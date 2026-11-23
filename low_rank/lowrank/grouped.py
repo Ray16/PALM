@@ -1,23 +1,18 @@
 """Must-link groups for the low-rank splitter: keep near-twins on the same side.
 
-Capped groups encourage strongly related entities to remain together.
-A dense cut and nearest-neighbour contamination measure different
-properties; grouping restricts assignments while retaining the
-factor-space objective, subject to capacity repair.
+Capped groups encourage strongly related entities to remain together:
 
-  1. ``must_link_groups`` — capped single linkage over the exact top-k similarity graph:
+  1. ``must_link_groups`` — capped linkage over the top-k similarity graph:
      edges with ``sim >= tau`` are merged strongest-first, refusing any merge that would
      exceed ``max_group`` points. Every point ends in a group; most stay singletons.
   2. The optimizer then works on *groups*. With ``g`` = sum of a group's B-rows, moving a
-     group from block a to b changes the leakage by exactly ``g·p_a − g·p_b − |g|²``, and
-     swapping u (in a) with v (in b) by the same expression with ``d = u − v``. So
-     weighted assignment and FM operate on the exact cut of the approximate kernel,
-     with whole groups retained unless balance repair dissolves them.
+     group from block a to b changes the leakage by ``g·p_a − g·p_b − |g|²``, and
+     swapping u (in a) with v (in b) by the same expression with ``d = u − v``.
 
 When greedy whole-group repair cannot restore the corridor, :func:`_repair` can
-break a smallest group into singletons (reported as ``broken_groups``). A final
-postcondition rejects invalid capacities; no universal feasibility or
-pair-threshold guarantee is claimed.
+break a smallest group into singletons or two coherent subgroups (reported as
+``broken_groups``), or under ``group_policy='strict'`` fall back to a bounded
+single-threaded HiGHS MILP (:func:`_whole_group_assignment`).
 """
 
 from __future__ import annotations
@@ -27,13 +22,10 @@ from typing import Optional, Sequence, Tuple
 import numpy as np
 
 from lowrank.splitters.common.balanced_assignment import capacity_corridor
-from lowrank.splitters.common.pairwise_similarity import (
-    pairwise_similarity,
-    standardize_for_metric,
-)
+from lowrank.splitters.common.pairwise_similarity import standardize_for_metric
 
 
-# ---------------------------------------------------------------- grouping
+# ── Top-k Neighbour Graph & Capped Linkage Grouping ──────────────────────────
 
 
 def topk_neighbours(
@@ -78,25 +70,7 @@ def must_link_groups(
     B: Optional[np.ndarray] = None,
     linkage: str = "single",
 ) -> np.ndarray:
-    """Capped linkage groups of the ``sim >= tau`` top-k graph. Returns (n,) group ids.
-
-    ``cap_rule`` decides what happens when a merge would exceed ``max_group``:
-
-    * ``"freeze"`` (default): the larger component stops growing at that similarity. Each group
-      then keeps every top-k pair stronger than its own stopping level, and dense regions are
-      grouped at a higher effective threshold than sparse ones. Without it, a tau below the
-      dataset's chaining point lets weaker edges fill capped groups with arbitrary chunks of one
-      giant component (full BACE at tau=0.4: 1502/1513 points in 49 cap-sized groups).
-    * ``"skip"``: skip only that merge and keep merging weaker edges (the original rule).
-
-    ``linkage`` controls the multi-point merge criterion:
-
-    * ``"single"`` (default): standard single-linkage over ``sim >= tau`` edges.
-    * ``"centroid"``: when factor matrix ``B`` is supplied, also requires the
-      factor-space cosine similarity between the two components' centroids
-      ``G_a / ||G_a||`` and ``G_b / ||G_b||`` to be at least ``tau`` (checked in
-      O(r) per candidate merge), preventing single-edge bridge chaining.
-    """
+    """Capped linkage groups of the ``sim >= tau`` top-k graph. Returns (n,) group ids."""
     if cap_rule not in ("freeze", "skip"):
         raise ValueError(f"cap_rule must be 'freeze' or 'skip'; got {cap_rule!r}")
     if linkage not in ("single", "centroid"):
@@ -123,7 +97,7 @@ def must_link_groups(
             a = parent[a]
         return a
 
-    for e in order:  # Kruskal, strongest edge first
+    for e in order:
         a, b = find(rows[e]), find(cols[e])
         if a == b:
             continue
@@ -139,8 +113,7 @@ def must_link_groups(
             na = float(np.linalg.norm(G_sum[a]))
             nb = float(np.linalg.norm(G_sum[b]))
             if na > 1e-12 and nb > 1e-12:
-                centroid_sim = float(np.dot(G_sum[a], G_sum[b]) / (na * nb))
-                if centroid_sim < tau:
+                if float(np.dot(G_sum[a], G_sum[b]) / (na * nb)) < tau:
                     continue
         parent[b] = a
         size[a] += size[b]
@@ -152,8 +125,7 @@ def must_link_groups(
 
 
 def resolve_tau(tau, metric: str, X=None, seed: int = 0) -> float:
-    """``tau`` as given, or ``"auto"``: 0.6 for tanimoto (the near-analog boundary used by the
-    leakage tail metrics), else the 0.995 quantile of the dataset's pair similarities."""
+    """``tau`` as given, or ``"auto"``: 0.6 for tanimoto, else 0.995 pair-sim quantile."""
     if tau != "auto":
         return float(tau)
     if metric == "tanimoto":
@@ -167,18 +139,11 @@ def resolve_tau(tau, metric: str, X=None, seed: int = 0) -> float:
     return _pair_sim_quantiles(ref, metric, (0.995,), seed=seed)[0]
 
 
-# ---------------------------------------------------------------- weighted optimizer
+# ── Group-Level Factor State & Weighted Corridor Peel ────────────────────────
 
 
 def _weighted_peel(scores, w, caps, floors):
-    """Weighted corridor assignment of m items to k blocks (greedy regret peel).
-
-    Same shape as :func:`lowrank.optimize.corridor_assign`, but each item carries a
-    weight (its point count). Block c takes items in preference order up to its
-    natural weight clamped into the corridor; items that would overshoot the cap are
-    skipped so smaller ones can fill the remainder. The last block takes the rest;
-    any residual violation is fixed later by :func:`_repair`.
-    """
+    """Weighted corridor assignment of m items to k blocks (greedy regret peel)."""
     m, k = scores.shape
     lab = np.full(m, k - 1, dtype=np.int64)
     remaining = np.arange(m)
@@ -194,19 +159,17 @@ def _weighted_peel(scores, w, caps, floors):
         t_max = max(t_min, min(caps[c], W - suf_flr[c + 1]))
         target = min(max(natural, t_min), t_max)
         w_ord = w[remaining[order]]
-        p = int(
-            np.searchsorted(np.cumsum(w_ord), target, side="right")
-        )  # prefix that fits whole
+        p = int(np.searchsorted(np.cumsum(w_ord), target, side="right"))
         take, cum = order[:p].tolist(), int(w_ord[:p].sum())
         if cum < target:
-            for j in order[p:]:  # preference order, skip overshoot
+            for j in order[p:]:
                 wj = w[remaining[j]]
                 if cum + wj <= target:
                     take.append(j)
                     cum += wj
                 if cum >= target:
                     break
-        if cum < t_min:  # top up with anything that fits
+        if cum < t_min:
             taken = set(take)
             for j in order:
                 if j not in taken and cum + w[remaining[j]] <= t_max:
@@ -221,7 +184,7 @@ def _weighted_peel(scores, w, caps, floors):
 
 
 class _State:
-    """Group-level factor-space state: P (k,r) block sums, M (m,k) = G·P^T, sizes."""
+    """Group-level factor-space state: ``P`` (k, r) block sums, ``M = G·P^T``, ``sizes``."""
 
     def __init__(self, G, w, lab, k, fold_weights=None):
         from .factors import validate_fold_weights
@@ -237,20 +200,20 @@ class _State:
         self.M = G @ self.P.T
         self.sizes = np.bincount(lab, weights=w, minlength=k).astype(np.int64)
 
-    def leakage(self):
+    def leakage(self) -> float:
         return 0.5 * float(np.sum(self.W * (self.P @ self.P.T)))
 
-    def costs(self):
+    def costs(self) -> np.ndarray:
         return self.M @ self.W.T - self.self_sim[:, None] * self.W[:, self.lab].T
 
-    def reductions(self):
+    def reductions(self) -> np.ndarray:
         cost = self.costs()
         return cost[np.arange(len(self.lab)), self.lab, None] - cost
 
-    def own(self):
+    def own(self) -> np.ndarray:
         return self.M[np.arange(len(self.lab)), self.lab] - self.self_sim
 
-    def move(self, u, b):
+    def move(self, u: int, b: int) -> None:
         a = self.lab[u]
         col = self.G @ self.G[u]
         self.M[:, a] -= col
@@ -262,12 +225,19 @@ class _State:
         self.lab[u] = b
 
 
-def _bisect_group_points(B, pts: Sequence[int], split_weight: int):
-    """Split a group of size >2 into two coherent subgroups of sizes (split_weight, len - split_weight).
+# ── Capacity Repair & Strict Whole-Group MILP Feasibility ────────────────────
 
-    Projects ``B[pts]`` onto its leading centered factor direction so the peeled
-    subgroup and the retained core each remain internally cohesive.
-    """
+
+class GroupInfeasibleError(ValueError):
+    """Whole-group retention and the specified capacities are proven incompatible."""
+
+
+class GroupFeasibilityUnresolved(RuntimeError):
+    """No feasible assignment found before the solver limit; not an infeasibility proof."""
+
+
+def _bisect_group_points(B, pts: Sequence[int], split_weight: int):
+    """Split a group of size >2 into two coherent subgroups of sizes ``(split_weight, len - split_weight)``."""
     pts = list(pts)
     m = len(pts)
     split_weight = max(1, min(int(split_weight), m - 1))
@@ -279,9 +249,10 @@ def _bisect_group_points(B, pts: Sequence[int], split_weight: int):
     _, evecs = np.linalg.eigh(0.5 * (cov + cov.T))
     proj = centered @ evecs[:, -1]
     order = np.argsort(proj, kind="stable")
-    left = [pts[i] for i in order[:split_weight]]
-    right = [pts[i] for i in order[split_weight:]]
-    return [left, right]
+    return [
+        [pts[i] for i in order[:split_weight]],
+        [pts[i] for i in order[split_weight:]],
+    ]
 
 
 def _repair(
@@ -293,17 +264,15 @@ def _repair(
     caps,
     floors,
     members,
-    allow_break=True,
+    allow_break: bool = True,
     fold_weights=None,
     break_mode: str = "singletons",
 ):
-    """Restore the corridor: move the best-fitting item that fixes a violation; if no whole
-    group fits, break the smallest multi-point group of the over-full block into singletons
-    (or two coherent subgroups when ``break_mode='bisect'``).
-    Moves update the factor-space state incrementally (exact); only a break rebuilds it.
-    Returns ``(G, w, lab, members, n_broken)``."""
+    """Restore the capacity corridor via greedy whole-group moves or group dissolution."""
     if break_mode not in ("singletons", "bisect"):
-        raise ValueError(f"break_mode must be 'singletons' or 'bisect'; got {break_mode!r}")
+        raise ValueError(
+            f"break_mode must be 'singletons' or 'bisect'; got {break_mode!r}"
+        )
     broken = 0
     st = _State(G, w, lab, k, fold_weights)
     for _ in range(10 * len(B) + 10):
@@ -321,9 +290,6 @@ def _repair(
             ok_u = st.sizes[src] - w_src >= floors[src]
             reductions = all_reductions[u_src]
             for b in np.flatnonzero(st.sizes < caps):
-                # A move must reduce an existing violation without creating one.
-                # Its weight may exceed the excess/deficit when both final sizes
-                # fit the corridor. Check every donor before dissolving a group.
                 if b == src or (
                     st.sizes[src] <= caps[src] and st.sizes[b] >= floors[b]
                 ):
@@ -339,13 +305,11 @@ def _repair(
             continue
         if not allow_break:
             break
-        # No directly feasible whole-group move reduces the violation. Break a
-        # smallest group in an overfull block (or a donor to an underfull one).
         sources = over if len(over) else donors
         multi = np.flatnonzero(np.isin(st.lab, sources) & (st.w > 1))
         if not len(multi):
             break
-        u = int(multi[np.argmin(st.w[multi])])  # first minimum, as before
+        u = int(multi[np.argmin(st.w[multi])])
         src = st.lab[u]
         pts = members[u]
         if break_mode == "bisect" and len(pts) > 2:
@@ -373,20 +337,8 @@ def _repair(
     return st.G, st.w, st.lab, members, broken
 
 
-class GroupInfeasibleError(ValueError):
-    """Whole-group retention and the specified capacities are proven incompatible."""
-
-
-class GroupFeasibilityUnresolved(RuntimeError):
-    """No feasible assignment found before the solver limit; not an infeasibility proof."""
-
-
-def _whole_group_assignment(weights, caps, floors, preferred, time_limit=5.0):
-    """Find a feasible whole-group packing using a sparse binary MILP.
-
-    This solves capacity feasibility, not the quadratic partition objective.
-    Integer incumbents are checked independently before use, including on timeout.
-    """
+def _whole_group_assignment(weights, caps, floors, preferred, time_limit: float = 5.0):
+    """Find a feasible whole-group packing using a single-threaded sparse binary MILP."""
     import warnings
     from scipy.optimize import Bounds, LinearConstraint, milp
     from scipy.sparse import coo_matrix
@@ -403,8 +355,6 @@ def _whole_group_assignment(weights, caps, floors, preferred, time_limit=5.0):
     ).tocsc()
     objective = np.ones((m, k))
     objective[np.arange(m), preferred] = 0
-    # HiGHS exposes its thread cap through scipy's forwarded native options.
-    # Keep this fallback single threaded even when called on a large shared host.
     with warnings.catch_warnings():
         warnings.filterwarnings(
             "ignore",
@@ -441,7 +391,10 @@ def _whole_group_assignment(weights, caps, floors, preferred, time_limit=5.0):
     )
 
 
-def _fm_groups(st: _State, caps, floors, tol=1e-6, max_moves=None, n_cand=8):
+# ── Group-Level FM Polish, Driver & Hardness Interpolation ───────────────────
+
+
+def _fm_groups(st: _State, caps, floors, tol: float = 1e-6, max_moves=None, n_cand: int = 8) -> int:
     """Monotone FM on groups: best feasible single move, else best feasible pair swap."""
     m, k = len(st.lab), st.k
     max_moves = max_moves if max_moves is not None else 4 * m
@@ -459,9 +412,9 @@ def _fm_groups(st: _State, caps, floors, tol=1e-6, max_moves=None, n_cand=8):
             st.move(u, b)
             moves += 1
             continue
-        best = (tol, None)  # pair swaps (exact-size corridors)
+        best = (tol, None)
         blocks = [np.nonzero(st.lab == c)[0] for c in range(k)]
-        G_blk = [st.G[ix] for ix in blocks]  # one copy per block, not per candidate
+        G_blk = [st.G[ix] for ix in blocks]
         for a in range(k):
             ia = blocks[a]
             for bb in range(k):
@@ -472,9 +425,7 @@ def _fm_groups(st: _State, caps, floors, tol=1e-6, max_moves=None, n_cand=8):
                 rv = gains[ib, a]
                 top = np.argsort(-ru)[:n_cand]
                 uu = ia[top]
-                dw = (
-                    st.w[uu][:, None] - st.w[ib][None, :]
-                )  # net weight a -> bb, (cand, |ib|)
+                dw = st.w[uu][:, None] - st.w[ib][None, :]
                 feas = (
                     (st.sizes[a] - dw >= floors[a])
                     & (st.sizes[a] - dw <= caps[a])
@@ -501,6 +452,13 @@ def _fm_groups(st: _State, caps, floors, tol=1e-6, max_moves=None, n_cand=8):
     return moves
 
 
+def _expand_group_labels(members: Sequence[Sequence[int]], group_labels: np.ndarray, n: int) -> np.ndarray:
+    labels = np.empty(n, dtype=np.int64)
+    for g, pts in enumerate(members):
+        labels[pts] = group_labels[g]
+    return labels
+
+
 def grouped_split(
     B,
     gid,
@@ -511,18 +469,12 @@ def grouped_split(
     seed: int = 0,
     fm: bool = True,
     init_labels=None,
-    group_policy="count_first",
-    feasibility_seconds=5.0,
+    group_policy: str = "count_first",
+    feasibility_seconds: float = 5.0,
     fold_weights=None,
     refine_restarts=None,
 ):
-    """Minimize factor-space leakage with groups and explicit capacity repair.
-
-    Returns ``(labels (n,), info dict)``. ``epsilon`` is the two-sided size corridor
-    (``0`` -> exact sizes, enforced by group swaps). ``init_labels`` (point labels, e.g.
-    the unconstrained point-level solution) adds a warm-started restart: each group
-    takes its members' majority label, then repair + Lloyd + FM as usual.
-    """
+    """Minimize factor-space leakage with groups and explicit capacity repair."""
     if group_policy not in ("count_first", "strict"):
         raise ValueError("group_policy must be count_first or strict")
     if not np.isfinite(feasibility_seconds) or feasibility_seconds <= 0:
@@ -547,15 +499,20 @@ def grouped_split(
     caps, floors = capacity_corridor(n, splits, epsilon)
     caps, floors = caps.astype(np.int64), floors.astype(np.int64)
 
+    def in_corridor(lab_vec, w_vec):
+        sz = np.bincount(lab_vec, weights=w_vec, minlength=k)
+        return bool(((sz >= floors) & (sz <= caps)).all())
+
     best = None
     candidates = []
     feasibility_solves = 0
     rejected_capacity_proposals = 0
     strict = group_policy == "strict"
     starts = ([None] if init_labels is not None else []) + list(range(n_restarts))
+
     for r in starts:
         G, w, mem = G0.copy(), w0.copy(), list(members)
-        if r is None:  # warm start: group majority vote
+        if r is None:
             votes = np.zeros((m, k))
             np.add.at(votes, (gid, np.asarray(init_labels)), 1.0)
             lab = votes.argmax(1)
@@ -563,19 +520,9 @@ def grouped_split(
             rng = np.random.default_rng(seed + r)
             lab = _weighted_peel(rng.random((m, k)), w, caps, floors)
         G, w, lab, mem, broken = _repair(
-            B,
-            G,
-            w,
-            lab,
-            k,
-            caps,
-            floors,
-            mem,
-            allow_break=not strict,
-            fold_weights=fold_weights,
+            B, G, w, lab, k, caps, floors, mem, allow_break=not strict, fold_weights=fold_weights
         )
-        sizes = np.bincount(lab, weights=w, minlength=k)
-        if strict and not ((sizes >= floors) & (sizes <= caps)).all():
+        if strict and not in_corridor(lab, w):
             if best is not None:
                 lab = best[1].copy()
             else:
@@ -583,27 +530,14 @@ def grouped_split(
                     w, caps, floors, lab, time_limit=feasibility_seconds
                 )
                 feasibility_solves += 1
-        for _ in range(n_iter):  # weighted balanced Lloyd
+        for _ in range(n_iter):
             st = _State(G, w, lab, k, fold_weights)
             old_G, old_w, old_mem, old_broken = G, w, mem, broken
-            sc = -st.costs()
-            new = _weighted_peel(sc, w, caps, floors)
+            new = _weighted_peel(-st.costs(), w, caps, floors)
             G, w, new, mem, b2 = _repair(
-                B,
-                G,
-                w,
-                new,
-                k,
-                caps,
-                floors,
-                mem,
-                allow_break=not strict,
-                fold_weights=fold_weights,
+                B, G, w, new, k, caps, floors, mem, allow_break=not strict, fold_weights=fold_weights
             )
-            sizes = np.bincount(new, weights=w, minlength=k)
-            if strict and not ((sizes >= floors) & (sizes <= caps)).all():
-                # A valid incumbent already exists. Reject an invalid heuristic
-                # proposal rather than solving another packing MILP every round.
+            if strict and not in_corridor(new, w):
                 rejected_capacity_proposals += 1
                 G, w, mem, broken = old_G, old_w, old_mem, old_broken
                 break
@@ -619,6 +553,7 @@ def grouped_split(
         candidates.append((obj, st, mem, broken, r is None))
         if best is None or obj < best[0]:
             best = (obj, st.lab.copy(), mem, broken, 0, r is None)
+
     candidates.sort(key=lambda item: item[0])
     refined_count = (
         min(len(candidates), refine_restarts or len(candidates)) if fm else 0
@@ -632,10 +567,9 @@ def grouped_split(
             obj, moves = before, 0
         if obj < best[0]:
             best = (obj, st.lab.copy(), mem, broken, moves, warm)
+
     obj, lab, mem, broken, moves, warm = best
-    labels = np.empty(n, dtype=np.int64)
-    for g, pts in enumerate(mem):
-        labels[pts] = lab[g]
+    labels = _expand_group_labels(mem, lab, n)
     sz = np.bincount(labels, minlength=k)
     corridor_ok = bool(((sz <= caps) & (sz >= floors)).all())
     if not corridor_ok:
@@ -673,17 +607,12 @@ def interpolate_groups_to_random(
     epsilon: float = 0.05,
     seed: int = 0,
 ) -> np.ndarray:
-    """Interpolate a grouped split toward random while keeping every intact group whole.
-
-    Unlike point-level :func:`lowrank.optimize.interpolate_to_random`, this operates
-    on whole groups so no group is torn across folds. Only moves or group swaps that
-    keep fold sizes inside the ``(1 ± epsilon)`` capacity corridor are applied.
-    ``alpha=1`` leaves ``labels`` unchanged; ``alpha=0`` applies up to ``m`` seeded
-    corridor-feasible group moves/swaps.
-    """
+    """Interpolate a grouped split toward random while keeping every intact group whole."""
     alpha = float(alpha)
     if not np.isfinite(alpha) or not 0.0 <= alpha <= 1.0:
-        raise ValueError(f"hardness/alpha must be a finite value in [0, 1]; got {alpha!r}")
+        raise ValueError(
+            f"hardness/alpha must be a finite value in [0, 1]; got {alpha!r}"
+        )
     labels = np.asarray(labels, dtype=np.int64).copy()
     gid = np.asarray(gid)
     _, inv = np.unique(gid, return_inverse=True)
@@ -696,10 +625,11 @@ def interpolate_groups_to_random(
         members[g].append(i)
     w = np.array([len(pts) for pts in members], dtype=np.int64)
     g_lab = np.array([labels[pts[0]] for pts in members], dtype=np.int64)
-    # Verify groups are currently intact before group-level interpolation.
     for g, pts in enumerate(members):
         if not np.all(labels[pts] == g_lab[g]):
-            raise ValueError("interpolate_groups_to_random requires intact initial groups")
+            raise ValueError(
+                "interpolate_groups_to_random requires intact initial groups"
+            )
     caps, floors = capacity_corridor(n, splits, epsilon)
     caps, floors = caps.astype(np.int64), floors.astype(np.int64)
     sizes = np.bincount(g_lab, weights=w, minlength=k).astype(np.int64)
@@ -720,7 +650,4 @@ def interpolate_groups_to_random(
             sizes[a] -= dw
             sizes[b] += dw
             g_lab[u], g_lab[v] = b, a
-    out = np.empty(n, dtype=np.int64)
-    for g, pts in enumerate(members):
-        out[pts] = g_lab[g]
-    return out
+    return _expand_group_labels(members, g_lab, n)

@@ -1,6 +1,4 @@
-"""Split-ratio bookkeeping: exact target sizes, the capacity corridor, and a
-balanced greedy assignment.
-"""
+"""Split-ratio bookkeeping: exact target sizes, capacity corridors, and balanced peel assignments."""
 
 from __future__ import annotations
 
@@ -23,8 +21,9 @@ def target_sizes(n: int, splits: Sequence[float]) -> np.ndarray:
     return sizes
 
 
-def capacity_corridor(n: int, splits: Sequence[float], epsilon: float
-                      ) -> Tuple[np.ndarray, np.ndarray]:
+def capacity_corridor(
+    n: int, splits: Sequence[float], epsilon: float
+) -> Tuple[np.ndarray, np.ndarray]:
     """Per-block ``(caps, floors)`` for the ``(1 +/- epsilon)`` balance corridor.
 
     With real-valued targets ``t_c = n * s_c/total``: ``caps = floor(t_c(1+epsilon))``
@@ -77,16 +76,29 @@ def _select_top_mask(pref, t: int):
     return mask
 
 
-def _peel_exact_order(scores, sizes: np.ndarray, block_order: Sequence[int]):
+def _peel_corridor_order(
+    scores, caps: Sequence[int], floors: Sequence[int], block_order: Sequence[int]
+):
+    """Greedy regret-ordered peel in the specified ``block_order`` within ``[floors, caps]``."""
     import torch
 
-    n, k = scores.shape
+    n, _ = scores.shape
     dev = scores.device
+    ord_caps = [int(caps[c]) for c in block_order]
+    ord_flrs = [int(floors[c]) for c in block_order]
+    m_blocks = len(block_order)
+    suf_cap = [0] * (m_blocks + 1)
+    suf_flr = [0] * (m_blocks + 1)
+    for j in range(m_blocks - 1, -1, -1):
+        suf_cap[j] = suf_cap[j + 1] + ord_caps[j]
+        suf_flr[j] = suf_flr[j + 1] + ord_flrs[j]
+
     remaining = torch.arange(n, device=dev)
     lab = torch.full((n,), int(block_order[-1]), dtype=torch.long, device=dev)
-    for pos in range(k - 1):
+    for pos in range(m_blocks - 1):
         c = int(block_order[pos])
         future_blocks = [int(b) for b in block_order[pos + 1 :]]
+        R = remaining.numel()
         sub = scores[remaining]
         other = (
             sub[:, future_blocks[0]]
@@ -94,37 +106,63 @@ def _peel_exact_order(scores, sizes: np.ndarray, block_order: Sequence[int]):
             else sub[:, future_blocks].max(dim=1).values
         )
         pref = sub[:, c] - other
-        take_mask = _select_top_mask(pref, int(sizes[c]))
+        t_min = max(0, min(max(ord_flrs[pos], R - suf_cap[pos + 1]), R))
+        t_max = max(t_min, min(min(ord_caps[pos], R - suf_flr[pos + 1]), R))
+        if t_min == t_max:
+            t = t_min
+        else:
+            natural = int((pref > 0).sum().item())
+            t = min(max(natural, t_min), t_max)
+        take_mask = _select_top_mask(pref, t)
         lab[remaining[take_mask]] = c
         remaining = remaining[~take_mask]
     return lab
 
 
-def balanced_assign(scores, sizes: np.ndarray):
-    """Assign n points to k blocks of *exactly* ``sizes`` maximizing chosen scores.
+def _peel_exact_order(scores, sizes: np.ndarray, block_order: Sequence[int]):
+    """Greedy regret-ordered peel with exact block sizes in ``block_order``."""
+    return _peel_corridor_order(scores, sizes, sizes, block_order)
 
-    ``scores``: (n, k) torch tensor, higher = better fit of point i to block c.
-    Exact/optimal for k == 2 (sort by block-preference difference); for k > 2,
-    evaluates both the forward regret-ordered peel and the minority-first
-    (ascending block size) peel and returns the higher-scoring assignment
-    (fully vectorized). Returns a (n,) long tensor of labels.
+
+def corridor_assign(scores, sizes: Sequence[int], caps: Sequence[int], floors: Sequence[int]):
+    """Assign n points to k blocks maximizing chosen scores, sizes within ``[floors, caps]``.
+
+    - **k == 2**: exact/optimal (concave in the single split point).
+    - **k > 2**: evaluates both the forward regret-based greedy peel and the
+      minority-first (ascending target size) peel, returning the higher-scoring
+      corridor-valid assignment. When ``floors == caps == sizes``, reproduces
+      :func:`balanced_assign`.
     """
     import torch
 
     n, k = scores.shape
+    dev = scores.device
     if k == 2:
         diff = scores[:, 1] - scores[:, 0]
-        take_mask = _select_top_mask(diff, int(sizes[1]))
-        lab = torch.zeros(n, dtype=torch.long, device=scores.device)
+        lo = max(int(floors[1]), n - int(caps[0]))
+        hi = min(int(caps[1]), n - int(floors[0]))
+        if lo == hi:
+            m = lo
+        else:
+            natural = int((diff > 0).sum().item())
+            m = min(max(natural, lo), hi)
+        take_mask = _select_top_mask(diff, m)
+        lab = torch.zeros(n, dtype=torch.long, device=dev)
         lab[take_mask] = 1
         return lab
+
     forward = list(range(k))
-    lab = _peel_exact_order(scores, sizes, forward)
+    lab = _peel_corridor_order(scores, caps, floors, forward)
     minority_first = [int(c) for c in np.argsort(sizes, kind="stable")]
     if minority_first != forward:
-        alt = _peel_exact_order(scores, sizes, minority_first)
+        alt = _peel_corridor_order(scores, caps, floors, minority_first)
         if float(scores.gather(1, alt[:, None]).sum()) > float(
             scores.gather(1, lab[:, None]).sum()
         ):
             lab = alt
     return lab
+
+
+def balanced_assign(scores, sizes: np.ndarray):
+    """Assign n points to k blocks of *exactly* ``sizes`` maximizing chosen scores."""
+    return corridor_assign(scores, sizes, sizes, sizes)

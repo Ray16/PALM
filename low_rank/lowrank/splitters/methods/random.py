@@ -2,8 +2,8 @@
 
 Shuffles entities (or records) into blocks of the exact target sizes — the
 reference every leakage-minimizing method should beat. Works on both 1-D feature
-dicts and n-D record sets, and reports the same scaled ``L(pi)`` diagnostic so it
-drops straight into the comparison alongside the real methods.
+inputs and n-D record sets, and reports the same scaled ``L(pi)`` diagnostic so it
+drops straight into comparisons alongside the optimization-based methods.
 """
 
 from __future__ import annotations
@@ -21,27 +21,35 @@ from ..common.split_naming import assign_split_names
 _LEAKAGE_MAX_N = 100_000
 
 
-def _random_labels(n, splits, seed):
+def _random_labels(n: int, splits, seed: int) -> np.ndarray:
     sizes = target_sizes(n, splits)
     order = np.concatenate([np.full(int(sz), c) for c, sz in enumerate(sizes)])
     np.random.default_rng(seed).shuffle(order)
     return order
 
 
+def _is_nd_input(data) -> bool:
+    """True when ``data`` represents n-D ``(records, axis_feature_maps)`` input."""
+    if hasattr(data, "records") and hasattr(data, "axis_feature_maps"):
+        return True
+    if isinstance(data, dict) and "records" in data and "axis_feature_maps" in data:
+        return True
+    if isinstance(data, tuple) and len(data) == 2 and isinstance(data[1], dict):
+        return True
+    return False
+
+
 @register("random")
 class RandomSplitter(BaseSplitter):
     description = "Random baseline: shuffle entities into exact target-size blocks"
-    arity = "1d"          # also accepts n-D input (records, axis_feature_maps)
+    arity = "1d"  # also accepts n-D input (records, axis_feature_maps)
     Params = None
 
     def split(self, data, spec: SplitSpec) -> SplitResult:
         t0 = time.time()
-        # n-D input?  (records, axis_feature_maps) tuple / dict / NDInput-like
-        from lowrank.nd import _as_nd
-        is_nd = (isinstance(data, tuple)
-                 or (isinstance(data, dict) and "records" in data)
-                 or (hasattr(data, "records") and hasattr(data, "axis_feature_maps")))
-        if is_nd:
+        if _is_nd_input(data):
+            from lowrank.nd import _as_nd
+
             records, afm = _as_nd(data)
             n = len(records)
             labels = _random_labels(n, spec.splits, spec.seed)

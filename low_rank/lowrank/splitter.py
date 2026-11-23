@@ -3,7 +3,7 @@
 Graph-free: factorize ``S ~= B B^T`` (Nyström), then minimize cross-split leakage
 in the r-dim factor space with balanced-Lloyd restarts + a monotone FM polish.
 Memory is linear, O(n·r); time is empirically near-linear in n at bounded rank,
-iterations and FM moves (see the README "Complexity" section for the exact terms).
+iterations and FM moves.
 """
 
 from __future__ import annotations
@@ -16,37 +16,33 @@ from typing import Optional
 import numpy as np
 
 from lowrank.splitters.base import BaseSplitter, SplitResult, SplitSpec, register
+from lowrank.splitters.common.balanced_assignment import target_sizes
 from lowrank.splitters.common.feature_preparation import feature_matrix_from_dict
 from lowrank.splitters.common.leakage_metrics import scaled_lpi
 from lowrank.splitters.common.split_naming import assign_split_names
 
-from lowrank.splitters.common.balanced_assignment import target_sizes
-
+from .diagnostics import positive_integer, sampled_leakage
+from .factors import validate_fold_weights
 from .grouped import grouped_split, must_link_groups, resolve_tau
 from .nystrom import LANDMARKS, nystrom_features
 from .objective import factor_leakage
-from .optimize import optimize_restarts, interpolate_to_random
-from .diagnostics import sampled_leakage, positive_integer
-from .factors import validate_fold_weights
+from .optimize import interpolate_to_random, optimize_restarts
 
 logger = logging.getLogger(__name__)
 
 _LEAKAGE_MAX_N = 100_000
 
 
-def _check_int(name, v):
+# ── Shared Parameter & Geometry Validation ───────────────────────────────────
+
+
+def _check_int(name: str, v) -> None:
     if isinstance(v, bool) or not isinstance(v, (int, np.integer)) or v < 1:
         raise ValueError(f"{name} must be an integer >= 1; got {v!r}")
 
 
 def resolve_size_tolerance(p, spec: SplitSpec):
-    """Validate the shared Params and return ``(lloyd_slack, fm_epsilon)``.
-
-    ``allowed_size_imbalance``: ``None`` -> use ``balance_slack`` (default zero);
-    ``0`` -> exact sizes end to end (FM uses size-preserving swaps);
-    ``x > 0`` -> ``(1 ± x)`` corridor for both. ``spec.epsilon`` does not
-    implicitly relax the low-rank splitter's default size guarantee.
-    """
+    """Validate shared Params and return ``(lloyd_slack, fm_epsilon)``."""
     if p.rank != "auto":
         _check_int("rank", p.rank)
     _check_int("n_restarts", p.n_restarts)
@@ -71,12 +67,11 @@ def resolve_size_tolerance(p, spec: SplitSpec):
         getattr(p, "must_link", None) is not None
         or getattr(p, "groups", None) is not None
     )
-    if grouped:
-        if p.hardness is not None and float(p.hardness) < 1.0:
-            raise ValueError(
-                "must_link/groups cannot be combined with hardness < 1: "
-                "point randomization would break retained groups"
-            )
+    if grouped and p.hardness is not None and float(p.hardness) < 1.0:
+        raise ValueError(
+            "must_link/groups cannot be combined with hardness < 1: "
+            "point randomization would break retained groups"
+        )
     if getattr(p, "must_link", None) is not None:
         if not 0.0 < p.max_group_frac <= 1.0:
             raise ValueError("max_group_frac must be in (0, 1]")
@@ -109,11 +104,32 @@ def resolve_size_tolerance(p, spec: SplitSpec):
     return size_tolerance, size_tolerance
 
 
-def validate_nonempty_targets(n, splits):
+def validate_nonempty_targets(n: int, splits) -> None:
     if np.any(target_sizes(n, splits) == 0):
         raise ValueError(
             "requested split ratios produce an empty fold at this dataset size"
         )
+
+
+def _prepare_strata(strata, ids, grouped: bool):
+    """Validate and integer-encode optional per-entity stratification labels."""
+    if strata is None:
+        return None
+    if grouped:
+        raise ValueError("strata cannot be combined with groups/must_link")
+    if isinstance(strata, dict):
+        if set(strata) != set(ids):
+            raise ValueError("strata mapping must cover every entity id")
+        raw_strata = [strata[i] for i in ids]
+    else:
+        raw_strata = list(strata)
+        if len(raw_strata) != len(ids):
+            raise ValueError("strata sequence must have one label per entity")
+    codes = {}
+    return np.array([codes.setdefault(v, len(codes)) for v in raw_strata])
+
+
+# ── Registered 1-D Low-Rank Splitter ─────────────────────────────────────────
 
 
 @register("lowrank")
@@ -134,59 +150,30 @@ class LowRankSplitter(BaseSplitter):
         factor_memory_mb: Optional[float] = None
         eigen_rtol: float = 1e-8
         metric: Optional[str] = None
-        landmark: str = "kmeans++"  # kmeans++ | uniform
+        landmark: str = "kmeans++"  # kmeans++ | uniform | kmeans||
         n_restarts: int = 4
         n_iter: int = 25
         fm: bool = True
-        # Flat single-move FM is O(n·r) per move and converges in ~n/100 moves from a
-        # Lloyd init (~12s at n=1M); the old 200k cap shipped *un-polished* Lloyd splits
-        # at scale, leaving ~4% leakage on the table (archive/multilevel/multilevel_fm.py).
-        # A multilevel V-cycle recovers the same leakage ~48× slower — not worth it (a
-        # documented negative result, see archive/multilevel/). So we keep flat FM and
-        # just raise the cap. >2M still skips (keeps a hard time bound).
         fm_max_n: int = 2_000_000
-        # Maximum fractional deviation from each target split size. This is the
-        # clearer public name; balance_slack remains as a compatibility alias.
         allowed_size_imbalance: Optional[float] = None
         balance_slack: float = 0.0
-        # Empirical hardness dial: None/1 = best-found optimized split, 0 = random.
-        # Label swaps preserve counts. Predictive difficulty is dataset- and
-        # model-specific, not a guaranteed ordering of individual partitions.
         hardness: Optional[float] = None
-        # Tail-aware extensions (lowrank/grouped.py, docs/FINDINGS.md Step 9):
-        # kernel_power p optimizes Σ cross sim**p — p>1 sharpens the kernel toward
-        # strong pairs so whole families/series move together; must_link = tau (float,
-        # or "auto" = 0.6 tanimoto / 0.995 pair-sim quantile otherwise) forms capped
-        # groups. Missing edges, refused merges and repair prevent a universal pair
-        # threshold guarantee. A tested molecular setting is power=3, tau=0.4
-        # (tanimoto) — see comparisons/FINDINGS.md "Tail-aware low-rank".
         kernel_power: int = 1
         must_link: Optional[object] = None
-        # Optional externally defined groups: complete entity-id -> group mapping.
-        # Strict retention applies to supplied/constructed groups, not all pairs.
         groups: Optional[dict] = None
         group_policy: str = "count_first"  # count_first | strict
         group_feasibility_seconds: float = 5.0
         max_group_frac: float = 0.5
         must_link_k: int = 32
-        # what a group does when the cap stops a merge: "freeze" = stop growing at that
-        # similarity (per-group effective tau; avoids cap-sized chunks of one chained
-        # component), "skip" = skip that merge only (original rule). See must_link_groups.
-        must_link_cap: str = "freeze"
-        # Optional packed-bit approximate search; edges are verified exactly.
-        # Approximate recall must be measured for the intended dataset.
-        must_link_backend: str = "exact"
+        must_link_cap: str = "freeze"  # freeze | skip
+        must_link_backend: str = "exact"  # exact | tiled | nndescent | auto
         must_link_candidates: int = 64
         must_link_n_jobs: int = 1
         must_link_row_block: int = 256
         must_link_ref_block: int = 8192
-        # Exact diagnostic is quadratic and can dominate splitting time.
         score_exact_leakage: bool = True
-        # None preserves the legacy flag; new workflows should use "auto".
         leakage_diagnostic: Optional[str] = None  # none | exact | sampled | auto
         diagnostic_pairs: int = 8192
-        # Experimental normalized global + positive local pairwise penalty.
-        # Off by default; compare against the existing powered/grouped method.
         local_weight: float = 0.0
         local_k: int = 32
         local_threshold: float = 0.4
@@ -230,7 +217,33 @@ class LowRankSplitter(BaseSplitter):
             schema["properties"][field]["enum"] = choices
         return schema
 
-    def _diagnose(self, X, labels, metric, seed):
+    def _validate_params(self, spec: SplitSpec) -> float:
+        p = self.params
+        tolerance, _ = resolve_size_tolerance(p, spec)
+        if p.leakage_diagnostic not in (None, "none", "exact", "sampled", "auto"):
+            raise ValueError("leakage_diagnostic must be none, exact, sampled or auto")
+        positive_integer("diagnostic_pairs", p.diagnostic_pairs)
+        positive_integer("local_k", p.local_k)
+        if p.refine_restarts is not None:
+            positive_integer("refine_restarts", p.refine_restarts)
+        if p.group_policy not in ("count_first", "strict"):
+            raise ValueError("group_policy must be count_first or strict")
+        if (
+            not np.isfinite(p.group_feasibility_seconds)
+            or p.group_feasibility_seconds <= 0
+        ):
+            raise ValueError("group_feasibility_seconds must be finite and positive")
+        if p.groups is not None and p.must_link is not None:
+            raise ValueError("supply groups or must_link, not both")
+        if not np.isfinite(p.local_weight) or p.local_weight < 0:
+            raise ValueError("local_weight must be finite and non-negative")
+        if p.local_weight and (p.groups is not None or p.must_link is not None):
+            raise ValueError(
+                "experimental local_weight cannot yet be combined with groups/must_link"
+            )
+        return tolerance
+
+    def _diagnose(self, X, labels, metric: str, seed: int) -> dict:
         p = self.params
         mode = p.leakage_diagnostic
         if mode is None:
@@ -262,7 +275,7 @@ class LowRankSplitter(BaseSplitter):
             )
         return result
 
-    def _prepare_groups(self, ids, X, metric, spec, B=None):
+    def _prepare_groups(self, ids, X, metric: str, spec: SplitSpec, B=None):
         p = self.params
         if p.groups is not None:
             if not isinstance(p.groups, dict) or set(p.groups) != set(ids):
@@ -337,101 +350,70 @@ class LowRankSplitter(BaseSplitter):
             info["neighbour_backend"] = backend
         return gid, info
 
+    def _prepare_local_term(self, X, B, metric: str, spec: SplitSpec, graph_data):
+        from .local import local_graph, normalize_components
+        from .neighbours import audited_neighbours
+
+        p = self.params
+        if graph_data is None:
+            nbrs, backend = audited_neighbours(
+                X,
+                metric,
+                p.local_k,
+                backend=p.local_backend,
+                candidates=max(p.must_link_candidates, p.local_k + 1),
+                seed=spec.seed,
+                n_jobs=p.must_link_n_jobs,
+                audit_queries=p.neighbour_audit_queries,
+                minimum_recall=p.neighbour_minimum_recall,
+                strong_threshold=p.local_threshold,
+                row_block=p.must_link_row_block,
+                reference_block=p.must_link_ref_block,
+            )
+            graph, info = local_graph(
+                X,
+                metric,
+                k=p.local_k,
+                threshold=p.local_threshold,
+                neighbours=nbrs,
+            )
+            graph_data = (graph, info, backend)
+        graph, info, backend = graph_data
+        optimization_B, local_term, normalization = normalize_components(
+            B, graph, p.local_weight
+        )
+        local_info = dict(
+            graph=info,
+            normalization=normalization,
+            backend=backend,
+            experimental=True,
+        )
+        return optimization_B, local_term, local_info, graph_data
+
     def split(self, feature_data, spec: SplitSpec) -> SplitResult:
         p = self.params
         start = time.perf_counter()
-        tolerance, _ = resolve_size_tolerance(p, spec)
-        if p.leakage_diagnostic not in (None, "none", "exact", "sampled", "auto"):
-            raise ValueError("leakage_diagnostic must be none, exact, sampled or auto")
-        positive_integer("diagnostic_pairs", p.diagnostic_pairs)
-        positive_integer("local_k", p.local_k)
-        if p.refine_restarts is not None:
-            positive_integer("refine_restarts", p.refine_restarts)
-        if p.group_policy not in ("count_first", "strict"):
-            raise ValueError("group_policy must be count_first or strict")
-        if (
-            not np.isfinite(p.group_feasibility_seconds)
-            or p.group_feasibility_seconds <= 0
-        ):
-            raise ValueError("group_feasibility_seconds must be finite and positive")
-        if p.groups is not None and p.must_link is not None:
-            raise ValueError("supply groups or must_link, not both")
-        if not np.isfinite(p.local_weight) or p.local_weight < 0:
-            raise ValueError("local_weight must be finite and non-negative")
+        tolerance = self._validate_params(spec)
         grouped = p.groups is not None or p.must_link is not None
-        if p.local_weight and grouped:
-            raise ValueError(
-                "experimental local_weight cannot yet be combined with groups/must_link"
-            )
         W = validate_fold_weights(p.fold_weights, len(spec.splits))
         ids, X = feature_matrix_from_dict(feature_data, min_rows=len(spec.splits))
         validate_nonempty_targets(len(ids), spec.splits)
-        strata_arr = None
-        if p.strata is not None:
-            if grouped:
-                raise ValueError("strata cannot be combined with groups/must_link")
-            if isinstance(p.strata, dict):
-                if set(p.strata) != set(ids):
-                    raise ValueError("strata mapping must cover every entity id")
-                raw_strata = [p.strata[i] for i in ids]
-            else:
-                raw_strata = list(p.strata)
-                if len(raw_strata) != len(ids):
-                    raise ValueError("strata sequence must have one label per entity")
-            s_codes = {}
-            strata_arr = np.array([s_codes.setdefault(v, len(s_codes)) for v in raw_strata])
+        strata_arr = _prepare_strata(p.strata, ids, grouped)
+
         candidate = {}
         group_data, graph_data = None, None
-        stage_times = {
-            "optimization_s": 0.0,
-            "grouping_s": 0.0,
-            "local_graph_s": 0.0,
-        }
+        stage_times = {"optimization_s": 0.0, "grouping_s": 0.0, "local_graph_s": 0.0}
 
         def optimize_candidate(B, metric):
-            # Cache X-dependent work across rank trials; audit samples never
-            # influence assignment proposals or optimizer settings.
             nonlocal group_data, graph_data
             optimization_B, local_term, local_info = B, None, None
             if p.local_weight:
-                from .local import local_graph, normalize_components, SparseTerm
-                from .neighbours import audited_neighbours
-
                 t_loc0 = time.perf_counter()
-                if graph_data is None:
-                    nbrs, backend = audited_neighbours(
-                        X,
-                        metric,
-                        p.local_k,
-                        backend=p.local_backend,
-                        candidates=max(p.must_link_candidates, p.local_k + 1),
-                        seed=spec.seed,
-                        n_jobs=p.must_link_n_jobs,
-                        audit_queries=p.neighbour_audit_queries,
-                        minimum_recall=p.neighbour_minimum_recall,
-                        strong_threshold=p.local_threshold,
-                        row_block=p.must_link_row_block,
-                        reference_block=p.must_link_ref_block,
-                    )
-                    graph, info = local_graph(
-                        X,
-                        metric,
-                        k=p.local_k,
-                        threshold=p.local_threshold,
-                        neighbours=nbrs,
-                    )
-                    graph_data = graph, info, backend
-                graph, info, backend = graph_data
-                optimization_B, local_term, normalization = normalize_components(
-                    B, graph, p.local_weight
+                optimization_B, local_term, local_info, graph_data = (
+                    self._prepare_local_term(X, B, metric, spec, graph_data)
                 )
                 stage_times["local_graph_s"] += time.perf_counter() - t_loc0
-                local_info = dict(
-                    graph=info,
-                    normalization=normalization,
-                    backend=backend,
-                    experimental=True,
-                )
+
             t_opt0 = time.perf_counter()
             labels, _, optimization = optimize_restarts(
                 optimization_B,
@@ -450,6 +432,7 @@ class LowRankSplitter(BaseSplitter):
             )
             stage_times["optimization_s"] += time.perf_counter() - t_opt0
             fields = dict(optimization=optimization, fm_moves=optimization["fm_moves"])
+
             if grouped:
                 t_grp0 = time.perf_counter()
                 if group_data is None:
@@ -480,6 +463,8 @@ class LowRankSplitter(BaseSplitter):
             if p.hardness is not None:
                 labels = interpolate_to_random(labels, p.hardness, seed=spec.seed)
             if local_info is not None:
+                from .local import SparseTerm
+
                 term = SparseTerm(local_term)
                 global_cost = factor_leakage(
                     optimization_B, labels, len(spec.splits), p.fold_weights

@@ -48,6 +48,9 @@ def test_direct_array_and_tuple_feature_inputs_match_dict():
     assert [r_array.assignment[i] for i in range(len(X))] == [
         r_dict.assignment[k] for k in ids
     ]
+    rand_dict = split("random", as_dict, spec)
+    rand_tuple = split("random", (ids, X), spec)
+    assert rand_dict.assignment == rand_tuple.assignment
     with pytest.raises(ValueError, match="unique"):
         feature_matrix_from_dict((["a", "a"], np.ones((2, 4), dtype=np.float32)))
 

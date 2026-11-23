@@ -9,7 +9,9 @@ factor/partition, not a guarantee for every possible split or future data.
 """
 
 from __future__ import annotations
+
 import numpy as np
+
 from .splitters.common.pairwise_similarity import (
     aligned_similarity,
     standardize_for_metric,
@@ -19,12 +21,15 @@ from .splitters.common.pairwise_similarity import (
 EXACT_PAIR_LIMIT = 65536
 
 
-def positive_integer(name, value):
+# ── Validation & Reference Preparation ───────────────────────────────────────
+
+
+def positive_integer(name: str, value) -> None:
     if isinstance(value, bool) or not isinstance(value, (int, np.integer)) or value < 1:
         raise ValueError(f"{name} must be an integer >= 1")
 
 
-def prepare_reference(X, metric, device="cpu"):
+def prepare_reference(X, metric: str, device: str = "cpu"):
     import torch
 
     X = validate_features(X, metric)
@@ -34,7 +39,10 @@ def prepare_reference(X, metric, device="cpu"):
     return standardize_for_metric(ref, metric)
 
 
-def sample_pairs(n, count, seed):
+# ── Support-Aware Pair Sampling & Kernel Evaluation ──────────────────────────
+
+
+def sample_pairs(n: int, count: int, seed: int):
     positive_integer("sample_pairs", count)
     if n < 2:
         return np.empty(0, dtype=np.int64), np.empty(0, dtype=np.int64)
@@ -44,7 +52,7 @@ def sample_pairs(n, count, seed):
     return i, j + (j >= i)
 
 
-def _audit_pairs(ref, metric, count, seed, B=None):
+def _audit_pairs(ref, metric: str, count: int, seed: int, B=None):
     """Condition only on analytically zero contributions, never sampled zero mass."""
     positive_integer("sample_pairs", count)
     pool = np.arange(len(ref))
@@ -63,7 +71,6 @@ def _audit_pairs(ref, metric, count, seed, B=None):
             pool = np.flatnonzero(active)
     population = len(pool) * (len(pool) - 1)
     if population <= EXACT_PAIR_LIMIT:
-        # At most 65536 aligned evaluations, independent of full dataset size.
         i = np.repeat(np.arange(len(pool)), len(pool))
         j = np.tile(np.arange(len(pool)), len(pool))
         keep = i != j
@@ -72,7 +79,7 @@ def _audit_pairs(ref, metric, count, seed, B=None):
     return pool[i], pool[j], False, len(pool)
 
 
-def paired_similarity(ref, i, j, metric, *, kernel_power=1, block_size=1024):
+def paired_similarity(ref, i, j, metric: str, *, kernel_power: int = 1, block_size: int = 1024):
     import torch
 
     positive_integer("kernel_power", kernel_power)
@@ -91,7 +98,35 @@ def paired_similarity(ref, i, j, metric, *, kernel_power=1, block_size=1024):
     return out
 
 
-def _mean_interval(x, bounds, alpha):
+def _paired_factor_dot(B: np.ndarray, i: np.ndarray, j: np.ndarray, block_size: int = 1024) -> np.ndarray:
+    """Evaluate aligned inner products ``sum_r B[i, r] * B[j, r]`` in bounded tiles."""
+    out = np.empty(len(i), dtype=np.float64)
+    for s in range(0, len(i), block_size):
+        a = B[i[s : s + block_size]].astype(np.float64)
+        b = B[j[s : s + block_size]].astype(np.float64)
+        out[s : s + block_size] = (a * b).sum(1)
+    return out
+
+
+def _pair_cut_weights(labels: np.ndarray, i: np.ndarray, j: np.ndarray, fold_weights=None):
+    """Return ``(pair_weights, max_weight_bound)`` for pairs ``(i, j)`` under ``labels``."""
+    labels = np.asarray(labels)
+    if fold_weights is None:
+        return (labels[i] != labels[j]).astype(np.float64), 1.0
+    from .factors import validate_fold_weights
+
+    W = validate_fold_weights(fold_weights, len(fold_weights))
+    if not np.issubdtype(labels.dtype, np.integer) or np.any(
+        (labels < 0) | (labels >= len(W))
+    ):
+        raise ValueError("weighted audit labels must be integer indices into fold_weights")
+    return W[labels[i], labels[j]].astype(np.float64), max(1.0, float(np.max(W)))
+
+
+# ── Empirical-Bernstein Ratio Bounds ─────────────────────────────────────────
+
+
+def _mean_interval(x: np.ndarray, bounds: Tuple[float, float], alpha: float):
     low, high = bounds
     mean = float(x.mean())
     if len(x) < 2:
@@ -108,13 +143,11 @@ def ratio_summary(
     *,
     numerator_bounds=(0.0, 1.0),
     denominator_bounds=(0.0, 1.0),
-    confidence=0.95,
-    exact=False,
+    confidence: float = 0.95,
+    exact: bool = False,
 ):
-    x, y = (
-        np.asarray(numerator, dtype=np.float64),
-        np.asarray(denominator, dtype=np.float64),
-    )
+    x = np.asarray(numerator, dtype=np.float64)
+    y = np.asarray(denominator, dtype=np.float64)
     if (
         x.shape != y.shape
         or x.ndim != 1
@@ -159,8 +192,6 @@ def ratio_summary(
             status="exact",
             **common,
         )
-    # Each component receives half the total failure probability; dependence
-    # between numerator and denominator is allowed by the union bound.
     nx = _mean_interval(x, numerator_bounds, (1 - confidence) / 2)
     dy = _mean_interval(y, denominator_bounds, (1 - confidence) / 2)
     interval = None
@@ -176,7 +207,7 @@ def ratio_summary(
     )
 
 
-def _fold_to_absolute(summary):
+def _fold_to_absolute(summary: dict) -> dict:
     """Report a signed-residual ratio as an error magnitude with a folded interval."""
     if summary.get("estimate") is not None:
         summary["estimate"] = abs(summary["estimate"])
@@ -189,12 +220,8 @@ def _fold_to_absolute(summary):
     return summary
 
 
-def _absolute_cut_error(signed, bounds, confidence, exact):
-    """Point and conservative upper estimate of |mean(signed cut residual)|.
-
-    This is the cut error in raw powered-kernel units (not normalized), used to
-    apply an absolute-error floor below which relative error is not meaningful.
-    """
+def _absolute_cut_error(signed, bounds, confidence: float, exact: bool):
+    """Point and conservative upper estimate of ``|mean(signed cut residual)|``."""
     signed = np.asarray(signed, dtype=np.float64)
     if not len(signed):
         return 0.0, 0.0
@@ -205,14 +232,8 @@ def _absolute_cut_error(signed, bounds, confidence, exact):
     return point, max(abs(lo), abs(hi))
 
 
-def _cut_acceptance(cut_rel, abs_upper, cut_mass, rel_tol, abs_floor):
-    """Decide whether the returned cut is trustworthy at the audited tolerance.
-
-    Accept when the (upper-bounded) cut-relative error clears ``rel_tol`` OR the
-    absolute cut error is below ``abs_floor``. When the cut mass is too small to
-    estimate a relative error and the absolute error is not below the floor, the
-    outcome is explicitly ``unresolved`` rather than a spuriously small ratio.
-    """
+def _cut_acceptance(cut_rel: dict, abs_upper: float, cut_mass: float, rel_tol: float, abs_floor: float) -> dict:
+    """Decide whether the returned cut is trustworthy at the audited tolerance."""
     rel_est = cut_rel.get("estimate")
     ci = cut_rel.get("ci95")
     rel_upper = ci[1] if ci is not None else rel_est
@@ -235,70 +256,38 @@ def _cut_acceptance(cut_rel, abs_upper, cut_mass, rel_tol, abs_floor):
     )
 
 
+# ── Factor, Cut & Leakage Audits ─────────────────────────────────────────────
+
+
 def factor_pair_error(
     B,
     ref,
-    metric,
+    metric: str,
     *,
-    pairs=2048,
-    seed=0,
-    kernel_power=1,
-    block_size=1024,
-    confidence=0.95,
+    pairs: int = 2048,
+    seed: int = 0,
+    kernel_power: int = 1,
+    block_size: int = 1024,
+    confidence: float = 0.95,
     labels=None,
     fold_weights=None,
-    cut_rel_tol=0.1,
-    cut_abs_floor=1e-3,
+    cut_rel_tol: float = 0.1,
+    cut_abs_floor: float = 1e-3,
 ):
-    """Entrywise MAE, or the absolute returned-cut error, relative to |kernel| mass.
-
-    Exact checks enumerate the analytically nonzero support for small populations.
-    For sampled cuts, bound the signed residual mean before taking its absolute
-    value; this estimates cut error rather than the larger entrywise MAE.
-
-    When ``labels`` are given the result reports two complementary cut diagnostics:
-
-    * ``relative_pair_mae`` -- the historical normalization: absolute cut residual
-      relative to the *total* mean |kernel| mass across all audited pairs. A small
-      cut can pass a tolerance here while being badly wrong relative to its own size.
-    * ``cut_relative_error`` -- the signed cut residual relative to the *cut mass*
-      itself (|kernel| summed over crossing pairs). This is the quantity that
-      actually governs the split decision. It carries an ``acceptance`` verdict
-      combining ``cut_rel_tol`` with an absolute-error floor ``cut_abs_floor``, and
-      reports ``unresolved_low_cut_mass`` when the cut mass is too small to rank.
-    """
+    """Entrywise MAE, or returned-cut error, relative to ``|kernel|`` mass and cut mass."""
     B = np.asarray(B)
     if B.ndim != 2 or len(B) != len(ref) or not np.isfinite(B).all():
-        raise ValueError(
-            "audit factor must be a finite matrix aligned to reference rows"
-        )
+        raise ValueError("audit factor must be a finite matrix aligned to reference rows")
     if labels is not None:
         labels = np.asarray(labels)
         if labels.shape != (len(ref),):
-            raise ValueError(
-                "audit partition must have one fold label per reference row"
-            )
-        if fold_weights is not None:
-            from .factors import validate_fold_weights
+            raise ValueError("audit partition must have one fold label per reference row")
 
-            fold_weights = validate_fold_weights(fold_weights, len(fold_weights))
-            if not np.issubdtype(labels.dtype, np.integer) or np.any(
-                (labels < 0) | (labels >= len(fold_weights))
-            ):
-                raise ValueError(
-                    "weighted audit labels must be integer indices into fold_weights"
-                )
     i, j, exact_population, active_rows = _audit_pairs(ref, metric, pairs, seed, B)
     truth = paired_similarity(
         ref, i, j, metric, kernel_power=kernel_power, block_size=block_size
     )
-    residual = np.empty(len(i), dtype=np.float64)
-    for s in range(0, len(i), block_size):
-        a, b = (
-            B[i[s : s + block_size]].astype(np.float64),
-            B[j[s : s + block_size]].astype(np.float64),
-        )
-        residual[s : s + block_size] = truth[s : s + block_size] - (a * b).sum(1)
+    residual = truth - _paired_factor_dot(B, i, j, block_size=block_size)
     maximum_norm = max(
         (
             float(np.square(B[s : s + block_size].astype(np.float64)).sum(1).max())
@@ -307,23 +296,15 @@ def factor_pair_error(
         default=0.0,
     )
     bound = 1.0 + maximum_norm
-    weight_bound = 1.0
     if labels is None:
         numerator, nb = np.abs(residual), (0.0, bound)
-        weights = None
+        weights, weight_bound = None, 1.0
     else:
-        labels = np.asarray(labels)
-        weights = (
-            (labels[i] != labels[j]).astype(float)
-            if fold_weights is None
-            else fold_weights[labels[i], labels[j]]
-        )
+        weights, weight_bound = _pair_cut_weights(labels, i, j, fold_weights)
         numerator = residual * weights
-        weight_bound = (
-            max(1.0, float(np.max(fold_weights))) if fold_weights is not None else 1.0
-        )
         bound *= weight_bound
         nb = (-bound, bound)
+
     proven_zero = exact_population and np.all(truth == 0) and np.all(residual == 0)
     if proven_zero:
         summary = dict(
@@ -353,10 +334,8 @@ def factor_pair_error(
     )
     if labels is None:
         return result
-    # Historical metric: fold the signed cut residual to a magnitude.
+
     _fold_to_absolute(summary)
-    # Cut-relative metric: residual normalized by the cut's own mass, plus the
-    # absolute cut error used for the acceptance floor.
     cut_denominator = np.abs(truth) * weights
     if proven_zero:
         cut_relative = dict(
@@ -393,12 +372,12 @@ def factor_pair_error(
 def sampled_leakage(
     X,
     labels,
-    metric="tanimoto",
+    metric: str = "tanimoto",
     *,
-    sample_pairs_count=8192,
-    seed=0,
-    kernel_power=1,
-    block_size=1024,
+    sample_pairs_count: int = 8192,
+    seed: int = 0,
+    kernel_power: int = 1,
+    block_size: int = 1024,
 ):
     ref = prepare_reference(X, metric)
     labels = np.asarray(labels)
@@ -429,25 +408,18 @@ def sampled_leakage(
 def compare_candidate_cuts(
     B,
     ref_or_X,
-    metric,
+    metric: str,
     labels_a,
     labels_b,
     *,
-    pairs=8192,
-    seed=0,
-    kernel_power=1,
-    block_size=1024,
-    confidence=0.95,
+    pairs: int = 8192,
+    seed: int = 0,
+    kernel_power: int = 1,
+    block_size: int = 1024,
+    confidence: float = 0.95,
     fold_weights=None,
 ):
-    """Audit the true-kernel cut difference ``cut(labels_a) - cut(labels_b)`` on common pairs.
-
-    Accurate absolute cut estimates need not preserve the ordering of near-tied
-    candidate partitions. Evaluating both candidates on the *same* sampled pairs
-    cancels common pair variance and yields a paired empirical-Bernstein interval
-    for ``(cut_true(A) - cut_true(B)) / mean(|K|)``, together with whether the
-    factor-space ranking agrees with the resolved true-kernel ordering.
-    """
+    """Audit the true-kernel cut difference ``cut(labels_a) - cut(labels_b)`` on common pairs."""
     import torch
 
     B = np.asarray(B)
@@ -460,36 +432,20 @@ def compare_candidate_cuts(
     lb = np.asarray(labels_b)
     if la.shape != (len(ref),) or lb.shape != (len(ref),):
         raise ValueError("candidate partitions must each have one label per row")
-    if fold_weights is not None:
-        from .factors import validate_fold_weights
-
-        fold_weights = validate_fold_weights(fold_weights, len(fold_weights))
 
     i, j, exact_pop, active_rows = _audit_pairs(ref, metric, pairs, seed, B)
     truth = paired_similarity(
         ref, i, j, metric, kernel_power=kernel_power, block_size=block_size
     )
-    approx = np.empty(len(i), dtype=np.float64)
-    for s in range(0, len(i), block_size):
-        a = B[i[s : s + block_size]].astype(np.float64)
-        b = B[j[s : s + block_size]].astype(np.float64)
-        approx[s : s + block_size] = (a * b).sum(1)
-
-    if fold_weights is None:
-        wa = (la[i] != la[j]).astype(np.float64)
-        wb = (lb[i] != lb[j]).astype(np.float64)
-        w_bound = 1.0
-    else:
-        wa = fold_weights[la[i], la[j]].astype(np.float64)
-        wb = fold_weights[lb[i], lb[j]].astype(np.float64)
-        w_bound = max(1.0, float(np.max(fold_weights)))
+    approx = _paired_factor_dot(B, i, j, block_size=block_size)
+    wa, w_bound = _pair_cut_weights(la, i, j, fold_weights)
+    wb, _ = _pair_cut_weights(lb, i, j, fold_weights)
 
     diff_true = truth * (wa - wb)
     diff_approx = float(np.mean(approx * (wa - wb))) if len(i) else 0.0
-    denom = np.abs(truth)
     summary = ratio_summary(
         diff_true,
-        denom,
+        np.abs(truth),
         numerator_bounds=(-w_bound, w_bound),
         denominator_bounds=(0.0, 1.0),
         confidence=confidence,
