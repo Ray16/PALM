@@ -53,10 +53,11 @@ def fiduccia_mattheyses_loop(
 
     max_moves = max_moves if max_moves is not None else n
     moves = 0
+    S_recv = torch.empty_like(S)
     while moves < max_moves:
         can_recv = sizes < caps_t
         can_leave = sizes > floors_t
-        S_recv = S.clone()
+        S_recv.copy_(S)
         S_recv[:, ~can_recv] = -float("inf")
         # Self-similarity makes the current block look artificially attractive.
         # It is not a move destination and must be masked before argmax, or an

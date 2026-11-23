@@ -72,11 +72,15 @@ class FactorOps:
         torch = self.torch
         if self.sparse:
             lab = labels.cpu().numpy()
-            onehot = np.zeros(
-                (self.shape[0], k), dtype=np.float64 if precise else np.float32
-            )
-            onehot[np.arange(len(lab)), lab] = 1
-            result = np.asarray(self.B.T @ onehot).T
+            dtype = np.float64 if precise else np.float32
+            counts = np.bincount(lab, minlength=k)
+            indptr = np.zeros(k + 1, dtype=np.int64)
+            indptr[1:] = np.cumsum(counts)
+            indices = np.argsort(lab, kind="stable").astype(np.int32)
+            data = np.ones(len(lab), dtype=dtype)
+            Y_T = sparse.csr_matrix((data, indices, indptr), shape=(k, self.shape[0]))
+            mat = self.B.astype(np.float64) if precise else self.B
+            result = np.asarray((Y_T @ mat).toarray(), dtype=dtype)
             return torch.as_tensor(result, device=self.device)
         dtype = torch.float64 if precise else self.B.dtype
         P = torch.zeros(k, self.shape[1], dtype=dtype, device=self.device)
@@ -92,12 +96,62 @@ class FactorOps:
         return P
 
     def mass(self, labels, k):
-        P = self.sums(labels, k)
+        use_precise = not self.sparse and self.shape[0] > 65536
+        P = self.sums(labels, k, precise=use_precise)
+        if use_precise:
+            P = P.to(self.B.dtype)
         if self.sparse:
             return self.torch.as_tensor(
                 np.asarray(self.B @ P.numpy().T), dtype=self.torch.float32
             )
         return self.B @ P.T
+
+    def batched_sums(self, labels_list, k, precise=False):
+        """Compute ``(k, r)`` fold sums for multiple label tensors simultaneously."""
+        torch = self.torch
+        R = len(labels_list)
+        if R == 1:
+            return [self.sums(labels_list[0], k, precise=precise)]
+        if self.sparse or self.shape[0] <= 2048:
+            return [self.sums(lab, k, precise=precise) for lab in labels_list]
+        # Fused chunked one-hot SGEMM accumulated into float64 (or float32)
+        n, r = self.shape
+        offsets = (torch.arange(R, device=self.device)[:, None] * k)
+        lab_stack = torch.stack(labels_list, dim=0) + offsets
+        P_all = torch.zeros(R * k, r, dtype=torch.float64, device=self.device)
+        block = 4096
+        oh = torch.zeros(R * k, min(n, block), dtype=self.B.dtype, device=self.device)
+        for s in range(0, n, block):
+            e = min(n, s + block)
+            oh_s = oh[:, : e - s]
+            oh_s.zero_()
+            oh_s.scatter_(0, lab_stack[:, s:e], 1.0)
+            P_all += (oh_s @ self.B[s:e]).double()
+        if not precise:
+            P_all = P_all.to(self.B.dtype)
+        return list(P_all.split(k, dim=0))
+
+    def mass_from_sums(self, P_list, k):
+        """Compute point-to-fold similarity masses from precomputed ``(k, r)`` fold sums."""
+        if not self.sparse:
+            P_all = self.torch.cat([P.to(self.B.dtype) for P in P_list], dim=0)
+            M_all = self.B @ P_all.T
+            return list(M_all.split(k, dim=1))
+        P_all = self.torch.cat([P.float() for P in P_list], dim=0)
+        M_all = self.torch.as_tensor(
+            np.asarray(self.B @ P_all.cpu().numpy().T), dtype=self.torch.float32
+        )
+        return list(M_all.split(k, dim=1))
+
+    def batched_mass(self, labels_list, k):
+        """Fused point-to-fold similarity masses for multiple label vectors.
+
+        Streams ``self.B`` from memory once by stacking the ``(k, r)`` fold sums
+        of all active restarts into a single ``(R*k, r)`` matrix before the GEMM.
+        """
+        use_precise = not self.sparse and self.shape[0] > 65536
+        P_list = self.batched_sums(labels_list, k, precise=use_precise)
+        return self.mass_from_sums(P_list, k)
 
     def diagonal(self):
         if self.sparse:

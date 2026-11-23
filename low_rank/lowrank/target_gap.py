@@ -311,8 +311,12 @@ def split_for_gap(feature_data: Dict, target_gap: float, *,
     if calibrator is None:
         if X is None or y is None or task_type is None:
             raise ValueError("provide a `calibrator`, or X/y/task_type to fit one")
+        cal_seeds_list = list(cal_seeds)
+        if seed in cal_seeds_list:
+            base_seed = max(max(cal_seeds_list, default=0), seed) + 101
+            cal_seeds_list = [base_seed + i for i in range(len(cal_seeds_list))]
         calibrator = calibrate_gap(feature_data, X, y, task_type,
-                                   alphas=alphas, seeds=cal_seeds,
+                                   alphas=alphas, seeds=cal_seeds_list,
                                    splits=splits, names=names)
     inv = calibrator.invert(target_gap)
     res = split("lowrank", feature_data,

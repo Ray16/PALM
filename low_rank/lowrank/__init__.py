@@ -17,8 +17,12 @@ from .optimize import balanced_lloyd, corridor_assign, fm_polish, interpolate_to
 from .splitter import LowRankSplitter
 from .nd import LowRankNDSplitter
 from .target_gap import GapCalibrator, calibrate_gap, split_for_gap
-from .diagnostics import sampled_leakage
-from .grouped import GroupInfeasibleError, GroupFeasibilityUnresolved
+from .diagnostics import sampled_leakage, compare_candidate_cuts
+from .grouped import (
+    GroupInfeasibleError,
+    GroupFeasibilityUnresolved,
+    interpolate_groups_to_random,
+)
 from .validation import chronological_reference
 
 # ``lowrank_leakage`` kept as an alias for the factor-space objective (historical
@@ -40,11 +44,13 @@ __all__ = [
     "split_for_gap",
     "GapCalibrator",
     "sampled_leakage",
+    "compare_candidate_cuts",
     "chronological_reference",
     "AccuracyError",
     "AccuracyWarning",
     "GroupInfeasibleError",
     "GroupFeasibilityUnresolved",
+    "interpolate_groups_to_random",
 ]
 
 # Public entry point; all support packages live inside lowrank.

@@ -198,6 +198,12 @@ class LowRankSplitter(BaseSplitter):
         rank_check: str = "pair_mae"
         on_rank_failure: str = "warn"
         factor_backend: str = "nystrom"
+        cut_rel_tol: float = 0.1
+        cut_abs_floor: float = 1e-3
+        power_landmarks: bool = False
+        init: str = "random"  # random | spectral | hybrid
+        strata: Optional[dict] = None
+        must_link_linkage: str = "single"  # single | centroid
 
     @classmethod
     def param_schema(cls):
@@ -207,16 +213,19 @@ class LowRankSplitter(BaseSplitter):
             "default": 256,
         }
         schema["properties"]["groups"] = {"type": ["object", "null"], "default": None}
+        schema["properties"]["strata"] = {"type": ["object", "null"], "default": None}
         schema["properties"]["fold_weights"] = {
             "type": ["array", "null"],
             "default": None,
             "items": {"type": "array", "items": {"type": "number"}},
         }
         for field, choices in (
-            ("rank_check", ["pair_mae", "cut_error"]),
+            ("rank_check", ["pair_mae", "cut_error", "cut_relative_error"]),
             ("rank_probe_policy", ["fixed", "adaptive"]),
             ("on_rank_failure", ["warn", "raise", "return"]),
             ("factor_backend", ["nystrom", "auto"]),
+            ("init", ["random", "spectral", "hybrid"]),
+            ("must_link_linkage", ["single", "centroid"]),
         ):
             schema["properties"][field]["enum"] = choices
         return schema
@@ -253,7 +262,7 @@ class LowRankSplitter(BaseSplitter):
             )
         return result
 
-    def _prepare_groups(self, ids, X, metric, spec):
+    def _prepare_groups(self, ids, X, metric, spec, B=None):
         p = self.params
         if p.groups is not None:
             if not isinstance(p.groups, dict) or set(p.groups) != set(ids):
@@ -300,6 +309,16 @@ class LowRankSplitter(BaseSplitter):
                 row_block=p.must_link_row_block,
                 reference_block=p.must_link_ref_block,
             )
+        else:
+            from .neighbours import tiled_neighbours
+
+            nbrs = tiled_neighbours(
+                X,
+                metric,
+                p.must_link_k,
+                row_block=p.must_link_row_block,
+                reference_block=p.must_link_ref_block,
+            )
         gid = must_link_groups(
             X,
             metric,
@@ -308,6 +327,8 @@ class LowRankSplitter(BaseSplitter):
             k=p.must_link_k,
             cap_rule=p.must_link_cap,
             nbrs=nbrs,
+            B=B,
+            linkage=p.must_link_linkage,
         )
         info = dict(
             group_source="capped_topk", must_link_tau=float(tau), max_group=max_group
@@ -345,8 +366,27 @@ class LowRankSplitter(BaseSplitter):
         W = validate_fold_weights(p.fold_weights, len(spec.splits))
         ids, X = feature_matrix_from_dict(feature_data, min_rows=len(spec.splits))
         validate_nonempty_targets(len(ids), spec.splits)
+        strata_arr = None
+        if p.strata is not None:
+            if grouped:
+                raise ValueError("strata cannot be combined with groups/must_link")
+            if isinstance(p.strata, dict):
+                if set(p.strata) != set(ids):
+                    raise ValueError("strata mapping must cover every entity id")
+                raw_strata = [p.strata[i] for i in ids]
+            else:
+                raw_strata = list(p.strata)
+                if len(raw_strata) != len(ids):
+                    raise ValueError("strata sequence must have one label per entity")
+            s_codes = {}
+            strata_arr = np.array([s_codes.setdefault(v, len(s_codes)) for v in raw_strata])
         candidate = {}
         group_data, graph_data = None, None
+        stage_times = {
+            "optimization_s": 0.0,
+            "grouping_s": 0.0,
+            "local_graph_s": 0.0,
+        }
 
         def optimize_candidate(B, metric):
             # Cache X-dependent work across rank trials; audit samples never
@@ -357,6 +397,7 @@ class LowRankSplitter(BaseSplitter):
                 from .local import local_graph, normalize_components, SparseTerm
                 from .neighbours import audited_neighbours
 
+                t_loc0 = time.perf_counter()
                 if graph_data is None:
                     nbrs, backend = audited_neighbours(
                         X,
@@ -384,12 +425,14 @@ class LowRankSplitter(BaseSplitter):
                 optimization_B, local_term, normalization = normalize_components(
                     B, graph, p.local_weight
                 )
+                stage_times["local_graph_s"] += time.perf_counter() - t_loc0
                 local_info = dict(
                     graph=info,
                     normalization=normalization,
                     backend=backend,
                     experimental=True,
                 )
+            t_opt0 = time.perf_counter()
             labels, _, optimization = optimize_restarts(
                 optimization_B,
                 spec.splits,
@@ -402,11 +445,15 @@ class LowRankSplitter(BaseSplitter):
                 local=local_term,
                 fold_weights=p.fold_weights,
                 tol=1e-9 if p.local_weight else 1e-6,
+                init=p.init,
+                strata=strata_arr,
             )
+            stage_times["optimization_s"] += time.perf_counter() - t_opt0
             fields = dict(optimization=optimization, fm_moves=optimization["fm_moves"])
             if grouped:
+                t_grp0 = time.perf_counter()
                 if group_data is None:
-                    group_data = self._prepare_groups(ids, X, metric, spec)
+                    group_data = self._prepare_groups(ids, X, metric, spec, B=B)
                 gid, group_info = group_data
                 labels, info = grouped_split(
                     B,
@@ -423,6 +470,7 @@ class LowRankSplitter(BaseSplitter):
                     fold_weights=p.fold_weights,
                     refine_restarts=p.refine_restarts,
                 )
+                stage_times["grouping_s"] += time.perf_counter() - t_grp0
                 fields.update(
                     group_info,
                     **info,
@@ -449,7 +497,12 @@ class LowRankSplitter(BaseSplitter):
             candidate.update(labels=labels, fields=fields)
             return labels
 
-        callback = optimize_candidate if p.rank_check == "cut_error" else None
+        callback = (
+            optimize_candidate
+            if p.rank_check in ("cut_error", "cut_relative_error")
+            else None
+        )
+        t_fac0 = time.perf_counter()
         B, metric, factor_info = nystrom_features(
             X,
             rank=p.rank,
@@ -470,13 +523,36 @@ class LowRankSplitter(BaseSplitter):
             on_failure=p.on_rank_failure,
             factor_backend=p.factor_backend,
             rank_check=p.rank_check,
+            cut_rel_tol=p.cut_rel_tol,
+            cut_abs_floor=p.cut_abs_floor,
+            power_landmarks=p.power_landmarks,
             _partitioner=callback,
             fold_weights=W,
         )
+        raw_fac_s = time.perf_counter() - t_fac0
         if not candidate:
             optimize_candidate(B, metric)
         labels, fields = candidate["labels"], candidate["fields"]
+        t_diag0 = time.perf_counter()
         diagnostics = self._diagnose(X, labels, metric, spec.seed)
+        diag_s = time.perf_counter() - t_diag0
+        fac_only_s = (
+            max(
+                0.0,
+                raw_fac_s
+                - stage_times["optimization_s"]
+                - stage_times["grouping_s"]
+                - stage_times["local_graph_s"],
+            )
+            if callback is not None
+            else raw_fac_s
+        )
+        timings = {
+            "factorization_s": round(fac_only_s, 6),
+            "optimization_s": round(stage_times["optimization_s"], 6),
+            "grouping_s": round(stage_times["grouping_s"], 6),
+            "diagnostic_s": round(diag_s, 6),
+        }
         assignment = assign_split_names(ids, labels, spec.splits, spec.names)
         return self._result(
             assignment,
@@ -486,6 +562,7 @@ class LowRankSplitter(BaseSplitter):
             rank=int(B.shape[1]),
             factorization=factor_info,
             fold_weights=W.tolist(),
+            timings=timings,
             **fields,
             **diagnostics,
         )

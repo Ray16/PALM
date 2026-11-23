@@ -26,12 +26,13 @@ def ecfp_matrix(smiles: Sequence[str], n_bits: int = 1024, radius: int = 2
     from rdkit.Chem import rdFingerprintGenerator
     RDLogger.DisableLog("rdApp.*")
 
+    gen = rdFingerprintGenerator.GetMorganGenerator(radius=radius, fpSize=n_bits)
     kept, rows = [], []
     for i, s in enumerate(smiles):
         m = Chem.MolFromSmiles(str(s))
         if m is None:
             continue
-        fp = rdFingerprintGenerator.GetMorganGenerator(radius=radius, fpSize=n_bits).GetFingerprint(m)
+        fp = gen.GetFingerprint(m)
         a = np.zeros(n_bits, dtype=np.float32)
         a[list(fp.GetOnBits())] = 1.0        # avoids ConvertToNumpyArray (numpy-2 ABI)
         kept.append(i)

@@ -97,15 +97,14 @@ def scaled_lpi_smiles(
     from rdkit.Chem import rdFingerprintGenerator
 
     RDLogger.DisableLog("rdApp.*")
+    gen = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=1024)
 
     def _ecfp1024(s):
         m = Chem.MolFromSmiles(str(s))
         if m is None:
             return None
         a = np.zeros(1024, dtype=np.float32)
-        DataStructs.ConvertToNumpyArray(
-            rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=1024).GetFingerprint(m), a
-        )
+        DataStructs.ConvertToNumpyArray(gen.GetFingerprint(m), a)
         return a
 
     fps, labels = [], []

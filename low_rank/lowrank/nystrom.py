@@ -16,7 +16,7 @@ from .splitters.common.pairwise_similarity import (
     validate_features,
 )
 
-LANDMARKS = ("kmeans++", "uniform")
+LANDMARKS = ("kmeans++", "uniform", "kmeans||")
 
 
 class AccuracyWarning(UserWarning):
@@ -30,10 +30,14 @@ class AccuracyError(RuntimeError):
 class _LandmarkSampler:
     """Extend one seeded landmark sequence; do not restart selection at each rank."""
 
-    def __init__(self, Xt, metric, seed, method):
+    def __init__(self, Xt, metric, seed, method, *, kernel_power=1, power_landmarks=False):
         import torch
 
         self.X, self.metric, self.method = Xt, metric, method
+        self.kernel_power = int(kernel_power)
+        self.power_landmarks = bool(power_landmarks or method == "kmeans||")
+        self._X_norm = normalize_cosine(Xt) if metric == "cosine" else None
+        self._card = Xt.sum(1) if metric == "tanimoto" else None
         eligible = (
             Xt.ne(0).any(1)
             if metric != "euclidean"
@@ -55,10 +59,61 @@ class _LandmarkSampler:
             else None
         )
 
+    def _sim_to_indices(self, idx_tensor):
+        import torch
+
+        if self.metric == "cosine":
+            return self._X_norm @ self._X_norm[idx_tensor].T
+        if self.metric == "tanimoto":
+            inter = self.X @ self.X[idx_tensor].T
+            union = self._card[:, None] + self._card[idx_tensor][None, :] - inter
+            return torch.where(union > 0, inter / union, torch.zeros_like(inter))
+        return pairwise_similarity(self.X, self.X[idx_tensor], self.metric)
+
+    def _update_min_dist(self, idx_tensor):
+        import torch
+
+        sim = self._sim_to_indices(idx_tensor)
+        if self.power_landmarks and self.kernel_power > 1:
+            sim = sim.pow(self.kernel_power)
+        max_sim = sim.squeeze(1) if sim.shape[1] == 1 else sim.max(dim=1).values
+        self.min_dist = torch.minimum(self.min_dist, 1 - max_sim)
+
     def extend(self, count):
         import torch
 
         count = min(count, len(self.pool))
+        if self.method == "kmeans||" and len(self.chosen) < count:
+            if not self.chosen:
+                weights = (self.eligible & ~self.selected).to(self.X.dtype)
+                first = int(torch.multinomial(weights, 1, generator=self.generator))
+                self.chosen.append(first)
+                self.selected[first] = True
+                self._update_min_dist(torch.tensor([first], device=self.X.device))
+            # Batched oversampled rounds: O(log r) full-matrix products instead of r.
+            remaining = count - len(self.chosen)
+            n_rounds = min(5, remaining)
+            batch_size = max(1, (remaining + n_rounds - 1) // max(1, n_rounds))
+            while len(self.chosen) < count:
+                take = min(batch_size, count - len(self.chosen))
+                weights = self.min_dist.clamp(min=0).square()
+                weights[~self.eligible | self.selected] = 0
+                avail = int((weights > 0).sum().item())
+                if avail < take:
+                    weights = (self.eligible & ~self.selected).to(self.X.dtype)
+                    avail = int((weights > 0).sum().item())
+                take = min(take, avail)
+                if take < 1:
+                    break
+                picks = torch.multinomial(
+                    weights, take, replacement=False, generator=self.generator
+                )
+                for nxt in picks.tolist():
+                    self.chosen.append(int(nxt))
+                    self.selected[int(nxt)] = True
+                self._update_min_dist(picks)
+            return np.asarray(self.chosen, dtype=np.int64)
+
         while len(self.chosen) < count:
             if self.uniform is not None:
                 nxt = int(self.uniform[len(self.chosen)])
@@ -71,19 +126,18 @@ class _LandmarkSampler:
             self.chosen.append(nxt)
             self.selected[nxt] = True
             if self.uniform is None:
-                sim = pairwise_similarity(
-                    self.X, self.X[nxt : nxt + 1], self.metric
-                ).squeeze(1)
-                self.min_dist = torch.minimum(self.min_dist, 1 - sim)
+                self._update_min_dist(torch.tensor([nxt], device=self.X.device))
         return np.asarray(self.chosen, dtype=np.int64)
 
 
-def _kmeanspp_landmarks(Xt, n_landmarks, metric, seed):
+def _kmeanspp_landmarks(Xt, n_landmarks, metric, seed, *, kernel_power=1, power_landmarks=False):
     """Distinct rows with (1-max_similarity)^2 weights, not Hilbert k-means++.
 
     Zero residual weights fall back to uniform *unselected* rows.
     """
-    return _LandmarkSampler(Xt, metric, seed, "kmeans++").extend(n_landmarks)
+    return _LandmarkSampler(
+        Xt, metric, seed, "kmeans++", kernel_power=kernel_power, power_landmarks=power_landmarks
+    ).extend(n_landmarks)
 
 
 def _array_plan(n, d, r, block_size, memory_mb):
@@ -136,6 +190,9 @@ def nystrom_features(
     rank_check="pair_mae",
     cut_labels=None,
     fold_weights=None,
+    cut_rel_tol=0.1,
+    cut_abs_floor=1e-3,
+    power_landmarks=False,
     _partitioner=None,
     _prepared=False,
 ):
@@ -164,14 +221,15 @@ def nystrom_features(
         raise ValueError("on_failure must be warn, raise or return")
     if factor_backend not in ("nystrom", "auto"):
         raise ValueError("factor_backend must be nystrom or auto")
-    if rank_check not in ("pair_mae", "cut_error"):
-        raise ValueError("rank_check must be pair_mae or cut_error")
+    if rank_check not in ("pair_mae", "cut_error", "cut_relative_error"):
+        raise ValueError("rank_check must be pair_mae, cut_error or cut_relative_error")
     if rank_probe_policy not in ("fixed", "adaptive"):
         raise ValueError("rank_probe_policy must be fixed or adaptive")
+    is_cut_check = rank_check in ("cut_error", "cut_relative_error")
     if rank_probe_pairs is None:
         rank_probe_pairs = (
             32768
-            if rank_check == "cut_error" and rank_probe_policy == "fixed"
+            if is_cut_check and rank_probe_policy == "fixed"
             else 2048
         )
     positive_integer("rank_probe_pairs", rank_probe_pairs)
@@ -186,9 +244,9 @@ def nystrom_features(
         raise ValueError("rank_probe_max_pairs must not be below rank_probe_pairs")
     if rank_probe_policy == "fixed" and rank_probe_max_pairs != rank_probe_pairs:
         raise ValueError("a different maximum probe count requires adaptive policy")
-    if rank_check == "cut_error" and cut_labels is None and _partitioner is None:
+    if is_cut_check and cut_labels is None and _partitioner is None:
         raise ValueError(
-            "cut_error requires a supplied partition or the splitter's partition optimizer"
+            f"{rank_check} requires a supplied partition or the splitter's partition optimizer"
         )
     auto = isinstance(rank, str) and rank == "auto"
     if not auto:
@@ -256,7 +314,18 @@ def nystrom_features(
         if _prepared
         else prepare_reference(X, metric, device)
     )
-    sampler = None if direct else _LandmarkSampler(Xt, metric, seed, landmark)
+    sampler = (
+        None
+        if direct
+        else _LandmarkSampler(
+            Xt,
+            metric,
+            seed,
+            landmark,
+            kernel_power=kernel_power,
+            power_landmarks=power_landmarks,
+        )
+    )
     if direct:
         count = d
     stages = 1 + max(0, int(np.ceil(np.log2(max(1, maximum) / max(1, count)))))
@@ -360,13 +429,25 @@ def nystrom_features(
                 kernel_power=kernel_power,
                 block_size=rows,
                 confidence=selection_confidence,
-                labels=labels if rank_check == "cut_error" else None,
+                labels=labels if is_cut_check else None,
                 fold_weights=fold_weights,
+                cut_rel_tol=cut_rel_tol if rank_check == "cut_relative_error" else rank_tolerance if rank_check == "cut_error" else cut_rel_tol,
+                cut_abs_floor=cut_abs_floor,
             )
-            summary = probe["relative_pair_mae"]
-            interval = summary["ci95"]
-            passed = interval is not None and interval[1] <= rank_tolerance
-            error_established = interval is not None and interval[0] > rank_tolerance
+            if rank_check == "cut_relative_error":
+                acc = probe["acceptance"]
+                passed = bool(acc["accepted"])
+                rel_ci = probe["cut_relative_error"].get("ci95")
+                error_established = bool(
+                    acc["status"] == "rejected"
+                    and rel_ci is not None
+                    and rel_ci[0] > acc["rel_tol"]
+                )
+            else:
+                summary = probe["relative_pair_mae"]
+                interval = summary["ci95"]
+                passed = interval is not None and interval[1] <= rank_tolerance
+                error_established = interval is not None and interval[0] > rank_tolerance
             more_probes = (
                 joint
                 and not passed
@@ -396,7 +477,9 @@ def nystrom_features(
             info.update(
                 selection_history=history,
                 selection_tolerance_met=bool(passed),
-                rank_tolerance=float(rank_tolerance),
+                rank_tolerance=float(
+                    cut_rel_tol if rank_check == "cut_relative_error" else rank_tolerance
+                ),
                 selected_probe_pairs=int(probe_pairs),
                 selection_pair_evaluations=sum(h["sample_pairs"] for h in history),
                 stop_reason="sample_tolerance"
@@ -420,15 +503,19 @@ def nystrom_features(
             kernel_power=kernel_power,
             block_size=info["row_block_size"],
             confidence=0.975 if joint else 0.95,
-            labels=labels if rank_check == "cut_error" else None,
+            labels=labels if is_cut_check else None,
             fold_weights=fold_weights,
+            cut_rel_tol=cut_rel_tol if rank_check == "cut_relative_error" else rank_tolerance if rank_check == "cut_error" else cut_rel_tol,
+            cut_abs_floor=cut_abs_floor,
         )
-        interval = audit["relative_pair_mae"]["ci95"]
+        if rank_check == "cut_relative_error":
+            audit_passed = bool(audit["acceptance"]["accepted"])
+        else:
+            interval = audit["relative_pair_mae"]["ci95"]
+            audit_passed = bool(interval is not None and interval[1] <= rank_tolerance)
         info.update(
             audit=audit,
-            audit_tolerance_met=bool(
-                interval is not None and interval[1] <= rank_tolerance
-            ),
+            audit_tolerance_met=audit_passed,
         )
         if not (info["selection_tolerance_met"] and info["audit_tolerance_met"]):
             message = (

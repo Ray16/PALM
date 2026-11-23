@@ -57,26 +57,67 @@ def to_scipy_metric(metric: str) -> str:
 
 
 def feature_matrix_from_dict(
-    feature_data: Dict[Hashable, Sequence[float]],
+    feature_data,
     min_rows: int = 1,
 ) -> Tuple[List[Hashable], np.ndarray]:
-    """``{id: vector}`` -> ``(sorted_ids, X)`` with finite float32 vectors.
+    """``{id: vector}``, ``(ids, X)`` or 2-D ``X`` -> ``(ids, X)`` with finite float32 vectors.
 
     Non-finite or inconsistent vectors raise. Imputation is the caller's explicit
-    preprocessing policy rather than a silent replacement with zeros.
+    preprocessing policy rather than a silent replacement with zeros. Accepting
+    ``(ids, X)`` or a 2-D ``np.ndarray`` avoids constructing a multi-million-entry
+    Python dictionary at scale.
 
     Args:
-        feature_data: mapping of entity id -> feature vector.
+        feature_data: mapping of entity id -> feature vector, ``(ids, X)`` tuple,
+            or 2-D array ``X`` (assigned integer ids ``0..n-1``).
         min_rows: raise ``ValueError`` if fewer than this many entities (callers
             pass ``len(splits)`` so a split is well-defined).
     Returns:
-        ``(ids, X)`` where ``ids`` is sorted and ``X`` is ``(n, d)`` float32.
+        ``(ids, X)`` where ``ids`` is sorted (for mappings) or preserved (for
+        explicit ``(ids, X)``) and ``X`` is ``(n, d)`` float32.
     """
-    ids = sorted(feature_data.keys())
-    n = len(ids)
-    if n < min_rows:
-        raise ValueError(f"Too few entities ({n}) for the requested split ({min_rows})")
-    X = np.asarray([feature_data[i] for i in ids], dtype=np.float32)
+    if isinstance(feature_data, dict):
+        ids = sorted(feature_data.keys())
+        n = len(ids)
+        if n < min_rows:
+            raise ValueError(f"Too few entities ({n}) for the requested split ({min_rows})")
+        try:
+            X = np.asarray([feature_data[i] for i in ids], dtype=np.float32)
+        except ValueError as exc:
+            raise ValueError(
+                "features must be finite vectors of equal nonzero dimension; impute missing values explicitly"
+            ) from exc
+    elif isinstance(feature_data, tuple) and len(feature_data) == 2:
+        raw_ids, raw_X = feature_data
+        ids = [v.item() if hasattr(v, "item") else v for v in raw_ids]
+        n = len(ids)
+        if n < min_rows:
+            raise ValueError(f"Too few entities ({n}) for the requested split ({min_rows})")
+        try:
+            if len(set(ids)) != n:
+                raise ValueError("entity ids must be unique")
+        except TypeError as exc:
+            raise ValueError("entity ids must be hashable") from exc
+        try:
+            X = np.asarray(raw_X, dtype=np.float32)
+        except ValueError as exc:
+            raise ValueError(
+                "features must be finite vectors of equal nonzero dimension; impute missing values explicitly"
+            ) from exc
+        if X.shape[0] != n:
+            raise ValueError(f"ids length ({n}) must match feature matrix rows ({X.shape[0]})")
+    elif isinstance(feature_data, np.ndarray):
+        X = np.asarray(feature_data, dtype=np.float32)
+        n = X.shape[0] if X.ndim >= 1 else 0
+        if n < min_rows:
+            raise ValueError(f"Too few entities ({n}) for the requested split ({min_rows})")
+        ids = list(range(n))
+    else:
+        ids = sorted(feature_data.keys())
+        n = len(ids)
+        if n < min_rows:
+            raise ValueError(f"Too few entities ({n}) for the requested split ({min_rows})")
+        X = np.asarray([feature_data[i] for i in ids], dtype=np.float32)
     if X.ndim != 2 or not X.shape[1] or not np.isfinite(X).all():
         raise ValueError(
             "features must be finite vectors of equal nonzero dimension; impute missing values explicitly"

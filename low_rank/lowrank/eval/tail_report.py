@@ -63,7 +63,8 @@ def tail_report(feature_data: Mapping[Any, np.ndarray],
         metric = choose_metric(X)
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    Xt = torch.as_tensor(X, dtype=torch.float32, device=device)
+    from lowrank.diagnostics import prepare_reference
+    Xt = prepare_reference(X, metric, device)
     lab_codes, _ = _codes(labels)
     lab_t = torch.as_tensor(lab_codes, device=device)
 

@@ -424,3 +424,104 @@ def sampled_leakage(
         kernel_power=int(kernel_power),
     )
     return result
+
+
+def compare_candidate_cuts(
+    B,
+    ref_or_X,
+    metric,
+    labels_a,
+    labels_b,
+    *,
+    pairs=8192,
+    seed=0,
+    kernel_power=1,
+    block_size=1024,
+    confidence=0.95,
+    fold_weights=None,
+):
+    """Audit the true-kernel cut difference ``cut(labels_a) - cut(labels_b)`` on common pairs.
+
+    Accurate absolute cut estimates need not preserve the ordering of near-tied
+    candidate partitions. Evaluating both candidates on the *same* sampled pairs
+    cancels common pair variance and yields a paired empirical-Bernstein interval
+    for ``(cut_true(A) - cut_true(B)) / mean(|K|)``, together with whether the
+    factor-space ranking agrees with the resolved true-kernel ordering.
+    """
+    import torch
+
+    B = np.asarray(B)
+    ref = (
+        ref_or_X
+        if isinstance(ref_or_X, torch.Tensor)
+        else prepare_reference(ref_or_X, metric)
+    )
+    la = np.asarray(labels_a)
+    lb = np.asarray(labels_b)
+    if la.shape != (len(ref),) or lb.shape != (len(ref),):
+        raise ValueError("candidate partitions must each have one label per row")
+    if fold_weights is not None:
+        from .factors import validate_fold_weights
+
+        fold_weights = validate_fold_weights(fold_weights, len(fold_weights))
+
+    i, j, exact_pop, active_rows = _audit_pairs(ref, metric, pairs, seed, B)
+    truth = paired_similarity(
+        ref, i, j, metric, kernel_power=kernel_power, block_size=block_size
+    )
+    approx = np.empty(len(i), dtype=np.float64)
+    for s in range(0, len(i), block_size):
+        a = B[i[s : s + block_size]].astype(np.float64)
+        b = B[j[s : s + block_size]].astype(np.float64)
+        approx[s : s + block_size] = (a * b).sum(1)
+
+    if fold_weights is None:
+        wa = (la[i] != la[j]).astype(np.float64)
+        wb = (lb[i] != lb[j]).astype(np.float64)
+        w_bound = 1.0
+    else:
+        wa = fold_weights[la[i], la[j]].astype(np.float64)
+        wb = fold_weights[lb[i], lb[j]].astype(np.float64)
+        w_bound = max(1.0, float(np.max(fold_weights)))
+
+    diff_true = truth * (wa - wb)
+    diff_approx = float(np.mean(approx * (wa - wb))) if len(i) else 0.0
+    denom = np.abs(truth)
+    summary = ratio_summary(
+        diff_true,
+        denom,
+        numerator_bounds=(-w_bound, w_bound),
+        denominator_bounds=(0.0, 1.0),
+        confidence=confidence,
+        exact=exact_pop,
+    )
+    ci = summary.get("ci95")
+    if ci is None:
+        verdict = "unresolved_insufficient_mass"
+    elif ci[1] < 0:
+        verdict = "a_better"
+    elif ci[0] > 0:
+        verdict = "b_better"
+    else:
+        verdict = "unresolved_near_tie"
+    factor_pref = (
+        "a_better"
+        if diff_approx < -1e-12
+        else "b_better"
+        if diff_approx > 1e-12
+        else "tie"
+    )
+    return dict(
+        paired_cut_difference=summary,
+        verdict=verdict,
+        factor_preference=factor_pref,
+        ranking_reversed=bool(
+            verdict in ("a_better", "b_better")
+            and factor_pref in ("a_better", "b_better")
+            and verdict != factor_pref
+        ),
+        sample_pairs=len(i),
+        eligible_rows=active_rows,
+        exact=exact_pop,
+        seed=int(seed),
+    )

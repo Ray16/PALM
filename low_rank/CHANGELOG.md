@@ -4,7 +4,31 @@
 
 - Cut-relative audit: `cut_relative_error`, an `acceptance` verdict with an
   absolute-error floor, and an explicit `unresolved_low_cut_mass` state (the
-  mass-normalized `relative_pair_mae` is kept for comparison).
+  mass-normalized `relative_pair_mae` is kept for comparison), now wired into
+  `nystrom_features` and `LowRankSplitter` via `rank_check="cut_relative_error"`,
+  `cut_rel_tol`, and `cut_abs_floor`.
+- Batched multi-restart `balanced_lloyd` (`FactorOps.batched_mass`), fusing
+  fold-sum GEMMs across active restarts and using float64 fold-sum accumulation
+  above 65,536 rows to prevent float32 sum absorption at million-point scale.
+- Spectral and hybrid restart initializations (`init="spectral" | "hybrid"`) using
+  centered principal directions of $B$, plus bidirectional (forward and
+  minority-first) multi-way peel selection in `balanced_assign` and `corridor_assign`.
+- Stratified low-rank splitting (`strata` parameter) enforcing per-stratum fold
+  capacities in Lloyd and pairwise swaps while minimizing global factor leakage.
+- Precomputed row norms/cardinalities in `_LandmarkSampler`, batched oversampled
+  `landmark="kmeans||"`, and `power_landmarks=True` for powered kernels.
+- Exact `must_link` neighbour search now routes through 2D-tiled `tiled_neighbours`
+  (respecting `must_link_row_block`, `must_link_ref_block`, and GPU acceleration);
+  added factor-space centroid linkage (`must_link_linkage="centroid"`), partial
+  group bisection (`break_mode="bisect"`), and group-preserving hardness
+  interpolation (`interpolate_groups_to_random`).
+- Pre-allocated move buffer in `fiduccia_mattheyses_loop`, incremental fold-member
+  updates in `swap_polish`, batched `ops.block` candidate evaluation in
+  `_weighted_polish`, and sparse CSR fold aggregation in `FactorOps.sums`.
+- Direct `(ids, X)` and 2-D `np.ndarray` inputs accepted by `feature_matrix_from_dict`
+  to avoid dictionary boxing overhead at scale; hoisted RDKit `GetMorganGenerator`
+  out of per-molecule loops; standardized Euclidean features in `tail_report`;
+  enforced disjoint calibration/evaluation seeds in `split_for_gap`.
 - `SplitResult.split_indices()` without `ids` now uses input (insertion) order;
   sorted keys put string IDs in text order (`"10"` before `"2"`).
 - The grouped path applies the same `fm_max_n` cap to FM polishing as the

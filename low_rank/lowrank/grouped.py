@@ -36,23 +36,34 @@ from lowrank.splitters.common.pairwise_similarity import (
 # ---------------------------------------------------------------- grouping
 
 
-def topk_neighbours(X, metric: str, k: int = 32, block: int = 2048):
-    """Exact top-k similarity neighbours (self excluded). Returns ``(idx, sim)`` (n, k)."""
-    import torch
+def topk_neighbours(
+    X,
+    metric: str,
+    k: int = 32,
+    block: int = 2048,
+    *,
+    row_block: Optional[int] = None,
+    reference_block: int = 8192,
+    device: Optional[str] = None,
+):
+    """Exact top-k similarity neighbours (self excluded). Returns ``(idx, sim)`` (n, k).
 
-    from .diagnostics import prepare_reference
+    Delegates to :func:`lowrank.neighbours.tiled_neighbours` so exact search
+    uses two-dimensional similarity tiles and visible GPU acceleration rather
+    than materializing ``(block, n)`` slices on CPU.
+    """
+    from .neighbours import tiled_neighbours
 
-    Xt = prepare_reference(X, metric)
-    n = Xt.shape[0]
-    k = min(k, n - 1)
-    idx = np.empty((n, k), dtype=np.int64)
-    sim = np.empty((n, k), dtype=np.float32)
-    for s in range(0, n, block):
-        S = pairwise_similarity(Xt[s : s + block], Xt, metric)
-        S[torch.arange(S.shape[0]), torch.arange(s, s + S.shape[0])] = -float("inf")
-        v, i = torch.topk(S, k, dim=1)
-        idx[s : s + block], sim[s : s + block] = i.numpy(), v.numpy()
-    return idx, sim
+    r_block = row_block if row_block is not None else min(block, 256)
+    ref_block = max(r_block, reference_block)
+    return tiled_neighbours(
+        X,
+        metric,
+        k=k,
+        row_block=r_block,
+        reference_block=ref_block,
+        device=device,
+    )
 
 
 def must_link_groups(
@@ -63,8 +74,11 @@ def must_link_groups(
     k: int = 32,
     nbrs: Optional[Tuple[np.ndarray, np.ndarray]] = None,
     cap_rule: str = "freeze",
+    *,
+    B: Optional[np.ndarray] = None,
+    linkage: str = "single",
 ) -> np.ndarray:
-    """Capped single-linkage groups of the ``sim >= tau`` top-k graph. Returns (n,) group ids.
+    """Capped linkage groups of the ``sim >= tau`` top-k graph. Returns (n,) group ids.
 
     ``cap_rule`` decides what happens when a merge would exceed ``max_group``:
 
@@ -74,9 +88,19 @@ def must_link_groups(
       dataset's chaining point lets weaker edges fill capped groups with arbitrary chunks of one
       giant component (full BACE at tau=0.4: 1502/1513 points in 49 cap-sized groups).
     * ``"skip"``: skip only that merge and keep merging weaker edges (the original rule).
+
+    ``linkage`` controls the multi-point merge criterion:
+
+    * ``"single"`` (default): standard single-linkage over ``sim >= tau`` edges.
+    * ``"centroid"``: when factor matrix ``B`` is supplied, also requires the
+      factor-space cosine similarity between the two components' centroids
+      ``G_a / ||G_a||`` and ``G_b / ||G_b||`` to be at least ``tau`` (checked in
+      O(r) per candidate merge), preventing single-edge bridge chaining.
     """
     if cap_rule not in ("freeze", "skip"):
         raise ValueError(f"cap_rule must be 'freeze' or 'skip'; got {cap_rule!r}")
+    if linkage not in ("single", "centroid"):
+        raise ValueError(f"linkage must be 'single' or 'centroid'; got {linkage!r}")
     n = len(X)
     idx, sim = nbrs if nbrs is not None else topk_neighbours(X, metric, k=k)
     rows = np.repeat(np.arange(n), idx.shape[1])
@@ -87,6 +111,11 @@ def must_link_groups(
     parent = np.arange(n)
     size = np.ones(n, dtype=np.int64)
     frozen = np.zeros(n, dtype=bool)
+    G_sum = (
+        np.asarray(B, dtype=np.float64).copy()
+        if (linkage == "centroid" and B is not None and np.asarray(B).shape[1] > 0)
+        else None
+    )
 
     def find(a):
         while parent[a] != a:
@@ -106,8 +135,17 @@ def must_link_groups(
             continue
         if frozen[a] or frozen[b]:
             continue
+        if G_sum is not None and (size[a] > 1 or size[b] > 1):
+            na = float(np.linalg.norm(G_sum[a]))
+            nb = float(np.linalg.norm(G_sum[b]))
+            if na > 1e-12 and nb > 1e-12:
+                centroid_sim = float(np.dot(G_sum[a], G_sum[b]) / (na * nb))
+                if centroid_sim < tau:
+                    continue
         parent[b] = a
         size[a] += size[b]
+        if G_sum is not None:
+            G_sum[a] += G_sum[b]
     roots = np.array([find(i) for i in range(n)])
     _, gid = np.unique(roots, return_inverse=True)
     return gid
@@ -191,9 +229,11 @@ class _State:
         self.G, self.w, self.lab, self.k = G, w, lab, k
         self.W = validate_fold_weights(fold_weights, k)
         self.self_sim = np.einsum("ij,ij->i", G, G)
-        onehot = np.zeros((k, len(lab)))
-        onehot[lab, np.arange(len(lab))] = 1.0
-        self.P = onehot @ G
+        self.P = np.zeros((k, G.shape[1]), dtype=np.float64)
+        for c in range(k):
+            mask = lab == c
+            if mask.any():
+                self.P[c] = G[mask].sum(0)
         self.M = G @ self.P.T
         self.sizes = np.bincount(lab, weights=w, minlength=k).astype(np.int64)
 
@@ -222,13 +262,48 @@ class _State:
         self.lab[u] = b
 
 
+def _bisect_group_points(B, pts: Sequence[int], split_weight: int):
+    """Split a group of size >2 into two coherent subgroups of sizes (split_weight, len - split_weight).
+
+    Projects ``B[pts]`` onto its leading centered factor direction so the peeled
+    subgroup and the retained core each remain internally cohesive.
+    """
+    pts = list(pts)
+    m = len(pts)
+    split_weight = max(1, min(int(split_weight), m - 1))
+    sub = np.asarray(B[pts], dtype=np.float64)
+    if sub.shape[1] == 0:
+        return [pts[:split_weight], pts[split_weight:]]
+    centered = sub - sub.mean(axis=0, keepdims=True)
+    cov = centered.T @ centered
+    _, evecs = np.linalg.eigh(0.5 * (cov + cov.T))
+    proj = centered @ evecs[:, -1]
+    order = np.argsort(proj, kind="stable")
+    left = [pts[i] for i in order[:split_weight]]
+    right = [pts[i] for i in order[split_weight:]]
+    return [left, right]
+
+
 def _repair(
-    B, G, w, lab, k, caps, floors, members, allow_break=True, fold_weights=None
+    B,
+    G,
+    w,
+    lab,
+    k,
+    caps,
+    floors,
+    members,
+    allow_break=True,
+    fold_weights=None,
+    break_mode: str = "singletons",
 ):
     """Restore the corridor: move the best-fitting item that fixes a violation; if no whole
-    group fits, break the smallest multi-point group of the over-full block into singletons.
+    group fits, break the smallest multi-point group of the over-full block into singletons
+    (or two coherent subgroups when ``break_mode='bisect'``).
     Moves update the factor-space state incrementally (exact); only a break rebuilds it.
     Returns ``(G, w, lab, members, n_broken)``."""
+    if break_mode not in ("singletons", "bisect"):
+        raise ValueError(f"break_mode must be 'singletons' or 'bisect'; got {break_mode!r}")
     broken = 0
     st = _State(G, w, lab, k, fold_weights)
     for _ in range(10 * len(B) + 10):
@@ -238,11 +313,13 @@ def _repair(
             break
         best = None
         donors = np.flatnonzero(st.sizes > floors)
+        if len(donors):
+            all_reductions = st.reductions()
         for src in donors:
             u_src = np.flatnonzero(st.lab == src)
             w_src = st.w[u_src]
             ok_u = st.sizes[src] - w_src >= floors[src]
-            reductions = st.reductions()[u_src]
+            reductions = all_reductions[u_src]
             for b in np.flatnonzero(st.sizes < caps):
                 # A move must reduce an existing violation without creating one.
                 # Its weight may exceed the excess/deficit when both final sizes
@@ -271,10 +348,26 @@ def _repair(
         u = int(multi[np.argmin(st.w[multi])])  # first minimum, as before
         src = st.lab[u]
         pts = members[u]
-        G = np.vstack([np.delete(st.G, u, 0), B[pts]])
-        w = np.concatenate([np.delete(st.w, u), np.ones(len(pts), dtype=np.int64)])
-        lab = np.concatenate([np.delete(st.lab, u), np.full(len(pts), src)])
-        members = members[:u] + members[u + 1 :] + [[p] for p in pts]
+        if break_mode == "bisect" and len(pts) > 2:
+            if st.sizes[src] > caps[src]:
+                needed = int(st.sizes[src] - caps[src])
+            elif len(under):
+                needed = int(floors[under[0]] - st.sizes[under[0]])
+            else:
+                needed = len(pts) // 2
+            split_w = max(1, min(needed, len(pts) - 1))
+            sub_members = _bisect_group_points(B, pts, split_w)
+            sub_G = np.stack([B[p].sum(0) for p in sub_members])
+            sub_w = np.array([len(p) for p in sub_members], dtype=np.int64)
+            G = np.vstack([np.delete(st.G, u, 0), sub_G])
+            w = np.concatenate([np.delete(st.w, u), sub_w])
+            lab = np.concatenate([np.delete(st.lab, u), np.full(len(sub_members), src)])
+            members = members[:u] + members[u + 1 :] + sub_members
+        else:
+            G = np.vstack([np.delete(st.G, u, 0), B[pts]])
+            w = np.concatenate([np.delete(st.w, u), np.ones(len(pts), dtype=np.int64)])
+            lab = np.concatenate([np.delete(st.lab, u), np.full(len(pts), src)])
+            members = members[:u] + members[u + 1 :] + [[p] for p in pts]
         st = _State(G, w, lab, k, fold_weights)
         broken += 1
     return st.G, st.w, st.lab, members, broken
@@ -570,3 +663,64 @@ def grouped_split(
         feasibility_solves=feasibility_solves,
         rejected_capacity_proposals=rejected_capacity_proposals,
     )
+
+
+def interpolate_groups_to_random(
+    labels,
+    gid,
+    alpha: float,
+    splits: Sequence[float],
+    epsilon: float = 0.05,
+    seed: int = 0,
+) -> np.ndarray:
+    """Interpolate a grouped split toward random while keeping every intact group whole.
+
+    Unlike point-level :func:`lowrank.optimize.interpolate_to_random`, this operates
+    on whole groups so no group is torn across folds. Only moves or group swaps that
+    keep fold sizes inside the ``(1 ± epsilon)`` capacity corridor are applied.
+    ``alpha=1`` leaves ``labels`` unchanged; ``alpha=0`` applies up to ``m`` seeded
+    corridor-feasible group moves/swaps.
+    """
+    alpha = float(alpha)
+    if not np.isfinite(alpha) or not 0.0 <= alpha <= 1.0:
+        raise ValueError(f"hardness/alpha must be a finite value in [0, 1]; got {alpha!r}")
+    labels = np.asarray(labels, dtype=np.int64).copy()
+    gid = np.asarray(gid)
+    _, inv = np.unique(gid, return_inverse=True)
+    n, k = len(labels), len(splits)
+    m = int(inv.max()) + 1 if n else 0
+    if m < 2 or alpha == 1.0:
+        return labels
+    members = [[] for _ in range(m)]
+    for i, g in enumerate(inv):
+        members[g].append(i)
+    w = np.array([len(pts) for pts in members], dtype=np.int64)
+    g_lab = np.array([labels[pts[0]] for pts in members], dtype=np.int64)
+    # Verify groups are currently intact before group-level interpolation.
+    for g, pts in enumerate(members):
+        if not np.all(labels[pts] == g_lab[g]):
+            raise ValueError("interpolate_groups_to_random requires intact initial groups")
+    caps, floors = capacity_corridor(n, splits, epsilon)
+    caps, floors = caps.astype(np.int64), floors.astype(np.int64)
+    sizes = np.bincount(g_lab, weights=w, minlength=k).astype(np.int64)
+    steps = int(round((1.0 - alpha) * m))
+    rng = np.random.default_rng(seed)
+    order = rng.permutation(m)
+    partners = (rng.random(m) * np.arange(1, m + 1)).astype(np.int64)
+    for t in range(1, steps):
+        u, v = int(order[t]), int(order[partners[t]])
+        a, b = int(g_lab[u]), int(g_lab[v])
+        if a == b:
+            continue
+        dw = w[u] - w[v]
+        if (
+            floors[a] <= sizes[a] - dw <= caps[a]
+            and floors[b] <= sizes[b] + dw <= caps[b]
+        ):
+            sizes[a] -= dw
+            sizes[b] += dw
+            g_lab[u], g_lab[v] = b, a
+    out = np.empty(n, dtype=np.int64)
+    for g, pts in enumerate(members):
+        out[pts] = g_lab[g]
+    return out

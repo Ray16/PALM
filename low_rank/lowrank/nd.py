@@ -101,9 +101,18 @@ def _build_nd_factor(
         parts = []
         if F is not None and has.any():
             # Preserve record-weighted standardization, then factor each unique
-            # prepared row once. Identity and continuous features stay separate.
+            # prepared row once. Deduplicate by entity ID first in O(n) to avoid
+            # sorting the full (n, d) float matrix when components repeat.
             prepared = prepare_reference(F[has], metric).numpy()
-            unique, inverse = np.unique(prepared, axis=0, return_inverse=True)
+            rows = np.flatnonzero(has)
+            featured_vals = np.asarray([vals[i] for i in rows])
+            _, first_pos, val_inv = np.unique(
+                featured_vals, return_index=True, return_inverse=True
+            )
+            unique, uniq_inv = np.unique(
+                prepared[first_pos], axis=0, return_inverse=True
+            )
+            inverse = uniq_inv[val_inv]
             B_f, _, info = nystrom_features(
                 unique,
                 rank=rank,
@@ -115,7 +124,6 @@ def _build_nd_factor(
                 **(factor_options or {}),
             )
             coo = sparse.csr_matrix(B_f)[inverse].tocoo()
-            rows = np.flatnonzero(has)
             parts.append(
                 sparse.csr_matrix(
                     (coo.data, (rows[coo.row], coo.col)), shape=(n, B_f.shape[1])
@@ -188,6 +196,7 @@ class LowRankNDSplitter(BaseSplitter):
         fold_weights: Optional[object] = None
         factor_backend: str = "nystrom"
         on_rank_failure: str = "warn"
+        init: str = "random"  # random | spectral | hybrid
 
     @classmethod
     def param_schema(cls):
@@ -195,7 +204,7 @@ class LowRankNDSplitter(BaseSplitter):
 
         schema = super().param_schema()
         shared = LowRankSplitter.param_schema()["properties"]
-        for name in ("rank", "fold_weights", "factor_backend", "on_rank_failure"):
+        for name in ("rank", "fold_weights", "factor_backend", "on_rank_failure", "init"):
             schema["properties"][name] = shared[name]
         return schema
 
@@ -235,6 +244,7 @@ class LowRankNDSplitter(BaseSplitter):
             fm=p.fm and n <= _FM_MAX_N,
             refine_restarts=p.refine_restarts,
             fold_weights=p.fold_weights,
+            init=p.init,
         )
 
         if p.hardness is not None:

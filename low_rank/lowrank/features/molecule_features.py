@@ -117,9 +117,9 @@ def physicochemical(smiles_or_mol):
     }
 
 
-# Cache of bit-column names per n_bits so the 2048 f-strings are built once,
-# not once per molecule.
+# Cache of bit-column names and Morgan generators per (radius, n_bits).
 _MORGAN_KEYS = {}
+_MORGAN_GENERATORS = {}
 
 
 def _morgan_keys(n_bits):
@@ -130,6 +130,16 @@ def _morgan_keys(n_bits):
     return keys
 
 
+def _morgan_generator(radius, n_bits):
+    key = (radius, n_bits)
+    gen = _MORGAN_GENERATORS.get(key)
+    if gen is None:
+        from rdkit.Chem import rdFingerprintGenerator
+        gen = rdFingerprintGenerator.GetMorganGenerator(radius=radius, fpSize=n_bits)
+        _MORGAN_GENERATORS[key] = gen
+    return gen
+
+
 def morgan_fingerprint(smiles_or_mol, radius=2, n_bits=2048):
     """Morgan (ECFP) circular fingerprint as a bit vector.
 
@@ -137,14 +147,13 @@ def morgan_fingerprint(smiles_or_mol, radius=2, n_bits=2048):
     topology. Best used with Tanimoto distance for clustering.
     """
     from rdkit import Chem, DataStructs
-    from rdkit.Chem import rdFingerprintGenerator
 
     keys = _morgan_keys(n_bits)
     mol = smiles_or_mol if hasattr(smiles_or_mol, 'GetNumAtoms') else Chem.MolFromSmiles(smiles_or_mol)
     if mol is None:
         return {k: 0 for k in keys}
 
-    fp = rdFingerprintGenerator.GetMorganGenerator(radius=radius, fpSize=n_bits).GetFingerprint(mol)
+    fp = _morgan_generator(radius, n_bits).GetFingerprint(mol)
     # Extract all bits in one C++ call instead of n_bits Python-level fp[i] reads.
     arr = np.zeros((n_bits,), dtype=np.int8)
     DataStructs.ConvertToNumpyArray(fp, arr)
