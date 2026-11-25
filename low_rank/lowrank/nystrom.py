@@ -19,7 +19,7 @@ from .splitters.common.pairwise_similarity import (
     validate_features,
 )
 
-LANDMARKS = ("kmeans++", "uniform", "kmeans||")
+LANDMARKS = ("kmeans++", "uniform", "kmeans||", "rls")
 
 
 class AccuracyWarning(UserWarning):
@@ -43,7 +43,7 @@ class _LandmarkSampler:
 
         self.X, self.metric, self.method = Xt, metric, method
         self.kernel_power = int(kernel_power)
-        self.power_landmarks = bool(power_landmarks or method == "kmeans||")
+        self.power_landmarks = bool(power_landmarks or method in ("kmeans||", "rls"))
         self._X_norm = normalize_cosine(Xt) if metric == "cosine" else None
         self._card = Xt.sum(1) if metric == "tanimoto" else None
         eligible = (
@@ -94,10 +94,99 @@ class _LandmarkSampler:
             weights = (self.eligible & ~self.selected).to(self.X.dtype)
         return weights
 
+    def _rls_weights(self):
+        """Approximate ridge leverage scores (Musco & Musco 2017) against current landmarks."""
+        import torch
+
+        n = len(self.X)
+        cur_idx = torch.as_tensor(self.chosen, dtype=torch.long, device=self.X.device)
+        L_cur = self.X[cur_idx]
+        if self.metric == "cosine":
+            Ln = self._X_norm[cur_idx]
+            W = (Ln @ Ln.T).double()
+        elif self.metric == "tanimoto":
+            inter = (L_cur @ L_cur.T).double()
+            c_cur = self._card[cur_idx].double()
+            union = c_cur[:, None] + c_cur[None, :] - inter
+            W = torch.where(union > 0, inter / union, torch.zeros_like(inter))
+        else:
+            W = pairwise_similarity(L_cur, L_cur, self.metric).double()
+        if self.power_landmarks and self.kernel_power > 1:
+            W = W.pow(self.kernel_power)
+        W = 0.5 * (W + W.T)
+        lam = max(1e-6, 0.1 * float(torch.trace(W).item()) / max(1, len(self.chosen)))
+        W_reg = W + lam * torch.eye(len(self.chosen), dtype=torch.float64, device=self.X.device)
+        try:
+            L_chol = torch.linalg.cholesky(W_reg)
+            use_chol = True
+        except RuntimeError:
+            evals, evecs = torch.linalg.eigh(W_reg)
+            inv_sqrt = evecs / torch.sqrt(evals.clamp_min(1e-12))[None, :]
+            use_chol = False
+
+        scores = torch.empty(n, dtype=torch.float64, device=self.X.device)
+        for start in range(0, n, 2048):
+            end = min(n, start + 2048)
+            if self.metric == "cosine":
+                C_blk = (self._X_norm[start:end] @ self._X_norm[cur_idx].T).double()
+            elif self.metric == "tanimoto":
+                inter = (self.X[start:end] @ L_cur.T).double()
+                union = (
+                    self._card[start:end, None].double()
+                    + self._card[cur_idx][None, :].double()
+                    - inter
+                )
+                C_blk = torch.where(union > 0, inter / union, torch.zeros_like(inter))
+            else:
+                C_blk = pairwise_similarity(self.X[start:end], L_cur, self.metric).double()
+            if self.power_landmarks and self.kernel_power > 1:
+                C_blk = C_blk.pow(self.kernel_power)
+            if use_chol:
+                Z = torch.linalg.solve_triangular(L_chol, C_blk.T, upper=False)
+                proj_sq = (Z * Z).sum(dim=0)
+            else:
+                Z = C_blk @ inv_sqrt
+                proj_sq = (Z * Z).sum(dim=1)
+            scores[start:end] = (1.0 - proj_sq).clamp_min(0.0) / lam
+
+        weights = scores.to(self.X.dtype)
+        weights[~self.eligible | self.selected] = 0
+        if float(weights.sum()) <= 0:
+            weights = (self.eligible & ~self.selected).to(self.X.dtype)
+        return weights
+
     def extend(self, count: int) -> np.ndarray:
         import torch
 
         count = min(count, len(self.pool))
+        if self.method == "rls" and len(self.chosen) < count:
+            if not self.chosen:
+                init_take = min(count, max(16, count // 4))
+                weights = (self.eligible & ~self.selected).to(self.X.dtype)
+                picks = torch.multinomial(
+                    weights, init_take, replacement=False, generator=self.generator
+                )
+                for nxt in picks.tolist():
+                    self.chosen.append(int(nxt))
+                    self.selected[int(nxt)] = True
+            while len(self.chosen) < count:
+                take = min(len(self.chosen), count - len(self.chosen))
+                weights = self._rls_weights()
+                avail = int((weights > 0).sum().item())
+                if avail < take:
+                    weights = (self.eligible & ~self.selected).to(self.X.dtype)
+                    avail = int((weights > 0).sum().item())
+                take = min(take, avail)
+                if take < 1:
+                    break
+                picks = torch.multinomial(
+                    weights, take, replacement=False, generator=self.generator
+                )
+                for nxt in picks.tolist():
+                    self.chosen.append(int(nxt))
+                    self.selected[int(nxt)] = True
+            return np.asarray(self.chosen, dtype=np.int64)
+
         if self.method == "kmeans||" and len(self.chosen) < count:
             if not self.chosen:
                 weights = (self.eligible & ~self.selected).to(self.X.dtype)

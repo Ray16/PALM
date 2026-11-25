@@ -496,32 +496,213 @@ def fm_polish(
         )
         return checked(lab, moves)
     if np.array_equal(caps, floors) or strata is not None:
-        lab, moves = swap_polish(
-            sim_col,
-            lab,
-            S,
-            self_sim,
-            k,
-            tol=tol,
-            max_swaps=max_moves,
-            sim_block=ops.block if local is None else None,
-            strata=strata,
-        )
+        if not ops.sparse and local is None and strata is None and n > 256:
+            lab, moves = _batched_swap_polish(
+                ops, lab, self_sim, k, tol=tol, max_swaps=max_moves
+            )
+        else:
+            lab, moves = swap_polish(
+                sim_col,
+                lab,
+                S,
+                self_sim,
+                k,
+                tol=tol,
+                max_swaps=max_moves,
+                sim_block=ops.block if local is None else None,
+                strata=strata,
+            )
         return checked(lab, moves)
 
     caps_t = torch.as_tensor(caps, device=device)
     floors_t = torch.as_tensor(floors, device=device)
-    lab, moves = fiduccia_mattheyses_loop(
-        lab,
-        S,
-        sim_col,
-        caps_t,
-        floors_t,
-        self_term=self_sim,
-        tol=tol,
-        max_moves=max_moves,
-    )
+    if not ops.sparse and local is None and n > 256:
+        lab, moves = _batched_fm_polish(
+            ops,
+            lab,
+            self_sim,
+            caps_t,
+            floors_t,
+            tol=tol,
+            max_moves=max_moves,
+        )
+    else:
+        lab, moves = fiduccia_mattheyses_loop(
+            lab,
+            S,
+            sim_col,
+            caps_t,
+            floors_t,
+            self_term=self_sim,
+            tol=tol,
+            max_moves=max_moves,
+        )
     return checked(lab, moves)
+
+
+def _batched_fm_polish(
+    ops,
+    lab,
+    self_sim,
+    caps_t,
+    floors_t,
+    *,
+    tol: float = 1e-6,
+    max_moves: Optional[int] = None,
+    pool_size: Optional[int] = None,
+):
+    """Boundary-pool FM polish for dense factors: O(C·r) per move, O(n·k·r) per pool refresh."""
+    import torch
+
+    n = lab.numel()
+    k = int(caps_t.numel())
+    max_moves = max_moves if max_moves is not None else n
+    pool_cap = min(n, pool_size if pool_size is not None else max(256, 64 * k))
+    sizes = torch.bincount(lab, minlength=k).to(torch.float32)
+    moves = 0
+
+    while moves < max_moves:
+        P = ops.sums(lab, k, precise=True)
+        S = ops.mass_from_sums([P], k)[0]
+        can_recv = sizes < caps_t
+        can_leave = sizes > floors_t
+        S_recv = S.clone()
+        S_recv[:, ~can_recv] = -float("inf")
+        S_recv.scatter_(1, lab[:, None], -float("inf"))
+        best_val, _ = S_recv.max(dim=1)
+        cur = S.gather(1, lab[:, None]).squeeze(1) - self_sim
+        reduction = best_val - cur
+        reduction[~can_leave[lab]] = -float("inf")
+        if float(reduction.max().item()) <= tol:
+            break
+
+        c_size = min(pool_cap, n)
+        pool_idx = torch.topk(reduction, c_size).indices
+        B_pool = ops.B[pool_idx]
+        S_pool = S[pool_idx].clone()
+        lab_pool = lab[pool_idx].clone()
+        self_pool = self_sim[pool_idx]
+        S_pool_recv = torch.empty_like(S_pool)
+        pool_moves = 0
+        budget = min(max_moves - moves, c_size)
+
+        while pool_moves < budget:
+            can_recv = sizes < caps_t
+            can_leave = sizes > floors_t
+            S_pool_recv.copy_(S_pool)
+            S_pool_recv[:, ~can_recv] = -float("inf")
+            S_pool_recv.scatter_(1, lab_pool[:, None], -float("inf"))
+            pv, pb = S_pool_recv.max(dim=1)
+            pcur = S_pool.gather(1, lab_pool[:, None]).squeeze(1) - self_pool
+            pred = pv - pcur
+            pred[pb == lab_pool] = -float("inf")
+            pred[~can_leave[lab_pool]] = -float("inf")
+            pi = int(torch.argmax(pred).item())
+            if not torch.isfinite(pred[pi]) or float(pred[pi].item()) <= tol:
+                break
+            a, b = int(lab_pool[pi].item()), int(pb[pi].item())
+            bv = B_pool[pi]
+            col_pool = B_pool @ bv
+            S_pool[:, a] -= col_pool
+            S_pool[:, b] += col_pool
+            lab_pool[pi] = b
+            lab[pool_idx[pi]] = b
+            sizes[a] -= 1
+            sizes[b] += 1
+            moves += 1
+            pool_moves += 1
+
+        if pool_moves == 0:
+            break
+    return lab, moves
+
+
+def _batched_swap_polish(
+    ops,
+    lab,
+    self_sim,
+    k: int,
+    *,
+    tol: float = 1e-6,
+    max_swaps: Optional[int] = None,
+    n_cand: int = 8,
+    per_fold_pool: Optional[int] = None,
+):
+    """Boundary-pool pairwise-swap polish for dense factors at exact fold counts."""
+    import torch
+
+    n = lab.numel()
+    max_swaps = max_swaps if max_swaps is not None else n
+    pf_cap = per_fold_pool if per_fold_pool is not None else max(64, 32 * k)
+    swaps = 0
+
+    while swaps < max_swaps:
+        P = ops.sums(lab, k, precise=True)
+        S = ops.mass_from_sums([P], k)[0]
+        cur = S.gather(1, lab[:, None]).squeeze(1) - self_sim
+        S_other = S.clone()
+        S_other.scatter_(1, lab[:, None], -float("inf"))
+        margin = S_other.max(dim=1).values - cur
+
+        pool_parts = []
+        for c in range(k):
+            idx_c = torch.nonzero(lab == c).squeeze(1)
+            if idx_c.numel() == 0:
+                continue
+            take = min(pf_cap, int(idx_c.numel()))
+            top_c = torch.topk(margin[idx_c], take).indices
+            pool_parts.append(idx_c[top_c])
+        if len(pool_parts) < 2:
+            break
+
+        pool_idx = torch.cat(pool_parts)
+        B_pool = ops.B[pool_idx]
+        S_pool = S[pool_idx].clone()
+        lab_pool = lab[pool_idx].clone()
+        self_pool = self_sim[pool_idx]
+        members = [torch.nonzero(lab_pool == c).squeeze(1) for c in range(k)]
+        pool_swaps = 0
+        budget = min(max_swaps - swaps, int(pool_idx.numel()))
+
+        while pool_swaps < budget:
+            pcur = S_pool.gather(1, lab_pool[:, None]).squeeze(1) - self_pool
+            best = (tol, None)
+            for a in range(k):
+                ia = members[a]
+                if ia.numel() == 0:
+                    continue
+                for b in range(k):
+                    if a == b:
+                        continue
+                    ib = members[b]
+                    if ib.numel() == 0:
+                        continue
+                    ru = S_pool[ia, b] - pcur[ia]
+                    rv = S_pool[ib, a] - pcur[ib]
+                    top = torch.topk(ru, min(n_cand, int(ia.numel()))).indices
+                    sim_blk = B_pool[ia[top]] @ B_pool[ib].T
+                    gains = ru[top, None] + rv[None, :] - 2.0 * sim_blk
+                    flat = int(torch.argmax(gains.reshape(-1)).item())
+                    ci, j = divmod(flat, int(ib.numel()))
+                    g = float(gains[ci, j].item())
+                    if g > best[0]:
+                        best = (g, (int(ia[top[ci]].item()), int(ib[j].item()), a, b))
+            if best[1] is None:
+                break
+            pu, pv, a, b = best[1]
+            diff = B_pool @ (B_pool[pv] - B_pool[pu])
+            S_pool[:, a] += diff
+            S_pool[:, b] -= diff
+            lab_pool[pu], lab_pool[pv] = b, a
+            lab[pool_idx[pu]], lab[pool_idx[pv]] = b, a
+            members[a] = torch.nonzero(lab_pool == a).squeeze(1)
+            members[b] = torch.nonzero(lab_pool == b).squeeze(1)
+            swaps += 1
+            pool_swaps += 1
+
+        if pool_swaps == 0:
+            break
+    return lab, swaps
 
 
 def swap_polish(

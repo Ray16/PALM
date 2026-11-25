@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- Boundary-pool refinement (`_batched_fm_polish` and `_batched_swap_polish`) for
+  dense factors above 256 rows, reducing per-move/swap cost from $O(nr)$ to $O(Cr)$
+  with periodic $O(nkr)$ pool refreshes while preserving exact monotonicity.
+- Recursive ridge-leverage-score Nyström landmark sampling (`landmark="rls"`),
+  supporting incremental rank extension and powered kernels.
+- Precomputed metric norms/cardinalities and CUDA `fp16` exact binary Tanimoto
+  dot products in `tiled_neighbours`.
+- Exposed `group_break_mode="singletons" | "bisect"` and
+  `hardness_mode="point" | "group"` in `LowRankSplitter`; added contracted sparse
+  local penalty support (`local=`) in `grouped_split`; added `strata`,
+  `power_landmarks`, `cut_rel_tol`, `cut_abs_floor`, and stage `timings` parity
+  to `LowRankNDSplitter`.
 - Cut-relative audit: `cut_relative_error`, an `acceptance` verdict with an
   absolute-error floor, and an explicit `unresolved_low_cut_mass` state (the
   mass-normalized `relative_pair_mae` is kept for comparison), now wired into

@@ -374,3 +374,167 @@ def test_paired_candidate_cut_audit_and_stage_timings():
     assert "lloyd_stop_reasons" in opt and "restart_dispersion" in opt
     assert "rejected_lloyd_proposals" in opt and "lloyd_iterations" in opt
 
+
+
+def test_batched_fm_and_swap_polish_monotone_and_feasible():
+    rng = np.random.default_rng(101)
+    n = 400
+    centers = rng.normal(size=(4, 16))
+    X = (centers[rng.integers(0, 4, size=n)] + 0.4 * rng.normal(size=(n, 16))).astype(
+        np.float32
+    )
+    B, _ = nystrom_features(X, rank=32, metric="cosine", seed=0)
+    init = rng.choice(3, size=n, p=[0.8, 0.1, 0.1])
+    # Exact counts -> exercises _batched_swap_polish (n > 256)
+    init_exact = np.array([0] * 320 + [1] * 40 + [2] * 40, dtype=np.int64)
+    rng.shuffle(init_exact)
+    before_exact = factor_leakage(B, init_exact, 3)
+    lab_exact, swaps = fm_polish(B, init_exact, [8, 1, 1], epsilon=0.0)
+    after_exact = factor_leakage(B, lab_exact, 3)
+    assert np.bincount(lab_exact, minlength=3).tolist() == [320, 40, 40]
+    assert after_exact <= before_exact + 1e-9
+    assert swaps > 0
+
+    # Corridor -> exercises _batched_fm_polish (n > 256)
+    lab_corr, moves = fm_polish(B, init_exact, [8, 1, 1], epsilon=0.05)
+    after_corr = factor_leakage(B, lab_corr, 3)
+    counts = np.bincount(lab_corr, minlength=3)
+    assert (counts >= np.array([304, 38, 38])).all() and (
+        counts <= np.array([336, 42, 42])
+    ).all()
+    assert after_corr <= before_exact + 1e-9
+    assert moves > 0
+
+
+def test_rls_nystrom_landmarks_fixed_and_auto():
+    rng = np.random.default_rng(77)
+    X_bin = (rng.random((120, 64)) < 0.25).astype(np.float32)
+    B_t, m_t, info_t = nystrom_features(
+        X_bin, rank=24, metric="tanimoto", landmark="rls", kernel_power=3, seed=1, return_info=True
+    )
+    assert m_t == "tanimoto"
+    assert B_t.shape[0] == 120 and 1 <= B_t.shape[1] <= 24
+    assert len(set(info_t["landmark_indices"])) == info_t["landmark_count"]
+
+    X_cos = rng.normal(size=(100, 32)).astype(np.float32)
+    B_auto, m_c, info_auto = nystrom_features(
+        X_cos,
+        rank="auto",
+        rank_min=16,
+        rank_max=64,
+        metric="cosine",
+        landmark="rls",
+        seed=2,
+        return_info=True,
+    )
+    assert m_c == "cosine"
+    assert B_auto.shape[0] == 100 and info_auto["effective_rank"] >= 1
+    assert len(set(info_auto["landmark_indices"])) == info_auto["landmark_count"]
+
+
+def test_tiled_neighbours_precomputed_matches_reference():
+    import torch
+    from lowrank.neighbours import tiled_neighbours
+    from lowrank.splitters.common.pairwise_similarity import pairwise_similarity
+
+    rng = np.random.default_rng(202)
+    X_bin = (rng.random((40, 64)) < 0.3).astype(np.float32)
+    X_dense = rng.normal(size=(40, 24)).astype(np.float32)
+    for metric, X in [("tanimoto", X_bin), ("cosine", X_dense), ("euclidean", X_dense)]:
+        idx, sim = tiled_neighbours(
+            X, metric, k=6, row_block=13, reference_block=17, device="cpu"
+        )
+        from lowrank.diagnostics import prepare_reference
+
+        ref = prepare_reference(X, metric, "cpu")
+        S_full = pairwise_similarity(ref, ref, metric)
+        S_full.fill_diagonal_(-torch.inf)
+        ref_sim, _ = S_full.topk(6, dim=1)
+        assert np.allclose(sim, ref_sim.numpy(), atol=1e-5)
+        assert not np.any(idx == np.arange(40)[:, None])
+
+
+def test_splitter_group_hardness_and_break_mode():
+    rng = np.random.default_rng(303)
+    X = np.vstack([rng.normal(loc=g * 4.0, scale=0.2, size=(4, 16)) for g in range(15)]).astype(
+        np.float32
+    )
+    groups = {i: i // 4 for i in range(60)}
+    # Exact multiple-of-4 targets [36, 12, 12] -> all 15 groups stay intact under group hardness
+    res = split(
+        "lowrank",
+        dict(enumerate(X)),
+        SplitSpec([3, 1, 1], ["train", "val", "test"], seed=0),
+        rank=16,
+        groups=groups,
+        allowed_size_imbalance=0.0,
+        hardness=0.4,
+        hardness_mode="group",
+        group_break_mode="bisect",
+    )
+    for g in range(15):
+        folds = {res.assignment[4 * g + j] for j in range(4)}
+        assert len(folds) == 1
+
+    # Targets [40, 10, 10] require breaking at least one 4-entity group; bisect + group hardness succeeds
+    res_broken = split(
+        "lowrank",
+        dict(enumerate(X)),
+        SplitSpec([4, 1, 1], ["train", "val", "test"], seed=0),
+        rank=16,
+        groups=groups,
+        allowed_size_imbalance=0.0,
+        hardness=0.5,
+        hardness_mode="group",
+        group_break_mode="bisect",
+    )
+    assert res_broken.diagnostics["split_counts"] == {"train": 40, "val": 10, "test": 10}
+
+
+def test_grouped_split_with_local_sparse_penalty():
+    from lowrank.grouped import grouped_split
+    from lowrank.local import local_graph
+
+    rng = np.random.default_rng(404)
+    X = (rng.random((48, 64)) < 0.25).astype(np.float32)
+    B, _ = nystrom_features(X, rank=16, metric="tanimoto", seed=0)
+    gid = np.repeat(np.arange(16), 3)
+    graph, _ = local_graph(X, "tanimoto", k=8, threshold=0.2)
+    labels, info = grouped_split(
+        B,
+        gid,
+        [3, 1],
+        epsilon=0.0,
+        n_restarts=3,
+        seed=0,
+        group_policy="strict",
+        local=graph,
+    )
+    assert np.bincount(labels, minlength=2).tolist() == [36, 12]
+    assert info["all_groups_preserved"] is True
+
+
+def test_lowrank_nd_parity_strata_and_timings():
+    rng = np.random.default_rng(505)
+    n = 60
+    records = [{"id": i, "mol": f"m{i % 20}", "prot": f"p{i % 10}"} for i in range(n)]
+    afm = {
+        "mol": {f"m{j}": (rng.random(32) < 0.3).astype(np.float32) for j in range(20)},
+        "prot": {f"p{j}": rng.normal(size=16).astype(np.float32) for j in range(10)},
+    }
+    strata = [i % 2 for i in range(n)]
+    res = split(
+        "lowrank_nd",
+        (records, afm),
+        SplitSpec([2, 1], ["train", "test"], seed=0),
+        rank=12,
+        landmark="rls",
+        strata=strata,
+    )
+    timings = res.diagnostics["timings"]
+    for key in ("factorization_s", "optimization_s", "diagnostic_s"):
+        assert key in timings and timings[key] >= 0.0
+    for s in (0, 1):
+        tr = sum(1 for i in range(n) if strata[i] == s and res.assignment[i] == "train")
+        te = sum(1 for i in range(n) if strata[i] == s and res.assignment[i] == "test")
+        assert (tr, te) == (20, 10)

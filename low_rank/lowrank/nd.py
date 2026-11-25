@@ -197,6 +197,10 @@ class LowRankNDSplitter(BaseSplitter):
         factor_backend: str = "nystrom"
         on_rank_failure: str = "warn"
         init: str = "random"  # random | spectral | hybrid
+        strata: Optional[object] = None
+        power_landmarks: bool = False
+        cut_rel_tol: float = 0.1
+        cut_abs_floor: float = 1e-3
 
     @classmethod
     def param_schema(cls):
@@ -204,20 +208,32 @@ class LowRankNDSplitter(BaseSplitter):
 
         schema = super().param_schema()
         shared = LowRankSplitter.param_schema()["properties"]
-        for name in ("rank", "fold_weights", "factor_backend", "on_rank_failure", "init"):
+        for name in (
+            "rank",
+            "landmark",
+            "fold_weights",
+            "factor_backend",
+            "on_rank_failure",
+            "init",
+            "strata",
+        ):
             schema["properties"][name] = shared[name]
         return schema
 
     def split(self, data, spec: SplitSpec) -> SplitResult:
+        from .splitter import _prepare_strata
+
         p = self.params
-        t0 = time.time()
+        t0 = time.perf_counter()
         size_tolerance, fm_eps = resolve_size_tolerance(p, spec)
 
         records, afm = _as_nd(data)
         n = len(records)
         validate_nonempty_targets(n, spec.splits)
+        strata_arr = _prepare_strata(p.strata, list(range(n)), grouped=False)
 
         W = validate_fold_weights(p.fold_weights, len(spec.splits))
+        t_fac0 = time.perf_counter()
         B, used_axes, factor_info = _build_nd_factor(
             records,
             afm,
@@ -226,14 +242,20 @@ class LowRankNDSplitter(BaseSplitter):
             spec.seed,
             p.axis_metrics,
             factor_options=dict(
-                factor_backend=p.factor_backend, on_failure=p.on_rank_failure
+                factor_backend=p.factor_backend,
+                on_failure=p.on_rank_failure,
+                power_landmarks=p.power_landmarks,
+                cut_rel_tol=p.cut_rel_tol,
+                cut_abs_floor=p.cut_abs_floor,
             ),
             return_info=True,
         )
+        fac_s = time.perf_counter() - t_fac0
         logger.info(
             "  lowrank_nd: n=%d axes=%d factor_dim=%d", n, len(used_axes), B.shape[1]
         )
 
+        t_opt0 = time.perf_counter()
         best_labels, _, optimization = optimize_restarts(
             B,
             spec.splits,
@@ -245,7 +267,9 @@ class LowRankNDSplitter(BaseSplitter):
             refine_restarts=p.refine_restarts,
             fold_weights=p.fold_weights,
             init=p.init,
+            strata=strata_arr,
         )
+        opt_s = time.perf_counter() - t_opt0
 
         if p.hardness is not None:
             best_labels = interpolate_to_random(best_labels, p.hardness, seed=spec.seed)
@@ -253,6 +277,7 @@ class LowRankNDSplitter(BaseSplitter):
         labels = np.asarray(best_labels)
         assignment = assign_split_names(list(range(n)), labels, spec.splits, spec.names)
 
+        t_diag0 = time.perf_counter()
         leak, per_axis, weighted_leak = (None, None, None)
         if p.score_exact_leakage and n <= _LEAKAGE_MAX_N:
             leak, per_axis = macro_axis_lpi(
@@ -264,10 +289,16 @@ class LowRankNDSplitter(BaseSplitter):
                 weighted_leak, _ = macro_axis_lpi(
                     records, afm, labels, axis_metrics=p.axis_metrics, fold_weights=W
                 )
+        diag_s = time.perf_counter() - t_diag0
+        timings = {
+            "factorization_s": round(fac_s, 6),
+            "optimization_s": round(opt_s, 6),
+            "diagnostic_s": round(diag_s, 6),
+        }
         return self._result(
             assignment,
             spec,
-            time.time() - t0,
+            time.perf_counter() - t0,
             imbalance=round(realized_imbalance(labels, spec.splits), 4),
             rank=int(B.shape[1]),
             optimization=optimization,
@@ -282,4 +313,5 @@ class LowRankNDSplitter(BaseSplitter):
             ),
             leakage=leak,
             axis_leakage=per_axis,
+            timings=timings,
         )

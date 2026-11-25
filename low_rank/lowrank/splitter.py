@@ -23,7 +23,12 @@ from lowrank.splitters.common.split_naming import assign_split_names
 
 from .diagnostics import positive_integer, sampled_leakage
 from .factors import validate_fold_weights
-from .grouped import grouped_split, must_link_groups, resolve_tau
+from .grouped import (
+    grouped_split,
+    interpolate_groups_to_random,
+    must_link_groups,
+    resolve_tau,
+)
 from .nystrom import LANDMARKS, nystrom_features
 from .objective import factor_leakage
 from .optimize import interpolate_to_random, optimize_restarts
@@ -67,10 +72,21 @@ def resolve_size_tolerance(p, spec: SplitSpec):
         getattr(p, "must_link", None) is not None
         or getattr(p, "groups", None) is not None
     )
-    if grouped and p.hardness is not None and float(p.hardness) < 1.0:
+    hardness_mode = getattr(p, "hardness_mode", "point")
+    if hardness_mode not in ("point", "group"):
         raise ValueError(
-            "must_link/groups cannot be combined with hardness < 1: "
-            "point randomization would break retained groups"
+            f"hardness_mode must be 'point' or 'group'; got {hardness_mode!r}"
+        )
+    if (
+        grouped
+        and p.hardness is not None
+        and float(p.hardness) < 1.0
+        and hardness_mode != "group"
+    ):
+        raise ValueError(
+            "must_link/groups cannot be combined with hardness < 1 under "
+            "hardness_mode='point': point randomization would break retained groups "
+            "(set hardness_mode='group' for group-preserving interpolation)"
         )
     if getattr(p, "must_link", None) is not None:
         if not 0.0 < p.max_group_frac <= 1.0:
@@ -191,6 +207,8 @@ class LowRankSplitter(BaseSplitter):
         init: str = "random"  # random | spectral | hybrid
         strata: Optional[dict] = None
         must_link_linkage: str = "single"  # single | centroid
+        group_break_mode: str = "singletons"  # singletons | bisect
+        hardness_mode: str = "point"  # point | group
 
     @classmethod
     def param_schema(cls):
@@ -207,12 +225,15 @@ class LowRankSplitter(BaseSplitter):
             "items": {"type": "array", "items": {"type": "number"}},
         }
         for field, choices in (
+            ("landmark", list(LANDMARKS)),
             ("rank_check", ["pair_mae", "cut_error", "cut_relative_error"]),
             ("rank_probe_policy", ["fixed", "adaptive"]),
             ("on_rank_failure", ["warn", "raise", "return"]),
             ("factor_backend", ["nystrom", "auto"]),
             ("init", ["random", "spectral", "hybrid"]),
             ("must_link_linkage", ["single", "centroid"]),
+            ("group_break_mode", ["singletons", "bisect"]),
+            ("hardness_mode", ["point", "group"]),
         ):
             schema["properties"][field]["enum"] = choices
         return schema
@@ -228,6 +249,8 @@ class LowRankSplitter(BaseSplitter):
             positive_integer("refine_restarts", p.refine_restarts)
         if p.group_policy not in ("count_first", "strict"):
             raise ValueError("group_policy must be count_first or strict")
+        if p.group_break_mode not in ("singletons", "bisect"):
+            raise ValueError("group_break_mode must be singletons or bisect")
         if (
             not np.isfinite(p.group_feasibility_seconds)
             or p.group_feasibility_seconds <= 0
@@ -452,6 +475,7 @@ class LowRankSplitter(BaseSplitter):
                     feasibility_seconds=p.group_feasibility_seconds,
                     fold_weights=p.fold_weights,
                     refine_restarts=p.refine_restarts,
+                    break_mode=p.group_break_mode,
                 )
                 stage_times["grouping_s"] += time.perf_counter() - t_grp0
                 fields.update(
@@ -461,18 +485,38 @@ class LowRankSplitter(BaseSplitter):
                     must_link_backend=p.must_link_backend,
                 )
             if p.hardness is not None:
-                labels = interpolate_to_random(labels, p.hardness, seed=spec.seed)
+                if grouped and p.hardness_mode == "group":
+                    eff_gid = gid
+                    if not info["all_groups_preserved"]:
+                        # Preserve every remaining intact (group, fold) subgroup after count_first repair
+                        k_f = len(spec.splits)
+                        _, eff_gid = np.unique(
+                            gid * k_f + np.asarray(labels, dtype=np.int64),
+                            return_inverse=True,
+                        )
+                    labels = interpolate_groups_to_random(
+                        labels,
+                        eff_gid,
+                        p.hardness,
+                        spec.splits,
+                        epsilon=tolerance,
+                        seed=spec.seed,
+                    )
+                else:
+                    labels = interpolate_to_random(labels, p.hardness, seed=spec.seed)
             if local_info is not None:
-                from .local import SparseTerm
-
-                term = SparseTerm(local_term)
+                coo = local_term.tocoo()
+                lab_arr = np.asarray(labels)
+                local_cross = 0.5 * float(
+                    coo.data[lab_arr[coo.row] != lab_arr[coo.col]].sum()
+                )
                 global_cost = factor_leakage(
                     optimization_B, labels, len(spec.splits), p.fold_weights
                 )
                 local_info.update(
-                    composite_objective=global_cost + term.cross(labels),
+                    composite_objective=global_cost + local_cross,
                     global_factor_ratio=global_cost,
-                    weighted_local_graph_ratio=term.cross(labels),
+                    weighted_local_graph_ratio=local_cross,
                 )
                 fields["local_objective"] = local_info
             fields["factor_leakage"] = factor_leakage(B, labels, len(spec.splits))

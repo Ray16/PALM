@@ -183,10 +183,28 @@ def _weighted_peel(scores, w, caps, floors):
     return lab
 
 
+def _contract_local(local, members, n: int):
+    """Contract an (n, n) symmetric sparse local penalty onto group supernodes."""
+    if local is None:
+        return None
+    from scipy import sparse
+
+    m = len(members)
+    rows = np.concatenate([np.asarray(pts, dtype=np.int64) for pts in members])
+    cols = np.concatenate([np.full(len(pts), g, dtype=np.int64) for g, pts in enumerate(members)])
+    G_map = sparse.csr_matrix((np.ones(len(rows), dtype=np.float64), (rows, cols)), shape=(n, m))
+    Rg = (G_map.T @ sparse.csr_matrix(local, dtype=np.float64) @ G_map).tocsr()
+    Rg.setdiag(0.0)
+    Rg.eliminate_zeros()
+    Rg.sort_indices()
+    return Rg
+
+
 class _State:
     """Group-level factor-space state: ``P`` (k, r) block sums, ``M = G·P^T``, ``sizes``."""
 
-    def __init__(self, G, w, lab, k, fold_weights=None):
+    def __init__(self, G, w, lab, k, fold_weights=None, local_g=None):
+        from scipy import sparse
         from .factors import validate_fold_weights
 
         self.G, self.w, self.lab, self.k = G, w, lab, k
@@ -199,12 +217,30 @@ class _State:
                 self.P[c] = G[mask].sum(0)
         self.M = G @ self.P.T
         self.sizes = np.bincount(lab, weights=w, minlength=k).astype(np.int64)
+        self.R = local_g
+        if local_g is not None:
+            m = len(lab)
+            onehot = sparse.csr_matrix(
+                (np.ones(m, dtype=np.float64), (np.arange(m), lab)), shape=(m, k)
+            )
+            self.R_mass = (local_g @ onehot).toarray()
+            self.R_deg = np.asarray(local_g.sum(axis=1)).ravel()
+        else:
+            self.R_mass = None
+            self.R_deg = None
 
     def leakage(self) -> float:
-        return 0.5 * float(np.sum(self.W * (self.P @ self.P.T)))
+        base = 0.5 * float(np.sum(self.W * (self.P @ self.P.T)))
+        if self.R is not None:
+            coo = self.R.tocoo()
+            base += 0.5 * float(coo.data[self.lab[coo.row] != self.lab[coo.col]].sum())
+        return base
 
     def costs(self) -> np.ndarray:
-        return self.M @ self.W.T - self.self_sim[:, None] * self.W[:, self.lab].T
+        c = self.M @ self.W.T - self.self_sim[:, None] * self.W[:, self.lab].T
+        if self.R_mass is not None:
+            c = c + (self.R_deg[:, None] - self.R_mass)
+        return c
 
     def reductions(self) -> np.ndarray:
         cost = self.costs()
@@ -218,6 +254,12 @@ class _State:
         col = self.G @ self.G[u]
         self.M[:, a] -= col
         self.M[:, b] += col
+        if self.R is not None:
+            start, end = self.R.indptr[u], self.R.indptr[u + 1]
+            idx = self.R.indices[start:end]
+            vals = self.R.data[start:end]
+            self.R_mass[idx, a] -= vals
+            self.R_mass[idx, b] += vals
         self.P[a] -= self.G[u]
         self.P[b] += self.G[u]
         self.sizes[a] -= self.w[u]
@@ -267,6 +309,7 @@ def _repair(
     allow_break: bool = True,
     fold_weights=None,
     break_mode: str = "singletons",
+    local=None,
 ):
     """Restore the capacity corridor via greedy whole-group moves or group dissolution."""
     if break_mode not in ("singletons", "bisect"):
@@ -274,7 +317,7 @@ def _repair(
             f"break_mode must be 'singletons' or 'bisect'; got {break_mode!r}"
         )
     broken = 0
-    st = _State(G, w, lab, k, fold_weights)
+    st = _State(G, w, lab, k, fold_weights, _contract_local(local, members, len(B)))
     for _ in range(10 * len(B) + 10):
         over = np.nonzero(st.sizes > caps)[0]
         under = np.nonzero(st.sizes < floors)[0]
@@ -332,7 +375,7 @@ def _repair(
             w = np.concatenate([np.delete(st.w, u), np.ones(len(pts), dtype=np.int64)])
             lab = np.concatenate([np.delete(st.lab, u), np.full(len(pts), src)])
             members = members[:u] + members[u + 1 :] + [[p] for p in pts]
-        st = _State(G, w, lab, k, fold_weights)
+        st = _State(G, w, lab, k, fold_weights, _contract_local(local, members, len(B)))
         broken += 1
     return st.G, st.w, st.lab, members, broken
 
@@ -439,6 +482,8 @@ def _fm_groups(st: _State, caps, floors, tol: float = 1e-6, max_moves=None, n_ca
                     + rv[None, :]
                     - 2.0 * st.W[a, bb] * (st.G[uu] @ G_blk[bb].T)
                 )
+                if st.R is not None:
+                    gain = gain - 2.0 * st.R[uu][:, ib].toarray()
                 gain[~feas] = -np.inf
                 t, j = np.unravel_index(int(np.argmax(gain)), gain.shape)
                 if gain[t, j] > best[0]:
@@ -473,10 +518,14 @@ def grouped_split(
     feasibility_seconds: float = 5.0,
     fold_weights=None,
     refine_restarts=None,
+    break_mode: str = "singletons",
+    local=None,
 ):
     """Minimize factor-space leakage with groups and explicit capacity repair."""
     if group_policy not in ("count_first", "strict"):
         raise ValueError("group_policy must be count_first or strict")
+    if break_mode not in ("singletons", "bisect"):
+        raise ValueError("break_mode must be 'singletons' or 'bisect'")
     if not np.isfinite(feasibility_seconds) or feasibility_seconds <= 0:
         raise ValueError("feasibility_seconds must be finite and positive")
     if refine_restarts is not None:
@@ -520,7 +569,18 @@ def grouped_split(
             rng = np.random.default_rng(seed + r)
             lab = _weighted_peel(rng.random((m, k)), w, caps, floors)
         G, w, lab, mem, broken = _repair(
-            B, G, w, lab, k, caps, floors, mem, allow_break=not strict, fold_weights=fold_weights
+            B,
+            G,
+            w,
+            lab,
+            k,
+            caps,
+            floors,
+            mem,
+            allow_break=not strict,
+            fold_weights=fold_weights,
+            break_mode=break_mode,
+            local=local,
         )
         if strict and not in_corridor(lab, w):
             if best is not None:
@@ -531,24 +591,38 @@ def grouped_split(
                 )
                 feasibility_solves += 1
         for _ in range(n_iter):
-            st = _State(G, w, lab, k, fold_weights)
+            st = _State(G, w, lab, k, fold_weights, _contract_local(local, mem, n))
             old_G, old_w, old_mem, old_broken = G, w, mem, broken
             new = _weighted_peel(-st.costs(), w, caps, floors)
             G, w, new, mem, b2 = _repair(
-                B, G, w, new, k, caps, floors, mem, allow_break=not strict, fold_weights=fold_weights
+                B,
+                G,
+                w,
+                new,
+                k,
+                caps,
+                floors,
+                mem,
+                allow_break=not strict,
+                fold_weights=fold_weights,
+                break_mode=break_mode,
+                local=local,
             )
             if strict and not in_corridor(new, w):
                 rejected_capacity_proposals += 1
                 G, w, mem, broken = old_G, old_w, old_mem, old_broken
                 break
-            if _State(G, w, new, k, fold_weights).leakage() > st.leakage():
+            if (
+                _State(G, w, new, k, fold_weights, _contract_local(local, mem, n)).leakage()
+                > st.leakage()
+            ):
                 G, w, mem, broken = old_G, old_w, old_mem, old_broken
                 break
             broken += b2
             if len(new) == len(lab) and np.array_equal(new, lab):
                 break
             lab = new
-        st = _State(G, w, lab, k, fold_weights)
+        st = _State(G, w, lab, k, fold_weights, _contract_local(local, mem, n))
         obj = st.leakage()
         candidates.append((obj, st, mem, broken, r is None))
         if best is None or obj < best[0]:
@@ -563,7 +637,7 @@ def grouped_split(
         moves = _fm_groups(st, caps, floors)
         obj = st.leakage()
         if obj > before:
-            st = _State(st.G, st.w, initial, k, fold_weights)
+            st = _State(st.G, st.w, initial, k, fold_weights, st.R)
             obj, moves = before, 0
         if obj < best[0]:
             best = (obj, st.lab.copy(), mem, broken, moves, warm)

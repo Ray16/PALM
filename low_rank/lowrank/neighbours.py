@@ -219,7 +219,10 @@ def tiled_neighbours(
     Ties can choose different equal-similarity indices across devices/backends.
     """
     import torch
-    from lowrank.splitters.common.pairwise_similarity import pairwise_similarity
+    from lowrank.splitters.common.pairwise_similarity import (
+        normalize_cosine,
+        pairwise_similarity,
+    )
 
     for name, value in (
         ("k", k),
@@ -245,12 +248,51 @@ def tiled_neighbours(
     scores = np.empty((len(queries), k), dtype=np.float32)
     if k == 0:
         return indices, scores
+
+    # Precompute metric-specific norms/popcounts once outside the 2-D tile loops.
+    ref_cos = normalize_cosine(ref) if metric == "cosine" else None
+    card = ref.sum(dim=1) if metric == "tanimoto" else None
+    use_fp16_tanimoto = (
+        metric == "tanimoto"
+        and str(device).startswith("cuda")
+        and ref.shape[1] <= 2048
+        and bool(((ref == 0) | (ref == 1)).all().item())
+    )
+    ref_half = ref.half() if use_fp16_tanimoto else None
+    sq_norm = (ref * ref).sum(dim=1) if metric == "euclidean" else None
+
     for start in range(0, len(queries), row_block):
         q = queries[start : start + row_block]
         best = torch.full((len(q), k), -torch.inf, device=device)
         ids = torch.zeros((len(q), k), dtype=torch.long, device=device)
+        if metric == "cosine":
+            q_cos = ref_cos[q]
+        elif metric == "tanimoto":
+            q_mat = ref_half[q] if use_fp16_tanimoto else ref[q]
+            q_card = card[q]
+        elif metric == "euclidean":
+            q_mat = ref[q]
+            q_sq = sq_norm[q]
         for r in range(0, n, reference_block):
-            S = pairwise_similarity(ref[q], ref[r : r + reference_block], metric)
+            end_r = min(n, r + reference_block)
+            if metric == "cosine":
+                S = q_cos @ ref_cos[r:end_r].T
+            elif metric == "tanimoto":
+                if use_fp16_tanimoto:
+                    inter = (q_mat @ ref_half[r:end_r].T).float()
+                else:
+                    inter = q_mat @ ref[r:end_r].T
+                union = q_card[:, None] + card[r:end_r][None, :] - inter
+                S = torch.where(union > 0, inter / union, torch.zeros_like(inter))
+            elif metric == "euclidean":
+                d2 = (
+                    q_sq[:, None]
+                    + sq_norm[r:end_r][None, :]
+                    - 2.0 * (q_mat @ ref[r:end_r].T)
+                ).clamp_min(0.0)
+                S = 1.0 / (1.0 + torch.sqrt(d2))
+            else:
+                S = pairwise_similarity(ref[q], ref[r:end_r], metric)
             self_rows = np.flatnonzero((q >= r) & (q < r + S.shape[1]))
             if len(self_rows):
                 S[
